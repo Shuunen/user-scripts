@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon - Hide products by keyword
 // @namespace    https://github.com/Shuunen
-// @version      1.1.5
+// @version      1.1.6
 // @description  Easily hide products from your searches by specifying a block list
 // @author       Romain Racamier-Lafon
 // @match        https://www.amazon.fr/s*
@@ -38,8 +38,9 @@
   }
 
   var selectors = {
-    container: ['#search > .sg-row > div:first-child > .sg-col-inner', '#leftNavContainer'].join(', '),
-    productTitle: 'a.s-access-detail-page > h2.s-access-title'
+    container: ['#search > .sg-row > div:first-child > .sg-col-inner', '#leftNavContainer'].join(','),
+    product: 'div[data-asin]',
+    productTitle: ['a.s-access-detail-page > h2.s-access-title', '.a-size-medium.a-color-base.a-text-normal'].join(',')
   }
 
   var utils = new Shuutils(app)
@@ -101,7 +102,7 @@
     } else {
       addTitleToSuggestions(titleStr)
     }
-    var product = titleEl.parentElement.parentElement.parentElement.parentElement.parentElement
+    var product = titleEl.closest(selectors.product)
     product.style.display = found ? 'none' : 'inline-block'
   }
 
