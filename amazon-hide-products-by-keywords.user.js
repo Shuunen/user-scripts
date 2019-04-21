@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon - Hide products by keyword
 // @namespace    https://github.com/Shuunen
-// @version      1.1.4
+// @version      1.1.5
 // @description  Easily hide products from your searches by specifying a block list
 // @author       Romain Racamier-Lafon
 // @match        https://www.amazon.fr/s*
@@ -58,8 +58,8 @@
       }
     })
     // add .map(key => `${key} (${app.suggestions[key]})`)
-    // to see ["steellwingsf (23)", "silicone (5)", "decoration (4)", "support (4)", "cheveux (3)",
-    // instead of ["steellwingsf", "silicone", "decoration", "support", "cheveux",
+    // to see ["silicone (5)", "decoration (4)", "support (4)", "cheveux (3)",
+    // instead of ["silicone", "decoration", "support", "cheveux",
     var suggestions = Object.keys(app.suggestions).sort((a, b) => (app.suggestions[b] - app.suggestions[a]))
     // limit displayed suggestions
     suggestions = suggestions.splice(0, app.maxSuggestions)
@@ -80,7 +80,7 @@
 
   function addTitleToSuggestions (title) {
     title.split(' ').filter(word => word.length > app.minLengthSuggestion).forEach(word => {
-      // add the word if needed & count the occurence
+      // add the word if needed & count the occurrence
       if (!app.suggestions.hasOwnProperty(word)) {
         app.suggestions[word] = 0
       }
@@ -91,10 +91,10 @@
 
   function checkProduct (titleStr, titleEl) {
     var found = false
-    var remainings = app.excluders.length
-    while (!found && remainings) {
-      found = titleStr.indexOf(app.excluders[remainings - 1]) >= 0
-      remainings--
+    var remaining = app.excluders.length
+    while (!found && remaining) {
+      found = titleStr.indexOf(app.excluders[remaining - 1]) >= 0
+      remaining--
     }
     if (found) {
       utils.log('"' + titleStr.substr(0, 40) + '..."', 'should be excluded')
@@ -144,6 +144,10 @@
 
   function insertFilter () {
     var container = utils.findFirst(selectors.container)
+    if (!container) {
+      utils.error('cannot inject filter, did not find left nav container')
+      return
+    }
     var html = `
     <style>
     .${cls.suggestions} {
