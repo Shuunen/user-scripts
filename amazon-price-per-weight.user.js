@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Amazon - Price per weight
 // @namespace    https://github.com/Shuunen
-// @version      1.0.1
+// @version      1.0.3
 // @description  Display price per weight & sort ascending
 // @author       Romain Racamier-Lafon
 // @match        https://*.amazon.fr/*
-// @require      https://raw.githubusercontent.com/Shuunen/snippets/master/bookmarklets/utils.js
+// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
 // @grant        none
 // ==/UserScript==
 

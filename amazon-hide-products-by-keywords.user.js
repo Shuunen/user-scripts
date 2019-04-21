@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Amazon - Hide products by keyword
 // @namespace    https://github.com/Shuunen
-// @version      1.1.2
+// @version      1.1.4
 // @description  Easily hide products from your searches by specifying a block list
 // @author       Romain Racamier-Lafon
 // @match        https://www.amazon.fr/s*
-// @require      https://raw.githubusercontent.com/Shuunen/snippets/master/bookmarklets/utils.js
+// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js
 // @grant        none
 // ==/UserScript==

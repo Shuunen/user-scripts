@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Amazon - Cleaner
 // @namespace    https://github.com/Shuunen
-// @version      1.0.3
+// @version      1.0.5
 // @description  Un-clutter Amazon website
 // @author       Romain Racamier-Lafon
 // @match        https://www.amazon.fr/*
-// @require      https://raw.githubusercontent.com/Shuunen/snippets/master/bookmarklets/utils.js
+// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
 // @grant        none
 // ==/UserScript==
 
