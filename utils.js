@@ -29,10 +29,15 @@ class Shuutils {
   }
 
   readableString (str) {
-    return str.split('').map(letter => {
-      var i = this.accentsIn.indexOf(letter)
-      return i !== -1 ? this.accentsOut[i] : letter
-    }).join('').replace(/(\W|-)/gi, ' ').replace(/\s+/g, ' ')
+    return str.split('') // zoom on letters
+      .map(letter => {
+        var i = this.accentsIn.indexOf(letter)
+        return i !== -1 ? this.accentsOut[i] : letter
+      }) // fix accents
+      .join('') // zoom out, back to a string
+      .replace(/<.+?>/g, ' ') // remove content in tags
+      .replace(/(\W|-)/gi, ' ') // remove non words
+      .replace(/\s+/g, ' ') // replace spaces with single space
   }
 
   debounce (func, wait, immediate) {
