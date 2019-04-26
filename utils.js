@@ -32,7 +32,7 @@ class Shuutils {
     return str.split('').map(letter => {
       var i = this.accentsIn.indexOf(letter)
       return i !== -1 ? this.accentsOut[i] : letter
-    }).join('').replace(/(\W|-)/gi, ' ').replace(/\s+/, ' ')
+    }).join('').replace(/(\W|-)/gi, ' ').replace(/\s+/g, ' ')
   }
 
   debounce (func, wait, immediate) {
