@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dealabs - All in one
 // @namespace    https://github.com/Shuunen
-// @version      1.1.0
+// @version      1.1.1
 // @description  Un-clutter & add filters to Dealabs
 // @author       Romain Racamier-Lafon
 // @match        https://www.dealabs.com/*
@@ -18,7 +18,7 @@
     id: 'dlb-clr',
     filter: '',
     excluders: [],
-    debug: true
+    debug: false
   }
 
   app.excluders = (window.localStorage[app.id + '.filter'] || 'my-keyword, other-keyword').split(',')
@@ -149,7 +149,9 @@
       utils.warn('"' + text.substr(0, 40) + '..."', 'is excluded, it contains : "' + app.excluders[remaining] + '"')
     } else {
       utils.log('"' + text.substr(0, 400) + '..."', 'was not excluded')
-      element.style.backgroundColor = '#f0fbf0'
+      if (app.debug) {
+        element.style.backgroundColor = '#f0fbf0'
+      }
     }
     element.style.opacity = found ? '0.3' : '1'
   }
