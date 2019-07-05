@@ -34,6 +34,14 @@ class Shuutils {
       .replace(/\s+/g, ' ') // replace spaces with single space
   }
 
+  ellipsisWords (strIn, maxWords) {
+    var strOut = strIn.split(' ').splice(0, maxWords).join(' ')
+    if (strOut !== strIn) {
+      strOut += '...'
+    }
+    return strOut
+  }
+
   debounce (func, wait, immediate) {
     var timeout
     return function () {
