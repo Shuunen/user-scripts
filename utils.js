@@ -1,19 +1,12 @@
 /* eslint-disable-next-line no-unused-vars */
 class Shuutils {
   constructor (app) {
-    app = app || {
-      id: 'shu-app',
-      debug: true
-    }
-    this.app = app
+    this.app = Object.apply(app, { id: 'shu-app', debug: true })
     this.accentsIn = 'ÀÁÂÃÄÅĄàáâãäåąßÒÓÔÕÕÖØÓòóôõöøóÈÉÊËĘèéêëęðÇĆçćÐÌÍÎÏìíîïÙÚÛÜùúûüÑŃñńŠŚšśŸÿýŽŻŹžżź'
     this.accentsOut = 'AAAAAAAaaaaaaaBOOOOOOOOoooooooEEEEEeeeeeeCCccDIIIIiiiiUUUUuuuuNNnnSSssYyyZZZzzz'
   }
 
   log (...stuff) {
-    if (!this.app.debug) {
-      return
-    }
     stuff.unshift(this.app.id + ' :')
     console.log.apply(console, stuff)
   }
