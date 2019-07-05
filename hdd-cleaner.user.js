@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         HDD Cleaner
 // @namespace    https://github.com/Shuunen
-// @version      1.1.0
+// @version      1.2.0
 // @description  Remove unwanted hard drives disks
 // @author       Romain Racamier-Lafon
 // @match        https://keepa.com/*
 // @match        https://www.amazon.fr/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/utils.js
+// @match        https://www.materiel.net/disque-dur-interne/*
+// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
 // @grant        none
 // ==/UserScript==
 
@@ -26,15 +27,15 @@
   }
 
   var selectors = {
-    desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
-    product: ['.productContainer', 'div[data-asin]'].join(','),
-    price: ['.productPriceTableTdLargeS', '.a-offscreen'].join(',')
+    desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
+    product: ['.productContainer', 'div[data-asin]', '.c-products-list__item'].join(','),
+    price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base'].join(',')
   }
 
   var regex = {
     sizes: /(\d+)\s?(go|gb|to|tb)\b/gi,
     size: /(\d+)\s?(\w+)/i,
-    price: /(\d+[\\.,]\d+)/
+    price: /(\d+[\\.,€]\d+)/
   }
 
   var utils = new Shuutils(app)
@@ -44,7 +45,6 @@
     if (!matches) {
       return false
     }
-    utils.log(matches)
     let size = 0
     matches.forEach(m => {
       let [, mSize, mUnit] = m.match(regex.size)
@@ -61,11 +61,17 @@
 
   function insertPricePerSize (productElement, descElement, size) {
     const priceElement = utils.findOne(selectors.price, productElement)
+    if (!priceElement) {
+      utils.error('failed at finding price element')
+      return false
+    }
+    utils.log('found price element :', priceElement.textContent)
     const matches = priceElement.textContent.match(regex.price)
     if (matches.length !== 2) {
-      return utils.error('failed at finding price')
+      utils.error('failed at finding price')
+      return false
     }
-    const price = parseFloat(matches[0].replace(',', '.'))
+    const price = parseFloat(matches[0].replace(',', '.').replace('€', '.'))
     const pricePerTo = Math.round(price / (size / 1000))
     let rating = ''
     for (let i = 40; i > 20; i -= 5) {
@@ -74,36 +80,55 @@
       }
     }
     rating = rating + (rating.length ? ' ' : '')
+    utils.log('price found :', pricePerTo, '€ per To')
     descElement.textContent = '( ' + rating + pricePerTo + '€ / to ) - ' + descElement.textContent
+    return true
   }
 
   function checkItems () {
     utils.findAll(selectors.desc, document, true).forEach(descElement => {
-      descElement.classList.add(cls.mark)
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
+      // first close last opened console group, else closing nothing without throwing error
+      console.groupEnd()
+      console.groupCollapsed(utils.ellipsisWords(text, 15))
       const size = getSize(text)
-      const sizeIsOk = (app.minSize <= size) && (size <= app.maxSize)
-      const productElement = descElement.closest(selectors.product)
-      if (!productElement) {
-        return utils.error('fail at finding closest product')
-      }
-      if (sizeIsOk) {
-        insertPricePerSize(productElement, descElement, size)
+      if (!size) {
+        utils.error('fail at finding size')
         return
       }
-      if (!app.debug) {
-        productElement.remove()
+      utils.log('size found :', size, 'Go')
+      const sizeIsOk = (app.minSize <= size) && (size <= app.maxSize)
+      utils.log('size is', sizeIsOk ? 'good' : 'INVALID')
+      const productElement = descElement.closest(selectors.product)
+      if (!productElement) {
+        utils.error('fail at finding closest product')
+        return
       }
-      productElement.style = 'background-color: lightcoral; opacity: 0.6;'
+      let markItem = true
+      if (sizeIsOk) {
+        markItem = insertPricePerSize(productElement, descElement, size)
+      } else {
+        productElement.style = app.debug ? 'background-color: lightcoral; opacity: 0.6;' : 'display: none;'
+      }
+      if (markItem) {
+        // only add mark class if check completed
+        descElement.classList.add(cls.mark)
+        utils.log('check complete, element marked')
+      }
     })
+    // if at least one iteration above, there's an open console group, else closing nothing without throwing error
+    console.groupEnd()
   }
 
   function process () {
     utils.log('processing')
+    console.log('hdd-clr : app debug active ?', app.debug)
     checkItems()
   }
 
   const processDebounced = utils.debounce(process, 500)
 
   document.addEventListener('scroll', processDebounced)
+
+  setTimeout(processDebounced, 1000)
 })()
