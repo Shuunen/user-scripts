@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HDD Cleaner
 // @namespace    https://github.com/Shuunen
-// @version      1.2.0
+// @version      1.2.1
 // @description  Remove unwanted hard drives disks
 // @author       Romain Racamier-Lafon
 // @match        https://keepa.com/*
