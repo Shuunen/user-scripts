@@ -7,6 +7,7 @@
 // @match        https://keepa.com/*
 // @match        https://www.amazon.fr/*
 // @match        https://www.materiel.net/disque-dur-interne/*
+// @match        https://www.ldlc.com/informatique/pieces-informatique/disque-dur-interne/*
 // @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
 // @grant        none
 // ==/UserScript==
@@ -27,9 +28,9 @@
   }
 
   var selectors = {
-    desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
-    product: ['.productContainer', 'div[data-asin]', '.c-products-list__item'].join(','),
-    price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base'].join(',')
+    desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
+    product: ['.productContainer', 'div[data-asin]', '.c-products-list__item', '.pdt-item'].join(','),
+    price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base', '.price > .price'].join(',')
   }
 
   var regex = {
