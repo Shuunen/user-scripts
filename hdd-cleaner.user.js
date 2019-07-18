@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         HDD Cleaner
 // @namespace    https://github.com/Shuunen
-// @version      1.2.1
+// @version      1.2.2
 // @description  Remove unwanted hard drives disks
 // @author       Romain Racamier-Lafon
 // @match        https://keepa.com/*
 // @match        https://www.amazon.fr/*
 // @match        https://www.amazon.co.uk/*
 // @match        https://www.dealabs.com/*
+// @match        https://www.topachat.com/*
 // @match        https://www.materiel.net/disque-dur-interne/*
 // @match        https://www.ldlc.com/informatique/pieces-informatique/disque-dur-interne/*
 // @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
@@ -30,9 +31,9 @@
   }
 
   var selectors = {
-    desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
-    product: ['.productContainer', 'div[data-asin]', '.c-products-list__item', '.pdt-item', 'article.thread'].join(','),
-    price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base', '.price > .price', '.thread-price'].join(',')
+    desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
+    product: ['.productContainer', 'div[data-asin]', '.c-products-list__item', '.pdt-item', 'article.thread', 'article.grille-produit'].join(','),
+    price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base', '.price > .price', '.thread-price', '[itemprop="price"]'].join(',')
   }
 
   var regex = {
