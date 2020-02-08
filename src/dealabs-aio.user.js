@@ -5,7 +5,7 @@
 // @description  Un-clutter & add filters to Dealabs
 // @author       Romain Racamier-Lafon
 // @match        https://www.dealabs.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js
 // @grant none
 // ==/UserScript==
@@ -70,7 +70,7 @@
             padding-right: 10px;
         }
         .threadGrid {
-            grid-template-rows: auto; 
+            grid-template-rows: auto;
         }
         .threadGrid-headerMeta > div {
           padding-top: 1em;

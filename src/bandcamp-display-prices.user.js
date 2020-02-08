@@ -5,7 +5,7 @@
 // @description  Simply display a price tag on each item in the wishlist
 // @author       Romain Racamier-Lafon
 // @match        https://bandcamp.com/*/wishlist
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
+// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
 // @grant        none
 // ==/UserScript==
 

@@ -11,7 +11,7 @@
 // @match        https://www.topachat.com/*
 // @match        https://www.materiel.net/disque-dur-interne/*
 // @match        https://www.ldlc.com/informatique/pieces-informatique/disque-dur-interne/*
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
+// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
 // @grant        none
 // ==/UserScript==
 
