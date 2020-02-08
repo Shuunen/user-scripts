@@ -18,18 +18,18 @@
     id: 'dlb-clr',
     filter: '',
     excluders: [],
-    debug: false
+    debug: false,
   }
 
   app.excluders = (window.localStorage[app.id + '.filter'] || 'my-keyword, other-keyword').split(',')
 
   const selectors = {
     dealList: '.js-threadList',
-    deal: '.thread--type-list'
+    deal: '.thread--type-list',
   }
 
   const cls = {
-    filter: app.id + '-filter'
+    filter: app.id + '-filter',
   }
 
   const uselessElements = {
@@ -39,11 +39,11 @@
     flash: '.cept-threadUpdate',
     buttons: '.threadGrid-body > .boxAlign-ai--all-c',
     showMore: '.thread-link.linkPlain.text--b.overflow--wrap-off',
-    data: '.threadGrid-footerMeta, .metaRibbon'
+    data: '.threadGrid-footerMeta, .metaRibbon',
   }
 
   const uselessClasses = {
-    descriptions: '.cept-description-container'
+    descriptions: '.cept-description-container',
   }
 
   const utils = new Shuutils(app)

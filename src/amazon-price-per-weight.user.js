@@ -20,7 +20,7 @@
     hideStuff: false,
     showDebug: false,
     injectRealPrice: true,
-    sortProducts: true
+    sortProducts: true,
   }
 
   app.debug = app.processOne
@@ -29,7 +29,7 @@
     handled: app.id + '-handled',
     avoided: app.id + '-avoided',
     debug: app.id + '-debug',
-    pricePer: app.id + '-price-per'
+    pricePer: app.id + '-price-per',
   }
 
   var selectors = {
@@ -41,7 +41,7 @@
     debugContainer: '.a-fixed-left-grid-col.a-col-right .a-row:not(.a-spacing-small) .a-column.a-span7',
     debug: '.' + cls.debug,
     pantry: 'img.sprPantry',
-    stuffToHide: '.s-result-item .a-column.a-span7 .a-row:not(.' + cls.debug + ')'
+    stuffToHide: '.s-result-item .a-column.a-span7 .a-row:not(.' + cls.debug + ')',
   }
 
   selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
@@ -50,13 +50,13 @@
     price: /EUR (\d+,\d\d)/i,
     weight: /(\d+)\s?(g|-)/i,
     bulk: /Lot de (\d+)/i,
-    pricePer: /EUR (\d+,\d\d)\/(\w+)(\s\w+)?/i
+    pricePer: /EUR (\d+,\d\d)\/(\w+)(\s\w+)?/i,
   }
 
   var templates = {
     debug: '<div class="a-row ' + cls.debug + '"><div class="a-column a-span12">\n    <p class="a-spacing-micro">Price  : {{price}} \u20AC</p>\n    <p class="a-spacing-micro">Weight : {{weight}} {{unit}}</p>    \n    <p class="a-spacing-small">Bulk   : {{bulk}}</p>\n    <p class="a-spacing-micro a-size-base a-color-price s-price a-text-bold">P/Kg  : {{pricePerKilo}} \u20AC/kg</p>\n    </div></div>',
     price: '<span class="s-price a-text-bold">EUR {{price}}</span>',
-    pricePerKilo: '<span class="a-color-price s-price a-text-bold ' + cls.pricePer + '">EUR {{pricePerKilo}}/kg</span>'
+    pricePerKilo: '<span class="a-color-price s-price a-text-bold ' + cls.pricePer + '">EUR {{pricePerKilo}}/kg</span>',
   }
 
   var utils = new Shuutils(app)
@@ -102,7 +102,7 @@
     // utils.log('found weight matches & unit :', matches)
     var data = {
       weight: 0,
-      unit: ''
+      unit: '',
     }
     if (matches && matches.length === 3) {
       data.weight = matches[1]
@@ -131,7 +131,7 @@
       price: 0,
       weight: 0,
       unit: '',
-      bulk: 1
+      bulk: 1,
     }
     if (matches && matches.length === 4) {
       data.price = priceStrToFloat(matches[1])

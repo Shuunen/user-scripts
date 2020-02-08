@@ -29,6 +29,7 @@ class Shuutils {
   }
 }
 
+/*
 class AmazonProductBlock {
 
 }
@@ -44,35 +45,31 @@ class AmazonProductPage {
 class AmazonPage {
 
 }
+*/
 
 class AmazonAIO extends Shuutils {
-
-  id = 'amz-aio'
-  debug = true
-
-  constructor() {
+  constructor () {
     super()
     this.log('constructor')
+    this.id = 'amz-aio'
+    this.debug = true
     this.filter = new AmazonFilter()
     // this.page = new AmazonPage()
   }
 }
 
-
 class AmazonFilter extends Shuutils {
-
-  id = 'amz-aio-filter'
-  debug = true
-  excluders = []
-
-  constructor() {
+  constructor () {
     super()
     this.log('constructor')
+    this.id = 'amz-aio-filter'
+    this.debug = true
     this.excluders = (window.localStorage[this.id + '.excluders'] || 'my-keyword, other-keyword').split(',')
   }
 }
 
 (function () {
   console.log('creating instance...')
-  new AmazonAIO();
+  const instance = new AmazonAIO()
+  console.log('AmazonAIO start, here is the instance', instance)
 })()

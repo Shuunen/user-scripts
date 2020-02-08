@@ -15,11 +15,11 @@
 
   var app = {
     id: 'amz-clr',
-    debug: false
+    debug: false,
   }
 
   var selectors = {
-    productLine: '.s-item-container'
+    productLine: '.s-item-container',
   }
 
   var uselessSelectors = {
@@ -31,7 +31,7 @@
     dashButtons: '#digitalDashHighProminence_feature_div',
     sharing: '#tellAFriendBox_feature_div',
     buyPack: '#sims-fbt',
-    comparison: '#HLCXComparisonWidget_feature_div'
+    comparison: '#HLCXComparisonWidget_feature_div',
   }
 
   var utils = new Shuutils(app)

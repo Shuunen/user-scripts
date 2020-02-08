@@ -158,7 +158,7 @@
   }
 
   function getNextData () {
-    let items = $(itemSelector + ':visible:not(.abw-with-data):lt(' + itemsPerBatch + ')')
+    const items = $(itemSelector + ':visible:not(.abw-with-data):lt(' + itemsPerBatch + ')')
     if (items.length) {
       console.log('getting next', items.length, 'items data')
       items.each((index, element) => {

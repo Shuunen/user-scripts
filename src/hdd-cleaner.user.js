@@ -23,23 +23,23 @@
     id: 'hdd-clr',
     debug: false,
     minSize: 4000, // in Gb or Go
-    maxSize: 12000
+    maxSize: 12000,
   }
 
   var cls = {
-    mark: app.id + '-mark'
+    mark: app.id + '-mark',
   }
 
   var selectors = {
     desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
     product: ['.productContainer', 'div[data-asin]', '.c-products-list__item', '.pdt-item', 'article.thread', 'article.grille-produit'].join(','),
-    price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base', '.price > .price', '.thread-price', '[itemprop="price"]'].join(',')
+    price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base', '.price > .price', '.thread-price', '[itemprop="price"]'].join(','),
   }
 
   var regex = {
     sizes: /(\d+)\s?(go|gb|to|tb)\b/gi,
     size: /(\d+)\s?(\w+)/i,
-    price: /(\d+[\\.,€]\d+)/
+    price: /(\d+[\\.,€]\d+)/,
   }
 
   var utils = new Shuutils(app)

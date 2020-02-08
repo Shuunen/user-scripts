@@ -21,7 +21,7 @@
     excluders: [],
     suggestions: {},
     minLengthSuggestion: 2,
-    maxSuggestions: 7
+    maxSuggestions: 7,
   }
 
   app.excluders = (window.localStorage[app.id + '.filter'] || 'my-keyword, other-keyword').split(',')
@@ -34,13 +34,13 @@
     plus: app.id + '-plus',
     suggestion: app.id + '-suggestion',
     suggestions: app.id + '-suggestions',
-    filter: app.id + '-filter'
+    filter: app.id + '-filter',
   }
 
   var selectors = {
     container: ['#search > .sg-row > div:first-child > .sg-col-inner', '#leftNavContainer'].join(','),
     product: 'div[data-asin]',
-    productTitle: ['a.s-access-detail-page > h2.s-access-title', '.a-size-medium.a-color-base.a-text-normal'].join(',')
+    productTitle: ['a.s-access-detail-page > h2.s-access-title', '.a-size-medium.a-color-base.a-text-normal'].join(','),
   }
 
   var utils = new Shuutils(app)
@@ -82,7 +82,7 @@
   function addTitleToSuggestions (title) {
     title.split(' ').filter(word => word.length > app.minLengthSuggestion).forEach(word => {
       // add the word if needed & count the occurrence
-      if (!app.suggestions.hasOwnProperty(word)) {
+      if (!app.suggestions[word]) {
         app.suggestions[word] = 0
       }
       app.suggestions[word]++
