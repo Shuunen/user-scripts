@@ -1,11 +1,13 @@
-# User scripts
+# User Scripts
 
 [![GitHub license](https://img.shields.io/github/license/shuunen/user-scripts.svg?color=informational)](https://github.com/Shuunen/user-scripts/blob/master/LICENSE)
 
+[![Build Status](https://travis-ci.org/Shuunen/user-scripts.svg?branch=master)](https://travis-ci.org/Shuunen/user-scripts)
 [![David](https://img.shields.io/david/shuunen/user-scripts.svg)](https://david-dm.org/shuunen/user-scripts)
-[![LGTM Grade](https://img.shields.io/lgtm/grade/javascript/github/Shuunen/user-scripts.svg)](https://lgtm.com/projects/g/Shuunen/user-scripts/)
+[![LGTM Grade](https://img.shields.io/lgtm/grade/javascript/github/Shuunen/user-scripts.svg)](https://lgtm.com/projects/g/Shuunen/user-scripts)
+[![Scrutinizer Score](https://scrutinizer-ci.com/g/Shuunen/user-scripts/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Shuunen/user-scripts)
 
-> Scripts I made to enhance my daily web experience.
+> Personal heavily opinionated script I make to enhance my daily web experience.
 
 ## Amazon - Clearer
 
@@ -22,3 +24,4 @@
 ## Thanks
 
 - [Shields.io](https://shields.io) : for the nice badges on top of this readme
+- [Travis-ci.org](https://travis-ci.org) : for providing free continuous deployments
