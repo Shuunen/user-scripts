@@ -8,6 +8,8 @@
 // @version     1.0
 // ==/UserScript==
 
+/* global fetch */
+
 class GitlabMr {
   constructor () {
     var processDebounced = this.debounce(this.process.bind(this), 500)

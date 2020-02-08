@@ -8,10 +8,12 @@
 // @version     1.0
 // ==/UserScript==
 
+/* global fetch */
+
 class LBCEnhanced {
   get config () {
     return {
-      processOne: true
+      processOne: true,
     }
   }
 

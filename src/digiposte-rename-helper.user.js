@@ -50,8 +50,8 @@
   var triggerChange = function (el) {
     el.dispatchEvent(new KeyboardEvent('change'))
     el.dispatchEvent(new Event('input', {
-      'bubbles': true,
-      'cancelable': true
+      bubbles: true,
+      cancelable: true,
     }))
   }
 

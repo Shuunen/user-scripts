@@ -14,12 +14,12 @@
   'use strict'
 
   var app = {
-    id: 'gp-ed'
+    id: 'gp-ed',
   }
 
   var selectors = {
     trash: '[data-delete-origin] button',
-    confirmBtn: 'button[autofocus]'
+    confirmBtn: 'button[autofocus]',
   }
 
   var utils = new Shuutils(app)

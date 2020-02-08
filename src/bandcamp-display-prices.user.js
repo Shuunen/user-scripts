@@ -15,16 +15,16 @@
 
   var app = {
     id: 'bcp-dp',
-    debug: false
+    debug: false,
   }
 
   var cls = {
     price: app.id + '-price',
-    handled: app.id + '-handled'
+    handled: app.id + '-handled',
   }
 
   var selectors = {
-    product: 'li[data-trackid]:not(.' + cls.handled + ')'
+    product: 'li[data-trackid]:not(.' + cls.handled + ')',
   }
 
   var utils = new Shuutils(app)
@@ -52,7 +52,7 @@
       var trackid = parseInt(product.getAttribute('data-trackid'))
       if (trackid) {
         utils.log('adding price for', trackid)
-        if (!app.tracks.hasOwnProperty(trackid)) {
+        if (!app.tracks[trackid]) {
           throw new Error('failed at gettting track price')
         }
         var price = app.tracks[trackid]
@@ -68,10 +68,10 @@
     var added = 0
     list.map(function (track) {
       var trackid = track.track_id
-      if (!app.tracks.hasOwnProperty(trackid)) {
+      if (!app.tracks[trackid]) {
         app.tracks[trackid] = {
           value: Math.round(track.price),
-          currency: track.currency
+          currency: track.currency,
         }
         added++
       }
@@ -83,13 +83,13 @@
     window.fetch('https://bandcamp.com/api/fancollection/1/wishlist_items', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         fan_id: app.userid,
-        older_than_token: app.token
-      })
+        older_than_token: app.token,
+      }),
     }).then(function (json) {
       return json.json()
     }).then(function (data) {
