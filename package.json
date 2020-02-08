@@ -1,28 +1,39 @@
 {
-  "author": "",
-  "bugs": {
-    "url": "https://github.com/Shuunen/user-scripts/issues"
-  },
-  "description": "[![GitHub license](https://img.shields.io/github/license/shuunen/user-scripts.svg?color=informational)](https://github.com/Shuunen/user-scripts/blob/master/LICENSE)",
+  "author": "Romain Racamier-Lafon <romain.racamier@gmail.com>",
+  "bugs": "https://github.com/Shuunen/user-scripts/issues",
+  "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint": "6.8.0",
+    "eslint-config-standard": "14.1.0",
+    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-node": "11.0.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-standard": "4.0.1"
   },
-  "homepage": "https://github.com/Shuunen/user-scripts#readme",
-  "keywords": [],
-  "license": "ISC",
-  "main": "amazon-aio.user.js",
-  "name": "user-scripts",
+  "files": [
+    "src",
+    "*"
+  ],
+  "homepage": "https://github.com/Shuunen/user-scripts",
+  "keywords": [
+    "user-script"
+  ],
+  "license": "GPL-3.0",
+  "name": "@shuunen/user-scripts",
+  "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shuunen/user-scripts.git"
+    "url": "https://github.com/Shuunen/user-scripts.git"
   },
   "scripts": {
-    "lint": "echo \"Error: no test specified\" && exit 1"
+    "check": "npx repo-check",
+    "ci": "npm run test",
+    "dev": "npm start",
+    "lint": "eslint --fix --ignore-path .gitignore --ext .js,.html .",
+    "postversion": "git push && git push --tags",
+    "start": "npm run test",
+    "test": "npm run lint && npm run check",
+    "update": "npx npm-check-updates -u"
   },
-  "version": "1.0.0"
+  "version": "0.0.1"
 }
