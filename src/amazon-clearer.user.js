@@ -5,7 +5,7 @@
 // @description  Un-clutter Amazon website
 // @author       Romain Racamier-Lafon
 // @match        https://www.amazon.fr/*
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
+// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
 // @grant        none
 // ==/UserScript==
 

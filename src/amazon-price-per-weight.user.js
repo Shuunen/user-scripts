@@ -5,7 +5,7 @@
 // @description  Display price per weight & sort ascending
 // @author       Romain Racamier-Lafon
 // @match        https://*.amazon.fr/*
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/utils.js
+// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
 // @grant        none
 // ==/UserScript==
 
