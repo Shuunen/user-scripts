@@ -44,9 +44,9 @@ class LBCEnhanced {
   }
 
   findMatch (str, regex, nbMatch) {
-    const matches = str.match(regex)
-    if (!matches || matches.length !== nbMatch) {
-      console.error(`findMatch found ${matches.length} matche(s) instead of ${nbMatch} for this regex :`, regex)
+    const matches = str.match(regex) || []
+    if (matches.length !== nbMatch) {
+      console.warn(`findMatch found ${matches.length} matche(s) instead of ${nbMatch} for this regex :`, regex)
       return null
     }
     const result = matches[nbMatch - 1]
@@ -57,28 +57,47 @@ class LBCEnhanced {
     return result
   }
 
+  enhanceListItemImmo (el, link, html) {
+    // TODO : get price per surface
+    var energyClass = this.findMatch(html, /criteria_item_energy_rate.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/, 2)
+    var gesClass = this.findMatch(html, /criteria_item_ges.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/, 2)
+    console.table({ title: link.title, energyClass, gesClass })
+  }
+
   async enhanceListItem (el) {
     el.classList.add('processed')
     var link = el.querySelector('a')
-    var title = link.title
     var html = await fetch(link.href).then(r => r.text())
-    var energyClass = this.findMatch(html, /<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/, 2)
-    console.table({ title, energyClass })
+    switch (this.context) {
+      case 'immo':
+        return this.enhanceListItemImmo(el, link, html)
+      default:
+        break
+    }
   }
 
   enhanceListing () {
     var items = document.querySelectorAll('[itemtype="http://schema.org/Offer"]:not(.processed)')
-    if (!items) return
+    if (!items || !items.length) return
     if (this.config.processOne) {
       return this.enhanceListItem(items[0])
     }
     items.forEach(item => this.enhanceListItem(item))
   }
 
+  detectContext () {
+    const title = document.querySelector('h1').textContent
+    this.context = 'unknown'
+    if (title.includes('Ventes immobilières')) {
+      this.context = 'immo'
+    }
+  }
+
   process () {
+    this.detectContext()
     this.enhanceListing()
   }
 }
 
 var instance = new LBCEnhanced()
-console.log('LBCEnhanced start, here is the instance', instance)
+console.log('LBCEnhanced 3 start, here is the instance', instance)
