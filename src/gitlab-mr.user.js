@@ -5,7 +5,7 @@
 // @author      Romain Racamier-Lafon
 // @match       https://sd-gitlab.cm-cic.fr/*
 // @grant       none
-// @version     1.0
+// @version     1.1
 // ==/UserScript==
 
 /* global fetch */
@@ -15,6 +15,10 @@ class GitlabMr {
     var processDebounced = this.debounce(this.process.bind(this), 500)
     setTimeout(() => processDebounced(), 500)
     document.addEventListener('scroll', processDebounced)
+  }
+
+  async sleep (ms) {
+    return new Promise(resolve => setTimeout(resolve, (ms || 1000)))
   }
 
   debounce (func, wait, immediate) {
@@ -37,31 +41,47 @@ class GitlabMr {
     }
   }
 
-  enhanceLinks () {
+  async enhanceLinks () {
     var link = document.querySelector('.dashboard-shortcuts-merge_requests:not(.processed)')
     if (!link) return
     link.classList.add('processed')
     var text = document.createElement('div')
     text.classList.add('label')
-    text.textContent = 'MR affectée(s)'
     link.insertAdjacentElement('afterBegin', text)
-    link.removeAttribute('data-original-title')
-    var newListElement = link.parentElement.cloneNode(true)
-    var newLink = newListElement.firstChild
-    var newBadge = newLink.querySelector('.badge')
-    var newLinkUrl = link.href.replace('assignee_username', 'author_username') + '&state=opened'
-    newLink.href = newLinkUrl
-    newLink.querySelector('.label').textContent = 'MR ouverte(s)'
-    newBadge.innerHTML = '&nbsp;'
-    link.parentElement.insertAdjacentElement('afterEnd', newListElement)
-    fetch(newLinkUrl).then(r => r.text()).then(html => {
-      var nb = html.match(/class="merge-request" data-id/g).length
-      newBadge.textContent = nb && nb > 0 ? nb : ''
+    link.parentElement.style.display = 'none'
+    await this.addButton(link.parentElement, 'MR affectée(s)', link.href.replace('assignee_username', 'wip=no&assignee_username'))
+    await this.sleep(300)
+    await this.addButton(link.parentElement, 'MR ouverte(s)', link.href.replace('assignee_username', 'author_username') + '&state=opened')
+  }
+
+  async addButton (parent, label, href) {
+    var btn = parent.cloneNode(true)
+    var link = btn.firstChild
+    var badge = link.querySelector('.badge')
+    btn.style.display = ''
+    badge.innerHTML = '&nbsp;'
+    link.href = href
+    link.style.height = '28px'
+    link.style.marginTop = '7px'
+    link.style.marginRight = '2px'
+    link.querySelector('.label').textContent = label
+    parent.insertAdjacentElement('afterEnd', btn)
+    fetch(href).then(r => r.text()).then(html => {
+      var matches = html.match(/class="merge-request" data-id/g)
+      var nb = matches ? matches.length : 0
+      badge.textContent = nb
+      if (nb < 1) badge.style.backgroundColor = '#1aaa55'
     })
+    return btn
+  }
+
+  hideStuff () {
+    document.querySelectorAll('.shortcuts-todos, .nav-item.header-help').forEach(el => el.remove())
   }
 
   process () {
     this.enhanceLinks()
+    this.hideStuff()
   }
 }
 
