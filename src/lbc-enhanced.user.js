@@ -33,7 +33,6 @@ class Store {
   }
 
   async set (key = '', data) {
-    console.log(`storing ${key}...`, data)
     this.provider[this.fullKey(key)] = typeof data === 'object' ? JSON.stringify(data) : data
     return data
   }
@@ -44,10 +43,23 @@ class Store {
 }
 
 const store = new Store(localStorage)
+const colors = {
+  A: '#379932',
+  B: '#3acc31',
+  C: '#cdfd33',
+  D: '#fbea49',
+  E: '#fccc2f',
+  F: '#fb9c34',
+  G: '#fa1c1f',
+  error: '#fa1c1f',
+  success: '#379932',
+  primary: '#f56b2a',
+}
 
 class LBCEnhanced {
   get config () {
     return {
+      debug: true,
       processOne: false,
       delayBetweenProcess: 500,
     }
@@ -68,6 +80,19 @@ class LBCEnhanced {
     this.hidden = await store.get('hidden', [])
     await this.sleep(500)
     this.processDebounced()
+  }
+
+  log (...stuff) {
+    if (this.config.debug) return
+    console.log.apply(console, stuff)
+  }
+
+  warn (...stuff) {
+    console.warn.apply(console, stuff)
+  }
+
+  error (...stuff) {
+    console.error.apply(console, stuff)
   }
 
   debounce (func, wait = 500, immediate = false) {
@@ -93,31 +118,65 @@ class LBCEnhanced {
   findMatch (str = '', regex = new RegExp(), nbMatch = 2) {
     const matches = str.match(regex) || []
     if (matches.length !== nbMatch) {
-      console.warn(`findMatch found ${matches.length} matche(s) instead of ${nbMatch} for this regex :`, regex)
+      this.warn(`findMatch found ${matches.length} matche(s) instead of ${nbMatch} for this regex :`, regex)
       return null
     }
     const result = matches[nbMatch - 1]
     if (!result) {
-      console.error('findMatch failed to return the correct index in matches :', matches)
+      this.error('findMatch failed to return the correct index in matches :', matches)
       return null
     }
     return result
   }
 
   enhanceListItemImmo (el = DomEl, html = '') {
-    // TODO : get price per surface
+    this.log('enhanceListItemImmo')
     var energyClass = this.findMatch(html, /criteria_item_energy_rate.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/)
     var gesClass = this.findMatch(html, /criteria_item_ges.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/)
     if (!energyClass || !['A', 'B', 'C'].includes(energyClass)) this.hideListItem(el, `Classe énergétique non-renseignée ou naze : ${energyClass}`)
     if (gesClass && !['A', 'B', 'C', 'D'].includes(gesClass)) this.hideListItem(el, `Classe GES pourrie : ${gesClass}`)
-    console.table({ title: el.link.title, link: el.link.href, energyClass, gesClass })
+    this.addIconsForClasses(el, [energyClass, gesClass])
+    var meters = this.findMatch(html, /surface[<\\\s\S">]+?>(\d+)/i) || 0
+    if (meters === 0) meters = this.findMatch(html, /(\d+)[\s]?m²/i) || 0
+    var price = this.findMatch(html, /(\d+)<![\s\S"]+?>Charges comprises/) || 0
+    this.addIcon(el, `${meters} m²`, 106, 8)
+    if (meters > 0 && price > 0) this.addIconsForPricePerMeter(el, Math.round(price / meters))
+    var forbiddenKeywords = 'sans asenseur,sans ascenseur'.split(',').sort()
+    var founds = forbiddenKeywords.filter(keyword => html.toLowerCase().includes(keyword))
+    if (founds) this.hideListItem(el, `Mots clé excluant trouvés : ${founds.join(', ')}`)
+    this.findKeywords(el, html.toLowerCase(), 'calme,rénové,jardin,placards,petite résidence,pas de frais,stationnement,double vitrage,petite copropriété,proximité du parc,parking,cave,ascenseur,dernier étage,lumineux,impasse,tram,arbres,champs,vis à vis'.split(',').sort())
+  }
+
+  findKeywords (el = DomEl, html = '', keywords) {
+    var founds = keywords.filter(keyword => html.includes(keyword))
+    var icon = this.addIcon(el, founds.join(', '), 0)
+    var width = 300
+    icon.style.right = `-${width}px`
+    icon.style.width = `${width}px`
+    icon.style.height = '100%'
+    icon.style.textAlign = 'left'
+    icon.style.backgroundColor = '#f1f1f1'
+  }
+
+  addIconsForPricePerMeter (el = DomEl, price) {
+    var icon = this.addIcon(el, `${price} € / m²`, 129, 8)
+    icon.style.color = (price <= 9 ? colors.success : (price > 12 ? colors.error : 'black'))
+    icon.style.padding = '0 2px'
   }
 
   /**
-   * @param {string} cls La classe énergétique ou GES de A à G
+   * @param {Array} list La liste des classe énergétique ou GES de A à G
    */
-  addIconForClass (el, cls = '') {
-
+  addIconsForClasses (el = DomEl, list = ['?', '?']) {
+    var top = 81
+    var right = 15
+    list.forEach(cls => {
+      var icon = this.addIcon(el, cls, top, right)
+      icon.style.backgroundColor = colors[cls]
+      icon.style.padding = '0 2px'
+      icon.style.fontSize = '20px'
+      right += 24
+    })
   }
 
   addIcon (el = DomEl, icon = '?', top = 10, right = 10, callback = null) {
@@ -125,14 +184,14 @@ class LBCEnhanced {
     btn.textContent = icon
     btn.style = `background: none;border: 0px;font-size: 24px;position: absolute;top: ${top}px;right: ${right}px;`
     el.appendChild(btn)
-    if (!callback) return
+    if (!callback) return btn
     btn.addEventListener('click', () => callback.bind(this)(el))
     return btn
   }
 
   async hideListItem (el = DomEl, message = '') {
-    if (message.length) console.log(message, '=> hiding', el.link.href)
-    else console.log('hiding', el.link.href)
+    if (message.length) this.log(message, '=> hiding', el.link.href)
+    else this.log('hiding', el.link.href)
     if (this.hidden.includes(el.id)) return
     this.hidden.push(el.id)
     store.set('hidden', this.hidden)
@@ -172,7 +231,7 @@ class LBCEnhanced {
   detectContext () {
     const title = document.querySelector('h1').textContent
     this.context = 'unknown'
-    if (title.includes('Ventes immobilières')) {
+    if (title.includes('immobilières')) {
       this.context = 'immo'
     }
   }
@@ -184,4 +243,4 @@ class LBCEnhanced {
 }
 
 var instance = new LBCEnhanced()
-console.log('LBCEnhanced start, here is the instance :', instance)
+instance.log('LBCEnhanced 3 start, here is the instance :', instance)
