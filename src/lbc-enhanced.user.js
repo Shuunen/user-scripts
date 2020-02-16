@@ -61,7 +61,7 @@ class LBCEnhanced {
     return {
       debug: true,
       processOne: false,
-      delayBetweenProcess: 500,
+      delayBetweenProcess: 700,
     }
   }
 
@@ -129,7 +129,7 @@ class LBCEnhanced {
     return result
   }
 
-  enhanceListItemImmo (el = DomEl, html = '') {
+  async enhanceListItemImmo (el = DomEl, html = '') {
     this.log('enhanceListItemImmo')
     var energyClass = this.findMatch(html, /criteria_item_energy_rate.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/)
     var gesClass = this.findMatch(html, /criteria_item_ges.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/)
@@ -143,7 +143,7 @@ class LBCEnhanced {
     if (meters > 0 && price > 0) this.addIconsForPricePerMeter(el, Math.round(price / meters))
     var forbiddenKeywords = 'sans asenseur,sans ascenseur'.split(',').sort()
     var founds = forbiddenKeywords.filter(keyword => html.toLowerCase().includes(keyword))
-    if (founds) this.hideListItem(el, `Mots clé excluant trouvés : ${founds.join(', ')}`)
+    if (founds.length) this.hideListItem(el, `Mots clé excluant trouvés : ${founds.join(', ')}`)
     this.findKeywords(el, html.toLowerCase(), 'calme,rénové,jardin,placards,petite résidence,pas de frais,stationnement,double vitrage,petite copropriété,proximité du parc,parking,cave,ascenseur,dernier étage,lumineux,impasse,tram,arbres,champs,vis à vis'.split(',').sort())
   }
 
@@ -209,12 +209,7 @@ class LBCEnhanced {
     if (this.hidden.includes(el.id)) return (el.style.display = 'none')
     var html = await fetch(el.link.href).then(r => r.text())
     this.enhanceListItemGeneric(el, html)
-    switch (this.context) {
-      case 'immo':
-        return this.enhanceListItemImmo(el, html)
-      default:
-        break
-    }
+    if (this.context === 'immo') await this.enhanceListItemImmo(el, html)
     await this.sleep(this.config.delayBetweenProcess)
   }
 
