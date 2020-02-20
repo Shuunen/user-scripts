@@ -5,7 +5,7 @@
 // @author      Romain Racamier-Lafon
 // @match       https://www.leboncoin.fr/*
 // @grant       none
-// @version     1.0
+// @version     1.1
 // ==/UserScript==
 
 /* global fetch, localStorage */
@@ -133,7 +133,7 @@ class LBCEnhanced {
     this.log('enhanceListItemImmo')
     var energyClass = this.findMatch(html, /criteria_item_energy_rate.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/)
     var gesClass = this.findMatch(html, /criteria_item_ges.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/)
-    if (!energyClass || !['A', 'B', 'C'].includes(energyClass)) this.hideListItem(el, `Classe énergétique non-renseignée ou naze : ${energyClass}`)
+    if (energyClass && !['A', 'B', 'C'].includes(energyClass)) this.hideListItem(el, `Classe énergétique non-renseignée ou naze : ${energyClass}`)
     if (gesClass && !['A', 'B', 'C', 'D'].includes(gesClass)) this.hideListItem(el, `Classe GES pourrie : ${gesClass}`)
     this.addIconsForClasses(el, [energyClass, gesClass])
     var meters = this.findMatch(html, /surface[<\\\s\S">]+?>(\d+)/i) || 0
