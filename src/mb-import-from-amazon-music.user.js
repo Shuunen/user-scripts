@@ -20,7 +20,7 @@ function mbImport () {
   const details = textFromSelector('#productDetailsTable')
   const data = {
     app: {
-      id: 'mb-import-from-amz-music',
+      id: 'mb-import-from-amazon-music',
       title: 'Amazon to MB',
     },
     title: textFromSelector('[data-feature-name="dmusicProductTitle"]'),
