@@ -27,7 +27,7 @@ function mbImport () {
     title: textFromSelector('h1'),
     artist: textFromSelector('a[href^="/artist/"]'),
     date: { year: 0, month: 0, day: 0 },
-    label: (textFromSelector('.copyrights p').match(/\d{4}\s(\w+)/) || [])[1] || '',
+    label: (textFromSelector('.copyrights p').match(/\d{4}\s(.+)/) || [])[1] || '',
     url: document.location.href,
     urlType: '85', // music streaming link
     tracks: getTracks(),
