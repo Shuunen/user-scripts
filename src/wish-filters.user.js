@@ -2,7 +2,7 @@
 // @name         Wish.com - Price filter & more
 // @namespace    https://github.com/Shuunen
 // @version      5.4.0
-// @description  Filtering by min/max price, allow hidding nsfw products, see reviews
+// @description  Filtering by min/max price, allow hiding nsfw products, see reviews
 // @author       Romain Racamier-Lafon
 // @match        https://*.wish.com/*
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js
@@ -27,16 +27,16 @@
   var itemPriceSelector = '[class^="FeedItemV2__ActualPrice"]'
   var itemDetailsSelector = '[class^="FeedItemV2__Row2"]'
 
-  function debounce (func, wait, immediate) {
+  function debounce (func, wait) {
     var timeout
     return function () {
       var context = this
       var args = arguments
       var later = function () {
         timeout = null
-        if (!immediate) func.apply(context, args)
+        func.apply(context, args)
       }
-      var callNow = immediate && !timeout
+      var callNow = !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) func.apply(context, args)
