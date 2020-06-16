@@ -5,7 +5,7 @@
 // @author      Romain Racamier-Lafon
 // @match       https://sd-gitlab.cm-cic.fr/*
 // @grant       none
-// @version     1.1
+// @version     1.1.1
 // ==/UserScript==
 
 /* global fetch */
@@ -60,6 +60,8 @@ class GitlabMr {
     var badge = link.querySelector('.badge')
     btn.style.display = ''
     badge.innerHTML = '&nbsp;'
+    badge.classList.add('ml-0')
+    badge.classList.remove('hidden')
     link.href = href
     link.style.height = '28px'
     link.style.marginTop = '7px'
@@ -69,6 +71,7 @@ class GitlabMr {
     fetch(href).then(r => r.text()).then(html => {
       var matches = html.match(/class="merge-request" data-id/g)
       var nb = matches ? matches.length : 0
+      console.log('found', nb, 'matches for', label)
       badge.textContent = nb
       if (nb < 1) badge.style.backgroundColor = '#1aaa55'
     })
