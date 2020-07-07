@@ -15,19 +15,19 @@
 function mbImport () {
   const getTracks = () => Array.from(document.querySelectorAll('.tracklist-row')).map((el, index) => ({
     number: (index + 1) + '',
-    name: textFromSelector('.track-name', el),
+    name: textFromSelector('.track-name, .tracklist-name', el),
     artists: textFromSelector('.tracklist-row__artist-name-link', el),
-    duration: textFromSelector('.total-duration', el),
+    duration: textFromSelector('.total-duration, .tracklist-duration', el),
   }))
   const data = {
     app: {
       id: 'mb-import-from-spotify',
       title: 'Spotify to MB',
     },
-    title: textFromSelector('h1'),
-    artist: textFromSelector('a[href^="/artist/"]'),
+    title: textFromSelector('.entity-info.media h1, section.content h1'),
+    artist: textFromSelector('.entity-info.media a[href^="/artist/"], section.content a[href^="/artist/"]'),
     date: { year: 0, month: 0, day: 0 },
-    label: (textFromSelector('.copyrights li').match(/\d{4}\s(.+)/) || [])[1] || '',
+    label: (textFromSelector('.copyrights li, section.content p[as="p"]').match(/\d{4}\s(.+)/) || [])[1] || '',
     url: document.location.href,
     urlType: '85', // music streaming link
     tracks: getTracks(),
@@ -38,7 +38,10 @@ function mbImport () {
     data.date.month = dateMatches[2]
     data.date.day = dateMatches[3]
   }
-  insertMbForm(data)
+  if (data.title && data.artist) {
+    clearInterval(spotifyNotFullyLoaded);
+    insertMbForm(data);
+  }
 }
 
-window.addEventListener('load', () => mbImport())
+var spotifyNotFullyLoaded = setInterval(mbImport, 1000);
