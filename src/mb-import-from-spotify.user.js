@@ -16,7 +16,7 @@ function mbImport () {
   const getTracks = () => Array.from(document.querySelectorAll('.tracklist-row')).map((el, index) => ({
     number: (index + 1) + '',
     name: textFromSelector('.track-name, .tracklist-name', el),
-    artists: textFromSelector('.tracklist-row__artist-name-link', el),
+    artist: textFromSelector('.tracklist-row__artist-name-link', el),
     duration: textFromSelector('.total-duration, .tracklist-duration', el),
   }))
   const data = {
