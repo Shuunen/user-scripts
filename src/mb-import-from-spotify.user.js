@@ -27,7 +27,7 @@ function mbImport () {
     title: textFromSelector('.entity-info.media h1, section.content h1'),
     artist: textFromSelector('.entity-info.media h2 a, section.content a[href^="/artist/"]') || textFromSelector('.entity-info.media h2').match(/^.+\b\s(.+)$/)[1],
     date: { year: 0, month: 0, day: 0 },
-    label: (textFromSelector('.copyrights li, section.content p[as="p"]').match(/[©\s℗]+\s(?:\d{4}\s)?(.*)/) || [])[1] || '',
+    label: (textFromSelector('.copyrights li, section.content p[as="p"]').match(/[\d\s©℗]+(.*)/) || [])[1] || '',
     url: document.location.href,
     urlType: '85', // music streaming link
     tracks: getTracks(),
