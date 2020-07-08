@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AliExpress - All in one
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.0.1
 // @description  Bigger listing
 // @author       Romain Racamier-Lafon
 // @match        https://*.aliexpress.com/*
@@ -14,23 +14,23 @@ const extendsImage = (img, size = 600) => {
   img.style.maxHeight = img.style.maxWidth = 'inherit'
 }
 
-const processProductCard = el => {
-  const img = el.querySelector('.item-img')
-  if (!img || !img.src) return console.error('cannot find image on card el', el)
+const processProductCard = element => {
+  const img = element.querySelector('.item-img')
+  if (!img || !img.src) return console.error('cannot find image on card el', element)
   extendsImage(img)
   const wrapper = img.closest('.product-img')
   wrapper.style.height = wrapper.style.width = 'inherit'
-  el.style.display = 'flex'
-  const zone = el.querySelector('.right-zone')
-  if (!zone) return console.error('cannot find zone on card el', el)
+  element.style.display = 'flex'
+  const zone = element.querySelector('.right-zone')
+  if (!zone) return console.error('cannot find zone on card el', element)
   zone.style.paddingLeft = zone.style.marginTop = '16px'
   zone.previousElementSibling.style.width = '80%'
-  el.classList.add('ali-aio-handled')
+  element.classList.add('ali-aio-handled')
 }
 
-const processItemRow = el => {
-  const img = el.querySelector('.pic-core')
-  if (!img || !img.src) return console.error('cannot find image on row el', el)
+const processItemRow = element => {
+  const img = element.querySelector('.pic-core')
+  if (!img || !img.src) return console.error('cannot find image on row el', element)
   console.log('image src was', img.src)
   extendsImage(img, 500)
   console.log('now image src is', img.src)
@@ -38,28 +38,28 @@ const processItemRow = el => {
   wrapper.style.height = wrapper.style.width = 'inherit'
   wrapper = wrapper.parentElement
   wrapper.style.height = wrapper.style.width = 'inherit'
-  el.style.display = 'flex'
-  el.style.height = 'inherit'
-  el.classList.add('ali-aio-handled')
+  element.style.display = 'flex'
+  element.style.height = 'inherit'
+  element.classList.add('ali-aio-handled')
 }
 
-const all = selector => Array.from(document.querySelectorAll(selector))
-const processProductCards = () => all('.list.product-card:not(.ali-aio-handled)').map(el => processProductCard(el))
-const processItemRows = () => all('.items-list > .item:not(.ali-aio-handled)').map(el => processItemRow(el))
+const all = selector => [...document.querySelectorAll(selector)]
+const processProductCards = () => all('.list.product-card:not(.ali-aio-handled)').map(element => processProductCard(element))
+const processItemRows = () => all('.items-list > .item:not(.ali-aio-handled)').map(element => processItemRow(element))
 
 function debounce (func, wait, immediate) {
   var timeout
   return function debounced () {
     var context = this
-    var args = arguments
+    var arguments_ = arguments
     var later = function later () {
-      timeout = null
-      if (!immediate) func.apply(context, args)
+      timeout = undefined
+      if (!immediate) func.apply(context, arguments_)
     }
     var callNow = immediate && !timeout
     clearTimeout(timeout)
     timeout = setTimeout(later, wait)
-    if (callNow) func.apply(context, args)
+    if (callNow) func.apply(context, arguments_)
   }
 }
 

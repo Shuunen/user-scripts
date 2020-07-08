@@ -5,7 +5,7 @@
 // @match       https://open.spotify.com/playlist/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/mb-import-utils.js
-// @version     1.0.0
+// @version     1.0.1
 // @author      Shuunen
 // @description This script let you import releases on Spotify to the great MusicBrainz db <3
 // ==/UserScript==
@@ -13,11 +13,11 @@
 /* global textFromSelector, insertMbForm */
 
 function mbImport () {
-  const getTracks = () => Array.from(document.querySelectorAll('.tracklist-row')).map((el, index) => ({
+  const getTracks = () => [...document.querySelectorAll('.tracklist-row')].map((element, index) => ({
     number: (index + 1) + '',
-    name: textFromSelector('.tracklist-name', el),
-    artists: textFromSelector('.tracklist-row__artist-name-link', el),
-    duration: textFromSelector('.tracklist-duration', el),
+    name: textFromSelector('.tracklist-name', element),
+    artists: textFromSelector('.tracklist-row__artist-name-link', element),
+    duration: textFromSelector('.tracklist-duration', element),
   }))
   const data = {
     app: {

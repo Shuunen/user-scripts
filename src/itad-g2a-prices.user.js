@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IsThereAnyDeal - Add G2A prices
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.3.1
 // @description  add G2A prices on listings
 // @author       Shuunen
 // @match        *://*isthereanydeal.com/*
@@ -35,10 +35,11 @@
   var g2aSearchUrl = '/lucene/search/quick?phrase='
   var g2aNormalSearchUrl = '/?search='
 
-  var pricesCache = null
+  var pricesCache
   try {
     pricesCache = JSON.parse(window.localStorage.g2aPriceCache)
-  } catch (e) {
+  } catch (error) {
+    console.error(error)
     pricesCache = {}
   }
 
@@ -71,11 +72,11 @@
     var gameUrl = ''
     var minPrice = 1000
     $.getJSON(url, function (data) {
-      if (!data.docs || !data.docs.length) {
+      if (!data.docs || data.docs.length <= 0) {
         console.error('no results found for ' + title + ' on ' + platform + ' (GET', url, ')')
       } else {
         data.docs.forEach(function (game) {
-          if (game.slug.indexOf('dlc') === -1 && (game.minPrice <= minPrice)) {
+          if (!game.slug.includes('dlc') && (game.minPrice <= minPrice)) {
             minPrice = game.minPrice
             gameUrl = g2aBaseUrl + game.slug
           }
@@ -100,23 +101,23 @@
   function searchPriceByLine (line, index) {
     var title = line.querySelector('.title a.noticeable').textContent
     // Watch_Dogs€ 2 => watch dogs 2
-    title = title.toLowerCase().replace(/[^a-z\s\d]/g, ' ').replace(/\s+/g, ' ').trim()
-    var priceEl = line.querySelector('.currentBest')
-    if (!priceEl) {
+    title = title.toLowerCase().replace(/[^\d\sa-z]/g, ' ').replace(/\s+/g, ' ').trim()
+    var priceElement = line.querySelector('.currentBest')
+    if (!priceElement) {
       var minPriceDeal = 1000
-      line.querySelectorAll('.deals > a').forEach(function (priceDealEl) {
-        var priceDeal = parseFloat(priceDealEl.textContent.replace(',', '.'))
+      line.querySelectorAll('.deals > a').forEach(function (priceDealElement) {
+        var priceDeal = Number.parseFloat(priceDealElement.textContent.replace(',', '.'))
         if (priceDeal < minPriceDeal) {
-          priceEl = priceDealEl
+          priceElement = priceDealElement
           minPriceDeal = priceDeal
         }
       })
     }
-    if (!priceEl) {
+    if (!priceElement) {
       console.error('cannot find price on line', line)
       return
     }
-    var price = parseFloat(priceEl.textContent.replace(',', '.'))
+    var price = Number.parseFloat(priceElement.textContent.replace(',', '.'))
     console.log(title, price)
     var platform = ''
     var gameId = line.getAttribute('data-plain')
@@ -152,12 +153,13 @@
             if (minPrice < price) {
               console.info('found better price for ' + title + ' [' + platform + '] : ' + minPrice + '$')
               var reduc = (100 - Math.round((minPrice / price) * 100))
+              // eslint-disable-next-line unicorn/no-nested-ternary
               var color = (reduc > 80 ? colorGreat : (reduc > 50 ? colorGood : (reduc > 30 ? colorNice : colorDefault)))
               var stl = ' style="color:' + color + '"'
               var hrf = ' href="' + gameUrl + '"'
               var ttl = ' title="on [' + platform + '], ' + reduc + '% off !"'
               var trg = ' target="_blank"'
-              priceEl.parentElement.innerHTML += '<a' + stl + hrf + ttl + trg + '>' + minPrice + '$ on G2A</a>'
+              priceElement.parentElement.innerHTML += '<a' + stl + hrf + ttl + trg + '>' + minPrice + '$ on G2A</a>'
             } else {
               console.log('didnt found better price for ' + title + ' than : ' + price + '$')
             }
@@ -168,11 +170,11 @@
               // console.log('cannot find the "Get price" link in order to hide it');
             }
             // let user check himself on G2A
-            var dealsEl = line.querySelector('.deals')
+            var dealsElement = line.querySelector('.deals')
             var cls = ' class="g2a-get-price manual"'
             var href = ' href="' + g2aBaseUrl + g2aNormalSearchUrl + title + ' global"'
             var target = ' target="_blank"'
-            dealsEl.innerHTML = '<a' + cls + href + target + '>Check on G2A</a>' + dealsEl.innerHTML
+            dealsElement.innerHTML = '<a' + cls + href + target + '>Check on G2A</a>' + dealsElement.innerHTML
             // remove loading styling
             line.style.filter = ''
           })
@@ -182,11 +184,11 @@
   }
 
   function addGetPriceLink (line, index) {
-    var dealsEl = line.querySelector('.deals')
-    dealsEl.innerHTML = '<div class="g2a-get-price">Get Price on G2A</div>' + dealsEl.innerHTML
+    var dealsElement = line.querySelector('.deals')
+    dealsElement.innerHTML = '<div class="g2a-get-price">Get Price on G2A</div>' + dealsElement.innerHTML
     var link = line.querySelector('.g2a-get-price')
     if (link) {
-      link.addEventListener('click', function (event) {
+      link.addEventListener('click', function () {
         searchPriceByLine(line, index)
         link.style.display = 'none'
       })
@@ -200,8 +202,8 @@
     container.innerHTML = '<div class="g2a-get-price all">Get ALL Prices on G2A</div>' + container.innerHTML
     var link = container.querySelector('.g2a-get-price')
     if (link) {
-      link.addEventListener('click', function (event) {
-        document.querySelectorAll('#games .game').forEach(searchPriceByLine)
+      link.addEventListener('click', function () {
+        document.querySelectorAll('#games .game').forEach((element, index) => searchPriceByLine(element, index))
       })
     } else {
       console.error('impossible to find the "Get ALL Prices" button to listen the click to')
@@ -211,18 +213,18 @@
   function detectMouseoverGames () {
     var gameHovered = ''
     document.body.addEventListener('mouseover', function (event) {
-      var el = event.target
-      if (!el.classList.contains('game')) {
+      var element = event.target
+      if (!element.classList.contains('game')) {
         return
       }
-      var curGameHovered = el.getAttribute('data-plain')
-      if (curGameHovered === gameHovered) {
+      var currentGameHovered = element.getAttribute('data-plain')
+      if (currentGameHovered === gameHovered) {
         return
       }
-      gameHovered = el.getAttribute('data-plain')
+      gameHovered = element.getAttribute('data-plain')
       // console.log('over', gameHovered);
-      if (!el.querySelector('.g2a-get-price')) {
-        addGetPriceLink(el, 0)
+      if (!element.querySelector('.g2a-get-price')) {
+        addGetPriceLink(element, 0)
       }
     })
   }
