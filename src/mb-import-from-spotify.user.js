@@ -16,7 +16,7 @@ function mbImport () {
   const getTracks = () => Array.from(document.querySelectorAll('.tracklist-row')).map((el, index) => ({
     number: (index + 1) + '',
     name: textFromSelector('.track-name, .tracklist-name', el),
-    artist: textFromSelector('.tracklist-row__artist-name-link', el),
+    artist: textFromSelector('.artists-inline, .tracklist-row__artist-name-link', el),
     duration: textFromSelector('.total-duration, .tracklist-duration', el),
   }))
   const data = {
@@ -25,9 +25,9 @@ function mbImport () {
       title: 'Spotify to MB',
     },
     title: textFromSelector('.entity-info.media h1, section.content h1'),
-    artist: textFromSelector('.entity-info.media a[href^="/artist/"], section.content a[href^="/artist/"]'),
+    artist: textFromSelector('.entity-info.media h2 a, section.content a[href^="/artist/"]') || textFromSelector('.entity-info.media h2').match(/^.+\b\s(.+)$/)[1],
     date: { year: 0, month: 0, day: 0 },
-    label: (textFromSelector('.copyrights li, section.content p[as="p"]').match(/[©℗]\s(?:\d{4}\s)?(.*)/) || [])[1] || '',
+    label: (textFromSelector('.copyrights li, section.content p[as="p"]').match(/[©\s℗]+\s(?:\d{4}\s)?(.*)/) || [])[1] || '',
     url: document.location.href,
     urlType: '85', // music streaming link
     tracks: getTracks(),
