@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bandcamp - Display Prices on Wishlist
 // @namespace    https://github.com/Shuunen
-// @version      1.0.4
+// @version      1.0.5
 // @description  Simply display a price tag on each item in the wishlist
 // @author       Romain Racamier-Lafon
 // @match        https://bandcamp.com/*/wishlist
@@ -40,7 +40,7 @@
     tag.innerHTML = price.value + ' <small>' + price.currency + '</small>'
     tag.style = 'position: absolute; top: 0; right: 0; background-color: green; color: white;'
     tag.classList.add(cls.price, 'col-edit-box')
-    product.appendChild(tag)
+    product.append(tag)
     if (price.value > 2) {
       product.style.filter = 'grayscale(1) opacity(.5)'
     }
@@ -49,13 +49,13 @@
 
   function displayPrices () {
     utils.findAll(selectors.product, document, true).forEach(function (product) {
-      var trackid = parseInt(product.getAttribute('data-trackid'))
-      if (trackid) {
-        utils.log('adding price for', trackid)
-        if (!app.tracks[trackid]) {
-          throw new Error('failed at gettting track price')
+      var trackId = Number.parseInt(product.getAttribute('data-trackid'))
+      if (trackId) {
+        utils.log('adding price for', trackId)
+        if (!app.tracks[trackId]) {
+          throw new Error('failed at getting track price')
         }
-        var price = app.tracks[trackid]
+        var price = app.tracks[trackId]
         displayPrice(product, price)
       }
     })
@@ -67,9 +67,9 @@
     }
     var added = 0
     list.map(function (track) {
-      var trackid = track.track_id
-      if (!app.tracks[trackid]) {
-        app.tracks[trackid] = {
+      var trackId = track.track_id
+      if (!app.tracks[trackId]) {
+        app.tracks[trackId] = {
           value: Math.round(track.price),
           currency: track.currency,
         }
@@ -102,8 +102,8 @@
   }
 
   function getDataFromPage () {
-    var dataEl = utils.findOne('#pagedata')
-    var data = JSON.parse(dataEl.getAttribute('data-blob'))
+    var dataElement = utils.findOne('#pagedata')
+    var data = JSON.parse(dataElement.getAttribute('data-blob'))
     setTracksFromList(data.track_list)
     app.token = data.wishlist_data.last_token
     app.userid = data.fan_data.fan_id

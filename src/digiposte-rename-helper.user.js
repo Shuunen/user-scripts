@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Digiposte - Rename helper
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.0.1
 // @description  Rename files with one keypress
 // @author       Romain Racamier-Lafon
 // @match        https://secure.digiposte.fr/
@@ -17,39 +17,39 @@
   var monthsIn = ['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc']
   var monthsOut = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
 
-  var formatDate = function (str, full) {
+  var formatDate = function (string, full) {
     var found = false
-    str = str.replace('.', '')
-    console.log('drh : trying to format date', str)
+    string = string.replace('.', '')
+    console.log('drh : trying to format date', string)
     monthsIn.forEach(function (monthIn, monthIndex) {
-      var monthPos = str.indexOf(monthIn)
+      var monthPos = string.indexOf(monthIn)
       if (monthPos !== -1) {
         found = true
-        str = str.replace(monthIn, monthsOut[monthIndex])
+        string = string.replace(monthIn, monthsOut[monthIndex])
       }
     })
     if (!found) {
-      window.alert('drh : did not found month in', str)
+      window.alert('drh : did not found month in', string)
     }
-    var arr = str.split(' ')
-    var year = arr[2]
+    var array = string.split(' ')
+    var year = array[2]
     if (year.length < 4) {
       year = '20' + year
     }
-    var month = arr[1]
+    var month = array[1]
     if (month.length < 2) {
       month = '0' + month
     }
-    var day = arr[0]
+    var day = array[0]
     if (day.length < 2) {
       day = '0' + day
     }
     return year + '-' + month + (full ? '-' + day : '')
   }
 
-  var triggerChange = function (el) {
-    el.dispatchEvent(new KeyboardEvent('change'))
-    el.dispatchEvent(new Event('input', {
+  var triggerChange = function (element) {
+    element.dispatchEvent(new KeyboardEvent('change'))
+    element.dispatchEvent(new Event('input', {
       bubbles: true,
       cancelable: true,
     }))
@@ -74,22 +74,22 @@
     }, 300)
   }
 
-  window.onkeydown = function (event) {
-    if (event.keyCode === 113) {
+  window.addEventListener('keydown', function (event) {
+    if (event.key === 'F2') {
       console.log('drh : F2 pressed !')
       openModal(false, false)
       return false
-    } else if (event.keyCode === 114) {
+    } else if (event.key === 'F3') {
       console.log('drh : F3 pressed !')
       openModal(false, true)
       return false
-    } else if (event.keyCode === 115) {
+    } else if (event.key === 'F4') {
       console.log('drh : F4 pressed !')
       openModal(true, false)
       return false
     } else {
-      console.log('drh : keyCode', event.keyCode, 'not handled')
+      console.log('drh : keyCode', event.key, 'not handled')
       return true
     }
-  }
+  })
 })()
