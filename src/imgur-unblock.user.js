@@ -5,7 +5,7 @@
 // @author      Romain Racamier-Lafon
 // @match       https://www.reddit.com/*
 // @grant       none
-// @version     1.1
+// @version     1.1.1
 // ==/UserScript==
 
 var PROXY_URL = 'https://proxy.duckduckgo.com/iu/?u='
@@ -20,33 +20,33 @@ class ImgurUnblock {
     var timeout
     return function debounced () {
       var context = this
-      var args = arguments
+      var arguments_ = arguments
       var later = function later () {
-        timeout = null
+        timeout = undefined
         if (!immediate) {
-          func.apply(context, args)
+          func.apply(context, arguments_)
         }
       }
       var callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) {
-        func.apply(context, args)
+        func.apply(context, arguments_)
       }
     }
   }
 
   findLinks () {
     var links = document.querySelectorAll('a[href^="https://i.imgur.com/"]')
-    if (!links || !links.length) return
+    if (!links || links.length <= 0) return
     console.log('found', links.length, 'to process')
     links.forEach(link => {
-      var src = PROXY_URL + link.href
+      var source = PROXY_URL + link.href
       var img = document.createElement('img')
-      img.src = src
+      img.src = source
       img.style = 'width: 100%'
-      link.href = src
-      link.parentElement.appendChild(img)
+      link.href = source
+      link.parentElement.append(img)
     })
   }
 

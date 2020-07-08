@@ -2,10 +2,12 @@ const rules = require('./.eslintrc.rules.js')
 
 module.exports = {
   extends: [
-    'standard'
+    'plugin:unicorn/recommended',
+    'standard',
   ],
   parserOptions: {
-    ecmaVersion: 2018
+    ecmaVersion: 2018,
   },
-  rules
+  rules,
+  plugins: ['unicorn'],
 }

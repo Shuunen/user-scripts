@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Dealabs - All in one
 // @namespace    https://github.com/Shuunen
-// @version      1.1.1
+// @version      1.1.2
 // @description  Un-clutter & add filters to Dealabs
 // @author       Romain Racamier-Lafon
 // @match        https://www.dealabs.com/*
@@ -100,9 +100,7 @@
     app.excluders = app.excluders
       .map(entry => entry.trim().toLowerCase())
       .filter(entry => entry.length)
-    if (!app.excluders.length) {
-      return
-    }
+    if (app.excluders.length <= 0) return
     utils.log('new excluders :', app.excluders)
     app.filter = app.excluders.join(', ')
     window.localStorage[app.id + '.filter'] = app.filter
@@ -142,13 +140,13 @@
     let found = false
     let remaining = app.excluders.length
     while (!found && remaining) {
-      found = text.indexOf(app.excluders[remaining - 1]) >= 0
+      found = text.includes(app.excluders[remaining - 1])
       remaining--
     }
     if (found) {
-      utils.warn('"' + text.substr(0, 40) + '..."', 'is excluded, it contains : "' + app.excluders[remaining] + '"')
+      utils.warn('"' + text.slice(0, 40) + '..."', 'is excluded, it contains : "' + app.excluders[remaining] + '"')
     } else {
-      utils.log('"' + text.substr(0, 400) + '..."', 'was not excluded')
+      utils.log('"' + text.slice(0, 400) + '..."', 'was not excluded')
       if (app.debug) {
         element.style.backgroundColor = '#f0fbf0'
       }

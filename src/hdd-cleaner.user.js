@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HDD Cleaner
 // @namespace    https://github.com/Shuunen
-// @version      1.2.2
+// @version      1.2.3
 // @description  Remove unwanted hard drives disks
 // @author       Romain Racamier-Lafon
 // @match        https://keepa.com/*
@@ -39,7 +39,7 @@
   var regex = {
     sizes: /(\d+)\s?(go|gb|to|tb)\b/gi,
     size: /(\d+)\s?(\w+)/i,
-    price: /(\d+[\\.,€]\d+)/,
+    price: /(\d+[,.\\€]\d+)/,
   }
 
   var utils = new Shuutils(app)
@@ -57,7 +57,7 @@
         mSize = mSize * 1000 // may be slightly different according to TO vs TB
       }
       if (mSize > size) {
-        size = parseInt(mSize)
+        size = Number.parseInt(mSize)
       }
     })
     return size
@@ -75,7 +75,7 @@
       utils.error('failed at finding price')
       return false
     }
-    const price = parseFloat(matches[0].replace(',', '.').replace('€', '.'))
+    const price = Number.parseFloat(matches[0].replace(',', '.').replace('€', '.'))
     const pricePerTo = Math.round(price / (size / 1000))
     let rating = ''
     for (let i = 40; i > 20; i -= 5) {
@@ -83,7 +83,7 @@
         rating += '👍'
       }
     }
-    rating = rating + (rating.length ? ' ' : '')
+    rating = rating + (rating.length > 0 ? ' ' : '')
     utils.log('price found :', pricePerTo, '€ per To')
     descElement.textContent = '( ' + rating + pricePerTo + '€ / to ) - ' + descElement.textContent
     return true
