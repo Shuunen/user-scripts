@@ -39,9 +39,9 @@ function mbImport () {
     data.date.day = dateMatches[3]
   }
   if (data.title && data.artist) {
-    clearInterval(spotifyNotFullyLoaded);
-    insertMbForm(data);
+    clearInterval(spotifyNotFullyLoaded)
+    insertMbForm(data)
   }
 }
 
-var spotifyNotFullyLoaded = setInterval(mbImport, 1000);
+var spotifyNotFullyLoaded = setInterval(mbImport, 1000)
