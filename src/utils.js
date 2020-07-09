@@ -22,8 +22,8 @@ class Shuutils {
     console.error.apply(console, stuff)
   }
 
-  readableString (str) {
-    return str.split('') // zoom on letters
+  readableString (string) {
+    return string.split('') // zoom on letters
       .map(letter => {
         var i = this.accentsIn.indexOf(letter)
         return i !== -1 ? this.accentsOut[i] : letter
@@ -34,30 +34,30 @@ class Shuutils {
       .replace(/\s+/g, ' ') // replace spaces with single space
   }
 
-  ellipsisWords (strIn, maxWords) {
-    var strOut = strIn.split(' ').splice(0, maxWords).join(' ')
-    if (strOut !== strIn) {
-      strOut += '...'
+  ellipsisWords (stringIn, maxWords) {
+    var stringOut = stringIn.split(' ').splice(0, maxWords).join(' ')
+    if (stringOut !== stringIn) {
+      stringOut += '...'
     }
-    return strOut
+    return stringOut
   }
 
   debounce (func, wait, immediate) {
     var timeout
     return function () {
       var context = this
-      var args = arguments
+      var arguments_ = arguments
       var later = function later () {
-        timeout = null
+        timeout = undefined
         if (!immediate) {
-          func.apply(context, args)
+          func.apply(context, arguments_)
         }
       }
       var callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) {
-        func.apply(context, args)
+        func.apply(context, arguments_)
       }
     }
   }
@@ -78,14 +78,14 @@ class Shuutils {
   }
 
   findAll (selector, context, dontYell) {
-    if (!selector || !selector.length || selector.length === 1) {
+    if (!selector || selector.length === 0 || selector.length === 1) {
       this.error('incorrect selector : ', selector)
     }
     context = context || document
     var items = Array.prototype.slice.call(context.querySelectorAll(selector))
-    if (items.length && this.app.debug) {
+    if (items.length > 0 && this.app.debug) {
       this.log('found', items.length, 'elements matching "' + selector + '"')
-    } else if (!items.length && !dontYell) {
+    } else if (items.length <= 0 && !dontYell) {
       this.warn('found no elements for selector "' + selector + '"')
     }
     return items

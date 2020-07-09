@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon - Price per weight
 // @namespace    https://github.com/Shuunen
-// @version      1.0.3
+// @version      1.0.5
 // @description  Display price per weight & sort ascending
 // @author       Romain Racamier-Lafon
 // @match        https://*.amazon.fr/*
@@ -47,10 +47,10 @@
   selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
 
   var regex = {
-    price: /EUR (\d+,\d\d)/i,
+    price: /eur (\d+,\d\d)/i,
     weight: /(\d+)\s?(g|-)/i,
-    bulk: /Lot de (\d+)/i,
-    pricePer: /EUR (\d+,\d\d)\/(\w+)(\s\w+)?/i,
+    bulk: /lot de (\d+)/i,
+    pricePer: /eur (\d+,\d\d)\/(\w+)\s?(\w*)/i,
   }
 
   var templates = {
@@ -64,9 +64,9 @@
   var products = []
 
   function shadeBadProducts () {
-    utils.findAll(selectors.pantry).forEach(function (el) {
+    utils.findAll(selectors.pantry).forEach(function (element) {
       var item =
-        el.parentElement.parentElement.parentElement.parentElement.parentElement
+        element.parentElement.parentElement.parentElement.parentElement.parentElement
           .parentElement.parentElement.parentElement
       item.style.filter = 'grayscale(100%)'
       item.style.opacity = 0.5
@@ -76,14 +76,14 @@
     })
   }
 
-  function priceStrToFloat (str) {
-    var price = str.replace(',', '.')
-    price = parseFloat(price)
+  function priceStringToFloat (string) {
+    var price = string.replace(',', '.')
+    price = Number.parseFloat(price)
     return price
   }
 
-  function priceFloatToStr (num) {
-    var price = num.toFixed(1)
+  function priceFloatToString (number) {
+    var price = number.toFixed(1)
     price = price.replace('.', ',') + '0'
     return price
   }
@@ -92,7 +92,7 @@
     var matches = text.match(regex.price)
     utils.log('found price matches :', matches)
     var price = matches && matches.length === 2 ? matches[1] : '0'
-    price = priceStrToFloat(price)
+    price = priceStringToFloat(price)
     utils.log('found price', price)
     return price
   }
@@ -119,7 +119,7 @@
     var matches = text.match(regex.bulk)
     // utils.log('found bulk matches :', matches)
     var bulk = matches && matches.length === 2 ? matches[1] : '1'
-    bulk = parseInt(bulk)
+    bulk = Number.parseInt(bulk)
     // utils.log('found bulk', bulk)
     return bulk
   }
@@ -134,7 +134,7 @@
       bulk: 1,
     }
     if (matches && matches.length === 4) {
-      data.price = priceStrToFloat(matches[1])
+      data.price = priceStringToFloat(matches[1])
       if (matches[3]) {
         data.weight = matches[2]
         data.unit = matches[3].trim()
@@ -169,13 +169,13 @@
   function fill (template, data) {
     var tpl = template + ''
     Object.keys(data).forEach(function (key) {
-      var str = '{{' + key + '}}'
-      var val = data[key]
-      if (key.indexOf('price') > -1 && val > 0) {
-        val = priceFloatToStr(val)
+      var string = '{{' + key + '}}'
+      var value = data[key]
+      if (key.includes('price') && value > 0) {
+        value = priceFloatToString(value)
       }
       // utils.log('looking for', str)
-      tpl = tpl.replace(new RegExp(str, 'gi'), val)
+      tpl = tpl.replace(new RegExp(string, 'gi'), value)
     })
     return tpl
   }
@@ -221,7 +221,7 @@
       utils.error(data.title, ': unit not handled :', data.unit)
     }
     if (data.pricePerKilo >= 0) {
-      data.pricePerKilo = priceStrToFloat(data.pricePerKilo.toFixed(1))
+      data.pricePerKilo = priceStringToFloat(data.pricePerKilo.toFixed(1))
     }
     utils.log('found pricePerKilo :', data)
     return data
@@ -251,8 +251,8 @@
   }
 
   function avoidProduct (item) {
-    var nbAttr = item.getAttributeNames().length
-    if (nbAttr === 5) {
+    var nbAttribute = item.getAttributeNames().length
+    if (nbAttribute === 5) {
       utils.warn('detected ad product', item)
       return true
     }
@@ -292,8 +292,8 @@
   }
 
   function hideStuff () {
-    utils.findAll(selectors.stuffToHide).forEach(function (el) {
-      return (el.style.display = app.hideStuff ? 'none' : 'inherit')
+    utils.findAll(selectors.stuffToHide).forEach(function (element) {
+      return (element.style.display = app.hideStuff ? 'none' : 'inherit')
     })
   }
 

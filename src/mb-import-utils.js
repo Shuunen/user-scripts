@@ -1,16 +1,14 @@
 
 // eslint-disable-next-line no-unused-vars
 const textFromSelector = (sel, context) => {
-  const el = (context || document).querySelector(sel)
-  if (!el) return ''
-  return el.textContent.trim()
+  const element = (context || document).querySelector(sel)
+  if (!element) return ''
+  return element.textContent.trim()
 }
 
 const createMbForm = (app) => {
-  const existing = document.getElementById(app.id)
-  if (existing) {
-    existing.remove()
-  }
+  const existing = document.querySelector(`#${app.id}`)
+  if (existing) existing.remove()
   const form = document.createElement('form')
   form.id = app.id
   form.method = 'post'
@@ -21,7 +19,7 @@ const createMbForm = (app) => {
   const header = document.createElement('h2')
   header.textContent = app.title
   header.style = 'text-align: center;padding: 0.2rem 0;font-size: 1.2rem;margin: 0;'
-  form.appendChild(header)
+  form.append(header)
   return form
 }
 
@@ -33,7 +31,7 @@ const addMbField = (form, name, value, isHidden = false) => {
   if (isHidden) field.hidden = true
   // field.required = true
   field.style = 'color: inherit; margin: 0.3rem 0 0; padding: .2rem 0 .2rem 0.5rem;width: 220px;'
-  form.appendChild(field)
+  form.append(field)
 }
 
 const addMbSubmit = (form) => {
@@ -41,7 +39,7 @@ const addMbSubmit = (form) => {
   submit.type = 'submit'
   submit.value = 'Export to MusicBrainz'
   submit.style = 'border-radius: 1rem;cursor: pointer;margin: 0.5rem auto 0;text-transform: uppercase;font-size: 0.8rem;padding: 0.4rem 1rem 0.2rem;display: block;background-color: steelblue;color: white;'
-  form.appendChild(submit)
+  form.append(submit)
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -69,5 +67,5 @@ const insertMbForm = ({ app, title, artist, date, tracks, label, url, urlType })
   addMbField(form, 'urls.0.link_type', urlType, true)
   addMbField(form, 'edit_note', `Release ${url} imported using github.com/Shuunen/user-scripts/blob/master/src/${app.id}.user.js`, true)
   addMbSubmit(form)
-  document.body.appendChild(form)
+  document.body.append(form)
 }

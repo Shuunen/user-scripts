@@ -5,7 +5,7 @@
 // @author      Romain Racamier-Lafon
 // @match       https://sd-gitlab.cm-cic.fr/*
 // @grant       none
-// @version     1.1.1
+// @version     1.1.2
 // ==/UserScript==
 
 /* global fetch */
@@ -25,18 +25,18 @@ class GitlabMr {
     var timeout
     return function debounced () {
       var context = this
-      var args = arguments
+      var arguments_ = arguments
       var later = function later () {
-        timeout = null
+        timeout = undefined
         if (!immediate) {
-          func.apply(context, args)
+          func.apply(context, arguments_)
         }
       }
       var callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) {
-        func.apply(context, args)
+        func.apply(context, arguments_)
       }
     }
   }
@@ -55,10 +55,10 @@ class GitlabMr {
   }
 
   async addButton (parent, label, href) {
-    var btn = parent.cloneNode(true)
-    var link = btn.firstChild
+    var button = parent.cloneNode(true)
+    var link = button.firstChild
     var badge = link.querySelector('.badge')
-    btn.style.display = ''
+    button.style.display = ''
     badge.innerHTML = '&nbsp;'
     badge.classList.add('ml-0')
     badge.classList.remove('hidden')
@@ -67,7 +67,7 @@ class GitlabMr {
     link.style.marginTop = '7px'
     link.style.marginRight = '2px'
     link.querySelector('.label').textContent = label
-    parent.insertAdjacentElement('afterEnd', btn)
+    parent.insertAdjacentElement('afterEnd', button)
     fetch(href).then(r => r.text()).then(html => {
       var matches = html.match(/class="merge-request" data-id/g)
       var nb = matches ? matches.length : 0
@@ -75,11 +75,11 @@ class GitlabMr {
       badge.textContent = nb
       if (nb < 1) badge.style.backgroundColor = '#1aaa55'
     })
-    return btn
+    return button
   }
 
   hideStuff () {
-    document.querySelectorAll('.shortcuts-todos, .nav-item.header-help').forEach(el => el.remove())
+    document.querySelectorAll('.shortcuts-todos, .nav-item.header-help').forEach(element => element.remove())
   }
 
   process () {

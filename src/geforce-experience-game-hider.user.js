@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geforce Experience - Game hider
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.0.1
 // @description  Lets you hide games from the list
 // @author       Romain Racamier-Lafon
 // @match        https://www.nvidia.fr/geforce/geforce-experience/games/
@@ -33,23 +33,23 @@ $(document).ready(function () {
     var timeout
     return function () {
       var context = this
-      var args = arguments
+      var arguments_ = arguments
       var later = function () {
-        timeout = null
-        if (!immediate) { func.apply(context, args) }
+        timeout = undefined
+        if (!immediate) { func.apply(context, arguments_) }
       }
       var callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
-      if (callNow) { func.apply(context, args) }
+      if (callNow) { func.apply(context, arguments_) }
     }
   }
 
   function hide () {
-    log('hidding...')
+    log('hiding...')
     $('.gameName:visible').each(function (index, game) {
       // clean game tile
-      var title = game.textContent.trim().replace(/\./g, '').replace(/[^a-zA-Z0-9\s]+/g, '')
+      var title = game.textContent.trim().replace(/\./g, '').replace(/[^\d\sA-Za-z]+/g, '')
       // game.textContent = title
       if (gamesToHide.includes(title)) {
         $(game).hide('slow')
@@ -58,7 +58,7 @@ $(document).ready(function () {
         var hideIt = $('<span style="' + hideItStyle + '"></span>')
         hideIt.click(function (event) {
           var gameToHide = event.currentTarget.previousElementSibling.textContent
-          log('user choosed to hide "' + gameToHide + '"')
+          log('user choose to hide "' + gameToHide + '"')
           gamesToHide.push(gameToHide)
           log('this list has been saved in LS, put it in your script if you want to save it forever')
           console.log(gamesToHide)

@@ -12,10 +12,10 @@
 /* global textFromSelector, insertMbForm */
 
 function mbImport () {
-  const getTracks = () => Array.from(document.querySelectorAll('[id^="dmusic_tracklist_player_row"]')).map((el, index) => ({
+  const getTracks = () => [...document.querySelectorAll('[id^="dmusic_tracklist_player_row"]')].map((element, index) => ({
     number: (index + 1) + '',
-    name: textFromSelector('.TitleLink', el),
-    duration: textFromSelector('[id^="dmusic_tracklist_duration"]', el),
+    name: textFromSelector('.TitleLink', element),
+    duration: textFromSelector('[id^="dmusic_tracklist_duration"]', element),
   }))
   const details = textFromSelector('#productDetailsTable')
   const data = {

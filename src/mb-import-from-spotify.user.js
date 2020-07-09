@@ -13,11 +13,11 @@
 /* global textFromSelector, insertMbForm */
 
 function mbImport () {
-  const getTracks = () => Array.from(document.querySelectorAll('.tracklist-row')).map((el, index) => ({
+  const getTracks = () => [...document.querySelectorAll('.tracklist-row')].map((element, index) => ({
     number: (index + 1) + '',
-    name: textFromSelector('.track-name, .tracklist-name', el),
-    artist: textFromSelector('.artists-inline, .tracklist-row__artist-name-link', el),
-    duration: textFromSelector('.total-duration, .tracklist-duration', el),
+    name: textFromSelector('.track-name, .tracklist-name', element),
+    artist: textFromSelector('.artists-inline, .tracklist-row__artist-name-link', element),
+    duration: textFromSelector('.total-duration, .tracklist-duration', element),
   }))
   const data = {
     app: {

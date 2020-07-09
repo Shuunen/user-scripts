@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon - Hide products by keyword
 // @namespace    https://github.com/Shuunen
-// @version      1.1.6
+// @version      1.1.7
 // @description  Easily hide products from your searches by specifying a block list
 // @author       Romain Racamier-Lafon
 // @match        https://www.amazon.fr/s*
@@ -29,7 +29,6 @@
   var cls = {
     base: app.id,
     title: app.id + '-title',
-    handled: app.id + '-handled',
     first: app.id + '-first',
     plus: app.id + '-plus',
     suggestion: app.id + '-suggestion',
@@ -53,7 +52,7 @@
 
   function showSuggestions () {
     Object.keys(app.suggestions).forEach(word => {
-      if (app.excluders.indexOf(word) !== -1) {
+      if (app.excluders.includes(word)) {
         // if already excluded, no need to suggest it again
         delete app.suggestions[word]
       }
@@ -90,19 +89,19 @@
     showSuggestionsDebounced()
   }
 
-  function checkProduct (titleStr, titleEl) {
+  function checkProduct (titleString, titleElement) {
     var found = false
     var remaining = app.excluders.length
     while (!found && remaining) {
-      found = titleStr.indexOf(app.excluders[remaining - 1]) >= 0
+      found = titleString.includes(app.excluders[remaining - 1])
       remaining--
     }
     if (found) {
-      utils.log('"' + titleStr.substr(0, 40) + '..."', 'should be excluded')
+      utils.log('"' + titleString.slice(0, 40) + '..."', 'should be excluded')
     } else {
-      addTitleToSuggestions(titleStr)
+      addTitleToSuggestions(titleString)
     }
-    var product = titleEl.closest(selectors.product)
+    var product = titleElement.closest(selectors.product)
     product.style.display = found ? 'none' : 'inline-block'
   }
 
@@ -110,10 +109,10 @@
     utils.log('checking displayed products...')
     clearSuggestions()
     var products = utils.findAll(selectors.productTitle)
-    products.forEach(function (titleEl) {
-      titleEl.textContent = utils.readableString(titleEl.textContent)
-      var titleStr = titleEl.textContent.toLowerCase()
-      checkProduct(titleStr, titleEl)
+    products.forEach(function (titleElement) {
+      titleElement.textContent = utils.readableString(titleElement.textContent)
+      var titleString = titleElement.textContent.toLowerCase()
+      checkProduct(titleString, titleElement)
     })
   }
 
@@ -121,9 +120,7 @@
     app.excluders = app.excluders
       .map(entry => entry.trim().toLowerCase())
       .filter(entry => entry.length)
-    if (!app.excluders.length) {
-      return
-    }
+    if (app.excluders.length <= 0) return
     utils.log('new excluders :', app.excluders)
     app.filter = app.excluders.join(', ')
     window.localStorage[app.id + '.filter'] = app.filter
