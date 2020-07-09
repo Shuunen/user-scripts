@@ -3,7 +3,7 @@
 // @namespace   https://github.com/Shuunen
 // @match       https://www.amazon.fr/*
 // @grant       none
-// @version     1.0.1
+// @version     1.0.2
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/mb-import-utils.js
 // @author      Shuunen
 // @description This script let you import releases on Amazon Music to the great MusicBrainz db <3
@@ -15,7 +15,7 @@ function mbImport () {
   const getTracks = () => [...document.querySelectorAll('[id^="dmusic_tracklist_player_row"]')].map((element, index) => ({
     number: (index + 1) + '',
     name: textFromSelector('.TitleLink', element),
-    length: textFromSelector('[id^="dmusic_tracklist_duration"]', element),
+    duration: textFromSelector('[id^="dmusic_tracklist_duration"]', element),
   }))
   const details = textFromSelector('#productDetailsTable')
   const data = {
