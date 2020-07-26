@@ -10,6 +10,26 @@
 
 /* global $ */
 
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+function debounce (func, wait, immediate) {
+  var timeout
+  return function () {
+    var context = this
+    var arguments_ = arguments
+    var later = function () {
+      timeout = undefined
+      if (!immediate) { func.apply(context, arguments_) }
+    }
+    var callNow = immediate && !timeout
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow) { func.apply(context, arguments_) }
+  }
+}
+
 $(document).ready(function () {
   console.log('geforce experience hider (geh) : init')
 
@@ -24,26 +44,6 @@ $(document).ready(function () {
   log(gamesToHide.length + ' games will be hidden')
 
   var hideItStyle = 'color: orangered; border-width: 3px; display: inline-block; box-sizing: content-box; border-radius: 50%; margin-left: 10px; cursor: pointer; height: 10px; width: 10px; border-style: dashed;'
-
-  // Returns a function, that, as long as it continues to be invoked, will not
-  // be triggered. The function will be called after it stops being called for
-  // N milliseconds. If `immediate` is passed, trigger the function on the
-  // leading edge, instead of the trailing.
-  function debounce (func, wait, immediate) {
-    var timeout
-    return function () {
-      var context = this
-      var arguments_ = arguments
-      var later = function () {
-        timeout = undefined
-        if (!immediate) { func.apply(context, arguments_) }
-      }
-      var callNow = immediate && !timeout
-      clearTimeout(timeout)
-      timeout = setTimeout(later, wait)
-      if (callNow) { func.apply(context, arguments_) }
-    }
-  }
 
   function hide () {
     log('hiding...')
