@@ -25,8 +25,8 @@ class Shuutils {
   readableString (string) {
     return string.split('') // zoom on letters
       .map(letter => {
-        var i = this.accentsIn.indexOf(letter)
-        return i !== -1 ? this.accentsOut[i] : letter
+        var index = this.accentsIn.indexOf(letter)
+        return index !== -1 ? this.accentsOut[index] : letter
       }) // fix accents
       .join('') // zoom out, back to a string
       .replace(/<.+?>/g, ' ') // remove content in tags
@@ -34,15 +34,19 @@ class Shuutils {
       .replace(/\s+/g, ' ') // replace spaces with single space
   }
 
-  ellipsisWords (stringIn, maxWords) {
+  ellipsisWords (stringIn = '', maxWords = 5) {
     var stringOut = stringIn.split(' ').splice(0, maxWords).join(' ')
-    if (stringOut !== stringIn) {
-      stringOut += '...'
-    }
-    return stringOut
+    if (stringOut === stringIn) return stringIn
+    return stringOut + '...'
   }
 
-  debounce (func, wait, immediate) {
+  ellipsis (stringIn = '', maxLength = 50) {
+    const stringOut = stringIn.slice(0, maxLength)
+    if (stringOut === stringIn) return stringIn
+    return stringOut + '...'
+  }
+
+  debounce (callback, wait, immediate) {
     var timeout
     return function () {
       var context = this
@@ -50,14 +54,14 @@ class Shuutils {
       var later = function later () {
         timeout = undefined
         if (!immediate) {
-          func.apply(context, arguments_)
+          callback.apply(context, arguments_)
         }
       }
       var callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) {
-        func.apply(context, arguments_)
+        callback.apply(context, arguments_)
       }
     }
   }
@@ -89,5 +93,38 @@ class Shuutils {
       this.warn('found no elements for selector "' + selector + '"')
     }
     return items
+  }
+
+  async sleep (ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  async waitToDetect (selector, wait = 500, nbTries = 0) {
+    await this.sleep(wait)
+    const element = this.findOne(selector)
+    if (element) return element
+    if (nbTries > 5) {
+      this.log(`stop searching after 5 fails to detect : "${selector}"`)
+      return
+    }
+    return this.waitToDetect(selector, wait, ++nbTries)
+  }
+
+  copyToClipboard (stuff) {
+    const element = document.createElement('textarea')
+    const text = typeof stuff === 'string' ? stuff : JSON.stringify(stuff)
+    this.log(`copying to clipboard : ${this.ellipsis(text)}`)
+    element.value = text
+    document.body.append(element)
+    element.select()
+    document.execCommand('copy')
+    element.remove()
+  }
+
+  async readClipboard () {
+    this.log('reading clipboard...')
+    const text = await navigator.clipboard.readText()
+    this.log(`got this text from clipboard : ${this.ellipsis(text)}`)
+    return text
   }
 }
