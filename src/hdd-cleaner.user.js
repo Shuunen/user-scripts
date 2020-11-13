@@ -78,8 +78,8 @@
     const price = Number.parseFloat(matches[0].replace(',', '.').replace('€', '.'))
     const pricePerTo = Math.round(price / (size / 1000))
     let rating = ''
-    for (let i = 40; i > 20; i -= 5) {
-      if (pricePerTo < i) {
+    for (let index = 40; index > 20; index -= 5) {
+      if (pricePerTo < index) {
         rating += '👍'
       }
     }
