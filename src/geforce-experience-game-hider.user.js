@@ -14,19 +14,19 @@
 // be triggered. The function will be called after it stops being called for
 // N milliseconds. If `immediate` is passed, trigger the function on the
 // leading edge, instead of the trailing.
-function debounce (func, wait, immediate) {
+function debounce (function_, wait, immediate) {
   var timeout
   return function () {
     var context = this
     var arguments_ = arguments
     var later = function () {
       timeout = undefined
-      if (!immediate) { func.apply(context, arguments_) }
+      if (!immediate) { function_.apply(context, arguments_) }
     }
     var callNow = immediate && !timeout
     clearTimeout(timeout)
     timeout = setTimeout(later, wait)
-    if (callNow) { func.apply(context, arguments_) }
+    if (callNow) { function_.apply(context, arguments_) }
   }
 }
 

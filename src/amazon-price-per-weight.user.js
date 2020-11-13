@@ -312,8 +312,8 @@
     products = products.sort(function (a, b) {
       return a.pricePerKilo - b.pricePerKilo
     })
-    products.forEach(function (p, i) {
-      return (p.el.style.order = i)
+    products.forEach(function (p, index) {
+      return (p.el.style.order = index)
     })
   }
 

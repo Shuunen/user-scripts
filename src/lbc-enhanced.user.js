@@ -95,7 +95,7 @@ class LBCEnhanced {
     console.error.apply(console, stuff)
   }
 
-  debounce (func, wait = 500, immediate = false) {
+  debounce (function_, wait = 500, immediate = false) {
     var timeout
     return function debounced () {
       var context = this
@@ -103,14 +103,14 @@ class LBCEnhanced {
       var later = function later () {
         timeout = undefined
         if (!immediate) {
-          func.apply(context, arguments_)
+          function_.apply(context, arguments_)
         }
       }
       var callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) {
-        func.apply(context, arguments_)
+        function_.apply(context, arguments_)
       }
     }
   }

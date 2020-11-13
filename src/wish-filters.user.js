@@ -27,19 +27,19 @@
   var itemPriceSelector = '[class^="FeedItemV2__ActualPrice"]'
   var itemDetailsSelector = '[class^="FeedItemV2__Row2"]'
 
-  function debounce (func, wait) {
+  function debounce (function_, wait) {
     var timeout
     return function () {
       var context = this
       var arguments_ = arguments
       var later = function () {
         timeout = undefined
-        func.apply(context, arguments_)
+        function_.apply(context, arguments_)
       }
       var callNow = !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
-      if (callNow) func.apply(context, arguments_)
+      if (callNow) function_.apply(context, arguments_)
     }
   }
 

@@ -21,7 +21,7 @@ class GitlabMr {
     return new Promise(resolve => setTimeout(resolve, (ms || 1000)))
   }
 
-  debounce (func, wait, immediate) {
+  debounce (function_, wait, immediate) {
     var timeout
     return function debounced () {
       var context = this
@@ -29,14 +29,14 @@ class GitlabMr {
       var later = function later () {
         timeout = undefined
         if (!immediate) {
-          func.apply(context, arguments_)
+          function_.apply(context, arguments_)
         }
       }
       var callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) {
-        func.apply(context, arguments_)
+        function_.apply(context, arguments_)
       }
     }
   }
