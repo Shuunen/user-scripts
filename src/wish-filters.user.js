@@ -16,27 +16,27 @@
 
   console.log('wish price filter : init')
 
-  var $ = jQuery.noConflict(true)
-  var minPrice = 0
-  var maxPrice = 1000
-  var minStars = Number.parseInt(window.localStorage.abwMinStars) || 1
-  var hideNsfw = window.localStorage.abwHideNsfw !== 'false'
-  var itemsPerBatch = 10
-  var itemSelector = '[class^="FeedItemV2__Wrapper"]'
-  var itemImageSelector = '[class^="FeedItemV2__Image"]'
-  var itemPriceSelector = '[class^="FeedItemV2__ActualPrice"]'
-  var itemDetailsSelector = '[class^="FeedItemV2__Row2"]'
+  const $ = jQuery.noConflict(true)
+  let minPrice = 0
+  let maxPrice = 1000
+  let minStars = Number.parseInt(window.localStorage.abwMinStars) || 1
+  let hideNsfw = window.localStorage.abwHideNsfw !== 'false'
+  const itemsPerBatch = 10
+  const itemSelector = '[class^="FeedItemV2__Wrapper"]'
+  const itemImageSelector = '[class^="FeedItemV2__Image"]'
+  const itemPriceSelector = '[class^="FeedItemV2__ActualPrice"]'
+  const itemDetailsSelector = '[class^="FeedItemV2__Row2"]'
 
   function debounce (function_, wait) {
-    var timeout
+    let timeout
     return function () {
-      var context = this
-      var arguments_ = arguments
-      var later = function () {
+      const context = this
+      const arguments_ = arguments
+      const later = function () {
         timeout = undefined
         function_.apply(context, arguments_)
       }
-      var callNow = !timeout
+      const callNow = !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) function_.apply(context, arguments_)
@@ -107,7 +107,7 @@
       })
   }
 
-  var currency
+  let currency
   function getCurrency () {
     if (currency) {
       return currency
@@ -116,7 +116,7 @@
       if (currency) {
         return
       }
-      var array = element.textContent.replace(/\d+/, '_').split('_')
+      const array = element.textContent.replace(/\d+/, '_').split('_')
       if (array.length === 2) {
         console.log('currency found at iteration', index)
         currency = array[1]
@@ -130,7 +130,7 @@
     return currency
   }
 
-  var loadedUrl = '//main.cdn.wish.com/fd9acde14ab5/img/ajax_loader_16.gif?v=13'
+  const loadedUrl = '//main.cdn.wish.com/fd9acde14ab5/img/ajax_loader_16.gif?v=13'
 
   function getData (element) {
     const productElement = $(element.tagName ? element : element.currentTarget)
@@ -167,14 +167,14 @@
   }
 
   function showHideProduct (element, originalPicture, totalPrice, nbStars) {
-    var productElement = $(element)
+    const productElement = $(element)
     if (!totalPrice) {
       totalPrice = productElement.find(itemPriceSelector).text().replace(/\D/g, '')
     }
     if (!nbStars) {
       nbStars = productElement.find('img.abw-star').size()
     }
-    var priceOk = totalPrice <= maxPrice
+    let priceOk = totalPrice <= maxPrice
     if (minPrice && minPrice > 0) {
       priceOk = priceOk && totalPrice >= minPrice
       // console.log('min price',priceOk? '': 'NOT', 'passed');
@@ -217,7 +217,7 @@
   }
 
   // prepare a debounced function
-  var showHideProductsDebounced = debounce(showHideProducts, 1000)
+  const showHideProductsDebounced = debounce(showHideProducts, 1000)
 
   // activate when window is scrolled
   $('.feed-grid-scroll-container, .search-grid-scroll-container').scroll(showHideProductsDebounced)
@@ -240,7 +240,7 @@
 
   setTimeout(hideUseless, 100)
 
-  var html = '<div id="wish_tweaks_config" style="float:left; white-space: nowrap; margin-right:10px;display:flex;justify-content:space-between;align-items:center; font-size: 14px; margin-left: 15px;">'
+  let html = '<div id="wish_tweaks_config" style="float:left; white-space: nowrap; margin-right:10px;display:flex;justify-content:space-between;align-items:center; font-size: 14px; margin-left: 15px;">'
   html += 'Min / Max Price : <input id="wtc_min_price" type="text" style="width: 30px; text-align: center; margin-left: 5px;">&nbsp;/<input id="wtc_max_price" type="text" style="width: 30px; text-align: center; margin-left: 5px; margin-right: 10px;">'
   html += 'Min stars : <input id="wtc_min_stars" type="number" min="0" max="5" style="width: 40px; text-align: center; margin: 0 5px;">&nbsp;'
   html += 'Hide nsfw : <input id="wtc_hide_nsfw" type="checkbox" checked style="margin: 0; height: 16px; width: 16px; margin: 0 5px;">'
@@ -266,10 +266,10 @@
   }
 
   // get elements
-  var hideNsfwCheckbox = $('#wtc_hide_nsfw')
-  var minStarsInput = $('#wtc_min_stars')
-  var minPriceInput = $('#wtc_min_price')
-  var maxPriceInput = $('#wtc_max_price')
+  const hideNsfwCheckbox = $('#wtc_hide_nsfw')
+  const minStarsInput = $('#wtc_min_stars')
+  const minPriceInput = $('#wtc_min_price')
+  const maxPriceInput = $('#wtc_max_price')
 
   // restore previous choices
   hideNsfwCheckbox.attr('checked', hideNsfw)

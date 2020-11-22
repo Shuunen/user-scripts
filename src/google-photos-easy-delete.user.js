@@ -13,16 +13,16 @@
   /* global Shuutils */
   'use strict'
 
-  var app = {
+  const app = {
     id: 'gp-ed',
   }
 
-  var selectors = {
+  const selectors = {
     trash: '[data-delete-origin] button',
     confirmBtn: 'button[autofocus]',
   }
 
-  var utils = new Shuutils(app)
+  const utils = new Shuutils(app)
 
   function deleteCurrentPhoto () {
     utils.log('deleting currently displayed photo...')

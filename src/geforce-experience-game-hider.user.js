@@ -15,15 +15,15 @@
 // N milliseconds. If `immediate` is passed, trigger the function on the
 // leading edge, instead of the trailing.
 function debounce (function_, wait, immediate) {
-  var timeout
+  let timeout
   return function () {
-    var context = this
-    var arguments_ = arguments
-    var later = function () {
+    const context = this
+    const arguments_ = arguments
+    const later = function () {
       timeout = undefined
       if (!immediate) { function_.apply(context, arguments_) }
     }
-    var callNow = immediate && !timeout
+    const callNow = immediate && !timeout
     clearTimeout(timeout)
     timeout = setTimeout(later, wait)
     if (callNow) { function_.apply(context, arguments_) }
@@ -37,27 +37,27 @@ $(document).ready(function () {
     console.log('geh :', thing)
   }
 
-  var gamesToHide = []
+  let gamesToHide = []
   if (window.localStorage.gahGamesToHide) {
     gamesToHide = window.localStorage.gahGamesToHide.split(',')
   }
   log(gamesToHide.length + ' games will be hidden')
 
-  var hideItStyle = 'color: orangered; border-width: 3px; display: inline-block; box-sizing: content-box; border-radius: 50%; margin-left: 10px; cursor: pointer; height: 10px; width: 10px; border-style: dashed;'
+  const hideItStyle = 'color: orangered; border-width: 3px; display: inline-block; box-sizing: content-box; border-radius: 50%; margin-left: 10px; cursor: pointer; height: 10px; width: 10px; border-style: dashed;'
 
   function hide () {
     log('hiding...')
     $('.gameName:visible').each(function (index, game) {
       // clean game tile
-      var title = game.textContent.trim().replace(/\./g, '').replace(/[^\d\sA-Za-z]+/g, '')
+      const title = game.textContent.trim().replace(/\./g, '').replace(/[^\d\sA-Za-z]+/g, '')
       // game.textContent = title
       if (gamesToHide.includes(title)) {
         $(game).hide('slow')
       } else {
         game.innerHTML = '<a href="https://www.google.fr/search?q=' + title + '" target="_blank">' + title + '</a>'
-        var hideIt = $('<span style="' + hideItStyle + '"></span>')
+        const hideIt = $('<span style="' + hideItStyle + '"></span>')
         hideIt.click(function (event) {
-          var gameToHide = event.currentTarget.previousElementSibling.textContent
+          const gameToHide = event.currentTarget.previousElementSibling.textContent
           log('user choose to hide "' + gameToHide + '"')
           gamesToHide.push(gameToHide)
           log('this list has been saved in LS, put it in your script if you want to save it forever')
@@ -71,7 +71,7 @@ $(document).ready(function () {
   }
 
   // prepare a debounced function
-  var hideDebounced = debounce(hide, 1000)
+  const hideDebounced = debounce(hide, 1000)
 
   // activate when window is scrolled
   // window.onscroll = hideDebounced;

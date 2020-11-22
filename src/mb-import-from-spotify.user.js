@@ -44,4 +44,4 @@ function mbImport () {
   }
 }
 
-var spotifyNotFullyLoaded = setInterval(mbImport, 1000)
+const spotifyNotFullyLoaded = setInterval(mbImport, 1000)
