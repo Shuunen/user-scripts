@@ -13,7 +13,7 @@
   /* global Shuutils */
   'use strict'
 
-  var app = {
+  const app = {
     id: 'amz-kg',
     processOne: false,
     processOnce: false,
@@ -25,14 +25,14 @@
 
   app.debug = app.processOne
 
-  var cls = {
+  const cls = {
     handled: app.id + '-handled',
     avoided: app.id + '-avoided',
     debug: app.id + '-debug',
     pricePer: app.id + '-price-per',
   }
 
-  var selectors = {
+  const selectors = {
     list: 'ul.s-result-list',
     item: '.s-result-item:not(.aok-hidden):not(.' + cls.handled + '):not(.' + cls.avoided + ')',
     itemTitle: '.s-access-title',
@@ -46,26 +46,26 @@
 
   selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
 
-  var regex = {
+  const regex = {
     price: /eur (\d+,\d\d)/i,
     weight: /(\d+)\s?(g|-)/i,
     bulk: /lot de (\d+)/i,
     pricePer: /eur (\d+,\d\d)\/(\w+)\s?(\w*)/i,
   }
 
-  var templates = {
+  const templates = {
     debug: '<div class="a-row ' + cls.debug + '"><div class="a-column a-span12">\n    <p class="a-spacing-micro">Price  : {{price}} \u20AC</p>\n    <p class="a-spacing-micro">Weight : {{weight}} {{unit}}</p>    \n    <p class="a-spacing-small">Bulk   : {{bulk}}</p>\n    <p class="a-spacing-micro a-size-base a-color-price s-price a-text-bold">P/Kg  : {{pricePerKilo}} \u20AC/kg</p>\n    </div></div>',
     price: '<span class="s-price a-text-bold">EUR {{price}}</span>',
     pricePerKilo: '<span class="a-color-price s-price a-text-bold ' + cls.pricePer + '">EUR {{pricePerKilo}}/kg</span>',
   }
 
-  var utils = new Shuutils(app)
+  const utils = new Shuutils(app)
 
-  var products = []
+  let products = []
 
   function shadeBadProducts () {
     utils.findAll(selectors.pantry).forEach(function (element) {
-      var item =
+      const item =
         element.parentElement.parentElement.parentElement.parentElement.parentElement
           .parentElement.parentElement.parentElement
       item.style.filter = 'grayscale(100%)'
@@ -77,30 +77,30 @@
   }
 
   function priceStringToFloat (string) {
-    var price = string.replace(',', '.')
+    let price = string.replace(',', '.')
     price = Number.parseFloat(price)
     return price
   }
 
   function priceFloatToString (number) {
-    var price = number.toFixed(1)
+    let price = number.toFixed(1)
     price = price.replace('.', ',') + '0'
     return price
   }
 
   function getPrice (text) {
-    var matches = text.match(regex.price)
+    const matches = text.match(regex.price)
     utils.log('found price matches :', matches)
-    var price = matches && matches.length === 2 ? matches[1] : '0'
+    let price = matches && matches.length === 2 ? matches[1] : '0'
     price = priceStringToFloat(price)
     utils.log('found price', price)
     return price
   }
 
   function getWeightAndUnit (text) {
-    var matches = text.match(regex.weight)
+    const matches = text.match(regex.weight)
     // utils.log('found weight matches & unit :', matches)
-    var data = {
+    const data = {
       weight: 0,
       unit: '',
     }
@@ -116,18 +116,18 @@
   }
 
   function getBulk (text) {
-    var matches = text.match(regex.bulk)
+    const matches = text.match(regex.bulk)
     // utils.log('found bulk matches :', matches)
-    var bulk = matches && matches.length === 2 ? matches[1] : '1'
+    let bulk = matches && matches.length === 2 ? matches[1] : '1'
     bulk = Number.parseInt(bulk)
     // utils.log('found bulk', bulk)
     return bulk
   }
 
   function getProductDataViaPricePer (text) {
-    var matches = text.match(regex.pricePer)
+    const matches = text.match(regex.pricePer)
     // utils.log('found pricePer matches :', matches)
-    var data = {
+    const data = {
       price: 0,
       weight: 0,
       unit: '',
@@ -155,8 +155,8 @@
   }
 
   function getProductData (item, data) {
-    var text = item.textContent
-    var weightAndUnit = getWeightAndUnit(text)
+    const text = item.textContent
+    const weightAndUnit = getWeightAndUnit(text)
     data = data || {}
     data.price = getPrice(text)
     data.weight = weightAndUnit.weight
@@ -167,10 +167,10 @@
   }
 
   function fill (template, data) {
-    var tpl = template + ''
+    let tpl = template + ''
     Object.keys(data).forEach(function (key) {
-      var string = '{{' + key + '}}'
-      var value = data[key]
+      const string = '{{' + key + '}}'
+      let value = data[key]
       if (key.includes('price') && value > 0) {
         value = priceFloatToString(value)
       }
@@ -181,7 +181,7 @@
   }
 
   function showDebugData (item, data) {
-    var debug = utils.findOne(selectors.debug, item, true)
+    let debug = utils.findOne(selectors.debug, item, true)
     if (!app.showDebug) {
       if (debug) {
         // if existing debug zone found
@@ -189,7 +189,7 @@
       }
       return
     }
-    var html = fill(templates.debug, data)
+    const html = fill(templates.debug, data)
     // utils.log('debug html', html)
     if (debug) {
       // if existing debug zone found
@@ -199,7 +199,7 @@
     }
     debug = document.createElement('div')
     debug.innerHTML = html
-    var container = utils.findOne(selectors.debugContainer, item)
+    const container = utils.findOne(selectors.debugContainer, item)
     if (container) {
       container.append(debug)
     } else {
@@ -212,7 +212,7 @@
     if (data.weight === 0) {
       return data
     }
-    var w = data.weight * data.bulk
+    const w = data.weight * data.bulk
     if (data.unit === 'g') {
       data.pricePerKilo = (1000 / w) * data.price
     } else if (data.unit === 'kg') {
@@ -232,26 +232,26 @@
       return
     }
     utils.log('injecting real price :', data)
-    var price = utils.findOne(selectors.price, item)
-    var text = ''
+    const price = utils.findOne(selectors.price, item)
+    let text = ''
     if (data.pricePerKilo > 0) {
       text = fill(templates.pricePerKilo, data)
     } else if (data.price > 0) {
       text = fill(templates.price, data)
     }
-    var pricePer = utils.findOne(selectors.pricePer, item, true)
+    const pricePer = utils.findOne(selectors.pricePer, item, true)
     if (pricePer) {
       pricePer.style.display = 'none'
     }
     price.innerHTML = text
-    var otherPrice = utils.findOne(selectors.otherPrice, item, true)
+    const otherPrice = utils.findOne(selectors.otherPrice, item, true)
     if (otherPrice) {
       otherPrice.classList.remove('a-color-price', 'a-text-bold')
     }
   }
 
   function avoidProduct (item) {
-    var nbAttribute = item.getAttributeNames().length
+    const nbAttribute = item.getAttributeNames().length
     if (nbAttribute === 5) {
       utils.warn('detected ad product', item)
       return true
@@ -270,8 +270,8 @@
     if (avoidProduct(item)) {
       return
     }
-    var pricePer = utils.findOne(selectors.pricePer, item, true)
-    var data = {}
+    const pricePer = utils.findOne(selectors.pricePer, item, true)
+    let data = {}
     if (pricePer) {
       pricePer.style.display = 'inherit'
       data = getProductDataViaPricePer(pricePer.textContent)
@@ -298,7 +298,7 @@
   }
 
   function sortProducts () {
-    var list = utils.findOne(selectors.list)
+    const list = utils.findOne(selectors.list)
     if (!list) {
       return utils.error('cannot sort without list')
     }

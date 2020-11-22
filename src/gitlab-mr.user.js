@@ -12,7 +12,7 @@
 
 class GitlabMr {
   constructor () {
-    var processDebounced = this.debounce(this.process.bind(this), 500)
+    const processDebounced = this.debounce(this.process.bind(this), 500)
     setTimeout(() => processDebounced(), 500)
     document.addEventListener('scroll', processDebounced)
   }
@@ -22,17 +22,17 @@ class GitlabMr {
   }
 
   debounce (function_, wait, immediate) {
-    var timeout
+    let timeout
     return function debounced () {
-      var context = this
-      var arguments_ = arguments
-      var later = function later () {
+      const context = this
+      const arguments_ = arguments
+      const later = function later () {
         timeout = undefined
         if (!immediate) {
           function_.apply(context, arguments_)
         }
       }
-      var callNow = immediate && !timeout
+      const callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) {
@@ -42,10 +42,10 @@ class GitlabMr {
   }
 
   async enhanceLinks () {
-    var link = document.querySelector('.dashboard-shortcuts-merge_requests:not(.processed)')
+    const link = document.querySelector('.dashboard-shortcuts-merge_requests:not(.processed)')
     if (!link) return
     link.classList.add('processed')
-    var text = document.createElement('div')
+    const text = document.createElement('div')
     text.classList.add('label')
     link.insertAdjacentElement('afterBegin', text)
     link.parentElement.style.display = 'none'
@@ -55,9 +55,9 @@ class GitlabMr {
   }
 
   async addButton (parent, label, href) {
-    var button = parent.cloneNode(true)
-    var link = button.firstChild
-    var badge = link.querySelector('.badge')
+    const button = parent.cloneNode(true)
+    const link = button.firstChild
+    const badge = link.querySelector('.badge')
     button.style.display = ''
     badge.innerHTML = '&nbsp;'
     badge.classList.add('ml-0')
@@ -69,8 +69,8 @@ class GitlabMr {
     link.querySelector('.label').textContent = label
     parent.insertAdjacentElement('afterEnd', button)
     fetch(href).then(r => r.text()).then(html => {
-      var matches = html.match(/class="merge-request" data-id/g)
-      var nb = matches ? matches.length : 0
+      const matches = html.match(/class="merge-request" data-id/g)
+      const nb = matches ? matches.length : 0
       console.log('found', nb, 'matches for', label)
       badge.textContent = nb
       if (nb < 1) badge.style.backgroundColor = '#1aaa55'
@@ -88,5 +88,5 @@ class GitlabMr {
   }
 }
 
-var instance = new GitlabMr()
+const instance = new GitlabMr()
 console.log('GitlabMr start, here is the instance', instance)

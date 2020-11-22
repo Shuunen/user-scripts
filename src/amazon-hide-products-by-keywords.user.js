@@ -14,7 +14,7 @@
   /* global Shuutils, autosize */
   'use strict'
 
-  var app = {
+  const app = {
     id: 'amz-xd',
     debug: false,
     filter: '',
@@ -26,7 +26,7 @@
 
   app.excluders = (window.localStorage[app.id + '.filter'] || 'my-keyword, other-keyword').split(',')
 
-  var cls = {
+  const cls = {
     base: app.id,
     title: app.id + '-title',
     first: app.id + '-first',
@@ -36,13 +36,13 @@
     filter: app.id + '-filter',
   }
 
-  var selectors = {
+  const selectors = {
     container: ['#search > .sg-row > div:first-child > .sg-col-inner', '#leftNavContainer'].join(','),
     product: 'div[data-asin]',
     productTitle: ['a.s-access-detail-page > h2.s-access-title', '.a-size-medium.a-color-base.a-text-normal'].join(','),
   }
 
-  var utils = new Shuutils(app)
+  const utils = new Shuutils(app)
 
   function clearSuggestions () {
     utils.log('cleared suggestions !')
@@ -60,19 +60,19 @@
     // add .map(key => `${key} (${app.suggestions[key]})`)
     // to see ["silicone (5)", "decoration (4)", "support (4)", "cheveux (3)",
     // instead of ["silicone", "decoration", "support", "cheveux",
-    var suggestions = Object.keys(app.suggestions).sort((a, b) => (app.suggestions[b] - app.suggestions[a]))
+    let suggestions = Object.keys(app.suggestions).sort((a, b) => (app.suggestions[b] - app.suggestions[a]))
     // limit displayed suggestions
     suggestions = suggestions.splice(0, app.maxSuggestions)
     // build html
     utils.log('showing suggestions', suggestions)
-    var html = suggestions.map(suggestion => `<div class="${cls.suggestion}" title="apparaît ${app.suggestions[suggestion]} fois"><span class="${cls.plus}">+</span>${suggestion}</div>`).join('')
+    const html = suggestions.map(suggestion => `<div class="${cls.suggestion}" title="apparaît ${app.suggestions[suggestion]} fois"><span class="${cls.plus}">+</span>${suggestion}</div>`).join('')
     utils.findOne('.' + cls.suggestions).innerHTML = html
   }
 
-  var showSuggestionsDebounced = utils.debounce(showSuggestions, 500)
+  const showSuggestionsDebounced = utils.debounce(showSuggestions, 500)
 
   function onSuggestionClick (event) {
-    var suggestion = event.target.textContent.replace(/\W/gi, '') // regex avoid caching the plus sign
+    const suggestion = event.target.textContent.replace(/\W/gi, '') // regex avoid caching the plus sign
     utils.log('user wants to add suggestion', suggestion)
     app.excluders.push(suggestion)
     onExcludersUpdate()
@@ -90,8 +90,8 @@
   }
 
   function checkProduct (titleString, titleElement) {
-    var found = false
-    var remaining = app.excluders.length
+    let found = false
+    let remaining = app.excluders.length
     while (!found && remaining) {
       found = titleString.includes(app.excluders[remaining - 1])
       remaining--
@@ -101,17 +101,17 @@
     } else {
       addTitleToSuggestions(titleString)
     }
-    var product = titleElement.closest(selectors.product)
+    const product = titleElement.closest(selectors.product)
     product.style.display = found ? 'none' : 'inline-block'
   }
 
   function checkProducts () {
     utils.log('checking displayed products...')
     clearSuggestions()
-    var products = utils.findAll(selectors.productTitle)
+    const products = utils.findAll(selectors.productTitle)
     products.forEach(function (titleElement) {
       titleElement.textContent = utils.readableString(titleElement.textContent)
-      var titleString = titleElement.textContent.toLowerCase()
+      const titleString = titleElement.textContent.toLowerCase()
       checkProduct(titleString, titleElement)
     })
   }
@@ -125,7 +125,7 @@
     app.filter = app.excluders.join(', ')
     window.localStorage[app.id + '.filter'] = app.filter
     if (!fromFilter) {
-      var filter = utils.findOne('.' + cls.filter)
+      const filter = utils.findOne('.' + cls.filter)
       filter.value = app.filter
       autosize.update(filter)
     }
@@ -138,15 +138,15 @@
     onExcludersUpdate(true)
   }
 
-  var onFilterChangeDebounced = utils.debounce(onFilterChange, 500)
+  const onFilterChangeDebounced = utils.debounce(onFilterChange, 500)
 
   function insertFilter () {
-    var container = utils.findFirst(selectors.container)
+    const container = utils.findFirst(selectors.container)
     if (!container) {
       utils.error('cannot inject filter, did not find left nav container')
       return
     }
-    var html = `
+    let html = `
     <style>
     .${cls.suggestions} {
       display: flex;
@@ -183,10 +183,10 @@
     <div class="${cls.suggestions}"></div>
     `
     container.innerHTML = html += container.innerHTML
-    var filter = utils.findOne('.' + cls.filter)
+    const filter = utils.findOne('.' + cls.filter)
     autosize(filter)
     filter.addEventListener('keyup', onFilterChangeDebounced)
-    var suggestions = utils.findOne('.' + cls.suggestions)
+    const suggestions = utils.findOne('.' + cls.suggestions)
     suggestions.addEventListener('click', onSuggestionClick)
   }
 
@@ -200,7 +200,7 @@
   }
 
   function detectNewPage () {
-    var firstProduct = utils.findFirst(selectors.productTitle)
+    const firstProduct = utils.findFirst(selectors.productTitle)
     if (firstProduct.classList.contains(cls.first)) {
       utils.log('same page')
     } else {
@@ -222,6 +222,6 @@
 
   init()
 
-  var processDebounced = utils.debounce(process, 500)
+  const processDebounced = utils.debounce(process, 500)
   document.addEventListener('scroll', processDebounced)
 })()

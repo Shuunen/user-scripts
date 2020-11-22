@@ -13,21 +13,21 @@
   /* global Shuutils */
   'use strict'
 
-  var app = {
+  const app = {
     id: 'bcp-dp',
     debug: false,
   }
 
-  var cls = {
+  const cls = {
     price: app.id + '-price',
     handled: app.id + '-handled',
   }
 
-  var selectors = {
+  const selectors = {
     product: 'li[data-trackid]:not(.' + cls.handled + ')',
   }
 
-  var utils = new Shuutils(app)
+  const utils = new Shuutils(app)
 
   function cleanPrevious () {
     utils.findAll('[class^="' + cls.price + '"]', document, true).forEach(function (node) {
@@ -36,7 +36,7 @@
   }
 
   function displayPrice (product, price) {
-    var tag = document.createElement('div')
+    const tag = document.createElement('div')
     tag.innerHTML = price.value + ' <small>' + price.currency + '</small>'
     tag.style = 'position: absolute; top: 0; right: 0; background-color: green; color: white;'
     tag.classList.add(cls.price, 'col-edit-box')
@@ -49,13 +49,13 @@
 
   function displayPrices () {
     utils.findAll(selectors.product, document, true).forEach(function (product) {
-      var trackId = Number.parseInt(product.getAttribute('data-trackid'))
+      const trackId = Number.parseInt(product.getAttribute('data-trackid'))
       if (trackId) {
         utils.log('adding price for', trackId)
         if (!app.tracks[trackId]) {
           throw new Error('failed at getting track price')
         }
-        var price = app.tracks[trackId]
+        const price = app.tracks[trackId]
         displayPrice(product, price)
       }
     })
@@ -65,9 +65,9 @@
     if (!app.tracks) {
       app.tracks = {}
     }
-    var added = 0
-    list.map(function (track) {
-      var trackId = track.track_id
+    let added = 0
+    list.forEach(function (track) {
+      const trackId = track.track_id
       if (!app.tracks[trackId]) {
         app.tracks[trackId] = {
           value: Math.round(track.price),
@@ -102,8 +102,8 @@
   }
 
   function getDataFromPage () {
-    var dataElement = utils.findOne('#pagedata')
-    var data = JSON.parse(dataElement.getAttribute('data-blob'))
+    const dataElement = utils.findOne('#pagedata')
+    const data = JSON.parse(dataElement.getAttribute('data-blob'))
     setTracksFromList(data.track_list)
     app.token = data.wishlist_data.last_token
     app.userid = data.fan_data.fan_id
@@ -123,6 +123,6 @@
 
   init()
 
-  var processDebounced = utils.debounce(process, 500)
+  const processDebounced = utils.debounce(process, 500)
   document.addEventListener('scroll', processDebounced)
 })()

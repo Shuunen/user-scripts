@@ -48,15 +48,15 @@ const processProductCards = () => all('.list.product-card:not(.ali-aio-handled)'
 const processItemRows = () => all('.items-list > .item:not(.ali-aio-handled)').map(element => processItemRow(element))
 
 function debounce (function_, wait, immediate) {
-  var timeout
+  let timeout
   return function debounced () {
-    var context = this
-    var arguments_ = arguments
-    var later = function later () {
+    const context = this
+    const arguments_ = arguments
+    const later = function later () {
       timeout = undefined
       if (!immediate) function_.apply(context, arguments_)
     }
-    var callNow = immediate && !timeout
+    const callNow = immediate && !timeout
     clearTimeout(timeout)
     timeout = setTimeout(later, wait)
     if (callNow) function_.apply(context, arguments_)

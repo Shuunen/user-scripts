@@ -13,16 +13,16 @@
   /* global Shuutils */
   'use strict'
 
-  var app = {
+  const app = {
     id: 'amz-clr',
     debug: false,
   }
 
-  var selectors = {
+  const selectors = {
     productLine: '.s-item-container',
   }
 
-  var uselessSelectors = {
+  const uselessSelectors = {
     oldPrice: '.a-text-strike, #priceblock_saleprice_lbl, #vatMessage',
     badges: '.a-badge-label, #acBadge_feature_div, #zeitgeistBadge_feature_div, .dotdBadge, .a-row.DEAL_OF_THE_DAY',
     ads: '.nav-swmslot, .GB-M-COMMON.GB-SHOVELER, #pdagSparkleAdFeedback, #detail-ilm_div, #quickPromoBucketContent, #sp_detail, #hqpWrapper, #productAlert_feature_div, #navSwmHoliday, #quickPromoDivId',
@@ -34,7 +34,7 @@
     comparison: '#HLCXComparisonWidget_feature_div',
   }
 
-  var utils = new Shuutils(app)
+  const utils = new Shuutils(app)
 
   function deleteUseless () {
     Object.keys(uselessSelectors).forEach(key => {
@@ -57,6 +57,6 @@
 
   process()
 
-  var processDebounced = utils.debounce(process, 500)
+  const processDebounced = utils.debounce(process, 500)
   document.addEventListener('scroll', processDebounced)
 })()

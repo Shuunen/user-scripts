@@ -25,7 +25,7 @@ class Shuutils {
   readableString (string) {
     return string.split('') // zoom on letters
       .map(letter => {
-        var index = this.accentsIn.indexOf(letter)
+        const index = this.accentsIn.indexOf(letter)
         return index !== -1 ? this.accentsOut[index] : letter
       }) // fix accents
       .join('') // zoom out, back to a string
@@ -35,7 +35,7 @@ class Shuutils {
   }
 
   ellipsisWords (stringIn = '', maxWords = 5) {
-    var stringOut = stringIn.split(' ').splice(0, maxWords).join(' ')
+    const stringOut = stringIn.split(' ').splice(0, maxWords).join(' ')
     if (stringOut === stringIn) return stringIn
     return stringOut + '...'
   }
@@ -47,17 +47,17 @@ class Shuutils {
   }
 
   debounce (callback, wait, immediate) {
-    var timeout
+    let timeout
     return function () {
-      var context = this
-      var arguments_ = arguments
-      var later = function later () {
+      const context = this
+      const arguments_ = arguments
+      const later = function later () {
         timeout = undefined
         if (!immediate) {
           callback.apply(context, arguments_)
         }
       }
-      var callNow = immediate && !timeout
+      const callNow = immediate && !timeout
       clearTimeout(timeout)
       timeout = setTimeout(later, wait)
       if (callNow) {
@@ -68,7 +68,7 @@ class Shuutils {
 
   findOne (selector, context, dontYell) {
     context = context || document
-    var item = context.querySelector(selector)
+    const item = context.querySelector(selector)
     if (item && this.app.debug) {
       this.log('found element matching "' + selector + '"')
     } else if (!item && !dontYell) {
@@ -86,7 +86,7 @@ class Shuutils {
       this.error('incorrect selector : ', selector)
     }
     context = context || document
-    var items = Array.prototype.slice.call(context.querySelectorAll(selector))
+    const items = Array.prototype.slice.call(context.querySelectorAll(selector))
     if (items.length > 0 && this.app.debug) {
       this.log('found', items.length, 'elements matching "' + selector + '"')
     } else if (items.length <= 0 && !dontYell) {
