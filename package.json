@@ -31,7 +31,7 @@
     "check": "repo-check",
     "ci": "npm run test",
     "dev": "npm start",
-    "lint": "eslint --fix --ignore-path .gitignore --ext .js,.html .",
+    "lint": "eslint --fix --ignore-path .gitignore --ext .js .",
     "postversion": "git push && git push --tags",
     "preversion": "npm run ci",
     "start": "npm run test",
