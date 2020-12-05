@@ -3,6 +3,8 @@ class Shuutils {
   constructor (app) {
     Object.apply(app, { id: 'shu-app', debug: true })
     this.app = app
+    this.version = '1.4.0'
+    if (this.debug) this.log('using Shuutils', this.version)
     this.accentsIn = 'ÀÁÂÃÄÅĄàáâãäåąßÒÓÔÕÕÖØÓòóôõöøóÈÉÊËĘèéêëęðÇĆçćÐÌÍÎÏìíîïÙÚÛÜùúûüÑŃñńŠŚšśŸÿýŽŻŹžżź'
     this.accentsOut = 'AAAAAAAaaaaaaaBOOOOOOOOoooooooEEEEEeeeeeeCCccDIIIIiiiiUUUUuuuuNNnnSSssYyyZZZzzz'
   }
