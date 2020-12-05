@@ -127,4 +127,11 @@ class Shuutils {
     this.log(`got this text from clipboard : ${this.ellipsis(text)}`)
     return text
   }
+
+  async onPageChange (callback = () => { }, last = '', wait = 1000) {
+    await this.sleep(wait)
+    const current = document.location.href
+    if (current !== last) callback()
+    this.onPageChange(callback, current, wait)
+  }
 }
