@@ -21,6 +21,12 @@
 
 ![render](https://i.imgur.com/NlHeqYY.jpg)
 
+## BundlePhobia <3 Everywhere
+
+Works on Github & Npmjs.org for now.
+
+![demo](docs/demo-bundlephobia-everywhere.jpg)
+
 ## Thanks
 
 - [Eslint](https://eslint.org) : super tool to find & fix problems
