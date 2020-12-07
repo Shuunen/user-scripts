@@ -8,7 +8,7 @@
 // @match       https://www.npmjs.com/package/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
-// @version     1.0.0
+// @version     1.0.1
 // ==/UserScript==
 
 (function () {
@@ -30,7 +30,7 @@
     const text = document.body.textContent
     const injectHere = text.includes('package.json') && text.includes('npm')
     if (injectHere === false) return utils.log('does not seems like the good place to add a badge')
-    const name = (text.match(/\b(npm i|npm install|npx|yarn add) ([\w-]+)/) || [])[2]
+    const name = (text.match(/\b(npm i|npm install|npx|yarn add).* ([^-][\w-]+)/) || [])[2]
     if (name === undefined) return utils.warn('failed to find a npm package name in this page')
     utils.log('found package name :', name)
     injectBadge(name)
