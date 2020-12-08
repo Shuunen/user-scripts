@@ -8,7 +8,7 @@
 // @match       https://www.npmjs.com/package/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
-// @version     1.0.3
+// @version     1.0.4
 // ==/UserScript==
 
 (function () {
@@ -22,7 +22,7 @@
     const image = document.createElement('img')
     image.src = url
     image.style = 'position: absolute; right: 0; top: 1rem;'
-    const anchor = document.querySelector('main article h1')
+    const anchor = document.querySelector('main article h1') || document.querySelector('#readme') || document.body
     anchor.style.position = 'relative'
     anchor.append(image)
   }
