@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autofill
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.0.1
 // @description  Simply fill your login everywhere
 // @author       Romain Racamier-Lafon
 // ==/UserScript==
@@ -14,8 +14,9 @@
   }
   const fill = (email = 'romain.racamier@gmail.com') => {
     console.log('autofill start')
-    const inputs = document.querySelectorAll('input[id*="mail"], input[name*="mail"], input[type*="mail"], input[name*="user"], input[name*="ident"]')
+    const inputs = document.querySelectorAll('input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]')
     inputs.forEach(input => {
+      if (input.type === 'password') return
       if (input.value.length === 0) {
         input.value = email
         triggerChange(input)
