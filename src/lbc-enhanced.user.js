@@ -59,7 +59,7 @@ const colors = {
 class LBCEnhanced {
   get config () {
     return {
-      debug: true,
+      debug: false,
       processOne: false,
       delayBetweenProcess: 700,
     }

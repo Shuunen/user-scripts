@@ -13,10 +13,7 @@
 
 (function () {
   /* global Shuutils */
-  const utils = new Shuutils({
-    id: 'bdl-evr',
-    debug: true,
-  })
+  const utils = new Shuutils({ id: 'bdl-evr', debug: false })
   const injectBadge = async (name) => {
     const url = `https://img.shields.io/bundlephobia/min/${name}`
     const image = document.createElement('img')
