@@ -22,6 +22,7 @@
   // Date.now polyfill
   if (!Date.now) {
     Date.now = function now () {
+      // eslint-disable-next-line unicorn/prefer-date-now
       return new Date().getTime()
     }
   }
