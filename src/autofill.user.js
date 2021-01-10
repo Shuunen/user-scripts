@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autofill
 // @namespace    https://github.com/Shuunen
-// @version      1.0.1
+// @version      1.0.2
 // @description  Simply fill your login everywhere
 // @author       Romain Racamier-Lafon
 // ==/UserScript==
@@ -24,8 +24,10 @@
       }
     })
   }
-  window.addEventListener('load', () => {
-    setTimeout(fill, 1000)
-    setTimeout(fill, 3000)
-  })
+  if (document.location.hostname !== 'localhost') {
+    window.addEventListener('load', () => {
+      setTimeout(fill, 1000)
+      setTimeout(fill, 3000)
+    })
+  }
 })()
