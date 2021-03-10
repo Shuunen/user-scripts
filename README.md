@@ -27,6 +27,12 @@ Works on Github & Npmjs.org for now.
 
 ![demo](docs/demo-bundlephobia-everywhere.jpg)
 
+## Saveur Bière - Untappd Ratings
+
+Fetch your own beer ratings from Untappd and inject them in the search results to facilitate orders.
+
+![demo](docs/demo-saveur-biere-untappd-rating.jpg)
+
 ## Thanks
 
 - [Eslint](https://eslint.org) : super tool to find & fix problems
