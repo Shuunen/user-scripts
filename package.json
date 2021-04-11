@@ -3,14 +3,7 @@
   "bugs": "https://github.com/Shuunen/user-scripts/issues",
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
-    "eslint": "7.18.0",
-    "eslint-config-standard": "16.0.2",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-standard": "4.1.0",
-    "eslint-plugin-unicorn": "24.0.0",
-    "repo-check": "1.14.5"
+    "shuunen-stack": "latest"
   },
   "files": [
     "src",
@@ -28,15 +21,9 @@
     "url": "https://github.com/Shuunen/user-scripts.git"
   },
   "scripts": {
-    "check": "repo-check",
-    "ci": "npm run test",
-    "dev": "npm start",
-    "lint": "eslint --fix --ignore-path .gitignore --ext .js .",
+    "lint": "stack lint",
     "postversion": "git push && git push --tags",
-    "preversion": "npm run ci",
-    "start": "npm run test",
-    "test": "npm run lint && npm run check",
-    "update": "npx npm-check-updates -u"
+    "preversion": "npm run ci"
   },
   "version": "0.0.1"
 }
