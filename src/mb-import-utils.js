@@ -1,4 +1,4 @@
-
+/* global document */
 // eslint-disable-next-line no-unused-vars
 const textFromSelector = (sel, context) => {
   const element = (context || document).querySelector(sel)
@@ -6,7 +6,7 @@ const textFromSelector = (sel, context) => {
   return element.textContent.trim()
 }
 
-const createMbForm = (app) => {
+const createMbForm = app => {
   const existing = document.querySelector(`#${app.id}`)
   if (existing) existing.remove()
   const form = document.createElement('form')
@@ -34,7 +34,7 @@ const addMbField = (form, name, value, isHidden = false) => {
   form.append(field)
 }
 
-const addMbSubmit = (form) => {
+const addMbSubmit = form => {
   const submit = document.createElement('input')
   submit.type = 'submit'
   submit.value = 'Export to MusicBrainz'
