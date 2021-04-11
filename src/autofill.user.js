@@ -9,9 +9,9 @@
 
 (function AutofillLogin() {
   /* global document, KeyboardEvent, Event, Shuutils */
-  const utils = new Shuutils({ id: 'auto-fill', debug: true })
+  const utils = new Shuutils({ id: 'auto-fill', debug: false })
   const selectors = {
-    input: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]'
+    input: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
   }
   const triggerChange = element => {
     element.dispatchEvent(new KeyboardEvent('change'))
