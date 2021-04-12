@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Saveur Bière - Untappd Ratings
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.1.0
 // @description  See your ratings when buying
 // @author       Romain Racamier-Lafon
 // @match        https://www.saveur-biere.com/*
@@ -9,10 +9,10 @@
 // @grant none
 // ==/UserScript==
 
-(function () {
-  /* global Shuutils, fetch */
+(function SaveurBiereUntappd() {
+  /* global window, document, Shuutils, fetch */
   const marker = 'svb-rat'
-  const utils = new Shuutils({ id: marker, debug: true })
+  const utils = new Shuutils({ id: marker, debug: false })
   const user = window.localStorage.untappdUser || ''
   if (user === '') return utils.error('please set localStorage.untappdUser to use this script')
   const wrapAPIKey = window.localStorage.wrapAPIKey || ''
@@ -21,6 +21,7 @@
     items: 'div[class^="styled__List-sc"] > div[class^="styled__Container-sc"], div[class^="styled__Content"] > h1[class^="styled__Title"]:first-child, div[class^="styled__Column-sc"] > span[class^="styled__Title-sc"]',
     title: 'a[class*="styled__Name-sc"]',
     banner: 'div[class^="styled__Banner-sc"]',
+    useless: '[class^="styled__List"]>a, [class^="styled__DiscountContainer"]',
   }
   const injectRating = (element, data) => {
     const rating = document.createElement('p')
@@ -30,6 +31,7 @@
     else if (data.user_rating >= 3) rating.style.backgroundColor = 'lightyellow'
     else rating.style.backgroundColor = 'lightpink'
     element.append(rating)
+    element.classList.add(marker)
   }
   const fetchRating = async item => {
     const titleElement = item.childElementCount === 0 ? item : utils.findOne(selectors.title, item)
@@ -45,14 +47,25 @@
     const items = utils.findAll(selectors.items)
     utils.log('found items', items)
     items.forEach(item => {
+      if (!item.classList.includes || item.classList.includes(marker)) return
       // skip if product not available
-      if (utils.findOne(selectors.banner, item)) return (item.style.opacity = '0.3')
+      if (utils.findOne(selectors.banner, item)) {
+        item.style.opacity = '0.3'
+        return
+      }
       fetchRating(item)
+    })
+  }
+  const deleteUseless = ()=> {
+    utils.findAll(selectors.useless, document, true).forEach(node => {
+      if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
+      else node.remove()
     })
   }
   const init = async () => {
     const items = await utils.waitToDetect(selectors.items)
     if (items === undefined) return utils.log('no item found on this page')
+    deleteUseless()
     injectRatings()
   }
   utils.onPageChange(init)
