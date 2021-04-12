@@ -56,7 +56,7 @@
       fetchRating(item)
     })
   }
-  const deleteUseless = ()=> {
+  const deleteUseless = () => {
     utils.findAll(selectors.useless, document, true).forEach(node => {
       if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       else node.remove()
