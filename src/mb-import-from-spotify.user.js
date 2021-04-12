@@ -13,7 +13,7 @@
 
 (function SpotifyMusicBrainzExport() {
   /* global document, textFromSelector, insertMbForm, Shuutils */
-  const utils = new Shuutils({ id: 'spotify-mb-export', debug: true })
+  const utils = new Shuutils({ id: 'spotify-mb-export', debug: false })
   const getTracks = () => utils.findAll('.tracklist-row, [data-testid="tracklist-row"]').map((element, index) => ({
     number: String(index + 1),
     name: textFromSelector('.track-name, .tracklist-name, [as="div"]', element),
