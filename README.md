@@ -16,10 +16,6 @@
 
 ![usage](https://i.imgur.com/hoSV2LC.gif)
 
-## Bandcamp - Show prices
-
-![render](https://i.imgur.com/NlHeqYY.jpg)
-
 ## BundlePhobia <3 Everywhere
 
 Works on Github & Npmjs.org for now.
