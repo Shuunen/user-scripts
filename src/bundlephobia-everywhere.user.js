@@ -8,13 +8,13 @@
 // @match       https://www.npmjs.com/package/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
-// @version     1.0.7
+// @version     1.0.8
 // ==/UserScript==
 
-(function () {
-  /* global Shuutils */
+(function BundlePhobiaEverywhere() {
+  /* global document, Shuutils */
   const utils = new Shuutils({ id: 'bdl-evr', debug: false })
-  const injectBadge = async (name) => {
+  const injectBadge = async name => {
     const url = `https://img.shields.io/bundlephobia/min/${name}`
     const image = document.createElement('img')
     image.src = url

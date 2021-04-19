@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Steam Wishlist Export
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.1.0
 // @description  Export games from a wishlist page
 // @author       Romain Racamier-Lafon
 // @match        https://store.steampowered.com/wishlist/profiles/*
@@ -9,17 +9,18 @@
 // @grant none
 // ==/UserScript==
 
-(function () {
-  /* global Shuutils */
+(function SteamWishlistExport() {
+  /* global document, Shuutils */
   const marker = 'stm-wex'
-  const utils = new Shuutils({ id: marker, debug: false })
+  const app = { id: marker, debug: false, games: [] }
+  const utils = new Shuutils(app)
   const selectors = {
     row: `.wishlist_row:not(.${marker})`,
     title: 'a.title',
     img: '.capsule img',
     price: '.discount_final_price',
   }
-  const getGameData = (row) => {
+  const getGameData = row => {
     row.classList.add(marker)
     row.scrollIntoView()
     const titleElement = utils.findOne(selectors.title, row)
@@ -37,16 +38,20 @@
     return getGames(list)
   }
   const copyGames = async () => {
+    if (app.games.length > 0) return utils.copyToClipboard(app.games)
     const games = await getGames()
     utils.log('found games :', games)
     utils.copyToClipboard(games)
-    window.alert(`${games.length} games has been scraped and JSON copied to your clipboard`)
+    app.button.style.backgroundColor = 'lightgreen'
+    app.button.textContent = `${games.length} games copied to your clipboard`
+    app.games = games
   }
   const injectButton = () => {
     const button = document.createElement('button')
     button.textContent = 'Export list to JSON'
-    button.style = 'position: absolute; top: 3.5rem; right: 1rem; padding: 0.5rem 1.2rem; font-size: 1rem; z-index: 1000; '
+    button.style = 'position: fixed; cursor: pointer; top: 3.5rem; right: 1rem; padding: 0.5rem 1.2rem; font-size: 1rem; z-index: 1000; '
     button.addEventListener('click', () => copyGames())
+    app.button = button
     document.body.append(button)
   }
   const init = async () => {

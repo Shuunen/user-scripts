@@ -1,47 +1,40 @@
 // ==UserScript==
 // @name         Google Photos - Easy Delete
 // @namespace    https://github.com/Shuunen
-// @version      1.0.3
+// @version      1.0.4
 // @description  Delete a photo by pressing ! (bang)
 // @author       Romain Racamier-Lafon
-// @match        https://photos.google.com/photo/*
+// @match        https://photos.google.com/*
 // @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
 // @grant        none
 // ==/UserScript==
 
-(function () {
-  /* global Shuutils */
-  'use strict'
-
-  const app = {
-    id: 'gp-ed',
-  }
-
+(function GooglePhotosEasyDelete() {
+  /* global document, Shuutils */
+  const app = { id: 'gp-ed', debug: false, init: false }
+  const utils = new Shuutils(app)
   const selectors = {
     trash: '[data-delete-origin] button',
     confirmBtn: 'button[autofocus]',
   }
-
-  const utils = new Shuutils(app)
-
-  function deleteCurrentPhoto () {
+  const deleteCurrentPhoto = async () => {
     utils.log('deleting currently displayed photo...')
-    utils.findOne(selectors.trash).click()
-    setTimeout(function () {
-      utils.findOne(selectors.confirmBtn).click()
-    }, 200)
+    const trash = utils.findOne(selectors.trash)
+    if (!trash) return utils.error('failed to find trash button')
+    trash.click()
+    await utils.sleep('200')
+    const confirmBtn = utils.findOne(selectors.confirmBtn)
+    if (!confirmBtn) return utils.error('failed to find confirm button')
+    confirmBtn.click()
   }
-
-  function onKeyPress (event) {
-    if (event.key === '!') {
-      deleteCurrentPhoto()
-    }
+  const onKeyPress = event => {
+    if (event.key === '!') deleteCurrentPhoto()
   }
-
-  function init () {
+  const init = () => {
+    if (app.init) return
     utils.log('init !')
     document.body.addEventListener('keypress', onKeyPress)
+    app.init = true
   }
-
-  init()
+  utils.onPageChange(init)
 })()
