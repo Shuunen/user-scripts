@@ -3,7 +3,7 @@
   "bugs": "https://github.com/Shuunen/user-scripts/issues",
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
-    "shuunen-stack": "latest"
+    "shuunen-stack": "0.6.2"
   },
   "files": [
     "src",
@@ -23,7 +23,8 @@
   "scripts": {
     "lint": "stack lint",
     "postversion": "git push && git push --tags",
-    "preversion": "npm run ci"
+    "preversion": "npm run ci",
+    "update": "stack update"
   },
   "version": "0.0.1"
 }
