@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Saveur Bière - Untappd Ratings
 // @namespace    https://github.com/Shuunen
-// @version      1.1.0
+// @version      1.1.1
 // @description  See your ratings when buying
 // @author       Romain Racamier-Lafon
 // @match        https://www.saveur-biere.com/*
@@ -18,7 +18,7 @@
   const wrapAPIKey = window.localStorage.wrapAPIKey || ''
   if (wrapAPIKey === '') return utils.error('please set localStorage.wrapAPIKey to use this script')
   const selectors = {
-    items: 'div[class^="styled__List-sc"] > div[class^="styled__Container-sc"], div[class^="styled__Content"] > h1[class^="styled__Title"]:first-child, div[class^="styled__Column-sc"] > span[class^="styled__Title-sc"]',
+    items: 'div[class^="styled__List"] > div[class^="styled__Container-sc"],[class^="styled__Products"] > div[class^="styled__Container-sc"], div[class^="styled__Content"] > h1[class^="styled__Title"]:first-child, div[class^="styled__Column-sc"] > span[class^="styled__Title-sc"]',
     title: 'a[class*="styled__Name-sc"]',
     banner: 'div[class^="styled__Banner-sc"]',
     useless: '[class^="styled__List"]>a, [class^="styled__DiscountContainer"]',
@@ -37,6 +37,7 @@
     const titleElement = item.childElementCount === 0 ? item : utils.findOne(selectors.title, item)
     if (titleElement === null) return utils.error('cant find item title')
     const name = titleElement.textContent.split(' - ')[0].trim()
+    utils.log('fetching rating for :', name)
     const data = await fetch(`https://wrapapi.com/use/jojo/untappd/history/0.0.1?user=${user}&search=${name}&wrapAPIKey=${wrapAPIKey}`).then(response => response.json()).then(response => response.data)
     if (data === null) return utils.log(`no ratings found for item "${name}"`)
     utils.log('found data', data, 'for item', name)
@@ -47,11 +48,11 @@
     const items = utils.findAll(selectors.items)
     utils.log('found items', items)
     items.forEach(item => {
-      if (!item.classList.includes || item.classList.includes(marker)) return
+      if (item.classList.contains(marker)) return utils.log('item already processed')
       // skip if product not available
       if (utils.findOne(selectors.banner, item)) {
         item.style.opacity = '0.3'
-        return
+        return utils.log('product not available', item)
       }
       fetchRating(item)
     })
