@@ -9,8 +9,8 @@
 // @grant none
 // ==/UserScript==
 
-(function SaveurBiereUntappd() {
-  /* global window, document, Shuutils, fetch */
+(function SaveurBiereUntappd () {
+  /* global Shuutils */
   const marker = 'svb-rat'
   const utils = new Shuutils({ id: marker, debug: false })
   const user = window.localStorage.untappdUser || ''

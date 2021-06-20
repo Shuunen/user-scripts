@@ -9,8 +9,8 @@
 // @version     1.1.3
 // ==/UserScript==
 
-(function GitlabMR() {
-  /* global document, fetch, Shuutils */
+(function GitlabMR () {
+  /* global Shuutils */
   const utils = new Shuutils({ id: 'gitlab-mr', debug: false })
   const enhanceLinks = async () => {
     const link = document.querySelector('.dashboard-shortcuts-merge_requests:not(.processed)')
@@ -44,7 +44,8 @@
       utils.log('found', nb, 'matches for', label)
       badge.textContent = nb
       if (nb < 1) badge.style.backgroundColor = '#1aaa55'
-    })
+      return nb
+    }).catch(error => console.error(error))
     return button
   }
   const hideStuff = () => {

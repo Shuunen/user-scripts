@@ -11,8 +11,8 @@
 // @grant none
 // ==/UserScript==
 
-(function G2ABatchCompare() {
-  /* global window, Shuutils, document, didYouMean */
+(function G2ABatchCompare () {
+  /* global Shuutils, didYouMean */
   const marker = 'g2a-bcp'
   let list = []
   const utils = new Shuutils({ id: marker, debug: false })

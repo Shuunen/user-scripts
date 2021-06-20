@@ -3,7 +3,7 @@
   "bugs": "https://github.com/Shuunen/user-scripts/issues",
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
-    "shuunen-stack": "0.6.2"
+    "shuunen-stack": "0.9.6"
   },
   "files": [
     "src",

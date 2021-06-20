@@ -9,8 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
-(function AmazonPricePerWeight() {
-  /* global document, Shuutils */
+(function AmazonPricePerWeight () {
+  /* global Shuutils */
   const app = {
     id: 'amz-kg',
     processOne: false,
@@ -60,7 +60,7 @@
 
   const products = []
 
-  function shadeBadProducts() {
+  function shadeBadProducts () {
     utils.findAll(selectors.pantry, document, true).forEach(element => {
       const item = element.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
       item.style.filter = 'grayscale(100%)'
@@ -71,19 +71,19 @@
     })
   }
 
-  function priceStringToFloat(string) {
+  function priceStringToFloat (string) {
     let price = string.replace(',', '.')
     price = Number.parseFloat(price)
     return price
   }
 
-  function priceFloatToString(number) {
+  function priceFloatToString (number) {
     let price = number.toFixed(1)
     price = price.replace('.', ',') + '0'
     return price
   }
 
-  function getPrice(text) {
+  function getPrice (text) {
     const matches = text.match(regex.price) || []
     if (matches.length !== 3) return utils.warn('failed to find price in : "' + text + '"', matches)
     if (app.processOne) utils.log('found price matches :', matches)
@@ -92,7 +92,7 @@
     return price
   }
 
-  function getWeightAndUnit(text) {
+  function getWeightAndUnit (text) {
     const matches = text.toLowerCase().match(regex.weight)
     if (app.processOne) utils.log('found weight matches & unit :', matches)
     const data = { weight: 0, unit: '' }
@@ -106,7 +106,7 @@
     return data
   }
 
-  function getBulk(text) {
+  function getBulk (text) {
     const matches = text.match(regex.bulk)
     // utils.log('found bulk matches :', matches)
     let bulk = matches && matches.length === 2 ? matches[1] : '1'
@@ -115,7 +115,7 @@
     return bulk
   }
 
-  function getProductDataViaPricePer(text) {
+  function getProductDataViaPricePer (text) {
     const matches = text.replace('&nbsp;', ' ').match(regex.pricePer) || []
     const data = {
       price: 0,
@@ -140,11 +140,11 @@
     return data
   }
 
-  function getTitle(text) {
+  function getTitle (text) {
     return text.split(' ').slice(0, 5).join(' ')
   }
 
-  function getProductData(item, data = {}) {
+  function getProductData (item, data = {}) {
     const text = item.textContent.trim()
     const textClean = utils.readableString(text)
     if (!data.unit || data.unit === '') {
@@ -158,7 +158,7 @@
     return data
   }
 
-  function fill(template, data) {
+  function fill (template, data) {
     let tpl = String(template)
     Object.keys(data).forEach(key => {
       const string = '{{' + key + '}}'
@@ -170,7 +170,7 @@
     return tpl
   }
 
-  function showDebugData(item, data) {
+  function showDebugData (item, data) {
     let debug = utils.findOne(selectors.debug, item, true)
     if (!app.showDebug) {
       if (debug) debug.style.display = 'none' // if existing debug zone found
@@ -191,7 +191,7 @@
     else utils.error(data.title, ': failed at finding debug container', item)
   }
 
-  function getPricePerKilo(data) {
+  function getPricePerKilo (data) {
     data.pricePerKilo = 0
     if (data.weight === 0) return data
     const w = data.weight * data.bulk
@@ -203,7 +203,7 @@
     return data
   }
 
-  function injectRealPrice(item, data) {
+  function injectRealPrice (item, data) {
     if (!app.injectRealPrice) return
     const price = utils.findOne(selectors.price, item)
     if (!price) return utils.error('failed to find price el')
@@ -217,12 +217,12 @@
     if (otherPrice) otherPrice.classList.remove('a-color-price', 'a-text-bold')
   }
 
-  function augmentProducts() {
+  function augmentProducts () {
     utils.findAll(selectors.item).forEach(item => augmentProduct(item))
     // sortProducts()
   }
 
-  function augmentProduct(item) {
+  function augmentProduct (item) {
     if (app.processOne) utils.log('augment', item)
     const pricePer = utils.findOne(selectors.pricePer, item, true)
     let data = {}
@@ -254,7 +254,7 @@
     })
   }
   */
-  function init() {
+  function init () {
     utils.log('is starting...')
     shadeBadProducts()
     if (app.processOne) augmentProduct(utils.findFirst(selectors.item))

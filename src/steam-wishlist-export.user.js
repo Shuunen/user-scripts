@@ -9,8 +9,8 @@
 // @grant none
 // ==/UserScript==
 
-(function SteamWishlistExport() {
-  /* global document, Shuutils */
+(function SteamWishlistExport () {
+  /* global Shuutils */
   const marker = 'stm-wex'
   const app = { id: marker, debug: false, games: [] }
   const utils = new Shuutils(app)

@@ -9,8 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
-(function GooglePhotosEasyDelete() {
-  /* global document, Shuutils */
+(function GooglePhotosEasyDelete () {
+  /* global Shuutils */
   const app = { id: 'gp-ed', debug: false, init: false }
   const utils = new Shuutils(app)
   const selectors = {
@@ -23,9 +23,9 @@
     if (!trash) return utils.error('failed to find trash button')
     trash.click()
     await utils.sleep('200')
-    const confirmBtn = utils.findOne(selectors.confirmBtn)
-    if (!confirmBtn) return utils.error('failed to find confirm button')
-    confirmBtn.click()
+    const confirmButton = utils.findOne(selectors.confirmBtn)
+    if (!confirmButton) return utils.error('failed to find confirm button')
+    confirmButton.click()
   }
   const onKeyPress = event => {
     if (event.key === '!') deleteCurrentPhoto()
