@@ -10,8 +10,8 @@
 // @grant none
 // ==/UserScript==
 
-(function DealabsAIO() {
-  /* global window, document, Shuutils, autosize */
+(function DealabsAIO () {
+  /* global Shuutils, autosize */
   const app = {
     id: 'dlb-clr',
     filter: '',
@@ -39,19 +39,19 @@
     descriptions: '.cept-description-container',
   }
   const utils = new Shuutils(app)
-  function cleanElements() {
+  function cleanElements () {
     Object.keys(uselessElements).forEach(key => {
       utils.findAll(uselessElements[key], document, true).forEach(node => node.remove())
     })
   }
-  function cleanClasses() {
+  function cleanClasses () {
     Object.keys(uselessClasses).forEach(key => {
       utils.findAll(uselessClasses[key], document, true).forEach(node => {
         node.classList = []
       })
     })
   }
-  function insertStyles() {
+  function insertStyles () {
     const styleTag = document.createElement('style')
     styleTag.innerHTML = `
         .subNav {
@@ -86,7 +86,7 @@
       `
     document.head.insertAdjacentElement('beforeend', styleTag)
   }
-  function onExcludersUpdate(fromFilter) {
+  function onExcludersUpdate (fromFilter) {
     app.excluders = app.excluders
       .map(entry => entry.trim().toLowerCase())
       .filter(entry => entry.length)
@@ -101,13 +101,13 @@
     }
     checkItems()
   }
-  function onFilterChange(event) {
+  function onFilterChange (event) {
     utils.log('filter changed !')
     app.excluders = event.target.value.split(',')
     onExcludersUpdate(true)
   }
   const onFilterChangeDebounced = utils.debounce(onFilterChange, 500)
-  function insertFilter() {
+  function insertFilter () {
     utils.log('insert filter...')
     const container = utils.findFirst(selectors.dealList)
     if (!container) {
@@ -122,7 +122,7 @@
     filter.addEventListener('keyup', onFilterChangeDebounced)
     container.insertAdjacentElement('beforeBegin', filter)
   }
-  function checkItem(text, element) {
+  function checkItem (text, element) {
     let found = false
     let remaining = app.excluders.length
     while (!found && remaining) {
@@ -133,20 +133,20 @@
     else if (app.debug) element.style.backgroundColor = '#f0fbf0'
     element.style.opacity = found ? '0.3' : '1'
   }
-  function checkItems() {
+  function checkItems () {
     utils.log('checking displayed items...')
     utils.findAll(selectors.deal).forEach(element => {
       const text = utils.readableString(element.textContent).toLowerCase().trim()
       checkItem(text, element)
     })
   }
-  function process() {
+  function process () {
     utils.log('processing')
     cleanClasses()
     cleanElements()
     onExcludersUpdate()
   }
-  function init() {
+  function init () {
     utils.log('init !')
     insertStyles()
     insertFilter()

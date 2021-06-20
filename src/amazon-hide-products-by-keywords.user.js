@@ -10,8 +10,8 @@
 // @grant        none
 // ==/UserScript==
 
-(function AmazonHide() {
-  /* global window, document, Shuutils, autosize */
+(function AmazonHide () {
+  /* global Shuutils, autosize */
   const app = {
     id: 'amz-xd',
     debug: false,
@@ -42,13 +42,13 @@
 
   const utils = new Shuutils(app)
 
-  function clearSuggestions() {
+  function clearSuggestions () {
     utils.log('cleared suggestions !')
     app.suggestions = {}
     utils.findOne('.' + cls.suggestions).innerHTML = ''
   }
 
-  function showSuggestions() {
+  function showSuggestions () {
     Object.keys(app.suggestions).forEach(word => {
       if (app.excluders.includes(word))
         // if already excluded, no need to suggest it again
@@ -68,14 +68,14 @@
 
   const showSuggestionsDebounced = utils.debounce(showSuggestions, 500)
 
-  function onSuggestionClick(event) {
+  function onSuggestionClick (event) {
     const suggestion = event.target.textContent.replace(/\W/gi, '') // regex avoid caching the plus sign
     utils.log('user wants to add suggestion', suggestion)
     app.excluders.push(suggestion)
     onExcludersUpdate()
   }
 
-  function addTitleToSuggestions(title) {
+  function addTitleToSuggestions (title) {
     title.split(' ').filter(word => word.length > app.minLengthSuggestion).forEach(word => {
       // add the word if needed & count the occurrence
       if (!app.suggestions[word])
@@ -86,7 +86,7 @@
     showSuggestionsDebounced()
   }
 
-  function checkProduct(titleString, titleElement) {
+  function checkProduct (titleString, titleElement) {
     let found = false
     let remaining = app.excluders.length
     while (!found && remaining) {
@@ -102,7 +102,7 @@
     product.style.display = found ? 'none' : 'inline-block'
   }
 
-  function checkProducts() {
+  function checkProducts () {
     utils.log('checking displayed products...')
     clearSuggestions()
     const products = utils.findAll(selectors.productTitle)
@@ -113,7 +113,7 @@
     })
   }
 
-  function onExcludersUpdate(fromFilter) {
+  function onExcludersUpdate (fromFilter) {
     app.excluders = app.excluders
       .map(entry => entry.trim().toLowerCase())
       .filter(entry => entry.length)
@@ -129,7 +129,7 @@
     checkProducts()
   }
 
-  function onFilterChange(event) {
+  function onFilterChange (event) {
     utils.log('filter changed')
     app.excluders = event.target.value.split(',')
     onExcludersUpdate(true)
@@ -137,7 +137,7 @@
 
   const onFilterChangeDebounced = utils.debounce(onFilterChange, 500)
 
-  function insertFilter() {
+  function insertFilter () {
     const container = utils.findFirst(selectors.container)
     if (!container) {
       utils.error('cannot inject filter, did not find left nav container')
@@ -188,16 +188,16 @@
     suggestions.addEventListener('click', onSuggestionClick)
   }
 
-  function cleanPrevious() {
+  function cleanPrevious () {
     utils.findAll('[class^="' + cls.base + '"]', document, true).forEach(node => node.remove())
   }
 
-  function onNewPage() {
+  function onNewPage () {
     utils.log('new page detected')
     onExcludersUpdate()
   }
 
-  function detectNewPage() {
+  function detectNewPage () {
     const firstProduct = utils.findFirst(selectors.productTitle)
     if (firstProduct.classList.contains(cls.first))
       utils.log('same page')
@@ -207,11 +207,11 @@
     }
   }
 
-  function process() {
+  function process () {
     detectNewPage()
   }
 
-  function init() {
+  function init () {
     utils.log('init !')
     cleanPrevious()
     insertFilter()

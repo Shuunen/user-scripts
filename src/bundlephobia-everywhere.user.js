@@ -11,8 +11,8 @@
 // @version     1.0.8
 // ==/UserScript==
 
-(function BundlePhobiaEverywhere() {
-  /* global document, Shuutils */
+(function BundlePhobiaEverywhere () {
+  /* global Shuutils */
   const utils = new Shuutils({ id: 'bdl-evr', debug: false })
   const injectBadge = async name => {
     const url = `https://img.shields.io/bundlephobia/min/${name}`

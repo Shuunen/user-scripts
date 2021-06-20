@@ -9,8 +9,8 @@
 // @version     1.1.3
 // ==/UserScript==
 
-(function ImageUnblock() {
-  /* global document, Shuutils */
+(function ImageUnblock () {
+  /* global Shuutils */
   const PROXY_URL = 'https://proxy.duckduckgo.com/iu/?u='
   const utils = new Shuutils({ id: 'img-unblock', debug: true })
   const selectors = {

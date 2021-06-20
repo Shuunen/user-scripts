@@ -9,8 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
-(function AliExpressAIO() {
-  /* global document, window, Shuutils */
+(function AliExpressAIO () {
+  /* global Shuutils */
   const utils = new Shuutils({ id: 'ali-express-aio', debug: false })
   const extendsImage = (img, size = 600) => {
     // img.src = img.src.split('.jpg_')[0] + '.jpg'

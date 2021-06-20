@@ -9,8 +9,8 @@
 // @version     1.1.3
 // ==/UserScript==
 
-(function LolKpmCounter() {
-  /* global document, window, Shuutils */
+(function LolKpmCounter () {
+  /* global Shuutils */
   const utils = new Shuutils({ id: 'lol-kpm', debug: false })
   const maxKpm = 1.8
   const coolPercents = kpm => Math.min(Math.max(Math.round(kpm / maxKpm * 100), 0), 100)

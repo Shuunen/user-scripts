@@ -9,8 +9,8 @@
 // @description This script let you import releases on Amazon Music to the great MusicBrainz db <3
 // ==/UserScript==
 
-(function AmazonMusicBrainzExport() {
-  /* global document, textFromSelector, insertMbForm, Shuutils */
+(function AmazonMusicBrainzExport () {
+  /* global textFromSelector, insertMbForm, Shuutils */
   const utils = new Shuutils({ id: 'amazon-mb-export', debug: false })
   const selectors = {
     title: '[data-feature-name="dmusicProductTitle"]',

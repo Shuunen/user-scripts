@@ -15,13 +15,13 @@
 // @grant        none
 // ==/UserScript==
 
-(function HDDCleaner() {
-  /* global document, Shuutils */
+(function HDDCleaner () {
+  /* global Shuutils */
   const app = {
     id: 'hdd-clr',
     debug: false,
     minSize: 4000, // in Gb or Go
-    maxSize: 12000,
+    maxSize: 12_000,
   }
   const cls = {
     mark: app.id + '-mark',
@@ -37,7 +37,7 @@
     price: /(\d+[,.\\€]\d+)/,
   }
   const utils = new Shuutils(app)
-  function getSize(text) {
+  function getSize (text) {
     const matches = text.match(regex.sizes)
     if (!matches) return false
     let size = 0
@@ -48,7 +48,7 @@
     })
     return size
   }
-  function insertPricePerSize(productElement, descElement, size) {
+  function insertPricePerSize (productElement, descElement, size) {
     const priceElement = utils.findOne(selectors.price, productElement)
     if (!priceElement) {
       utils.error('failed at finding price element')
@@ -70,7 +70,7 @@
     descElement.textContent = '( ' + rating + pricePerTo + '€ / to ) - ' + descElement.textContent
     return true
   }
-  function checkItems() {
+  function checkItems () {
     utils.findAll(selectors.desc, document, true).forEach(descElement => {
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // first close last opened console group, else closing nothing without throwing error
@@ -101,7 +101,7 @@
     // if at least one iteration above, there's an open console group, else closing nothing without throwing error
     console.groupEnd()
   }
-  function process() {
+  function process () {
     utils.log('processing')
     checkItems()
   }

@@ -9,20 +9,20 @@
 // @version     1.1.2
 // ==/UserScript==
 
-(function LeBonCoinEnhanced() {
-  /* global document, fetch, localStorage, Shuutils */
+(function LeBonCoinEnhanced () {
+  /* global Shuutils */
   const utils = new Shuutils({ id: 'lbc-enhanced', debug: false })
   const div = document.createElement('div')
   class Store {
-    constructor(provider) {
+    constructor (provider) {
       this.provider = provider
     }
 
-    fullKey(key) {
+    fullKey (key) {
       return `lbc-enhanced_${key}`
     }
 
-    async get(key, defaultValue) {
+    async get (key, defaultValue) {
       const data = this.provider[this.fullKey(key)]
       if (defaultValue && !data) return defaultValue
       if (!data) throw new Error(`storage : found no matching key "${this.fullKey(key)}"`)
@@ -33,12 +33,12 @@
       return result
     }
 
-    async set(key, data) {
+    async set (key, data) {
       this.provider[this.fullKey(key)] = typeof data === 'object' ? JSON.stringify(data) : data
       return data
     }
 
-    async has(key) {
+    async has (key) {
       return this.get(key).then(value => Boolean(value)).catch(() => false)
     }
   }
@@ -56,7 +56,7 @@
     primary: '#f56b2a',
   }
   class LBCEnhanced {
-    get config() {
+    get config () {
       return {
         debug: false,
         processOne: false,
@@ -64,20 +64,21 @@
       }
     }
 
-    constructor() {
+    constructor () {
+      // eslint-disable-next-line unicorn/prefer-prototype-methods
       this.processDebounced = utils.debounce(this.process.bind(this), 500)
       document.addEventListener('scroll', this.processDebounced)
       this.hidden = []
       this.loadData()
     }
 
-    async loadData() {
+    async loadData () {
       this.hidden = await store.get('hidden', [])
       await utils.sleep(500)
       this.processDebounced()
     }
 
-    findMatch(string = '', regex = new RegExp(), nbMatch = 2) {
+    findMatch (string = '', regex = new RegExp(), nbMatch = 2) {
       const matches = string.match(regex) || []
       if (matches.length !== nbMatch) return this.warn(`findMatch found ${matches.length} matche(s) instead of ${nbMatch} for this regex :`, regex)
       const result = matches[nbMatch - 1]
@@ -85,7 +86,7 @@
       return result
     }
 
-    async enhanceListItemImmo(element = div, html = '') {
+    async enhanceListItemImmo (element = div, html = '') {
       utils.log('enhanceListItemImmo')
       const energyClass = this.findMatch(html, /criteria_item_energy_rate.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/)
       const gesClass = this.findMatch(html, /criteria_item_ges.*?<div class="\w+ \w+ \w+" data-reactid="\d+">(\w)<\/div>/)
@@ -103,7 +104,7 @@
       this.findKeywords(element, html.toLowerCase(), 'calme,rénové,jardin,placards,petite résidence,pas de frais,stationnement,double vitrage,petite copropriété,proximité du parc,parking,cave,ascenseur,dernier étage,lumineux,impasse,tram,arbres,champs,vis à vis'.split(',').sort())
     }
 
-    findKeywords(element = div, html = '', keywords = []) {
+    findKeywords (element = div, html = '', keywords = []) {
       const founds = keywords.filter(keyword => html.includes(keyword))
       const icon = this.addIcon(element, founds.join(', '), 0)
       const width = 300
@@ -114,7 +115,7 @@
       icon.style.backgroundColor = '#f1f1f1'
     }
 
-    addIconsForPricePerMeter(element = div, price = 0) {
+    addIconsForPricePerMeter (element = div, price = 0) {
       const icon = this.addIcon(element, `${price} € / m²`, 129, 8)
       icon.style.color = (price <= 9 ? colors.success : (price > 12 ? colors.error : 'black'))
       icon.style.padding = '0 2px'
@@ -123,7 +124,7 @@
     /**
    * @param {Array} list La liste des classe énergétique ou GES de A à G
    */
-    addIconsForClasses(element = div, list = ['?', '?']) {
+    addIconsForClasses (element = div, list = ['?', '?']) {
       const top = 81
       let right = 15
       list.forEach(cls => {
@@ -135,7 +136,7 @@
       })
     }
 
-    addIcon(element = div, icon = '?', top = 10, right = 10, callback = undefined) { // eslint-disable-line max-params
+    addIcon (element = div, icon = '?', top = 10, right = 10, callback) { // eslint-disable-line max-params
       const button = document.createElement('button')
       button.textContent = icon
       button.style = `background: none;border: 0px;font-size: 24px;position: absolute;top: ${top}px;right: ${right}px;`
@@ -145,7 +146,7 @@
       return button
     }
 
-    async hideListItem(element = div, message = '') {
+    async hideListItem (element = div, message = '') {
       if (message.length > 0) utils.log(message, '=> hiding', element.link.href)
       else utils.log('hiding', element.link.href)
       if (this.hidden.includes(element.id)) return
@@ -154,11 +155,11 @@
       element.style.display = 'none'
     }
 
-    enhanceListItemGeneric(element = div) {
+    enhanceListItemGeneric (element = div) {
       this.addIcon(element, '👁️', 44, 7, this.hideListItem)
     }
 
-    async enhanceListItem(element = div) {
+    async enhanceListItem (element = div) {
       element.link = element.querySelector('a')
       element.id = this.findMatch(element.link.href, /\/(\d+)\.htm/)
       if (!element.id) throw new Error('failed at defining an id')
@@ -172,7 +173,7 @@
       await utils.sleep(this.config.delayBetweenProcess)
     }
 
-    async enhanceListing() {
+    async enhanceListing () {
       let items = document.querySelectorAll('[itemtype="http://schema.org/Offer"]:not(.processed)')
       if (!items || items.length <= 0) return
       if (this.config.processOne) items = [items[0]]
@@ -180,13 +181,13 @@
       for (const item of items) await this.enhanceListItem(item) // eslint-disable-line no-await-in-loop
     }
 
-    detectContext() {
+    detectContext () {
       const title = document.querySelector('h1').textContent
       this.context = 'unknown'
       if (title.includes('immobilières')) this.context = 'immo'
     }
 
-    process() {
+    process () {
       this.detectContext()
       this.enhanceListing()
     }

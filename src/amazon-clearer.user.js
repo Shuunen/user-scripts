@@ -9,8 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
-(function AmazonClearer() {
-  /* global document, Shuutils */
+(function AmazonClearer () {
+  /* global Shuutils */
   const utils = new Shuutils({ id: 'amz-clr', debug: false })
   const selectors = {
     productLine: '.s-item-container',
@@ -27,7 +27,7 @@
     buyPack: '#sims-fbt',
     comparison: '#HLCXComparisonWidget_feature_div',
   }
-  function deleteUseless() {
+  function deleteUseless () {
     Object.keys(uselessSelectors).forEach(key => {
       utils.findAll(uselessSelectors[key], document, true).forEach(node => {
         if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
@@ -35,12 +35,12 @@
       })
     })
   }
-  function cosmeticChanges() {
+  function cosmeticChanges () {
     utils.findAll(selectors.productLine, document, true).forEach(node => {
       node.className = ''
     })
   }
-  function process() {
+  function process () {
     utils.log('processing')
     deleteUseless()
     cosmeticChanges()

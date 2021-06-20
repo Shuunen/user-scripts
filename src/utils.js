@@ -1,7 +1,6 @@
-/* global document, navigator */
-/* eslint-disable-next-line no-unused-vars */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class Shuutils {
-  constructor(app) {
+  constructor (app) {
     Object.apply(app, { id: 'shu-app', debug: true })
     this.app = app
     this.version = '1.4.0'
@@ -10,22 +9,25 @@ class Shuutils {
     this.accentsOut = 'AAAAAAAaaaaaaaBOOOOOOOOoooooooEEEEEeeeeeeCCccDIIIIiiiiUUUUuuuuNNnnSSssYyyZZZzzz'
   }
 
-  log(...stuff) {
+  log (...stuff) {
     stuff.unshift(this.app.id + ' :')
-    console.log.apply(console, stuff) // eslint-disable-line prefer-spread
+    // eslint-disable-next-line unicorn/prefer-prototype-methods
+    console.log.apply(console, stuff)
   }
 
-  warn(...stuff) {
+  warn (...stuff) {
     stuff.unshift(this.app.id + ' :')
-    console.warn.apply(console, stuff) // eslint-disable-line prefer-spread
+    // eslint-disable-next-line unicorn/prefer-prototype-methods
+    console.warn.apply(console, stuff)
   }
 
-  error(...stuff) {
+  error (...stuff) {
     stuff.unshift(this.app.id + ' :')
-    console.error.apply(console, stuff) // eslint-disable-line prefer-spread
+    // eslint-disable-next-line unicorn/prefer-prototype-methods
+    console.error.apply(console, stuff)
   }
 
-  readableString(string) {
+  readableString (string) {
     return string.split('') // zoom on letters
       .map(letter => {
         const index = this.accentsIn.indexOf(letter)
@@ -37,24 +39,25 @@ class Shuutils {
       .replace(/\s+/g, ' ') // replace spaces with single space
   }
 
-  ellipsisWords(stringIn = '', maxWords = 5) {
+  ellipsisWords (stringIn = '', maxWords = 5) {
     const stringOut = stringIn.split(' ').splice(0, maxWords).join(' ')
     if (stringOut === stringIn) return stringIn
     return stringOut + '...'
   }
 
-  ellipsis(stringIn = '', maxLength = 50) {
+  ellipsis (stringIn = '', maxLength = 50) {
     const stringOut = stringIn.slice(0, maxLength)
     if (stringOut === stringIn) return stringIn
     return stringOut + '...'
   }
 
-  debounce(callback, wait, immediate) {
+  debounce (callback, wait, immediate) {
     let timeout
-    return function _debounce() {
+    return function _debounce () {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const context = this // eslint-disable-line unicorn/no-this-assignment
       const arguments_ = arguments
-      const later = function later() {
+      const later = function later () {
         timeout = undefined
         if (!immediate) callback.apply(context, arguments_)
       }
@@ -65,7 +68,7 @@ class Shuutils {
     }
   }
 
-  findOne(selector, context, dontYell) {
+  findOne (selector, context, dontYell) {
     context = context || document
     const item = context.querySelector(selector)
     if (item && this.app.debug) this.log('found element matching "' + selector + '"')
@@ -73,11 +76,11 @@ class Shuutils {
     return item
   }
 
-  findFirst(selector, context, dontYell) {
+  findFirst (selector, context, dontYell) {
     return this.findAll(selector, context, dontYell)[0]
   }
 
-  findAll(selector, context, dontYell) {
+  findAll (selector, context, dontYell) {
     if (!selector || selector.length === 0 || selector.length === 1) this.error('incorrect selector : ', selector)
     context = context || document
     const items = Array.prototype.slice.call(context.querySelectorAll(selector))
@@ -86,13 +89,13 @@ class Shuutils {
     return items
   }
 
-  async sleep(ms) {
+  async sleep (ms) {
     return new Promise(resolve => {
       setTimeout(resolve, ms)
     })
   }
 
-  async waitToDetect(selector, wait = 500, nbTries = 0) {
+  async waitToDetect (selector, wait = 500, nbTries = 0) {
     await this.sleep(wait)
     const element = this.findOne(selector)
     if (element) return element
@@ -103,7 +106,7 @@ class Shuutils {
     return this.waitToDetect(selector, wait, ++nbTries)
   }
 
-  copyToClipboard(stuff) {
+  copyToClipboard (stuff) {
     const element = document.createElement('textarea')
     const text = typeof stuff === 'string' ? stuff : JSON.stringify(stuff)
     this.log(`copying to clipboard : ${this.ellipsis(text)}`)
@@ -114,14 +117,14 @@ class Shuutils {
     element.remove()
   }
 
-  async readClipboard() {
+  async readClipboard () {
     this.log('reading clipboard...')
     const text = await navigator.clipboard.readText()
     this.log(`got this text from clipboard : ${this.ellipsis(text)}`)
     return text
   }
 
-  async onPageChange(callback = () => {}, last = '', wait = 1000) {
+  async onPageChange (callback = () => { console.log('empty callback') }, last = '', wait = 1000) {
     await this.sleep(wait)
     const current = document.location.href
     if (current !== last) callback(current)

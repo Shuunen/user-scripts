@@ -11,8 +11,8 @@
 // @description This script let you import releases on Spotify to the great MusicBrainz db <3
 // ==/UserScript==
 
-(function SpotifyMusicBrainzExport() {
-  /* global document, textFromSelector, insertMbForm, Shuutils */
+(function SpotifyMusicBrainzExport () {
+  /* global textFromSelector, insertMbForm, Shuutils */
   const utils = new Shuutils({ id: 'spotify-mb-export', debug: false })
   const selectors = {
     title: '.entity-info.media h1, .os-content h1[as="h1"]',
