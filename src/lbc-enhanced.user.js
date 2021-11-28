@@ -65,7 +65,6 @@
     }
 
     constructor () {
-      // eslint-disable-next-line unicorn/prefer-prototype-methods
       this.processDebounced = utils.debounce(this.process.bind(this), 500)
       document.addEventListener('scroll', this.processDebounced)
       this.hidden = []
@@ -136,7 +135,7 @@
       })
     }
 
-    addIcon (element = div, icon = '?', top = 10, right = 10, callback) { // eslint-disable-line max-params
+    addIcon (element = div, icon = '?', top = 10, right = 10, callback) {
       const button = document.createElement('button')
       button.textContent = icon
       button.style = `background: none;border: 0px;font-size: 24px;position: absolute;top: ${top}px;right: ${right}px;`
@@ -178,7 +177,7 @@
       if (!items || items.length <= 0) return
       if (this.config.processOne) items = [items[0]]
       items.forEach(item => item.classList.add('processed'))
-      for (const item of items) await this.enhanceListItem(item) // eslint-disable-line no-await-in-loop
+      for (const item of items) await this.enhanceListItem(item)
     }
 
     detectContext () {

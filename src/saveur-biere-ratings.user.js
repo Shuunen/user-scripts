@@ -12,7 +12,7 @@
 (function SaveurBiereUntappd () {
   /* global Shuutils */
   const marker = 'svb-rat'
-  const cached = new Date().toISOString().substr(0, 7) // like 2021-11
+  const cached = new Date().toISOString().slice(0, 7) // like 2021-11
   const utils = new Shuutils({ id: marker, debug: true })
   const user = localStorage.untappdUser || ''
   if (user === '') return utils.error('please set localStorage.untappdUser to use this script')

@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line no-unused-vars
 class Shuutils {
   constructor (app) {
     Object.apply(app, { id: 'shu-app', debug: true })
@@ -11,29 +11,26 @@ class Shuutils {
 
   log (...stuff) {
     stuff.unshift(this.app.id + ' :')
-    // eslint-disable-next-line unicorn/prefer-prototype-methods
     console.log.apply(console, stuff)
   }
 
   warn (...stuff) {
     stuff.unshift(this.app.id + ' :')
-    // eslint-disable-next-line unicorn/prefer-prototype-methods
     console.warn.apply(console, stuff)
   }
 
   error (...stuff) {
     stuff.unshift(this.app.id + ' :')
-    // eslint-disable-next-line unicorn/prefer-prototype-methods
     console.error.apply(console, stuff)
   }
 
   readableString (string) {
-    return string.split('') // zoom on letters
+    return [...string] // string to letters
       .map(letter => {
         const index = this.accentsIn.indexOf(letter)
         return index === -1 ? letter : this.accentsOut[index]
       }) // fix accents
-      .join('') // zoom out, back to a string
+      .join('') // letters to string
       .replace(/<.+?>/g, ' ') // remove content in tags
       .replace(/(\W|-)/gi, ' ') // remove non words
       .replace(/\s+/g, ' ') // replace spaces with single space
@@ -54,7 +51,6 @@ class Shuutils {
   debounce (callback, wait, immediate) {
     let timeout
     return function _debounce () {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const context = this // eslint-disable-line unicorn/no-this-assignment
       const arguments_ = arguments
       const later = function later () {
