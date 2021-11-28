@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/* eslint-disable no-unused-vars */
 const textFromSelector = (sel, context) => {
   const element = (context || document).querySelector(sel)
   if (!element) return ''
@@ -41,7 +41,6 @@ const addMbSubmit = form => {
   form.append(submit)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const insertMbForm = ({ app, title, artist, date, tracks, label, url, urlType }) => {
   if (!title || !artist) return console.info(app.id, 'cannot work without data, exiting...')
   console.log(app.id, 'got data :', { title, artist, date, tracks, label, url, urlType })

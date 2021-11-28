@@ -115,7 +115,7 @@
     const total = list.length
     for (const game of list) {
       progress.textContent = `${++index}/${total}`
-      await getLocalPrice(game) // eslint-disable-line no-await-in-loop
+      await getLocalPrice(game)
     }
   }
   const showModal = async () => {
