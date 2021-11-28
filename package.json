@@ -29,5 +29,5 @@
     "postversion": "git push && git push --tags",
     "preversion": "npm run ci"
   },
-  "version": "0.0.1"
+  "version": "1.0.0"
 }
