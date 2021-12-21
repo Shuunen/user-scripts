@@ -8,7 +8,7 @@
 // @match       https://www.npmjs.com/package/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
-// @version     1.1.0
+// @version     1.1.1
 // ==/UserScript==
 
 (function BundlePhobiaEverywhere () {
@@ -22,7 +22,7 @@
     link.href = `https://bundlephobia.com/package/${name}`
     link.target = '_blank'
     link.style = 'position: absolute; right: 0.8rem; top: 0.9rem; z-index: 1000; display: flex; gap: 1rem;'
-    const anchor = document.querySelector('main article h1') || document.querySelector('#readme') || document.body
+    const anchor = document.querySelector('#readme') || document.body
     anchor.style.position = 'relative'
     anchor.append(link)
   }
