@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Steam Wishlist Export
 // @namespace    https://github.com/Shuunen
-// @version      1.1.0
+// @version      1.1.1
 // @description  Export games from a wishlist page
 // @author       Romain Racamier-Lafon
 // @match        https://store.steampowered.com/wishlist/profiles/*
+// @match        https://store.steampowered.com/wishlist/id/*
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @grant none
 // ==/UserScript==
