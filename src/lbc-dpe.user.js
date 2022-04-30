@@ -51,6 +51,7 @@
     if (element.classList.contains(cls.marker)) return utils.log('ad already processed', id)
     utils.log('process ad :', ad)
     element.classList.add(cls.marker)
+    element.style.position = 'relative'
     const energy = ad.attributes.find(a => a.key === 'energy_rate').value
     const ges = ad.attributes.find(a => a.key === 'ges').value
     if (!/[a-c]/.test(energy) || !/[a-c]/.test(ges)) element.style.display = 'none'
