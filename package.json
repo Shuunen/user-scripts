@@ -3,9 +3,9 @@
   "bugs": "https://github.com/Shuunen/user-scripts/issues",
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
-    "eslint": "8",
+    "eslint": "8.20",
     "eslint-plugin-unicorn": "43",
-    "repo-check": "^1.21"
+    "repo-check": "1.24"
   },
   "files": [
     "src",

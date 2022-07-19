@@ -13,7 +13,7 @@ const createMbForm = app => {
   form.method = 'post'
   form.target = 'blank'
   form.action = 'https://musicbrainz.org/release/add?tport=8000'
-  form.acceptCharset = 'UTF-8'
+  form.acceptCharset = 'utf8'
   form.style = 'position: absolute; z-index: 1000; display: flex; flex-direction: column;padding: 0.7rem 0.8rem;color: rgb(51, 51, 51);background-color: white;top: 60px;right: 1rem;border-radius: 0.2rem;'
   const header = document.createElement('h2')
   header.textContent = app.title
