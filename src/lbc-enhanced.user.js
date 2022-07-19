@@ -39,7 +39,7 @@
     }
 
     async has (key) {
-      return this.get(key).then(value => Boolean(value)).catch(() => false)
+      return this.get(key).then(Boolean).catch(() => false)
     }
   }
   const store = new Store(localStorage)
