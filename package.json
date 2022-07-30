@@ -4,6 +4,7 @@
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
     "eslint": "8.20",
+    "eslint-plugin-filenames": "1",
     "eslint-plugin-unicorn": "43",
     "repo-check": "1.25"
   },
