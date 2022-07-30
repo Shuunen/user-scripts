@@ -13,6 +13,7 @@
     "sourceType": "module"
   },
   "plugins": [
+    "filenames",
     "unicorn"
   ],
   "rules": {
@@ -24,6 +25,11 @@
     "curly": [
       "error",
       "multi"
+    ],
+    "filenames/match-regex": [
+      2,
+      "(\\.user|utils|\\.config)$",
+      true
     ],
     "func-names": [
       "error",
