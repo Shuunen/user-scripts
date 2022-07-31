@@ -33,7 +33,7 @@
   },
   "scripts": {
     "check": "repo-check",
-    "ci": "npm run lint && npm run check",
+    "ci": "npm run lint && npm run check && npm run test",
     "lint": "tsc --noEmit && eslint --fix --ignore-path .gitignore --ext .js .",
     "postversion": "git push && git push --tags",
     "preversion": "npm run ci",
