@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
 const textFromSelector = (sel, context) => {
   const element = (context || document).querySelector(sel)
   if (!element) return ''

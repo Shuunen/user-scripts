@@ -1,4 +1,4 @@
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 class Shuutils {
   constructor (app) {
     Object.apply(app, { id: 'shu-app', debug: true })
@@ -48,19 +48,16 @@ class Shuutils {
     return stringOut + '...'
   }
 
-  debounce (callback, wait, immediate) {
-    let timeout
-    return function _debounce () {
-      const context = this // eslint-disable-line unicorn/no-this-assignment
-      const arguments_ = arguments
-      const later = function later () {
-        timeout = undefined
-        if (!immediate) callback.apply(context, arguments_)
-      }
-      const callNow = immediate && !timeout
-      clearTimeout(timeout)
-      timeout = setTimeout(later, wait)
-      if (callNow) callback.apply(context, arguments_)
+  throttle (function_, timeout) {
+    let ready = true
+    return (...parameters) => {
+      if (!ready)
+        return
+      ready = false
+      function_(...parameters)
+      setTimeout(() => {
+        ready = true
+      }, timeout)
     }
   }
 
