@@ -8,6 +8,7 @@
     "eslint:recommended",
     "plugin:unicorn/recommended"
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2021,
     "sourceType": "module"
@@ -28,7 +29,7 @@
     ],
     "filenames/match-regex": [
       2,
-      "(\\.user|utils|\\.config)$",
+      "(\\.user|utils|\\.test|\\.d|\\.config)$",
       true
     ],
     "func-names": [
