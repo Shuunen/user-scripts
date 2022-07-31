@@ -10,6 +10,8 @@
 // @grant none
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function DealabsAIO () {
   /* global Shuutils, autosize */
   const app = {

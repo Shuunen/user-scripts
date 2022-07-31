@@ -9,6 +9,8 @@
 // @version     1.1.2
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function LeBonCoinEnhanced () {
   /* global Shuutils */
   const utils = new Shuutils({ id: 'lbc-enhanced', debug: false })

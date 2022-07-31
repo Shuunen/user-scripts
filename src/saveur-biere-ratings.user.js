@@ -9,6 +9,8 @@
 // @grant none
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function SaveurBiereUntappd () {
   /* global Shuutils */
   const marker = 'svb-rat'

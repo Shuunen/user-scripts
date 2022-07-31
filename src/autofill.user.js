@@ -13,6 +13,10 @@
   const selectors = {
     input: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
   }
+  /**
+   * Trigger a change event on an input element
+   * @param {HTMLInputElement} element
+   */
   const triggerChange = element => {
     element.dispatchEvent(new KeyboardEvent('change'))
     element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))

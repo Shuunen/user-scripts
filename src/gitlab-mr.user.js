@@ -9,6 +9,8 @@
 // @version     1.1.3
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function GitlabMR () {
   /* global Shuutils */
   const utils = new Shuutils({ id: 'gitlab-mr', debug: false })

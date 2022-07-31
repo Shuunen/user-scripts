@@ -15,6 +15,8 @@
 // @grant        none
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function HDDCleaner () {
   /* global Shuutils */
   const app = {
@@ -37,12 +39,15 @@
     price: /(\d+[,.\\€]\d+)/,
   }
   const utils = new Shuutils(app)
+  /**
+   * @param {string} text
+   */
   function getSize (text) {
     const matches = text.match(regex.sizes)
     if (!matches) return false
     let size = 0
     matches.forEach(m => {
-      let [, mSize, mUnit] = m.match(regex.size)
+      let [, mSize, mUnit] = m.match(regex.size) ?? []
       if (mUnit === 'to' || mUnit === 'tb') mSize *= 1000 // align sizes to Go, may be slightly different according to TO vs TB
       if (mSize > size) size = Number.parseInt(mSize, 10)
     })

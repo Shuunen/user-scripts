@@ -9,6 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function AmazonPricePerWeight () {
   /* global Shuutils */
   const app = {

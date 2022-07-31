@@ -14,6 +14,10 @@
 (function BundlePhobiaEverywhere () {
   /* global Shuutils */
   const utils = new Shuutils({ id: 'bdl-evr', debug: false })
+  /**
+   * Inject bundlephobia badges into the page
+   * @param {string} name
+   */
   const injectBadge = async name => {
     const link = document.createElement('a')
     link.innerHTML = `"${name}" stats from BundlePhobia :
@@ -21,13 +25,19 @@
       <img src="https://badgen.net/bundlephobia/dependency-count/${name}" alt="dependency count" />`
     link.href = `https://bundlephobia.com/package/${name}`
     link.target = '_blank'
-    link.style = 'position: absolute; right: 0.8rem; top: 0.9rem; z-index: 1000; display: flex; gap: 1rem;'
-    const anchor = document.querySelector('#readme') || document.body
+    link.style.position = 'absolute'
+    link.style.right = '0.8rem'
+    link.style.top = '0.9rem'
+    link.style.zIndex = '1000'
+    link.style.display = 'flex'
+    link.style.gap = '1rem'
+    const /** @type HTMLElement */ anchor = document.querySelector('#readme') || document.body
     anchor.style.position = 'relative'
     anchor.append(link)
   }
   const detectName = () => {
     let text = document.body.textContent
+    if(!text) return utils.error('cannot find body text content')
     if (text.includes('npm') === false) return utils.log('does not seems like the good place to add a badge')
     const copyBlock = utils.findOne('.lh-copy span')
     if (copyBlock) text = copyBlock.textContent + '\n' + text

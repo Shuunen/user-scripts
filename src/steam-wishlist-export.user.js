@@ -10,6 +10,8 @@
 // @grant none
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function SteamWishlistExport () {
   /* global Shuutils */
   const marker = 'stm-wex'
