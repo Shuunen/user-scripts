@@ -48,6 +48,16 @@ class Shuutils {
     return stringOut + '...'
   }
 
+  debounce (callback, waitFor) {
+    let timeout
+    return async (...parameters) => new Promise((resolve) => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        resolve(callback(...parameters))
+      }, waitFor)
+    })
+  }
+
   throttle (function_, timeout) {
     let ready = true
     return (...parameters) => {
