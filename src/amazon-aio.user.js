@@ -9,6 +9,12 @@
 // @grant        none
 // ==/UserScript==
 
+/**
+ * Return the position of a value in an interval
+ * @param {number} value
+ * @param {number[]} intervals
+ * @returns {number}
+ */
 const positionInInterval = (value, intervals) => {
   let ponderation = 0
   for (const interval of intervals) {
@@ -25,7 +31,7 @@ const maxScore = 16
  * @param {number} rating The product rating
  * @param {number} reviews The product reviews count
  * @param {boolean} explanation If true, the score explanation string will be returned
- * @returns a score between 0 and maxScore
+ * @returns {number|string} a score between 0 and maxScore
  */
 const score = (rating, reviews, explanation = false) => {
   const ratingScore = positionInInterval(rating, [2, 3, 4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5])
@@ -37,11 +43,18 @@ const score = (rating, reviews, explanation = false) => {
   return score
 }
 
+/**
+ * Get the score of a product /20 and give its style
+ * @param {number} rating
+ * @param {number} reviews
+ * @returns {{ score: number, color: string, size: number }}
+ */
 const score20Styled = (rating, reviews) => {
   const data = { score: 0, color: 'black', size: 1 }
-  data.score = Math.round(score(rating, reviews) / maxScore * 20)
+  const value = score(rating, reviews)
+  if (typeof value === 'number') data.score = Math.round(value / maxScore * 20)
   const index = positionInInterval(data.score, [8, 12, 16])
-  data.color = ['red', 'darkorange', 'black', 'darkgreen'][index]
+  data.color = ['red', 'darkorange', 'black', 'darkgreen'][index] ?? 'grey'
   data.size = index + 1
   return data
 }
@@ -71,50 +84,77 @@ const score20Styled = (rating, reviews) => {
     sellYours: '[data-cel-widget="moreBuyingChoices_feature_div"]',
     buyPack: '#sims-fbt',
     comparison: '#HLCXComparisonWidget_feature_div',
+    relatedSearches: '.s-flex-geom',
+    needHelp: '[data-cel-widget^="MAIN-FEEDBACK"]',
   }
   function deleteUseless () {
-    Object.keys(deleteUselessSelectors).forEach((key) => {
-      utils.findAll(deleteUselessSelectors[key], document, true).forEach((node) => {
-        // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-        node.remove()
-      })
+    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+      // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
+      node.remove()
     })
   }
   function clearClassnames () {
-    Object.keys(clearClassSelectors).forEach((key) => {
-      utils.findAll(clearClassSelectors[key], document, true).forEach((node) => {
-        node.className = ''
-      })
+    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+      node.className = ''
     })
   }
+  /**
+   * Calculate the score by currency, eg: 0.52 pts/€
+   * @param {HTMLElement} product
+   * @param {number} score
+   * @param {HTMLDivElement} scoreSection
+   */
+  function getScoreByCurrency (product, score, scoreSection) {
+    let scoreByCurrency = 0
+    const priceElement = utils.findOne(selectors.productPrice, product, true)
+    if (!priceElement) return scoreByCurrency
+    const scoreByCurrencySection = document.createElement('div')
+    const price = Number.parseFloat(priceElement.textContent.replace(',', '.').replace(' ', ''))
+    const currency = utils.findOne(selectors.productPriceCurrency, product, true).textContent
+    scoreByCurrency = Math.round(score / price * 100) / 100
+    scoreByCurrencySection.textContent += `${scoreByCurrency.toFixed(2)}pts/${currency}`
+    const index = positionInInterval(scoreByCurrency, [0.2, 0.3, 0.4])
+    scoreByCurrencySection.style.color = ['red', 'darkorange', 'black', 'darkgreen'][index] ?? 'grey'
+    scoreSection.append(document.createElement('br'), scoreByCurrencySection)
+    return scoreByCurrency
+  }
+  /**
+   * Get the product score section
+   * @param {HTMLElement} product
+   * @param {number} score
+   * @param {string} color
+   * @param {number} size
+   * @returns {{ scoreSection:HTMLElement, scoreByCurrency:number }}
+   */
+  function generateScoreSection (product, score, color, size) {
+    const scoreSection = document.createElement('div')
+    scoreSection.className = 'amz-aio-score a-spacing-top-micro'
+    scoreSection.textContent = `${score}/20`
+    scoreSection.style.color = color
+    scoreSection.style.lineHeight = 'normal'
+    scoreSection.style.fontSize = `${Math.max(size * 7, 14)}px`
+    const scoreByCurrency = getScoreByCurrency(product, score, scoreSection)
+    return { scoreSection, scoreByCurrency }
+  }
   function injectScore () {
-    utils.findAll(selectors.product, document, true).forEach((product) => {
+    const products = utils.findAll(selectors.product, document, true)
+    // set amz-aio-score
+    products.forEach((product) => {
       product.classList.add('amz-processed')
+      product.dataset.amzAioScore = 0
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
       if (!ratingSection) return
       const childs = ratingSection.firstChild.children
       const rating = Number.parseFloat(childs[0].getAttribute('aria-label').split(' ')[0].replace(',', '.'))
       const reviews = Number.parseInt(childs[1].getAttribute('aria-label').replace(/\W/g, ''))
-      utils.log({ rating, votes: reviews })
       const { score, color, size } = score20Styled(rating, reviews)
-      const scoreSection = document.createElement('div')
-      scoreSection.className = 'amz-aio-score a-spacing-top-micro'
-      scoreSection.textContent = `${score}/20`
-      scoreSection.style.color = color
-      scoreSection.style.lineHeight = 'normal'
-      scoreSection.style.fontSize = `${Math.max(size * 7, 14)}px`
-      const priceElement = utils.findOne(selectors.productPrice, product, true)
-      if (priceElement) {
-        const scoreByCurrencySection = document.createElement('div')
-        const price = Number.parseFloat(priceElement.textContent.replace(',', '.').replace(' ', ''))
-        const currency = utils.findOne(selectors.productPriceCurrency, product, true).textContent
-        const scoreByCurrency = Math.round(score / price * 100) / 100
-        scoreByCurrencySection.textContent += `${scoreByCurrency.toFixed(2)}pts/${currency}`
-        const index = positionInInterval(scoreByCurrency, [0.2, 0.3, 0.4])
-        scoreByCurrencySection.style.color = ['red', 'darkorange', 'black', 'darkgreen'][index]
-        scoreSection.append(document.createElement('br'), scoreByCurrencySection)
-      }
+      const { scoreSection, scoreByCurrency } = generateScoreSection(product, score, color, size)
       ratingSection.parentNode.insertBefore(scoreSection, ratingSection.nextSibling)
+      product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70)
+    })
+    // sort by score & apply position
+    products.sort((a, b) => (b.dataset.amzAioScore - a.dataset.amzAioScore)).forEach((product, index) => {
+      product.style.order = index
     })
   }
   const process = () => {
