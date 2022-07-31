@@ -27,6 +27,9 @@
     if (!confirmButton) return utils.error('failed to find confirm button')
     confirmButton.click()
   }
+  /**
+   * @param {KeyboardEvent} event
+   */
   const onKeyPress = event => {
     if (event.key === '!') deleteCurrentPhoto()
   }

@@ -9,6 +9,8 @@
 // @grant        none
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function AliExpressAIO () {
   /* global Shuutils */
   const utils = new Shuutils({ id: 'ali-express-aio', debug: false })

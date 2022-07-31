@@ -9,6 +9,8 @@
 // @version     1.1.3
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function LolKpmCounter () {
   /* global Shuutils */
   const utils = new Shuutils({ id: 'lol-kpm', debug: false })

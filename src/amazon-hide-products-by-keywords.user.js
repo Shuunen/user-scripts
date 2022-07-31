@@ -10,6 +10,8 @@
 // @grant        none
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function AmazonHide () {
   /* global Shuutils, autosize */
   const app = {

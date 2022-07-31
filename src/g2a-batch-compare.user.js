@@ -11,6 +11,8 @@
 // @grant none
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function G2ABatchCompare () {
   /* global Shuutils, didYouMean */
   const marker = 'g2a-bcp'

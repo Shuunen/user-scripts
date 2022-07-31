@@ -9,6 +9,8 @@
 // @version     1.0.1
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function LeBonCoinDPE () {
   /* global Shuutils */
   const utils = new Shuutils({ id: 'lbc-dpe', debug: true })

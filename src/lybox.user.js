@@ -9,6 +9,8 @@
 // @version     1.0.0
 // ==/UserScript==
 
+// @ts-nocheck
+
 (function LyBoxEnhanced () {
   /* global Shuutils */
   const utils = new Shuutils({ id: 'lyb-enhanced', debug: false })

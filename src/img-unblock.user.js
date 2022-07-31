@@ -23,7 +23,7 @@
     const source = PROXY_URL + element.href
     const img = document.createElement('img')
     img.src = source
-    img.style = 'width: 100%'
+    img.style.width = '100%'
     element.href = source
     element.parentElement.append(img)
     element.parentElement.style = 'display: flex; flex-direction: column;'

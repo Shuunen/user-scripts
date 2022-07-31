@@ -1,10 +1,22 @@
 /* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
+
+/**
+ * Get the text content from the node behind a css selector
+ * @param {string} sel
+ * @param {HTMLElement} context
+ * @returns {string}
+ */
 const textFromSelector = (sel, context) => {
   const element = (context || document).querySelector(sel)
   if (!element) return ''
-  return element.textContent.trim()
+  return element.textContent?.trim() || ''
 }
 
+/**
+ * Generate a form to import a release to MusicBrainz
+ * @param {{ id:string, title: string }} app
+ * @returns
+ */
 const createMbForm = app => {
   const existing = document.querySelector(`#${app.id}`)
   if (existing) existing.remove()
@@ -14,14 +26,33 @@ const createMbForm = app => {
   form.target = 'blank'
   form.action = 'https://musicbrainz.org/release/add?tport=8000'
   form.acceptCharset = 'utf8'
-  form.style = 'position: absolute; z-index: 1000; display: flex; flex-direction: column;padding: 0.7rem 0.8rem;color: rgb(51, 51, 51);background-color: white;top: 60px;right: 1rem;border-radius: 0.2rem;'
+  form.style.position = 'absolute'
+  form.style.zIndex = '1000'
+  form.style.display = 'flex'
+  form.style.flexDirection = 'column'
+  form.style.padding = '0.7rem 0.8rem'
+  form.style.color = 'rgb(51, 51, 51)'
+  form.style.backgroundColor = 'white'
+  form.style.top = '60px'
+  form.style.right = '1rem'
+  form.style.borderRadius = '0.2rem'
   const header = document.createElement('h2')
   header.textContent = app.title
-  header.style = 'text-align: center;padding: 0.2rem 0;font-size: 1.2rem;margin: 0;'
+  header.style.textAlign = 'center'
+  header.style.padding = '0.2rem 0'
+  header.style.fontSize = '1.2rem'
+  header.style.margin = '0'
   form.append(header)
   return form
 }
 
+/**
+ * Add a field to the form
+ * @param {HTMLFormElement} form
+ * @param {string} name
+ * @param {string} value
+ * @param {boolean} isHidden
+ */
 const addMbField = (form, name, value, isHidden = false) => {
   const field = document.createElement('input')
   field.name = name
@@ -29,18 +60,38 @@ const addMbField = (form, name, value, isHidden = false) => {
   field.value = value
   if (isHidden) field.hidden = true
   // field.required = true
-  field.style = 'color: inherit; margin: 0.3rem 0 0; padding: .2rem 0 .2rem 0.5rem;width: 220px;'
+  field.style.color = 'inherit'
+  field.style.margin = '0.3rem 0 0'
+  field.style.padding = '.2rem 0 .2rem 0.5rem'
+  field.style.width = '220px'
   form.append(field)
 }
 
+/**
+ * Add a submit button to the form
+ * @param {HTMLFormElement} form
+ */
 const addMbSubmit = form => {
   const submit = document.createElement('input')
   submit.type = 'submit'
   submit.value = 'Export to MusicBrainz'
-  submit.style = 'border-radius: 1rem;cursor: pointer;margin: 0.5rem auto 0;text-transform: uppercase;font-size: 0.8rem;padding: 0.4rem 1rem 0.2rem;display: block;background-color: steelblue;color: white;'
+  submit.style.borderRadius = '1rem'
+  submit.style.cursor = 'pointer'
+  submit.style.margin = '0.5rem auto 0'
+  submit.style.textTransform = 'uppercase'
+  submit.style.fontSize = '0.8rem'
+  submit.style.padding = '0.4rem 1rem 0.2rem'
+  submit.style.display = 'block'
+  submit.style.backgroundColor = 'steelblue'
+  submit.style.color = 'white'
   form.append(submit)
 }
 
+/**
+ * Insert the form into the page
+ * @param {{ app: { id:string, title: string }, title: string, artist: string, date: {day:string, month:string, year: string}, tracks: {number: string, name: string, artist: string, duration: string}[], label: string, url: string, urlType: string }} data
+ * @returns
+ */
 const insertMbForm = ({ app, title, artist, date, tracks, label, url, urlType }) => {
   if (!title || !artist) return console.info(app.id, 'cannot work without data, exiting...')
   console.log(app.id, 'got data :', { title, artist, date, tracks, label, url, urlType })
