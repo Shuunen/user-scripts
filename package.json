@@ -34,7 +34,7 @@
   "scripts": {
     "check": "repo-check",
     "ci": "npm run lint && npm run check",
-    "lint": "eslint --fix --ignore-path .gitignore --ext .js .",
+    "lint": "tsc --noEmit && eslint --fix --ignore-path .gitignore --ext .js .",
     "postversion": "git push && git push --tags",
     "preversion": "npm run ci",
     "test": "uvu -r tsm tests",

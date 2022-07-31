@@ -1,9 +1,9 @@
 import { check } from 'shuutils'
 import { test } from 'uvu'
 import { equal } from 'uvu/assert'
-const { score, score20Styled, maxScore } = require('../src/amazon-aio.user') // eslint-disable-line no-undef
+const { score, score20Styled, maxScore } = require('../src/amazon-aio.user') // eslint-disable-line no-undef, @typescript-eslint/no-var-requires
 
-const checkGreaterThan = (title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number) => {
+const checkGreaterThan = (title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number): void => {
   test(title, () => {
     const scoreA = score(ratingA, reviewsA)
     const scoreB = score(ratingB, reviewsB)
