@@ -28,7 +28,7 @@
   }
   const injectRating = (element, data) => {
     const rating = document.createElement('p')
-    rating.innerHTML = `You rated <em style="text-decoration: underline">${data.title}</em> : <strong>${data.user_rating}/5</strong> on Untappd`
+    rating.textContent = `You rated "${data.title}" : ${data.user_rating}/5 on Untappd`
     rating.style.padding = '2px 6px'
     if (data.user_rating >= 4) rating.style.backgroundColor = 'lightgreen'
     else if (data.user_rating >= 3) rating.style.backgroundColor = 'lightyellow'
