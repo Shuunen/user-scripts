@@ -1,14 +1,10 @@
-import { check } from 'shuutils'
-import { test } from 'uvu'
-import { equal } from 'uvu/assert'
+import { check, checksRun } from 'shuutils'
 const { score, score20Styled, maxScore } = require('../src/amazon-aio.user') // eslint-disable-line no-undef, @typescript-eslint/no-var-requires
 
 const checkGreaterThan = (title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number): void => {
-  test(title, () => {
-    const scoreA = score(ratingA, reviewsA)
-    const scoreB = score(ratingB, reviewsB)
-    equal(scoreA > scoreB, true, `expected ${score(ratingA, reviewsA, true)} to be greater than ${score(ratingB, reviewsB, true)}`)
-  })
+  const scoreA = score(ratingA, reviewsA)
+  const scoreB = score(ratingB, reviewsB)
+  check(`${title}, expect ${score(ratingA, reviewsA, true)} to be greater than ${score(ratingB, reviewsB, true)}`, scoreA > scoreB, true)
 }
 
 checkGreaterThan('amazon-aio same ratings is better with more reviews A', 4.2, 30, 4.2, 15)
@@ -95,4 +91,4 @@ check('amazon-aio 0/20 score', score0_20.score, 0)
 check('amazon-aio 0/20 score is red', score0_20.color, 'red')
 check('amazon-aio 0/20 score is small', score0_20.size, 1)
 
-check.run()
+checksRun()
