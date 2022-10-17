@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Saveur Bière - Untappd Ratings
 // @namespace    https://github.com/Shuunen
-// @version      1.1.2
+// @version      1.2.0
 // @description  See your ratings when buying
 // @author       Romain Racamier-Lafon
 // @match        https://www.saveur-biere.com/*
@@ -11,8 +11,24 @@
 
 // @ts-nocheck
 
+/**
+ * Clean a title string
+ * @param {string} title The title to clean
+ * @returns {string} The cleaned title
+ */
+const cleanTitle = (title) => {
+  return title
+    .replace(/\([^(]+\)/g, ' ') // remove parenthesis content(s)
+    .replace(' Can', ' ').replace('Fût ', ' ')
+    .replace(/['’-]/g, ' ').normalize('NFD').replace(/[^\d\sa-z]/gi, '').toLowerCase() // from shuutils sanitize
+    .replace(/(\d+cl|\d+l|\d+L|pack \d+|pack de|\d+ bieres|pack|et \d+ verres)/g, ' ') // remove contenance or pack size
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 (function SaveurBiereUntappd () {
-  /* global Shuutils */
+  /* global Shuutils, module */
+  if (typeof window === 'undefined') return
   const marker = 'svb-rat'
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
   const utils = new Shuutils({ id: marker, debug: true })
@@ -21,9 +37,9 @@
   const wrapAPIKey = localStorage.wrapAPIKey || ''
   if (wrapAPIKey === '') return utils.error('please set localStorage.wrapAPIKey to use this script')
   const selectors = {
-    items: 'div[class^="styled__List"] > div[class^="styled__Container-sc"],[class^="styled__Products"] > div[class^="styled__Container-sc"], div[class^="styled__Content"] > h1[class^="styled__Title"]:first-child, div[class^="styled__Column-sc"] > span[class^="styled__Title-sc"]',
-    title: 'a[class*="styled__Name-sc"]',
-    banner: 'div[class^="styled__Banner-sc"]',
+    items: 'div > div > div > div > div > div > div > img[class^="Box-sc"] + div[class^="Box-sc"],[data-insights-object-id], div[class^="styled__List"] > div[class^="styled__Container-sc"],[class^="styled__Products"] > div[class^="styled__Container-sc"], div[class^="styled__Content"] > h1[class^="styled__Title"]:first-child, div[class^="styled__Column-sc"] > span[class^="styled__Title-sc"]',
+    title: 'p[class^="Paragraph"]:first-child, div > div + div > div > a:first-child, a[class*="styled__Name-sc"]',
+    banner: 'span > p, div[class^="styled__Banner-sc"]',
     useless: '[class^="styled__List"]>a, [class^="styled__DiscountContainer"]',
   }
   const injectRating = (element, data) => {
@@ -38,10 +54,11 @@
     element.parentElement.style.height = 'auto'
   }
   const fetchRating = async item => {
-    const titleElement = item.childElementCount === 0 ? item : utils.findOne(selectors.title, item)
+    const titleElement = utils.findOne(selectors.title, item)
     if (titleElement === null) return utils.error('cant find item title')
-    const name = utils.readableString(titleElement.textContent.split(' - ')[0].replace(' 75cl', '')).trim()
-    if (name === '') return utils.error('cant find item name')
+    const name = cleanTitle(utils.readableString(titleElement.textContent))
+    if (name === '') return utils.error('cant find item name in', titleElement)
+    titleElement.title = `Cleaned title : ${name}`
     const storageKey = `${marker}-${cached}-${name}` // '2021-11-svb-rat-Gouden Carolus Tripel'
     utils.log(`looking for "${storageKey}" in localStorage`)
     let data = {}
@@ -87,3 +104,7 @@
   }
   utils.onPageChange(init)
 })()
+
+if (module) module.exports = {
+  cleanTitle,
+}
