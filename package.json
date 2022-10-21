@@ -6,7 +6,7 @@
     "@types/node": "16",
     "@typescript-eslint/eslint-plugin": "5",
     "@typescript-eslint/parser": "5",
-    "eslint": "8.25",
+    "eslint": "8.26",
     "eslint-plugin-filenames": "1",
     "eslint-plugin-unicorn": "44",
     "repo-check": "1.27",
