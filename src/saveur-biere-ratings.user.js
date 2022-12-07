@@ -62,17 +62,17 @@ const cleanTitle = (title) => {
     const storageKey = `${marker}-${cached}-${name}` // '2021-11-svb-rat-Gouden Carolus Tripel'
     utils.log(`looking for "${storageKey}" in localStorage`)
     let data = {}
-    if (localStorage.getItem(storageKey) !== null) {
-      data = localStorage.getItem(storageKey)
-      utils.log(`found ${data === 'EMPTY' ? 'EMPTY ' : ''}cached data for "${storageKey}" in localStorage`)
-      if (data === 'EMPTY') return utils.log(`no ratings found for item "${name}"`)
-      data = JSON.parse(data)
-    } else {
+    if (localStorage.getItem(storageKey) === null) {
       utils.log('fetching rating for :', name)
       data = await fetch(`https://wrapapi.com/use/jojo/untappd/history/0.0.1?user=${user}&search=${name}&wrapAPIKey=${wrapAPIKey}`).then(response => response.json()).then(response => response.data)
       utils.log(`fetched ${data ? '' : 'EMPTY '}data`, data, 'for item', name)
       localStorage.setItem(storageKey, data ? JSON.stringify(data) : 'EMPTY')
       if (data === null) return utils.log(`no ratings found for item "${name}"`)
+    } else {
+      data = localStorage.getItem(storageKey)
+      utils.log(`found ${data === 'EMPTY' ? 'EMPTY ' : ''}cached data for "${storageKey}" in localStorage`)
+      if (data === 'EMPTY') return utils.log(`no ratings found for item "${name}"`)
+      data = JSON.parse(data)
     }
     injectRating(titleElement.parentElement, data)
     if (titleElement.tagName !== 'A') titleElement.outerHTML = `<a href="https://www.saveur-biere.com/fr/search-result/${name}" target="_blank">${name}</a>`
