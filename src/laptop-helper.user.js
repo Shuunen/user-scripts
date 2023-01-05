@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-abusive-eslint-disable */
 // ==UserScript==
 // @name         Laptop Helper
 // @namespace    https://github.com/Shuunen
@@ -7,8 +8,11 @@
 // @match        https://bestware.com/*
 // @match        https://noteb.com/*
 // @match        https://www.amazon.fr/*
+// @match        https://www.amazon.com/*
+// @match        https://www.boulanger.com/*
 // @match        https://www.dealabs.com/*
 // @match        https://www.laptoparena.net/*
+// @match        https://www.laptopspirit.fr/*
 // @match        https://www.ldlc.com/*
 // @match        https://www.lenovo.com/*
 // @match        https://www.materiel.net/*
@@ -62,15 +66,15 @@ function getScoresForWifi (wifi, score) {
 
 const scoresByKeyword = {
   'gtx': 70,
-  'ips': 70,
+  'ips': 50,
   'led': 70,
   'lg gram': 70,
-  'oled': 70,
+  'Oled': 70,
   'Schenker': 70,
   'Tuxedo': 70,
   'Lenovo Legion': 0,
-  'lenovo': 70,
-  'nvme': 80,
+  'Lenovo': 70,
+  'NvmE': 80,
   'rtx': 70,
   'backlit': 70,
   'fingerprint': 70,
@@ -98,6 +102,33 @@ const scoresByKeyword = {
   ...getScoresForScreen(16, 50),
   ...getScoresForScreen(17, 0),
   ...getScoresForScreen(17.3, 0),
+}
+
+/* eslint-disable */
+function b2a (a) {
+  var c, d, e, f, g, h, i, j, o, b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", k = 0, l = 0, m = "", n = []
+  if (!a) return a
+  do c = a.charCodeAt(k++), d = a.charCodeAt(k++), e = a.charCodeAt(k++), j = c << 16 | d << 8 | e,
+    f = 63 & j >> 18, g = 63 & j >> 12, h = 63 & j >> 6, i = 63 & j, n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i); while (k < a.length)
+  return m = n.join(""), o = a.length % 3, (o ? m.slice(0, o - 3) : m) + "===".slice(o || 3)
+}
+
+function a2b (a) {
+  var b, c, d, e = {}, f = 0, g = 0, h = "", i = String.fromCharCode, j = a.length
+  for (b = 0; 64 > b; b++) e["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(b)] = b
+  for (c = 0; j > c; c++) for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8;) ((d = 255 & f >>> (g -= 8)) || j - 2 > c) && (h += i(d))
+  return h
+}
+/* eslint-enable */
+
+function stringToBase64 (str) {
+  console.log('stringToBase64', str)
+  return b2a(str)
+}
+
+function base64ToString (str) {
+  console.log('base64ToString', str)
+  return a2b(str)
 }
 
 // prepare cpu data
@@ -231,7 +262,7 @@ Intel Pentium Gold 7505	2 %
 Intel Pentium Silver N6000	1 %
 Intel Core i7-10750H	7 %
 Intel Core i7-10710U	5 %`
-const scoresByCpu = {}
+
 data.split('\n').forEach(line => {
   const [cpuRaw, scoreRaw] = line.split('\t')
   const cpu = cleanCpuName(cpuRaw)
@@ -249,7 +280,8 @@ function LaptopHelper () {
     mark: app.id + '-mark',
   }
   const selectors = {
-    desc: ['h1', 'p > strong', '.v-list-item[role="listitem"]', '.contenttable td', '.td-spec > span', '.prod_details > li', '.specs_details', '.product-item-short-specs > p', '.resulspace', '.colorTipContent', '.desc', '.short_desc', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
+    clearLinks: '.comparo_table_description a',
+    desc: ['h1', '.c-product__description', '.wp-block-table td', '.keypoints__item', '.comparo_table_description', '.search tr > td', '.secondary-title', '.description p', 'p > strong', '.prodDetAttrValue', '.v-list-item[role="listitem"]', '.contenttable td', '.td-spec > span', '.prod_details > li', '.specs_details', '.product-item-short-specs > p', '.resulspace', '.colorTipContent', '.desc', '.short_desc', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
   }
   const utils = new Shuutils(app)
 
@@ -275,7 +307,7 @@ function LaptopHelper () {
   }
 
   function checkItems () {
-    utils.findAll(selectors.desc, document, true).forEach(descElement => {
+    utils.findAll(selectors.desc, document, true).forEach((/** @type HTMLElement */descElement) => {
       descElement.classList.add(cls.mark)
       // first close last opened console group, else closing nothing without throwing error
       console.groupEnd()
@@ -287,8 +319,22 @@ function LaptopHelper () {
     })
     console.groupEnd()
   }
+  function clearLinks () {
+    utils.findAll(selectors.clearLinks, document, true).forEach((/** @type HTMLAnchorElement */ link) => {
+      if (typeof link.href !== 'string' || link.href.length < 2) return
+      link.dataset.url = stringToBase64(link.href)
+      link.href = '#'
+      link.parentElement.addEventListener('mouseup', event => {
+        if (event.button !== 1) return
+        event.preventDefault()
+        window.open(base64ToString(link.dataset.url), '_blank')
+      })
+      link.removeAttribute('title')
+    })
+  }
   async function process () {
     utils.log('processing')
+    clearLinks()
     checkItems()
   }
   const processDebounced = utils.debounce(process, 500)
