@@ -22,18 +22,25 @@
     'Battlefield',
     'Black Desert',
     'Blade Soul',
+    'Bloons TD',
     'Brawlhalla',
+    'BTS Island',
     'Call of Duty',
+    'Candy Crush',
     'Dead by Daylight',
     'Deathloop',
     'Destiny 2',
+    'Divine Knockout',
     'Fall Guys',
+    'Farm Heroes',
     'FIFA',
     'Fortnite',
+    'Genshin Impact',
     'Guild Wars',
     'Kartrider',
     'Legends of Runeterra',
     'Lineage',
+    'Lords Mobile',
     'Lost Ark',
     'Madden',
     'Marvel s Avengers',
@@ -100,6 +107,13 @@
       node.style.filter = visibleChildren === 0 ? 'invert(0.4)' : ''
     })
   }
+  function hideElement (/** @type {HTMLElement} */ element, cause = '') {
+    element.dataset.hiddenCause = cause
+    element.classList.remove('tw-block')
+    element.style.display = 'none'
+    element.style.visibility = 'hidden'
+    element.style.opacity = '0'
+  }
   function hideClaimed () {
     utils.findAll(selectors.claimedTag, document, true).forEach((/** @type {HTMLElement} */ node) => {
       node.classList.add(appId + '-processed')
@@ -107,8 +121,7 @@
       const product = node.closest(selectors.product)
       if (!product) { utils.error('no product found for claimed tag', node); return }
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      product.dataset.hiddenCause = 'claimed'
-      product.style.display = 'none !important'
+      hideElement(product, 'claimed')
     })
     checkEmptyGrids()
   }
@@ -128,8 +141,7 @@
       const shouldHide = dlcToHide.some((dlc) => gameName.includes(cleanDLCName(dlc)))
       if (!shouldHide) { utils.log('game dlc is ok :', gameName); return }
       product.title = gameName
-      product.dataset.hiddenCause = 'unwanted-dlc'
-      product.style.display = 'none !important'
+      hideElement(product, 'unwanted-dlc')
     })
     checkEmptyGrids()
   }
