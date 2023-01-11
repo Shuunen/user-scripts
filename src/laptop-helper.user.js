@@ -8,12 +8,18 @@
 // @match        https://bestware.com/*
 // @match        https://noteb.com/*
 // @match        https://www.amazon.fr/*
+// @match        https://deals.dell.com/*
+// @match        https://laptopmedia.com/*
 // @match        https://www.amazon.com/*
 // @match        https://www.boulanger.com/*
+// @match        https://www.comparez-malin.fr/*
+// @match        https://www.darty.com/*
 // @match        https://www.dealabs.com/*
+// @match        https://www.dell.com/*
 // @match        https://www.laptoparena.net/*
 // @match        https://www.laptopspirit.fr/*
 // @match        https://www.ldlc.com/*
+// @match        https://www.lenovo.com/*
 // @match        https://www.lenovo.com/*
 // @match        https://www.materiel.net/*
 // @match        https://www.newegg.com/*
@@ -64,16 +70,26 @@ function getScoresForWifi (wifi, score) {
   return scores
 }
 
+function getScoreForRefresh (refresh, score) {
+  const scores = {}
+  scores[`${refresh}hz`] = score
+  scores[`${refresh} hz`] = score
+  return scores
+}
+
+function getScoreForResolution (resolution, score) {
+  const scores = {}
+  scores[`${resolution}p`] = score
+  scores[`${resolution} p`] = score
+  return scores
+}
+
 const scoresByKeyword = {
   'gtx': 70,
-  'ips': 50,
   'led': 70,
-  'lg gram': 70,
   'Oled': 70,
-  'Schenker': 70,
-  'Tuxedo': 70,
-  'Lenovo Legion': 0,
-  'Lenovo': 70,
+  'Full HD': 30,
+  'FHD': 30,
   'NvmE': 80,
   'rtx': 70,
   'backlit': 70,
@@ -83,9 +99,12 @@ const scoresByKeyword = {
   'ssd': 70,
   'lock': 70,
   ' tn ': 50,
-  '1080': 50,
-  '1600': 70,
-  '1800': 70,
+  ...getScoreForResolution('1080', 30),
+  ...getScoreForResolution('1200', 60),
+  ...getScoreForResolution('1440', 70),
+  ...getScoreForResolution('1600', 70),
+  ...getScoreForResolution('1800', 70),
+  ...getScoreForResolution('2160', 70),
   ...getScoresForWifi(6, 70),
   ...getScoresForWifi('ax', 70),
   ...getScoresForWifi(5, 50),
@@ -95,6 +114,7 @@ const scoresByKeyword = {
   ...getScoresForRam(8, 50),
   ...getScoresForScreen(12, 0),
   ...getScoresForScreen(13, 50),
+  ...getScoresForScreen(13.4, 50),
   ...getScoresForScreen(13.6, 50),
   ...getScoresForScreen(14, 70),
   ...getScoresForScreen(15, 70),
@@ -102,6 +122,13 @@ const scoresByKeyword = {
   ...getScoresForScreen(16, 50),
   ...getScoresForScreen(17, 0),
   ...getScoresForScreen(17.3, 0),
+  ...getScoreForRefresh(60, 0),
+  ...getScoreForRefresh(75, 60),
+  ...getScoreForRefresh(90, 70),
+  ...getScoreForRefresh(120, 70),
+  ...getScoreForRefresh(144, 70),
+  ...getScoreForRefresh(165, 70),
+  ...getScoreForRefresh(240, 70),
 }
 
 /* eslint-disable */
@@ -135,133 +162,134 @@ function base64ToString (str) {
 function cleanCpuName (name) {
   return name.replace(/(AMD|Ryzen \d|Core i\d-|Intel|Pro|Pentium|Gold|Silver)/giu, '').trim()
 }
-const data = `AMD Ryzen 3 5125C	1 %
-AMD Ryzen 3 5300U	6 %
-AMD Ryzen 3 5400U	5 %
-AMD Ryzen 3 5425C	5 %
-AMD Ryzen 3 5425U	6 %
+const data = `AMD Ryzen 3 5125C	3 %
+AMD Ryzen 3 5300U	12 %
+AMD Ryzen 3 5400U	11 %
+AMD Ryzen 3 5425C	11 %
+AMD Ryzen 3 5425U	12 %
 AMD Ryzen 3 7320U	3 %
-AMD Ryzen 3 Pro 5450U	4 %
-AMD Ryzen 3 Pro 5475U	6 %
-AMD Ryzen 5 4600H	9 %
-AMD Ryzen 5 4680U	9 %
-Amd Ryzen 5 5500U	14 %
-Amd Ryzen 5 5500U	15 %
-AMD Ryzen 5 5600H	11 %
-AMD Ryzen 5 5600HS	11 %
-AMD Ryzen 5 5600U	17 %
-AMD Ryzen 5 5625C	8 %
-AMD Ryzen 5 5625U	12 %
-AMD Ryzen 5 6600H	21 %
-AMD Ryzen 5 6600HS	25 %
-AMD Ryzen 5 6600U	26 %
+AMD Ryzen 3 Pro 5450U	9 %
+AMD Ryzen 3 Pro 5475U	13 %
+AMD Ryzen 5 4600H	17 %
+AMD Ryzen 5 4680U	22 %
+Amd Ryzen 5 5500U	26 %
+Amd Ryzen 5 5500U	26 %
+AMD Ryzen 5 5600H	22 %
+AMD Ryzen 5 5600HS	23 %
+AMD Ryzen 5 5600U	31 %
+AMD Ryzen 5 5625C	20 %
+AMD Ryzen 5 5625U	31 %
+AMD Ryzen 5 6600H	33 %
+AMD Ryzen 5 6600HS	38 %
+AMD Ryzen 5 6600U	44 %
 AMD Ryzen 5 7520U	3 %
-AMD Ryzen 5 Pro 5650U	18 %
-AMD Ryzen 5 Pro 5675U	14 %
-AMD Ryzen 5 Pro 6650H	25 %
-AMD Ryzen 5 Pro 6650HS	27 %
-AMD Ryzen 5 Pro 6650U	22 %
-AMD Ryzen 7 4800U	20 %
-AMD Ryzen 7 4980U	34 %
-AMD Ryzen 7 5700G	52 %
-AMD Ryzen 7 5700U	28 %
-AMD Ryzen 7 5800H	24 %
-AMD Ryzen 7 5800HS	27 %
-AMD Ryzen 7 5800U	40 %
-AMD Ryzen 7 5825C	24 %
-AMD Ryzen 7 5825U	24 %
-AMD Ryzen 7 6800H	62 %
-AMD Ryzen 7 6800HS	57 %
-AMD Ryzen 7 6800U	53 %
-AMD Ryzen 7 Pro 2700U 	4 %
-AMD Ryzen 7 Pro 4750U	8 %
-AMD Ryzen 7 Pro 5750G	43 %
-AMD Ryzen 7 Pro 5850U	44 %
-AMD Ryzen 7 Pro 5875U	50 %
-AMD Ryzen 7 Pro 6850H	51 %
-AMD Ryzen 7 Pro 6850HS	63 %
-AMD Ryzen 7 Pro 6850U	53 %
-AMD Ryzen 7 Pro 6860Z	59 %
-AMD Ryzen 9 4900H	20 %
-AMD Ryzen 9 4900HS	22 %
-AMD Ryzen 9 5900HS	28 %
-AMD Ryzen 9 5900HX	40 %
-AMD Ryzen 9 5980HS	48 %
-AMD Ryzen 9 5980HX	50 %
-AMD Ryzen 9 6900HS	77 %
-AMD Ryzen 9 6900HX	73 %
-AMD Ryzen 9 6980HS	82 %
-AMD Ryzen 9 6980HX	74 %
-AMD Ryzen 9 Pro 6950H	62 %
-AMD Ryzen 9 Pro 6950HS	69 %
-Intel Core i3-1220P	10 %
-Intel Core i5-10200H	4 %
+AMD Ryzen 5 Pro 5650U	32 %
+AMD Ryzen 5 Pro 5675U	24 %
+AMD Ryzen 5 Pro 6650H	38 %
+AMD Ryzen 5 Pro 6650HS	42 %
+AMD Ryzen 5 Pro 6650U	37 %
+AMD Ryzen 7 4800U	40 %
+AMD Ryzen 7 4980U	47 %
+AMD Ryzen 7 5700G	64 %
+AMD Ryzen 7 5700U	38 %
+AMD Ryzen 7 5800H	44 %
+AMD Ryzen 7 5800HS	49 %
+AMD Ryzen 7 5800U	55 %
+AMD Ryzen 7 5825C	31 %
+AMD Ryzen 7 5825U	48 %
+AMD Ryzen 7 6800H	83 %
+AMD Ryzen 7 6800HS	78 %
+AMD Ryzen 7 6800U	87 %
+AMD Ryzen 7 Pro 2700U 	7 %
+AMD Ryzen 7 Pro 4750U	21 %
+AMD Ryzen 7 Pro 5750G	53 %
+AMD Ryzen 7 Pro 5850U	61 %
+AMD Ryzen 7 Pro 5875U	70 %
+AMD Ryzen 7 Pro 6850H	75 %
+AMD Ryzen 7 Pro 6850HS	92 %
+AMD Ryzen 7 Pro 6850U	87 %
+AMD Ryzen 7 Pro 6860Z	96 %
+AMD Ryzen 9 4900H	36 %
+AMD Ryzen 9 4900HS	40 %
+AMD Ryzen 9 5900HS	50 %
+AMD Ryzen 9 5900HX	49 %
+AMD Ryzen 9 5980HS	58 %
+AMD Ryzen 9 5980HX	58 %
+AMD Ryzen 9 6900HS	98 %
+AMD Ryzen 9 6900HX	88 %
+AMD Ryzen 9 6980HS	99 %
+AMD Ryzen 9 6980HX	89 %
+AMD Ryzen 9 Pro 6950H	88 %
+AMD Ryzen 9 Pro 6950HS	98 %
+Intel Core i3-1220P	21 %
+Intel Core i5-10200H	3 %
 Intel Core i5-10210U	4 %
-Intel Core i5-10300H	11 %
-Intel Core i5-11260H	8 %
-Intel Core i5-11300H	16 %
-Intel Core i5-1130G7	9 %
-Intel Core i5-11320H	35 %
-Intel Core i5-1135G7	15 %
-Intel Core i5-11400H	8 %
-Intel Core i5-1140G7	7 %
-Intel Core i5-1145G7	17 %
-Intel Core i5-11500H	9 %
-Intel Core i5-1155G7	19 %
-Intel Core i5-1230U	15 %
-Intel Core i5-1235U	18 %
-Intel Core i5-1240P	30 %
-Intel Core i5-12450H	11 %
-Intel Core i5-1245U	21 %
-Intel Core i5-12500H	38 %
-Intel Core i5-1250P	29 %
-Intel Core i5-12600K	18 %
-Intel Core i5-3317U	1 %
+Intel Core i5-10300H	18 %
+Intel Core i5-11260H	5 %
+Intel Core i5-11300H	26 %
+Intel Core i5-1130G7	23 %
+Intel Core i5-11320H	45 %
+Intel Core i5-1135G7	27 %
+Intel Core i5-11400H	6 %
+Intel Core i5-1140G7	19 %
+Intel Core i5-1145G7	31 %
+Intel Core i5-11500H	13 %
+Intel Core i5-1155G7	36 %
+Intel Core i5-1230U	32 %
+Intel Core i5-1235U	50 %
+Intel Core i5-1240P	54 %
+Intel Core i5-12450H	22 %
+Intel Core i5-1245U	56 %
+Intel Core i5-12500H	50 %
+Intel Core i5-1250P	56 %
+Intel Core i5-12600K	20 %
+Intel Core i5-3317U	0 %
 Intel Core i5-8350U	3 %
+Intel Core i5-9600K	5 %
 Intel Core i7-10510U	4 %
-Intel Core i7-10610U	4 %
-Intel Core i7-1065G7	4 %
-Intel Core i7-10810U	5 %
+Intel Core i7-10610U	9 %
+Intel Core i7-1065G7	8 %
+Intel Core i7-10710U	5 %
+Intel Core i7-10750H	6 %
+Intel Core i7-10810U	11 %
 Intel Core i7-10870H	8 %
-Intel Core i7-11370H	35 %
-Intel Core i7-11375H	42 %
-Intel Core i7-11390H	39 %
-Intel Core i7-11600H	7 %
-Intel Core i7-1160G7	16 %
-Intel Core i7-1165G7	32 %
-Intel Core i7-11800H	12 %
-Intel Core i7-1180G7	19 %
-Intel Core i7-11850H	13 %
-Intel Core i7-1185G7	35 %
-Intel Core i7-1195G7	30 %
-Intel Core i7-1250U	16 %
-Intel Core i7-1255U	37 %
-Intel Core i7-1260P	70 %
-Intel Core i7-1260U	15 %
-Intel Core i7-12650H	24 %
-Intel Core i7-1265U	63 %
-Intel Core i7-12700H	80 %
-Intel Core i7-1270P	57 %
-Intel Core i7-12800H	83 %
-Intel Core i7-12800HX	83 %
-Intel Core i7-1280P	81 %
-Intel Core i7-12850HX	17 %
-Intel Core i7-1370P	16 %
-Intel Core i7-7820HQ	3 %
-Intel Core i7-8705G	16 %
-Intel Core i7-8706G	15 %
-Intel Core i7-8850H	4 %
-Intel Core i9-11900H	13 %
-Intel Core i9-11950H	11 %
-Intel Core i9-11980HK	13 %
-Intel Core i9-12900H	89 %
-Intel Core i9-12900HK	96 %
-Intel Core i9-12900HX	31 %
-Intel Core i9-12950HX	24 %
-Intel Pentium Gold 7505	2 %
-Intel Pentium Silver N6000	1 %
-Intel Core i7-10750H	7 %
-Intel Core i7-10710U	5 %`
+Intel Core i7-11370H	44 %
+Intel Core i7-11375H	53 %
+Intel Core i7-11390H	52 %
+Intel Core i7-11600H	11 %
+Intel Core i7-1160G7	31 %
+Intel Core i7-1165G7	43 %
+Intel Core i7-11800H	17 %
+Intel Core i7-1180G7	35 %
+Intel Core i7-11850H	18 %
+Intel Core i7-1185G7	50 %
+Intel Core i7-1195G7	44 %
+Intel Core i7-1250U	41 %
+Intel Core i7-1255U	49 %
+Intel Core i7-1260P	93 %
+Intel Core i7-1260U	41 %
+Intel Core i7-12650H	46 %
+Intel Core i7-1265U	77 %
+Intel Core i7-12700H	76 %
+Intel Core i7-1270P	83 %
+Intel Core i7-12800H	77 %
+Intel Core i7-12800HX	77 %
+Intel Core i7-1280P	96 %
+Intel Core i7-12850HX	20 %
+Intel Core i7-1370P	20 %
+Intel Core i7-7820HQ	2 %
+Intel Core i7-8705G	22 %
+Intel Core i7-8706G	20 %
+Intel Core i7-8850H	3 %
+Intel Core i9-11900H	18 %
+Intel Core i9-11950H	16 %
+Intel Core i9-11980HK	18 %
+Intel Core i9-12900H	82 %
+Intel Core i9-12900HK	83 %
+Intel Core i9-12900HX	21 %
+Intel Core i9-12950HX	21 %
+Intel Pentium Gold 7505	6 %
+Intel Pentium Silver N6000	3 %`
 
 data.split('\n').forEach(line => {
   const [cpuRaw, scoreRaw] = line.split('\t')
@@ -280,8 +308,22 @@ function LaptopHelper () {
     mark: app.id + '-mark',
   }
   const selectors = {
-    clearLinks: '.comparo_table_description a',
-    desc: ['h1', '.c-product__description', '.wp-block-table td', '.keypoints__item', '.comparo_table_description', '.search tr > td', '.secondary-title', '.description p', 'p > strong', '.prodDetAttrValue', '.v-list-item[role="listitem"]', '.contenttable td', '.td-spec > span', '.prod_details > li', '.specs_details', '.product-item-short-specs > p', '.resulspace', '.colorTipContent', '.desc', '.short_desc', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
+    clearLinks: '.comparo_table_description a, .contenttable td a',
+    desc: [
+      'h1', '.specs > li', 'dd', '.product_details_item', '.infos_strenghts > li',
+      '.techSpecs-table td', '.cd-features-list > li', '.no-checkbox', '.checkbox > a',
+      '.ProductShowcase__title__SBCBw', 'h1 + .a-unordered-list > li > span.a-list-item',
+      '.configuratorItem-mtmTable-description', '.text-start label',
+      '.see-more > div > span', '.tech-spec-content', '.sd-ps-spec-item > div',
+      '.userHtml', '.ps-iconography-specs-label', '.c-product__description',
+      '.wp-block-table td', '.keypoints__item', '.comparo_table_description',
+      '.search tr > td', '.secondary-title', '.description p', 'p > strong',
+      '.prodDetAttrValue', '.v-list-item[role="listitem"]', '.value > p',
+      '.contenttable td', '.td-spec > span', '.prod_details > li', '.specs_details',
+      '.product-item-short-specs > p', '.resulspace', '.colorTipContent', '.desc',
+      '.short_desc', 'div[data-asin] span.a-text-normal', '.c-product__title',
+      '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3',
+    ].map(sel => `${sel}:not(.${cls.mark})`).join(','),
   }
   const utils = new Shuutils(app)
 
@@ -311,6 +353,7 @@ function LaptopHelper () {
       descElement.classList.add(cls.mark)
       // first close last opened console group, else closing nothing without throwing error
       console.groupEnd()
+      descElement.innerHTML = descElement.innerHTML.replace(/&nbsp;/g, '')
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       console.groupCollapsed(utils.ellipsisWords(text, 15))
       utils.log('checking :', text)
