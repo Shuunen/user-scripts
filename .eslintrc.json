@@ -140,5 +140,8 @@
         }
       }
     ]
+  },
+  "settings": {
+    "repo/faker": "hardcore/ts"
   }
 }
