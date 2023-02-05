@@ -10,6 +10,12 @@ class Shuutils {
     this.accentsOut = 'AAAAAAAaaaaaaaBOOOOOOOOoooooooEEEEEeeeeeeCCccDIIIIiiiiUUUUuuuuNNnnSSssYyyZZZzzz'
   }
 
+  debug (...stuff) {
+    if (!this.app.debug) return
+    stuff.unshift(this.app.id + ' :')
+    console.log.apply(console, stuff)
+  }
+
   log (...stuff) {
     stuff.unshift(this.app.id + ' :')
     console.log.apply(console, stuff)

@@ -34,12 +34,12 @@
   },
   "scripts": {
     "check": "repo-check",
-    "ci": "npm run lint && npm run check && npm run test",
+    "ci": "npm run lint && npm run check && npm run test && echo ci success",
     "lint": "tsc --noEmit && eslint --cache --fix --ignore-path .gitignore --ext .js . && echo lint success",
     "lint:watch": "watchlist src tests -eager -- npm run lint",
     "postversion": "git push && git push --tags",
     "preversion": "npm run ci",
-    "test": "uvu -r tsm tests",
+    "test": "uvu -r tsm tests && echo test success",
     "test:watch": "watchlist src tests -eager -- npm test"
   },
   "version": "1.0.0"
