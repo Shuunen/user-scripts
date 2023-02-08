@@ -5,9 +5,9 @@
     "node": false
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended", // TODO: use all instead of recommended
-    "plugin:unicorn/recommended" // TODO: use all instead of recommended
+    "plugin:unicorn/all",
+    "hardcore",
+    "hardcore/ts"
   ],
   "overrides": [
     {
@@ -16,15 +16,16 @@
       ],
       "rules": {
         "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/explicit-function-return-type": "off"
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "import/no-commonjs": "off",
+        "import/unambiguous": "off",
+        "max-lines": "off",
+        "putout/putout": "off"
       }
     }
   ],
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2021,
-    "project": "./tsconfig.json",
-    "sourceType": "module"
+    "project": "tsconfig.json"
   },
   "plugins": [
     "filenames"
@@ -41,6 +42,7 @@
       "error",
       "always-multiline"
     ],
+    "@typescript-eslint/consistent-indexed-object-style": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/indent": [
@@ -55,7 +57,6 @@
         }
       }
     ],
-    "@typescript-eslint/no-magic-numbers": "off",
     "@typescript-eslint/no-type-alias": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -86,6 +87,10 @@
       "error",
       "multi"
     ],
+    "eslint-comments/no-use": "off",
+    "etc/no-const-enum": "off",
+    "etc/no-enum": "off",
+    "ext/lines-between-object-properties": "off",
     "filenames/match-regex": [
       2,
       "(\\.user|utils|\\.test|\\.d|\\.config)$",
@@ -95,26 +100,67 @@
       "error",
       "always"
     ],
-    "import/no-unassigned-import": "off",
-    "indent": [
+    "id-length": [
       "error",
-      2
+      {
+        "exceptions": [
+          "t"
+        ],
+        "min": 2
+      }
     ],
+    "import/export": "off",
+    "import/extensions": "off",
+    "import/first": "off",
+    "import/named": "off",
+    "import/namespace": "off",
+    "import/newline-after-import": "off",
+    "import/no-absolute-path": "off",
+    "import/no-amd": "off",
+    "import/no-cycle": "off",
+    "import/no-deprecated": "off",
+    "import/no-duplicates": "off",
+    "import/no-dynamic-require:": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-import-module-exports": "off",
+    "import/no-mutable-exports": "off",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off",
+    "import/no-named-default": "off",
+    "import/no-relative-packages": "off",
+    "import/no-self-import": "off",
+    "import/no-unassigned-import": "off",
+    "import/no-unresolved": "off",
+    "import/no-unused-modules": "off",
+    "import/no-useless-path-segments": "off",
+    "import/no-webpack-loader-syntax": "off",
+    "import/order": "off",
+    "import/prefer-default-export": "off",
+    "indent": "off",
+    "line-comment-position": "off",
+    "lines-around-comment": "off",
     "lines-between-class-members": "off",
+    "logical-assignment-operators": "off",
+    "max-len": "off",
     "max-statements-per-line": "off",
     "no-console": "off",
+    "no-inline-comments": "off",
     "object-curly-spacing": [
       "error",
       "always"
     ],
     "padding-line-between-statements": "off",
+    "prettier/prettier": "off",
     "quote-props": [
       "error",
       "consistent-as-needed"
     ],
-    "quotes": [
+    "quotes": "off",
+    "require-atomic-updates": [
       "error",
-      "single"
+      {
+        "allowProperties": true
+      }
     ],
     "semi": [
       "error",
@@ -140,8 +186,5 @@
         }
       }
     ]
-  },
-  "settings": {
-    "repo/faker": "hardcore/ts"
   }
 }

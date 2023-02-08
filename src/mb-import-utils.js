@@ -6,7 +6,7 @@
  * @param {HTMLElement} context
  * @returns {string}
  */
-const textFromSelector = (sel, context) => {
+function textFromSelector (sel, context) {
   const element = (context || document).querySelector(sel)
   if (!element) return ''
   return element.textContent?.trim() || ''
@@ -17,7 +17,8 @@ const textFromSelector = (sel, context) => {
  * @param {{ id:string, title: string }} app
  * @returns
  */
-const createMbForm = app => {
+// eslint-disable-next-line max-statements
+function createMbForm (app) {
   const existing = document.querySelector(`#${app.id}`)
   if (existing) existing.remove()
   const form = document.createElement('form')
@@ -53,7 +54,8 @@ const createMbForm = app => {
  * @param {string} value
  * @param {boolean} isHidden
  */
-const addMbField = (form, name, value, isHidden = false) => {
+// eslint-disable-next-line max-params
+function addMbField (form, name, value, isHidden = false) {
   const field = document.createElement('input')
   field.name = name
   field.title = name
@@ -71,7 +73,8 @@ const addMbField = (form, name, value, isHidden = false) => {
  * Add a submit button to the form
  * @param {HTMLFormElement} form
  */
-const addMbSubmit = form => {
+// eslint-disable-next-line max-statements
+function addMbSubmit (form) {
   const submit = document.createElement('input')
   submit.type = 'submit'
   submit.value = 'Export to MusicBrainz'
@@ -92,8 +95,9 @@ const addMbSubmit = form => {
  * @param {{ app: { id:string, title: string }, title: string, artist: string, date: {day:string, month:string, year: string}, tracks: {number: string, name: string, artist: string, duration: string}[], label: string, url: string, urlType: string }} data
  * @returns
  */
-const insertMbForm = ({ app, title, artist, date, tracks, label, url, urlType }) => {
-  if (!title || !artist) return console.info(app.id, 'cannot work without data, exiting...')
+// eslint-disable-next-line max-statements
+function insertMbForm ({ app, title, artist, date, tracks, label, url, urlType }) {
+  if (!title || !artist) { console.info(app.id, 'cannot work without data, exiting...'); return }
   console.log(app.id, 'got data :', { title, artist, date, tracks, label, url, urlType })
   const form = createMbForm(app)
   addMbField(form, 'name', title)

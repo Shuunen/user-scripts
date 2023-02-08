@@ -1,3 +1,7 @@
+/* eslint-disable func-style */
+/* eslint-disable no-magic-numbers */
+/* eslint-disable no-param-reassign */
+/* eslint-disable max-statements */
 // ==UserScript==
 // @name         Amazon - All in one
 // @namespace    https://github.com/Shuunen
@@ -16,12 +20,12 @@
  * @returns {number}
  */
 const positionInInterval = (value, intervals) => {
-  let ponderation = 0
+  let weight = 0
   for (const interval of intervals) {
     if (value <= interval) break
-    ponderation++
+    weight += 1
   }
-  return ponderation
+  return weight
 }
 
 const maxScore = 16
@@ -33,7 +37,7 @@ const maxScore = 16
  * @param {boolean} explanation If true, the score explanation string will be returned
  * @returns {number|string} a score between 0 and maxScore
  */
-const score = (rating, reviews, explanation = false) => {
+const calcScore = (rating, reviews, explanation = false) => {
   const ratingScore = positionInInterval(rating, [2, 3, 4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5])
   const reviewsScore = ratingScore ? positionInInterval(reviews, [4, 8, 16, 32]) : 0
   let score = ratingScore + reviewsScore
@@ -51,7 +55,7 @@ const score = (rating, reviews, explanation = false) => {
  */
 const score20Styled = (rating, reviews) => {
   const data = { score: 0, color: 'black', size: 1 }
-  const value = score(rating, reviews)
+  const value = calcScore(rating, reviews)
   if (typeof value === 'number') data.score = Math.round(value / maxScore * 20)
   const index = positionInInterval(data.score, [8, 12, 16])
   data.color = ['red', 'darkorange', 'black', 'darkgreen'][index] ?? 'grey'
@@ -59,6 +63,7 @@ const score20Styled = (rating, reviews) => {
   return data
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 (function AmazonAIO () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
@@ -95,6 +100,7 @@ const score20Styled = (rating, reviews) => {
   }
   function clearClassnames () {
     for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+      // eslint-disable-next-line unicorn/no-keyword-prefix
       node.className = ''
     })
   }
@@ -126,8 +132,10 @@ const score20Styled = (rating, reviews) => {
    * @param {number} size
    * @returns {{ scoreSection:HTMLElement, scoreByCurrency:number }}
    */
+  // eslint-disable-next-line max-params
   function generateScoreSection (product, score, color, size) {
     const scoreSection = document.createElement('div')
+    // eslint-disable-next-line unicorn/no-keyword-prefix
     scoreSection.className = 'amz-aio-score a-spacing-top-micro'
     scoreSection.textContent = `${score}/20`
     scoreSection.style.color = color
@@ -144,16 +152,16 @@ const score20Styled = (rating, reviews) => {
       product.dataset.amzAioScore = 0
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
       if (!ratingSection) return
-      const childs = ratingSection.firstChild.children
-      const rating = Number.parseFloat(childs[0].getAttribute('aria-label').split(' ')[0].replace(',', '.'))
-      const reviews = Number.parseInt(childs[1].getAttribute('aria-label').replace(/\W/g, ''))
+      const { children } = ratingSection.firstChild
+      const rating = Number.parseFloat(children[0].getAttribute('aria-label').split(' ')[0].replace(',', '.'))
+      const reviews = Number.parseInt(children[1].getAttribute('aria-label').replace(/\W/gu, ''), 10)
       const { score, color, size } = score20Styled(rating, reviews)
       const { scoreSection, scoreByCurrency } = generateScoreSection(product, score, color, size)
       ratingSection.parentNode.insertBefore(scoreSection, ratingSection.nextSibling)
       product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70)
     })
     // sort by score & apply position
-    products.sort((a, b) => (b.dataset.amzAioScore - a.dataset.amzAioScore)).forEach((product, index) => {
+    products.sort((productA, productB) => (productB.dataset.amzAioScore - productA.dataset.amzAioScore)).forEach((product, index) => {
       product.style.order = index
     })
   }
@@ -169,5 +177,5 @@ const score20Styled = (rating, reviews) => {
 })()
 
 if (module) module.exports = {
-  score, score20Styled, maxScore,
+  score: calcScore, score20Styled, maxScore,
 }

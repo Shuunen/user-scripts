@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 // ==UserScript==
 // @name         Amazon Gaming - All in one
 // @namespace    https://github.com/Shuunen
@@ -9,6 +10,7 @@
 // @grant        none
 // ==/UserScript==
 
+// eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
 (function amazonGamingAIO () {
   /* global Shuutils */
   if (typeof window === 'undefined') return
@@ -99,7 +101,8 @@
   function checkEmptyGrids () {
     utils.findAll(selectors.grid, document, true).forEach((/** @type {HTMLElement} */ node) => {
       // @ts-expect-error
-      const visibleChildren = [...node.children].filter(c => !c.hasAttribute('data-hidden-cause')).length // eslint-disable-line unicorn/prefer-dom-node-dataset
+      // eslint-disable-next-line array-func/prefer-array-from
+      const visibleChildren = [...node.children].filter(child => !child.hasAttribute('data-hidden-cause')).length // eslint-disable-line unicorn/prefer-dom-node-dataset
       node.style.backgroundImage = visibleChildren === 0 ? 'url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHZpZXdCb3g9IjAgMCAyMzIgMjMyIj48cGF0aCBkPSJNMTA3IDE0NmE4IDggMCAwIDAgMTUtMmwtMy0zM2E4IDggMCAwIDAtMTUgMWwzIDM0em00NyA2IDEgMWM0IDAgNy0zIDgtN2wzLTM0YTcgNyAwIDEgMC0xNS0xbC0zIDMzYy0xIDQgMiA4IDYgOHptLTU4IDMzYTIzIDIzIDAgMSAwIDAgNDcgMjMgMjMgMCAwIDAgMC00N3ptMCAzMmE4IDggMCAxIDEgMC0xNyA4IDggMCAwIDEgMCAxN3ptNzgtMzJhMjMgMjMgMCAxIDAgMCA0NyAyMyAyMyAwIDAgMCAwLTQ3em0wIDMyYTggOCAwIDEgMSAwLTE3IDggOCAwIDAgMSAwIDE3eiIvPjxwYXRoIGQ9Im0yMTkgNzktNi0zSDYzbC02LTI0Yy0xLTMtNC02LTctNkgxOWE4IDggMCAwIDAgMCAxNWgyNWw2IDI0djFsMjMgODljMSAzIDQgNSA4IDVoMTA4YzQgMCA3LTIgOC01bDIzLTg5LTEtN3ptLTM1IDg2SDg2TDY3IDkxaDEzNmwtMTkgNzR6TTEwNiA1M2E3IDcgMCAwIDAgMTAgMGMzLTMgMy04IDAtMTFMOTMgMTlhOCA4IDAgMCAwLTExIDEwbDI0IDI0em01MyAyIDUtMiAyNC0yNGE3IDcgMCAxIDAtMTEtMTBsLTIzIDIzYTggOCAwIDAgMCA1IDEzem0tMjQtN2M0IDAgOC0zIDgtN1Y4YzAtNS00LTgtOC04cy03IDMtNyA3djM0YzAgNCAzIDcgNyA3eiIvPjwvc3ZnPg==")' : ''
       node.style.height = visibleChildren === 0 ? '160px' : ''
       node.style.backgroundRepeat = visibleChildren === 0 ? 'no-repeat' : ''
@@ -116,21 +119,21 @@
   }
   function hideClaimed () {
     utils.findAll(selectors.claimedTag, document, true).forEach((/** @type {HTMLElement} */ node) => {
-      node.classList.add(appId + '-processed')
+      node.classList.add(`${appId}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
       if (!product) { utils.error('no product found for claimed tag', node); return }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       hideElement(product, 'claimed')
     })
     checkEmptyGrids()
   }
   function cleanDLCName (name = '') {
-    return name.replace(/\W/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase() || ''
+    return name.replace(/\W/gu, ' ').replace(/\s+/gu, ' ').trim().toLowerCase() || ''
   }
   function hideUnwantedDLC () {
+    // eslint-disable-next-line max-statements
     utils.findAll(selectors.dlcName, document, true).forEach((/** @type {HTMLElement} */ node) => {
-      node.classList.add(appId + '-processed')
+      node.classList.add(`${appId}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
       if (!product) { utils.error('no product found for game name', node); return }
@@ -145,7 +148,7 @@
     })
     checkEmptyGrids()
   }
-  const process = (cause = '') => {
+  function process (cause = '') {
     if (cause === 'dom-node-inserted:featured-content-thumbnail__overlay') return
     utils.log('process, cause :', cause)
     deleteUseless()
@@ -153,11 +156,12 @@
     hideClaimed()
     hideUnwantedDLC()
   }
+  // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-misused-promises
-  utils.onPageChange(async () => processDebounced('page-change'))
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  window.addEventListener('scroll', async () => processDebounced('scroll'))
-  // eslint-disable-next-line @typescript-eslint/no-extra-parens, @typescript-eslint/no-misused-promises
-  window.addEventListener('DOMNodeInserted', async (event) => processDebounced('dom-node-inserted:' + ( /** @type {HTMLElement} **/ (event.target)?.className || 'unknown')))
+
+  utils.onPageChange(() => processDebounced('page-change'))
+
+  window.addEventListener('scroll', () => processDebounced('scroll'))
+
+  window.addEventListener('DOMNodeInserted', (event) => processDebounced(`dom-node-inserted:${   /** @type {HTMLElement} * */ (event.target)?.className || 'unknown'}`))
 })()

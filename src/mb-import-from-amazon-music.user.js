@@ -18,12 +18,15 @@
     title: '[data-feature-name="dmusicProductTitle"]',
     artist: '[data-feature-name="artistLink"',
   }
-  const getTracks = () => utils.findAll('[id^="dmusic_tracklist_player_row"]').map((element, index) => ({
-    number: String(index + 1),
-    name: textFromSelector('.TitleLink', element),
-    duration: textFromSelector('[id^="dmusic_tracklist_duration"]', element),
-  }))
-  const mbImport = () => {
+  function getTracks () {
+    return utils.findAll('[id^="dmusic_tracklist_player_row"]').map((element, index) => ({
+      number: String(index + 1),
+      name: textFromSelector('.TitleLink', element),
+      duration: textFromSelector('[id^="dmusic_tracklist_duration"]', element),
+    }))
+  }
+  // eslint-disable-next-line max-statements
+  function mbImport () {
     const details = textFromSelector('#productDetailsTable')
     const data = {
       app: {
@@ -33,24 +36,24 @@
       title: textFromSelector(selectors.title),
       artist: textFromSelector(selectors.artist),
       date: { year: 0, month: 0, day: 0 },
-      label: (details.match(/Label: (\S+)/) || [])[1] || '',
+      label: (details.match(/Label: (?<name>\S+)/u) || [])[1] || '',
       url: document.location.href,
-      urlType: '77', // amazon link
+      urlType: '77',
       tracks: getTracks(),
     }
-    const dateMatches = details.match(/origine : (\d{1,2}) (\S+) (\d{4})/) || []
-    if (dateMatches.length === 4) {
+    const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u)
+    if (dateMatches.groups?.year) {
       const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
-      data.date.year = dateMatches[3]
-      data.date.month = months.indexOf(dateMatches[2]) + 1
-      data.date.day = dateMatches[1]
+      data.date.year = dateMatches.groups.year
+      data.date.month = months.indexOf(dateMatches.groups.month) + 1
+      data.date.day = dateMatches.groups.day
     }
-    if (data.title && data.artist) return insertMbForm(data)
+    if (data.title && data.artist) { insertMbForm(data); return }
     utils.warn('cannot insert MB form without title & artist')
   }
-  const init = async () => {
+  async function init () {
     const title = await utils.waitToDetect(selectors.title)
-    if (title === undefined) return utils.log('no music title found on this page')
+    if (title === undefined) { utils.log('no music title found on this page'); return }
     mbImport()
   }
   utils.onPageChange(init)

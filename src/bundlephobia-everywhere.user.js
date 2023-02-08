@@ -18,7 +18,8 @@
    * Inject bundlephobia badges into the page
    * @param {string} name
    */
-  const injectBadge = async name => {
+  // eslint-disable-next-line max-statements
+  function injectBadge (name) {
     const link = document.createElement('a')
     link.innerHTML = `"${name}" stats from BundlePhobia :
       <img src="https://badgen.net/bundlephobia/min/${name}" alt="minified size" />
@@ -35,14 +36,15 @@
     anchor.style.position = 'relative'
     anchor.append(link)
   }
-  const detectName = () => {
+  // eslint-disable-next-line max-statements
+  function detectName () {
     let text = document.body.textContent
-    if(!text) return utils.error('cannot find body text content')
-    if (text.includes('npm') === false) return utils.log('does not seems like the good place to add a badge')
+    if (!text) { utils.error('cannot find body text content'); return }
+    if (text.includes('npm') === false) { utils.log('does not seems like the good place to add a badge'); return }
     const copyBlock = utils.findOne('.lh-copy span')
-    if (copyBlock) text = copyBlock.textContent + '\n' + text
-    const name = (text.match(/\b(npm i|npm install|npx|yarn add).* ([^-][\w./@-]+)/) || text.match(/(unpkg\.com)\/(@?[\w./-]+)/) || [])[2]
-    if (name === undefined) return utils.warn('failed to find a npm package name in this page')
+    if (copyBlock) text = `${copyBlock.textContent}\n${text}`
+    const name = (text.match(/\b(?<provider>npm i|npm install|npx|yarn add).* (?<name>[^-][\w./@-]+)/iu) || text.match(/(?<provider>unpkg\.com)\/(?<name>@?[\w./-]+)/iu))?.groups?.name
+    if (name === undefined) { utils.warn('failed to find a npm package name in this page'); return }
     utils.log('found package name :', name)
     injectBadge(name)
   }
