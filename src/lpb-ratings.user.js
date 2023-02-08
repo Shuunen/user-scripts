@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 // ==UserScript==
 // @name         Le Petit Ballon - Ratings
 // @namespace    https://github.com/Shuunen
@@ -393,21 +394,7 @@ chateau saint ahon haut medoc,4.0
 gallo family vineyards summer red,1.0
 chateau lynch bages pauillac,4.0
 san pedro gato negro rose,1.0`
-const ratings = ratingsCsv.split('\n').map((line) => {
-  const [title, rating] = line.split(',')
-  return {
-    title: cleanTitle(title),
-    rating: Number.parseFloat(rating, 10),
-  }
-})
-console.log(ratings)
 
-const fuse = new Fuse(ratings, {
-  keys: ['title'],
-  includeScore: true,
-  threshold: 0.4,
-  minMatchCharLength: 4,
-})
 
 /**
  * Clean a title string
@@ -416,54 +403,71 @@ const fuse = new Fuse(ratings, {
  */
 function cleanTitle (title) {
   return title
-    .replace(/\([^(]+\)/g, ' ') // remove parenthesis content(s)
-    .replace(/\d{4}/g, ' ') // remove year
-    .replace(/['’-]/g, ' ').normalize('NFD').replace(/[^\d\sa-z]/gi, '').toLowerCase() // from shuutils sanitize
-    .replace(/\b(vini|cuvee|clos|maison|domaine|chateau|de|le|la|du)s?\b/g, ' ') // remove common words
-    .replace(/\s+/g, ' ')
+    .replace(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
+    .replace(/\d{4}/gu, ' ') // remove year
+    .replace(/['’-]/gu, ' ').normalize('NFD').replace(/[^\d\sa-z]/giu, '').toLowerCase() // from shuutils sanitize
+    .replace(/\b(?:chateau|clos|cuvee|de|domaine|du|la|le|maison|vini)s?\b/gu, ' ') // remove common words
+    .replace(/\s+/gu, ' ')
     .trim()
 }
 
-(function LePetitBallonRatings () {
+const ratings = ratingsCsv.split('\n').map((line) => {
+  const [title, rating] = line.split(',')
+  return {
+    title: cleanTitle(title),
+    rating: Number.parseFloat(rating, 10),
+  }
+})
+
+// eslint-disable-next-line max-statements
+function createReview (name, rating) {
+  const review = document.createElement('div')
+  review.classList.add('my-review')
+  review.style.width = `${Math.max(rating / 5 * 100, 20)}%` // 5 stars will be 100% width
+  review.style.height = `${12}px`
+  review.style.margin = '2px 0'
+  review.style.borderRadius = `${5}px`
+  review.style.backgroundColor = 'red'
+  review.style.backgroundImage = 'url("https://i.pinimg.com/originals/d5/a7/cb/d5a7cb46e2f15a8fed10aaf1dd00965c.gif")'
+  review.style.backgroundBlendMode = 'color-dodge'
+  review.style.backgroundSize = '16px'
+  if (rating >= 3) review.style.backgroundColor = 'orange'
+  if (rating >= 4) review.style.backgroundColor = 'green'
+  review.title = `"${name}" rated ${rating} stars`
+  return review
+}
+
+// eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
+function LePetitBallonRatings () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
+  const fuseSettings = {
+    keys: ['title'],
+    includeScore: true,
+    threshold: 0.4,
+    minMatchCharLength: 4,
+  }
+  const fuse = new Fuse(ratings, fuseSettings)
   const marker = 'lpb-ratings'
   const utils = new Shuutils({ id: marker, debug: false })
   const selectors = {
-    items: '.product-item:not(.' + marker + ')',
+    items: `.product-item:not(.${marker})`,
     wineTitle: '.product-catalog__title',
-    wineDomain: '.product-catalog__title + .product-catalog__text',
-    review: '.product-catalog__review',
     useless: '.product-catalog--out-stock, .footer-trustpilot, .footer-legal',
   }
   function hideUseless () {
     utils.findAll(selectors.useless, document, true).forEach(node => {
-      if (utils.app.debug)
-        node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-      else
-        node.style.display = 'none'
+      // eslint-disable-next-line no-param-reassign
+      if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
+      // eslint-disable-next-line no-param-reassign
+      else node.style.display = 'none'
     })
   }
-  function createReview (name, rating) {
-    const review = document.createElement('div')
-    review.classList.add('my-review')
-    review.style.width = Math.max(rating / 5 * 100, 20) + '%' // 5 stars will be 100% width
-    review.style.height = 12 + 'px'
-    review.style.margin = '2px 0'
-    review.style.borderRadius = 5 + 'px'
-    review.style.backgroundColor = 'red'
-    review.style.backgroundImage = 'url("https://i.pinimg.com/originals/d5/a7/cb/d5a7cb46e2f15a8fed10aaf1dd00965c.gif")'
-    review.style.backgroundBlendMode = 'color-dodge'
-    review.style.backgroundSize = '16px'
-    if (rating >= 3) review.style.backgroundColor = 'orange'
-    if (rating >= 4) review.style.backgroundColor = 'green'
-    review.title = `"${name}" rated ${rating} stars`
-    return review
-  }
+
   function searchRating (wine = '') {
     const results = fuse.search(wine)
     if (results.length === 0) return { doesMatch: false }
-    const result = results[0]
+    const [result] = results
     const percent = 100 - Math.round(result.score * 100)
     if (percent < 50) return { doesMatch: false }
     const { title = '', rating = 0 } = result.item
@@ -471,29 +475,38 @@ function cleanTitle (title) {
     if (wine.includes('blanc') && title.includes('rouge')) return { doesMatch: false }
     return { search: wine, title, percent, doesMatch: true, rating }
   }
+
+  // eslint-disable-next-line max-statements
+  function injectRating (item) {
+    item.classList.add(marker)
+    const title = utils.findOne(selectors.wineTitle, item, true)
+    if (!title) { utils.error('no title found on item', item); return }
+    const domain = title.nextElementSibling
+    const wine = cleanTitle(`${domain.textContent} ${title.textContent}`)
+    const result = searchRating(wine)
+    if (!result.doesMatch) return
+    utils.log('found', result)
+    title.prepend(createReview(result.title, result.rating))
+  }
+
   function injectRatings () {
     utils.findAll(selectors.items).forEach((item) => {
-      item.classList.add(marker)
-      const title = utils.findOne(selectors.wineTitle, item, true)
-      if (!title) { utils.error('no title found on item', item); return }
-      const domain = title.nextElementSibling
-      const wine = cleanTitle(domain.textContent + ' ' + title.textContent)
-      const result = searchRating(wine)
-      if (!result.doesMatch) return
-      utils.log('found', result)
-      title.prepend(createReview(result.title, result.rating))
+      injectRating(item)
     })
   }
   async function init () {
     const items = await utils.waitToDetect(selectors.items)
-    if (items === undefined) return utils.log('no item found on this page')
+    if (items === undefined) { utils.log('no item found on this page'); return }
     hideUseless()
     injectRatings()
   }
   const injectRatingsDebounced = utils.debounce(injectRatings, 500)
   utils.onPageChange(init)
   window.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
-})()
+}
+
+// eslint-disable-next-line new-cap
+LePetitBallonRatings()
 
 if (module) module.exports = {
   cleanTitle,

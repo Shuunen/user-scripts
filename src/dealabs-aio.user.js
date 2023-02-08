@@ -12,6 +12,7 @@
 
 // @ts-nocheck
 
+// eslint-disable-next-line max-statements
 (function DealabsAIO () {
   /* global Shuutils, autosize */
   const app = {
@@ -20,13 +21,13 @@
     excluders: [],
     debug: false,
   }
-  app.excluders = (window.localStorage[app.id + '.filter'] || 'my-keyword, other-keyword').split(',')
+  app.excluders = (window.localStorage[`${app.id}.filter`] || 'my-keyword, other-keyword').split(',')
   const selectors = {
     dealList: '.js-threadList',
     deal: '.thread--type-list',
   }
   const cls = {
-    filter: app.id + '-filter',
+    filter: `${app.id}-filter`,
   }
   const uselessElements = {
     rightNav: '.listLayout-side',
@@ -43,12 +44,13 @@
   const utils = new Shuutils(app)
   function cleanElements () {
     Object.keys(uselessElements).forEach(key => {
-      utils.findAll(uselessElements[key], document, true).forEach(node => node.remove())
+      utils.findAll(uselessElements[key], document, true).forEach(node => { node.remove() })
     })
   }
   function cleanClasses () {
     Object.keys(uselessClasses).forEach(key => {
       utils.findAll(uselessClasses[key], document, true).forEach(node => {
+        // eslint-disable-next-line unicorn/no-keyword-prefix, no-param-reassign
         node.classList = []
       })
     })
@@ -88,6 +90,27 @@
       `
     document.head.insertAdjacentElement('beforeend', styleTag)
   }
+  function checkItem (text, element) {
+    let found = false
+    let remaining = app.excluders.length
+    while (!found && remaining) {
+      found = text.includes(app.excluders[remaining - 1])
+      remaining -= 1
+    }
+    // eslint-disable-next-line no-magic-numbers
+    if (found) utils.warn(`"${text.slice(0, 40)}..."`, `is excluded, it contains : "${app.excluders[remaining]}"`)
+    // eslint-disable-next-line no-param-reassign, sonarjs/elseif-without-else
+    else if (app.debug) element.style.backgroundColor = '#f0fbf0'
+    // eslint-disable-next-line no-param-reassign
+    element.style.opacity = found ? '0.3' : '1'
+  }
+  function checkItems () {
+    utils.log('checking displayed items...')
+    utils.findAll(selectors.deal).forEach(element => {
+      const text = utils.readableString(element.textContent).toLowerCase().trim()
+      checkItem(text, element)
+    })
+  }
   function onExcludersUpdate (fromFilter) {
     app.excluders = app.excluders
       .map(entry => entry.trim().toLowerCase())
@@ -95,9 +118,9 @@
     if (app.excluders.length <= 0) return
     utils.log('new excluders :', app.excluders)
     app.filter = app.excluders.join(', ')
-    window.localStorage[app.id + '.filter'] = app.filter
+    window.localStorage[`${app.id}.filter`] = app.filter
     if (!fromFilter) {
-      const filter = utils.findOne('.' + cls.filter)
+      const filter = utils.findOne(`.${cls.filter}`)
       filter.value = app.filter
       autosize.update(filter)
     }
@@ -108,7 +131,9 @@
     app.excluders = event.target.value.split(',')
     onExcludersUpdate(true)
   }
+  // eslint-disable-next-line no-magic-numbers
   const onFilterChangeDebounced = utils.debounce(onFilterChange, 500)
+  // eslint-disable-next-line max-statements
   function insertFilter () {
     utils.log('insert filter...')
     const container = utils.findFirst(selectors.dealList)
@@ -124,24 +149,7 @@
     filter.addEventListener('keyup', onFilterChangeDebounced)
     container.insertAdjacentElement('beforeBegin', filter)
   }
-  function checkItem (text, element) {
-    let found = false
-    let remaining = app.excluders.length
-    while (!found && remaining) {
-      found = text.includes(app.excluders[remaining - 1])
-      remaining--
-    }
-    if (found) utils.warn('"' + text.slice(0, 40) + '..."', 'is excluded, it contains : "' + app.excluders[remaining] + '"')
-    else if (app.debug) element.style.backgroundColor = '#f0fbf0'
-    element.style.opacity = found ? '0.3' : '1'
-  }
-  function checkItems () {
-    utils.log('checking displayed items...')
-    utils.findAll(selectors.deal).forEach(element => {
-      const text = utils.readableString(element.textContent).toLowerCase().trim()
-      checkItem(text, element)
-    })
-  }
+
   function process () {
     utils.log('processing')
     cleanClasses()
@@ -155,6 +163,7 @@
     process()
   }
   init()
+  // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
   document.addEventListener('scroll', processDebounced)
 })()

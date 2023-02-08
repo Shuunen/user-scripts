@@ -1,3 +1,6 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-magic-numbers */
 // ==UserScript==
 // @name         Amazon - Price per weight
 // @namespace    https://github.com/Shuunen
@@ -10,7 +13,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
-
+// eslint-disable-next-line max-statements
 (function AmazonPricePerWeight () {
   /* global Shuutils */
   const app = {
@@ -25,37 +28,37 @@
   }
 
   const cls = {
-    handled: app.id + '-handled',
-    avoided: app.id + '-avoided',
-    debug: app.id + '-debug',
-    pricePer: app.id + '-price-per',
+    handled: `${app.id}-handled`,
+    avoided: `${app.id}-avoided`,
+    debug: `${app.id}-debug`,
+    pricePer: `${app.id}-price-per`,
   }
 
   const selectors = {
-    list: '.s-main-slot.s-result-list.s-search-results',
-    item: '.s-result-item[data-asin^="B"]:not(.aok-hidden):not(.' + cls.handled + '):not(.' + cls.avoided + ')',
-    itemTitle: '.s-access-title',
+    item: `.s-result-item[data-asin^="B"]:not(.aok-hidden):not(.${cls.handled}):not(.${cls.avoided})`,
     otherPrice: '.a-size-base.a-color-price.s-price.a-text-bold',
     price: 'span.a-price',
     pricePer: 'span.a-price + .a-size-base.a-color-secondary',
     debugContainer: '.a-fixed-left-grid-col.a-col-right .a-row:not(.a-spacing-small) .a-column.a-span7',
-    debug: '.' + cls.debug,
+    debug: `.${cls.debug}`,
     pantry: 'img.sprPantry',
   }
 
   // selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
 
   const regex = {
-    price: /(eur|€)\s?(\d+,\d\d)/i,
-    weight: /(\d+)\s?(g|kg|-)/i,
-    bulk: /lot de (\d+)/i,
-    pricePer: /(\d+,\d\d)\s€\/(\w+)/i,
+    /* eslint-disable regexp/prefer-named-capture-group, prefer-named-capture-group, regexp/no-super-linear-move */
+    price: /(eur|€)\s?(\d+,\d{2})/iu,
+    weight: /(\d+)\s?(g|kg|-)/iu,
+    bulk: /lot de (\d+)/iu,
+    pricePer: /(\d+,\d{2})\s€\/(\w+)/u,
+    /* eslint-enable regexp/prefer-named-capture-group, prefer-named-capture-group, regexp/no-super-linear-move */
   }
 
   const templates = {
-    debug: '<div class="a-row ' + cls.debug + '"><div class="a-column a-span12">\n    <p class="a-spacing-micro">Price  : {{price}} \u20AC</p>\n    <p class="a-spacing-micro">Weight : {{weight}} {{unit}}</p>    \n    <p class="a-spacing-small">Bulk   : {{bulk}}</p>\n    <p class="a-spacing-micro a-size-base a-color-price s-price a-text-bold">P/Kg  : {{pricePerKilo}} \u20AC/kg</p>\n    </div></div>',
+    debug: `<div class="a-row ${cls.debug}"><div class="a-column a-span12">\n    <p class="a-spacing-micro">Price  : {{price}} \u20AC</p>\n    <p class="a-spacing-micro">Weight : {{weight}} {{unit}}</p>    \n    <p class="a-spacing-small">Bulk   : {{bulk}}</p>\n    <p class="a-spacing-micro a-size-base a-color-price s-price a-text-bold">P/Kg  : {{pricePerKilo}} \u20AC/kg</p>\n    </div></div>`,
     price: '<span class="s-price a-text-bold">EUR {{price}}</span>',
-    pricePerKilo: '<span class="a-color-price s-price a-text-bold ' + cls.pricePer + '">EUR {{pricePerKilo}}/kg</span>',
+    pricePerKilo: `<span class="a-color-price s-price a-text-bold ${cls.pricePer}">EUR {{pricePerKilo}}/kg</span>`,
   }
 
   const utils = new Shuutils(app)
@@ -81,13 +84,13 @@
 
   function priceFloatToString (number) {
     let price = number.toFixed(1)
-    price = price.replace('.', ',') + '0'
+    price = `${price.replace('.', ',')}0`
     return price
   }
 
   function getPrice (text) {
     const matches = text.match(regex.price) || []
-    if (matches.length !== 3) return utils.warn('failed to find price in : "' + text + '"', matches)
+    if (matches.length !== 3) return utils.warn(`failed to find price in : "${text}"`, matches)
     if (app.processOne) utils.log('found price matches :', matches)
     const price = priceStringToFloat(matches[2])
     if (app.processOne) utils.log('found price', price)
@@ -103,6 +106,7 @@
       data.unit = matches[2]
     }
     if (data.unit === '-') data.unit = 'g'
+    // eslint-disable-next-line sonarjs/elseif-without-else
     else if (data.unit === '') utils.warn('failed to find a unit in :', text)
     if (app.processOne) utils.log('found weight & unit :', data)
     return data
@@ -117,6 +121,7 @@
     return bulk
   }
 
+  // eslint-disable-next-line max-statements
   function getProductDataViaPricePer (text) {
     const matches = text.replace('&nbsp;', ' ').match(regex.pricePer) || []
     const data = {
@@ -163,15 +168,17 @@
   function fill (template, data) {
     let tpl = String(template)
     Object.keys(data).forEach(key => {
-      const string = '{{' + key + '}}'
+      const string = `{{${key}}}`
       let value = data[key]
       if (key.includes('price') && value > 0) value = priceFloatToString(value)
       // utils.log('looking for', str)
-      tpl = tpl.replace(new RegExp(string, 'gi'), value)
+      // eslint-disable-next-line security/detect-non-literal-regexp
+      tpl = tpl.replace(new RegExp(string, 'giu'), value)
     })
     return tpl
   }
 
+  // eslint-disable-next-line max-statements
   function showDebugData (item, data) {
     let debug = utils.findOne(selectors.debug, item, true)
     if (!app.showDebug) {
@@ -196,22 +203,24 @@
   function getPricePerKilo (data) {
     data.pricePerKilo = 0
     if (data.weight === 0) return data
-    const w = data.weight * data.bulk
-    if (data.unit === 'g') data.pricePerKilo = (1000 / w) * data.price
-    else if (data.unit === 'kg') data.pricePerKilo = w * data.price
+    const weight = data.weight * data.bulk
+    if (data.unit === 'g') data.pricePerKilo = (1000 / weight) * data.price
+    else if (data.unit === 'kg') data.pricePerKilo = weight * data.price
     else utils.error(data.title, ': unit not handled :', data.unit)
     if (data.pricePerKilo >= 0) data.pricePerKilo = priceStringToFloat(data.pricePerKilo.toFixed(1))
     if (app.processOne) utils.log('found pricePerKilo :', data)
     return data
   }
 
+  // eslint-disable-next-line max-statements
   function injectRealPrice (item, data) {
     if (!app.injectRealPrice) return
     const price = utils.findOne(selectors.price, item)
-    if (!price) return utils.error('failed to find price el')
+    if (!price) { utils.error('failed to find price el'); return }
     utils.log('injecting real price :', data)
     let text = ''
     if (data.pricePerKilo > 0) text = fill(templates.pricePerKilo, data)
+    // eslint-disable-next-line sonarjs/elseif-without-else
     else if (data.price > 0) text = fill(templates.price, data)
     price.innerHTML = text + (app.debug ? ` (${price.innerHTML})` : '')
     if (price.nextElementSibling && !app.debug) price.nextElementSibling.remove()
@@ -219,11 +228,7 @@
     if (otherPrice) otherPrice.classList.remove('a-color-price', 'a-text-bold')
   }
 
-  function augmentProducts () {
-    utils.findAll(selectors.item).forEach(item => augmentProduct(item))
-    // sortProducts()
-  }
-
+  // eslint-disable-next-line max-statements
   function augmentProduct (item) {
     if (app.processOne) utils.log('augment', item)
     const pricePer = utils.findOne(selectors.pricePer, item, true)
@@ -237,25 +242,30 @@
     data.el = item
     products.push(data)
   }
-  /*
-  function sortProducts() {
-    const list = utils.findOne(selectors.list)
-    if (!list) return utils.error('cannot sort without list')
-    list.style.display = 'flex'
-    list.style.flexDirection = 'column'
-    // trick to have products without pricePerKilo at bottom
-    products.forEach(p => {
-      p.pricePerKilo = p.pricePerKilo || p.price + 1000
-    })
-    // sort by pricePerKilo
-    products = products.sort((a, b) => {
-      return a.pricePerKilo - b.pricePerKilo
-    })
-    products.forEach((p, index) => {
-      p.el.style.order = index
-    })
+
+  function augmentProducts () {
+    utils.findAll(selectors.item).forEach(item => { augmentProduct(item) })
+    // sortProducts()
   }
-  */
+
+  // function sortProducts() {
+  // const list = utils.findOne(selectors.list)
+  // if (!list) return utils.error('cannot sort without list')
+  // list.style.display = 'flex'
+  // list.style.flexDirection = 'column'
+  // // trick to have products without pricePerKilo at bottom
+  // products.forEach(p => {
+  //     p.pricePerKilo = p.pricePerKilo || p.price + 1000
+  // })
+  // // sort by pricePerKilo
+  // products = products.sort((a, b) => {
+  //     return a.pricePerKilo - b.pricePerKilo
+  // })
+  // products.forEach((p, index) => {
+  //     p.el.style.order = index
+  // })
+  // }
+
   function init () {
     utils.log('is starting...')
     shadeBadProducts()

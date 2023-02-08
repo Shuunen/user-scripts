@@ -4,10 +4,10 @@
   "bugs": "https://github.com/Shuunen/user-scripts/issues",
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
+    "@babel/core": "*",
     "@types/node": "18",
-    "@typescript-eslint/eslint-plugin": "5",
-    "@typescript-eslint/parser": "5",
     "eslint": "8.33",
+    "eslint-config-hardcore": "26",
     "eslint-plugin-filenames": "1",
     "eslint-plugin-unicorn": "45",
     "repo-check": "1.30",
@@ -35,7 +35,7 @@
   "scripts": {
     "check": "repo-check",
     "ci": "npm run lint && npm run check && npm run test && echo ci success",
-    "lint": "tsc --noEmit && eslint --cache --fix --ignore-path .gitignore --ext .js . && echo lint success",
+    "lint": "tsc --noEmit && eslint --cache --fix --ignore-path .gitignore --ext .js,.ts . && echo lint success",
     "lint:watch": "watchlist src tests -eager -- npm run lint",
     "postversion": "git push && git push --tags",
     "preversion": "npm run ci",

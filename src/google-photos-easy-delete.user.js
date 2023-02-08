@@ -17,23 +17,25 @@
     trash: '[data-delete-origin] button',
     confirmBtn: 'button[autofocus]',
   }
-  const deleteCurrentPhoto = async () => {
+  // eslint-disable-next-line max-statements
+  async function deleteCurrentPhoto () {
     utils.log('deleting currently displayed photo...')
     const trash = utils.findOne(selectors.trash)
-    if (!trash) return utils.error('failed to find trash button')
+    if (!trash) { utils.error('failed to find trash button'); return }
     trash.click()
     await utils.sleep('200')
     const confirmButton = utils.findOne(selectors.confirmBtn)
-    if (!confirmButton) return utils.error('failed to find confirm button')
+    if (!confirmButton) { utils.error('failed to find confirm button'); return }
     confirmButton.click()
   }
   /**
    * @param {KeyboardEvent} event
    */
-  const onKeyPress = event => {
-    if (event.key === '!') deleteCurrentPhoto()
+  function onKeyPress (event) {
+    if (event.key === '!')
+      deleteCurrentPhoto()
   }
-  const init = () => {
+  function init () {
     if (app.init) return
     utils.log('init !')
     document.body.addEventListener('keypress', onKeyPress)

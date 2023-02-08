@@ -17,22 +17,23 @@
    * Trigger a change event on an input element
    * @param {HTMLInputElement} element
    */
-  const triggerChange = element => {
+  function triggerChange (element) {
     element.dispatchEvent(new KeyboardEvent('change'))
     element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
   }
-  const fill = (email = 'romain.racamier@gmail.com') => {
+  function fill (email = 'romain.racamier@gmail.com') {
     utils.log('autofill start')
     utils.findAll(selectors.input).forEach(input => {
       if (input.type === 'password' || input.value.length > 0) return
+      // eslint-disable-next-line no-param-reassign
       input.value = email
       triggerChange(input)
       utils.log('filled', input)
     })
   }
-  const init = () => {
-    setTimeout(fill, 1000)
-    setTimeout(fill, 3000)
+  function init () {
+    setTimeout(fill, 1000) // eslint-disable-line no-magic-numbers
+    setTimeout(fill, 3000) // eslint-disable-line no-magic-numbers
   }
   if (document.location.hostname === 'localhost') return
   utils.onPageChange(init)

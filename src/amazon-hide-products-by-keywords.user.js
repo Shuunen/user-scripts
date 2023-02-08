@@ -11,7 +11,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
-
+// eslint-disable-next-line max-statements
 (function AmazonHide () {
   /* global Shuutils, autosize */
   const app = {
@@ -22,18 +22,19 @@
     suggestions: {},
     minLengthSuggestion: 2,
     maxSuggestions: 7,
+    debounceTime: 500,
   }
 
-  app.excluders = (window.localStorage[app.id + '.filter'] || 'my-keyword, other-keyword').split(',')
+  app.excluders = (window.localStorage[`${app.id}.filter`] || 'my-keyword, other-keyword').split(',')
 
   const cls = {
     base: app.id,
-    title: app.id + '-title',
-    first: app.id + '-first',
-    plus: app.id + '-plus',
-    suggestion: app.id + '-suggestion',
-    suggestions: app.id + '-suggestions',
-    filter: app.id + '-filter',
+    title: `${app.id}-title`,
+    first: `${app.id}-first`,
+    plus: `${app.id}-plus`,
+    suggestion: `${app.id}-suggestion`,
+    suggestions: `${app.id}-suggestions`,
+    filter: `${app.id}-filter`,
   }
 
   const selectors = {
@@ -47,7 +48,7 @@
   function clearSuggestions () {
     utils.log('cleared suggestions !')
     app.suggestions = {}
-    utils.findOne('.' + cls.suggestions).innerHTML = ''
+    utils.findOne(`.${cls.suggestions}`).innerHTML = ''
   }
 
   function showSuggestions () {
@@ -59,31 +60,22 @@
     // add .map(key => `${key} (${app.suggestions[key]})`)
     // to see ["silicone (5)", "decoration (4)", "support (4)", "cheveux (3)",
     // instead of ["silicone", "decoration", "support", "cheveux",
-    let suggestions = Object.keys(app.suggestions).sort((a, b) => (app.suggestions[b] - app.suggestions[a]))
+    let suggestions = Object.keys(app.suggestions).sort((suggestionA, suggestionB) => (app.suggestions[suggestionB] - app.suggestions[suggestionA]))
     // limit displayed suggestions
     suggestions = suggestions.splice(0, app.maxSuggestions)
     // build html
     utils.log('showing suggestions', suggestions)
     const html = suggestions.map(suggestion => `<div class="${cls.suggestion}" title="apparaît ${app.suggestions[suggestion]} fois"><span class="${cls.plus}">+</span>${suggestion}</div>`).join('')
-    utils.findOne('.' + cls.suggestions).innerHTML = html
+    utils.findOne(`.${cls.suggestions}`).innerHTML = html
   }
 
-  const showSuggestionsDebounced = utils.debounce(showSuggestions, 500)
-
-  function onSuggestionClick (event) {
-    const suggestion = event.target.textContent.replace(/\W/gi, '') // regex avoid caching the plus sign
-    utils.log('user wants to add suggestion', suggestion)
-    app.excluders.push(suggestion)
-    onExcludersUpdate()
-  }
+  const showSuggestionsDebounced = utils.debounce(showSuggestions, app.debounceTime)
 
   function addTitleToSuggestions (title) {
     title.split(' ').filter(word => word.length > app.minLengthSuggestion).forEach(word => {
       // add the word if needed & count the occurrence
-      if (!app.suggestions[word])
-        app.suggestions[word] = 0
-
-      app.suggestions[word]++
+      if (!app.suggestions[word]) app.suggestions[word] = 0
+      app.suggestions[word] += 1
     })
     showSuggestionsDebounced()
   }
@@ -93,13 +85,11 @@
     let remaining = app.excluders.length
     while (!found && remaining) {
       found = titleString.includes(app.excluders[remaining - 1])
-      remaining--
+      remaining -= 1
     }
-    if (found)
-      utils.log('"' + titleString.slice(0, 40) + '..."', 'should be excluded')
-    else
-      addTitleToSuggestions(titleString)
-
+    // eslint-disable-next-line no-magic-numbers
+    if (found) utils.log(`"${titleString.slice(0, 40)}..."`, 'should be excluded')
+    else addTitleToSuggestions(titleString)
     const product = titleElement.closest(selectors.product)
     product.style.display = found ? 'none' : 'inline-block'
   }
@@ -109,6 +99,7 @@
     clearSuggestions()
     const products = utils.findAll(selectors.productTitle)
     products.forEach(titleElement => {
+      // eslint-disable-next-line no-param-reassign
       titleElement.textContent = utils.readableString(titleElement.textContent)
       const titleString = titleElement.textContent.toLowerCase()
       checkProduct(titleString, titleElement)
@@ -122,13 +113,20 @@
     if (app.excluders.length <= 0) return
     utils.log('new excluders :', app.excluders)
     app.filter = app.excluders.join(', ')
-    window.localStorage[app.id + '.filter'] = app.filter
+    window.localStorage[`${app.id}.filter`] = app.filter
     if (!fromFilter) {
-      const filter = utils.findOne('.' + cls.filter)
+      const filter = utils.findOne(`.${cls.filter}`)
       filter.value = app.filter
       autosize.update(filter)
     }
     checkProducts()
+  }
+
+  function onSuggestionClick (event) {
+    const suggestion = event.target.textContent.replace(/\W/gu, '') // regex avoid caching the plus sign
+    utils.log('user wants to add suggestion', suggestion)
+    app.excluders.push(suggestion)
+    onExcludersUpdate()
   }
 
   function onFilterChange (event) {
@@ -137,61 +135,63 @@
     onExcludersUpdate(true)
   }
 
-  const onFilterChangeDebounced = utils.debounce(onFilterChange, 500)
+  const onFilterChangeDebounced = utils.debounce(onFilterChange, app.debounceTime)
 
+  const styles = `
+  <style>
+  .${cls.suggestions} {
+    display: flex;
+    flex-direction: column;
+  }
+  .${cls.suggestion} {
+    display: flex;
+    align-items: baseline;
+    margin-top: 2px;
+    padding: 2px 4px;
+    color: lightcoral;
+    transition: background-color .3s, color .3s;
+  }
+  .${cls.suggestion}:hover {
+    color: white;
+    background-color: darkred;
+    cursor: pointer;
+  }
+  .${cls.plus} {
+    border: 1px solid lightgray;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    text-align: center;
+    margin-right: 6px;
+  }
+  .${cls.suggestion}:hover .${cls.plus} {
+    border: 1px solid currentColor;
+  }
+  </style>`
+
+  // eslint-disable-next-line max-statements
   function insertFilter () {
     const container = utils.findFirst(selectors.container)
     if (!container) {
       utils.error('cannot inject filter, did not find left nav container')
       return
     }
-    let html = `
-    <style>
-    .${cls.suggestions} {
-      display: flex;
-      flex-direction: column;
-    }
-    .${cls.suggestion} {
-      display: flex;
-      align-items: baseline;
-      margin-top: 2px;
-      padding: 2px 4px;
-      color: lightcoral;
-      transition: background-color .3s, color .3s;
-    }
-    .${cls.suggestion}:hover {
-      color: white;
-      background-color: darkred;
-      cursor: pointer;
-    }
-    .${cls.plus} {
-      border: 1px solid lightgray;
-      border-radius: 50%;
-      width: 14px;
-      height: 14px;
-      line-height: 14px;
-      text-align: center;
-      margin-right: 6px;
-    }
-    .${cls.suggestion}:hover .${cls.plus} {
-      border: 1px solid currentColor;
-    }
-    </style>
+    let html = `${styles}
     <h3 class="${cls.title} a-size-medium a-spacing-base a-spacing-top-small a-color-tertiary a-text-normal">Exclure les résultats contenant :</h3>
     <textarea class="${cls.filter}">${app.filter}</textarea>
-    <div class="${cls.suggestions}"></div>
-    `
+    <div class="${cls.suggestions}"></div>`
     html += container.innerHTML
     container.innerHTML = html
-    const filter = utils.findOne('.' + cls.filter)
+    const filter = utils.findOne(`.${cls.filter}`)
     autosize(filter)
     filter.addEventListener('keyup', onFilterChangeDebounced)
-    const suggestions = utils.findOne('.' + cls.suggestions)
+    const suggestions = utils.findOne(`.${cls.suggestions}`)
     suggestions.addEventListener('click', onSuggestionClick)
   }
 
   function cleanPrevious () {
-    utils.findAll('[class^="' + cls.base + '"]', document, true).forEach(node => node.remove())
+    utils.findAll(`[class^="${cls.base}"]`, document, true).forEach(node => { node.remove() })
   }
 
   function onNewPage () {
@@ -222,6 +222,6 @@
 
   init()
 
-  const processDebounced = utils.debounce(process, 500)
+  const processDebounced = utils.debounce(process, app.debounceTime)
   document.addEventListener('scroll', processDebounced)
 })()

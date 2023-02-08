@@ -1,3 +1,5 @@
+/* eslint-disable promise/avoid-new */
+/* eslint-disable sonarjs/elseif-without-else */
 // @ts-nocheck
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 class Shuutils {
@@ -6,58 +8,54 @@ class Shuutils {
     this.app = app
     this.version = '1.4.0'
     if (this.debug) this.log('using Shuutils', this.version)
-    this.accentsIn = 'ÀÁÂÃÄÅĄàáâãäåąßÒÓÔÕÕÖØÓòóôõöøóÈÉÊËĘèéêëęðÇĆçćÐÌÍÎÏìíîïÙÚÛÜùúûüÑŃñńŠŚšśŸÿýŽŻŹžżź'
-    this.accentsOut = 'AAAAAAAaaaaaaaBOOOOOOOOoooooooEEEEEeeeeeeCCccDIIIIiiiiUUUUuuuuNNnnSSssYyyZZZzzz'
   }
 
   debug (...stuff) {
     if (!this.app.debug) return
-    stuff.unshift(this.app.id + ' :')
-    console.log.apply(console, stuff)
+    stuff.unshift(`${this.app.id} :`)
+    console.log(...stuff)
   }
 
   log (...stuff) {
-    stuff.unshift(this.app.id + ' :')
-    console.log.apply(console, stuff)
+    stuff.unshift(`${this.app.id} :`)
+    console.log(...stuff)
   }
 
   warn (...stuff) {
-    stuff.unshift(this.app.id + ' :')
-    console.warn.apply(console, stuff)
+    stuff.unshift(`${this.app.id} :`)
+    console.warn(...stuff)
   }
 
   error (...stuff) {
-    stuff.unshift(this.app.id + ' :')
-    console.error.apply(console, stuff)
+    stuff.unshift(`${this.app.id} :`)
+    console.error(...stuff)
   }
 
   readableString (string) {
-    return [...string] // string to letters
-      .map(letter => {
-        const index = this.accentsIn.indexOf(letter)
-        return index === -1 ? letter : this.accentsOut[index]
-      }) // fix accents
-      .join('') // letters to string
-      .replace(/<.+?>/g, ' ') // remove content in tags
-      .replace(/(\W|-)/gi, ' ') // remove non words
-      .replace(/\s+/g, ' ') // replace spaces with single space
+    return string
+      .trim().replace(/['’-]/gu, ' ').normalize('NFD').replace(/[^\d\sa-z]/giu, '').replace(/\s{2,}/gu, ' ') // from shuutils sanitize
+      // eslint-disable-next-line regexp/no-super-linear-move
+      .replace(/<.+?>/gu, ' ') // remove content in tags
+      .replace(/\W/gu, ' ') // remove non words
+      .replace(/\s+/gu, ' ') // replace spaces with single space
   }
 
   ellipsisWords (stringIn = '', maxWords = 5) {
     const stringOut = stringIn.split(' ').splice(0, maxWords).join(' ')
     if (stringOut === stringIn) return stringIn
-    return stringOut + '...'
+    return `${stringOut}...`
   }
 
   ellipsis (stringIn = '', maxLength = 50) {
     const stringOut = stringIn.slice(0, maxLength)
     if (stringOut === stringIn) return stringIn
-    return stringOut + '...'
+    return `${stringOut}...`
   }
 
   debounce (callback, waitFor) {
+    // eslint-disable-next-line init-declarations
     let timeout
-    return async (...parameters) => new Promise((resolve) => {
+    return (...parameters) => new Promise((resolve) => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
         resolve(callback(...parameters))
@@ -65,13 +63,12 @@ class Shuutils {
     })
   }
 
-  throttle (function_, timeout) {
+  throttle (callback, timeout) {
     let ready = true
     return (...parameters) => {
-      if (!ready)
-        return
+      if (!ready) return
       ready = false
-      function_(...parameters)
+      callback(...parameters)
       setTimeout(() => {
         ready = true
       }, timeout)
@@ -79,10 +76,10 @@ class Shuutils {
   }
 
   findOne (selector, context, dontYell) {
-    context = context || document
-    const item = context.querySelector(selector)
-    if (item && this.app.debug) this.log('found element matching "' + selector + '"')
-    else if (!item && !dontYell) this.warn('found no element for selector "' + selector + '"')
+    const scope = context || document
+    const item = scope.querySelector(selector)
+    if (item && this.app.debug) this.log(`found element matching "${selector}"`)
+    else if (!item && !dontYell) this.warn(`found no element for selector "${selector}"`)
     return item
   }
 
@@ -92,28 +89,32 @@ class Shuutils {
 
   findAll (selector, context, dontYell) {
     if (!selector || selector.length === 0 || selector.length === 1) this.error('incorrect selector : ', selector)
-    context = context || document
-    const items = Array.prototype.slice.call(context.querySelectorAll(selector))
-    if (items.length > 0 && this.app.debug) this.log('found', items.length, 'elements matching "' + selector + '"')
-    else if (items.length <= 0 && !dontYell) this.warn('found no elements for selector "' + selector + '"')
+    const scope = context || document
+    const items = Array.prototype.slice.call(scope.querySelectorAll(selector))
+    if (items.length > 0 && this.app.debug) this.log('found', items.length, `elements matching "${selector}"`)
+    else if (items.length <= 0 && !dontYell) this.warn(`found no elements for selector "${selector}"`)
     return items
   }
 
-  async sleep (ms) {
+  sleep (ms) {
     return new Promise(resolve => {
       setTimeout(resolve, ms)
     })
   }
 
+  /**
+   * WaitToDetect will wait for an element to be detected in the DOM and return it
+   * @param {string} selector the css selector to detect
+   * @param {number} wait in ms, the time to wait between each try
+   * @param {number} nbTries the number of tries already done, don't use it
+   * @returns {Promise<HTMLElement|undefined>} the element found or undefined
+   */
   async waitToDetect (selector, wait = 500, nbTries = 0) {
     await this.sleep(wait)
     const element = this.findOne(selector)
     if (element) return element
-    if (nbTries > 5) {
-      this.log(`stop searching after 5 fails to detect : "${selector}"`)
-      return
-    }
-    return this.waitToDetect(selector, wait, ++nbTries)
+    if (nbTries > 5) { this.log(`stop searching after 5 fails to detect : "${selector}"`); return undefined } // eslint-disable-line unicorn/no-useless-undefined, no-magic-numbers
+    return this.waitToDetect(selector, wait, nbTries + 1)
   }
 
   copyToClipboard (stuff) {

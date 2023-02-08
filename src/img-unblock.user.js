@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 // ==UserScript==
 // @name        Image Unblock
 // @namespace   https://github.com/Shuunen
@@ -16,18 +17,22 @@
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }
-  const process = () => utils.findAll(selectors.images).forEach(element => {
-    element.classList.add('img-unblock')
-    if (!element.href.includes('.jpg') && !element.href.includes('.png')) return
-    utils.log('processing', element)
-    const source = PROXY_URL + element.href
-    const img = document.createElement('img')
-    img.src = source
-    img.style.width = '100%'
-    element.href = source
-    element.parentElement.append(img)
-    element.parentElement.style = 'display: flex; flex-direction: column;'
-  })
+  function process () {
+    return utils.findAll(selectors.images).forEach(element => {
+      element.classList.add('img-unblock')
+      if (!element.href.includes('.jpg') && !element.href.includes('.png'))
+        return
+      utils.log('processing', element)
+      const source = PROXY_URL + element.href
+      const img = document.createElement('img')
+      img.src = source
+      img.style.width = '100%'
+      element.href = source
+      element.parentElement.append(img)
+      element.parentElement.style = 'display: flex; flex-direction: column;'
+    })
+  }
+  // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
   utils.log('set scroll listener')
   document.addEventListener('scroll', processDebounced)

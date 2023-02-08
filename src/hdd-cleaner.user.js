@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+/* eslint-disable regexp/no-super-linear-move */
 // ==UserScript==
 // @name         HDD Cleaner
 // @namespace    https://github.com/Shuunen
@@ -16,7 +18,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
-
+// eslint-disable-next-line max-statements
 (function HDDCleaner () {
   /* global Shuutils */
   const app = {
@@ -26,7 +28,7 @@
     maxSize: 12_000,
   }
   const cls = {
-    mark: app.id + '-mark',
+    mark: `${app.id}-mark`,
   }
   const selectors = {
     desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
@@ -34,9 +36,9 @@
     price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base', '.price > .price', '.thread-price', '[itemprop="price"]'].join(','),
   }
   const regex = {
-    sizes: /(\d+)\s?(go|gb|to|tb)\b/gi,
-    size: /(\d+)\s?(\w+)/i,
-    price: /(\d+[,.\\€]\d+)/,
+    sizes: /(?<size>\d+)\s?(?<unit>gb|go|tb|to)\b/giu,
+    size: /(?<size>\d+)\s?(?<unit>\w+)/u,
+    price: /(?<price>\d+[,.\\€]\d+)/u,
   }
   const utils = new Shuutils(app)
   /**
@@ -46,13 +48,15 @@
     const matches = text.match(regex.sizes)
     if (!matches) return false
     let size = 0
-    matches.forEach(m => {
-      let [, mSize, mUnit] = m.match(regex.size) ?? []
+    matches.forEach(match => {
+      // eslint-disable-next-line prefer-const
+      let [, mSize, mUnit] = match.match(regex.size) ?? []
       if (mUnit === 'to' || mUnit === 'tb') mSize *= 1000 // align sizes to Go, may be slightly different according to TO vs TB
       if (mSize > size) size = Number.parseInt(mSize, 10)
     })
     return size
   }
+  // eslint-disable-next-line max-statements
   function insertPricePerSize (productElement, descElement, size) {
     const priceElement = utils.findOne(selectors.price, productElement)
     if (!priceElement) {
@@ -72,10 +76,13 @@
       if (pricePerTo < index) rating += '👍'
     rating += (rating.length > 0 ? ' ' : '')
     utils.log('price found :', pricePerTo, '€ per To')
-    descElement.textContent = '( ' + rating + pricePerTo + '€ / to ) - ' + descElement.textContent
+    // eslint-disable-next-line no-param-reassign
+    descElement.textContent = `( ${rating}${pricePerTo}€ / to ) - ${descElement.textContent}`
     return true
   }
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   function checkItems () {
+    // eslint-disable-next-line max-statements
     utils.findAll(selectors.desc, document, true).forEach(descElement => {
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // first close last opened console group, else closing nothing without throwing error

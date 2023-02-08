@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable camelcase */
 import { check, checksRun } from 'shuutils'
-const { score, score20Styled, maxScore } = require('../src/amazon-aio.user') // eslint-disable-line no-undef, @typescript-eslint/no-var-requires
+import { maxScore, score, score20Styled } from '../src/amazon-aio.user.js'
 
-const checkGreaterThan = (title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number): void => {
+// eslint-disable-next-line max-params
+function checkGreaterThan (title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number): void {
   const scoreA = score(ratingA, reviewsA)
   const scoreB = score(ratingB, reviewsB)
   check(`${title}, expect ${score(ratingA, reviewsA, true)} to be greater than ${score(ratingB, reviewsB, true)}`, scoreA > scoreB, true)

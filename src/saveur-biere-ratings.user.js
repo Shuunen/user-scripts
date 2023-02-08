@@ -16,44 +16,51 @@
  * @param {string} title The title to clean
  * @returns {string} The cleaned title
  */
-const cleanTitle = (title) => {
+function cleanTitle (title) {
   return title
-    .replace(/\([^(]+\)/g, ' ') // remove parenthesis content(s)
+    .replace(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
     .replace(' Can', ' ').replace('Fût ', ' ')
-    .replace(/['’-]/g, ' ').normalize('NFD').replace(/[^\d\sa-z]/gi, '').toLowerCase() // from shuutils sanitize
-    .replace(/(\d+cl|\d+l|\d+L|pack \d+|pack de|\d+ bieres|pack|et \d+ verres)/g, ' ') // remove contenance or pack size
-    .replace(/\s+/g, ' ')
+    .replace(/['’-]/gu, ' ').normalize('NFD').replace(/[^\d\sa-z]/giu, '').toLowerCase() // from shuutils sanitize
+    // eslint-disable-next-line regexp/no-super-linear-move
+    .replace(/\d+cl|\d+l|\d+L|pack \d+|pack de|\d+ bieres|pack|et \d+ verres/gu, ' ') // remove contenance or pack size
+    .replace(/\s+/gu, ' ')
     .trim()
 }
 
+// eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
 (function SaveurBiereUntappd () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
   const marker = 'svb-rat'
+  // eslint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
   const utils = new Shuutils({ id: marker, debug: true })
   const user = localStorage.untappdUser || ''
-  if (user === '') return utils.error('please set localStorage.untappdUser to use this script')
+  if (user === '') { utils.error('please set localStorage.untappdUser to use this script'); return }
   const wrapAPIKey = localStorage.wrapAPIKey || ''
-  if (wrapAPIKey === '') return utils.error('please set localStorage.wrapAPIKey to use this script')
+  if (wrapAPIKey === '') { utils.error('please set localStorage.wrapAPIKey to use this script'); return }
   const selectors = {
     items: 'div > div > div > div > div > div > div > img[class^="Box-sc"] + div[class^="Box-sc"],[data-insights-object-id], div[class^="styled__List"] > div[class^="styled__Container-sc"],[class^="styled__Products"] > div[class^="styled__Container-sc"], div[class^="styled__Content"] > h1[class^="styled__Title"]:first-child, div[class^="styled__Column-sc"] > span[class^="styled__Title-sc"]',
     title: 'p[class^="Paragraph"]:first-child, div > div + div > div > a:first-child, a[class*="styled__Name-sc"]',
     banner: 'span > p, div[class^="styled__Banner-sc"]',
     useless: '[class^="styled__List"]>a, [class^="styled__DiscountContainer"]',
   }
-  const injectRating = (element, data) => {
+  function injectRating (element, data) {
     const rating = document.createElement('p')
     rating.textContent = `You rated "${data.title}" : ${data.user_rating}/5 on Untappd`
     rating.style.padding = '2px 6px'
+    // eslint-disable-next-line no-magic-numbers
     if (data.user_rating >= 4) rating.style.backgroundColor = 'lightgreen'
+    // eslint-disable-next-line no-magic-numbers
     else if (data.user_rating >= 3) rating.style.backgroundColor = 'lightyellow'
     else rating.style.backgroundColor = 'lightpink'
     element.append(rating)
     element.classList.add(marker)
+    // eslint-disable-next-line no-param-reassign
     element.parentElement.style.height = 'auto'
   }
-  const fetchRating = async item => {
+  // eslint-disable-next-line max-statements, consistent-return
+  async function fetchRating (item) {
     const titleElement = utils.findOne(selectors.title, item)
     if (titleElement === null) return utils.error('cant find item title')
     const name = cleanTitle(utils.readableString(titleElement.textContent))
@@ -75,30 +82,34 @@ const cleanTitle = (title) => {
       data = JSON.parse(data)
     }
     injectRating(titleElement.parentElement, data)
-    if (titleElement.tagName !== 'A') titleElement.outerHTML = `<a href="https://www.saveur-biere.com/fr/search-result/${name}" target="_blank">${name}</a>`
+    if (titleElement.tagName !== 'A')
+      titleElement.outerHTML = `<a href="https://www.saveur-biere.com/fr/search-result/${name}" target="_blank">${name}</a>`
   }
-  const injectRatings = () => {
+  function injectRatings () {
     const items = utils.findAll(selectors.items)
     utils.log('found items', items)
     items.forEach(item => {
-      if (item.classList.contains(marker)) return utils.log('item already processed')
+      if (item.classList.contains(marker)) { utils.log('item already processed'); return }
       // skip if product not available
       if (utils.findOne(selectors.banner, item)) {
+        // eslint-disable-next-line no-param-reassign
         item.style.opacity = '0.3'
-        return utils.log('product not available', item)
+        utils.log('product not available', item)
+        return
       }
       fetchRating(item)
     })
   }
-  const deleteUseless = () => {
+  function deleteUseless () {
     utils.findAll(selectors.useless, document, true).forEach(node => {
+      // eslint-disable-next-line no-param-reassign
       if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       else node.remove()
     })
   }
-  const init = async () => {
+  async function init () {
     const items = await utils.waitToDetect(selectors.items)
-    if (items === undefined) return utils.log('no item found on this page')
+    if (items === undefined) { utils.log('no item found on this page'); return }
     deleteUseless()
     injectRatings()
   }
