@@ -33,7 +33,7 @@ class Shuutils {
 
   readableString (string) {
     return string
-      .trim().replace(/['’.-]/gu, ' ').normalize('NFD').replace(/[^\d\sa-z]/giu, '').replace(/\s{2,}/gu, ' ') // from shuutils sanitize
+      .trim().replace(/['’_.-]/gu, ' ').normalize('NFD').replace(/[^\d\sa-z]/giu, '').replace(/\s{2,}/gu, ' ') // from shuutils sanitize
       // eslint-disable-next-line regexp/no-super-linear-move
       .replace(/<.+?>/gu, ' ') // remove content in tags
       .replace(/\W/gu, ' ') // remove non words
