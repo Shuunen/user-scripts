@@ -1,12 +1,12 @@
 /* eslint-disable promise/avoid-new */
 /* eslint-disable sonarjs/elseif-without-else */
 // @ts-nocheck
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+
 class Shuutils {
   constructor (app) {
     Object.apply(app, { id: 'shu-app', debug: true })
     this.app = app
-    this.version = '1.4.0'
+    this.version = '1.4.1'
     if (this.debug) this.log('using Shuutils', this.version)
   }
 
@@ -38,6 +38,7 @@ class Shuutils {
       .replace(/<.+?>/gu, ' ') // remove content in tags
       .replace(/\W/gu, ' ') // remove non words
       .replace(/\s+/gu, ' ') // replace spaces with single space
+      .trim() // final trim
   }
 
   ellipsisWords (stringIn = '', maxWords = 5) {
@@ -141,4 +142,9 @@ class Shuutils {
     if (current !== last) callback(current)
     this.onPageChange(callback, current, wait)
   }
+}
+
+// eslint-disable-next-line no-undef
+if (module) module.exports = {
+  Shuutils,
 }
