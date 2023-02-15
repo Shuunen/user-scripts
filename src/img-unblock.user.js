@@ -13,23 +13,26 @@
 (function ImageUnblock () {
   /* global Shuutils */
   const PROXY_URL = 'https://proxy.duckduckgo.com/iu/?u='
+  // @ts-ignore
   const utils = new Shuutils({ id: 'img-unblock', debug: true })
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }
   function process () {
-    return utils.findAll(selectors.images).forEach(element => {
+    // eslint-disable-next-line max-statements
+    return utils.findAll(selectors.images).forEach((/** @type HTMLAnchorElement */ element) => {
       element.classList.add('img-unblock')
-      if (!element.href.includes('.jpg') && !element.href.includes('.png'))
-        return
+      if (!element.href.includes('.jpg') && !element.href.includes('.png')) return
       utils.log('processing', element)
       const source = PROXY_URL + element.href
       const img = document.createElement('img')
       img.src = source
       img.style.width = '100%'
       element.href = source
+      if (!element.parentElement) return
       element.parentElement.append(img)
-      element.parentElement.style = 'display: flex; flex-direction: column;'
+      element.parentElement.style.display = 'flex'
+      element.parentElement.style.flexDirection = 'column'
     })
   }
   // eslint-disable-next-line no-magic-numbers

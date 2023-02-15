@@ -13,6 +13,7 @@
 
 (function BundlePhobiaEverywhere () {
   /* global Shuutils */
+  // @ts-ignore
   const utils = new Shuutils({ id: 'bdl-evr', debug: false })
   /**
    * Inject bundlephobia badges into the page
