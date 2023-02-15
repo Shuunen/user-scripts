@@ -8,21 +8,32 @@
 
 > Personal heavily opinionated script I make to enhance my daily web experience.
 
-## Amazon - Clearer
+## Usage
+
+![demo](docs/demo.gif)
+
+1. Make sure you have [ViolentMonkey](https://violentmonkey.github.io) installed
+2. Open the script you want to use (use raw view)
+3. Review the code, no one should trust a random script from the internet
+4. Install the script in your browser
+
+## Scripts
+
+### Amazon - Clearer
 
 ![before and after](https://i.imgur.com/cxkNxIe.jpg)
 
-## Amazon - Hide products by keywords
+### Amazon - Hide products by keywords
 
 ![usage](https://i.imgur.com/hoSV2LC.gif)
 
-## BundlePhobia <3 Everywhere
+### BundlePhobia <3 Everywhere
 
 Works on Github & Npmjs.org for now.
 
 ![demo](docs/demo-bundlephobia-everywhere.jpg)
 
-## Saveur Bière - Untappd Ratings
+### Saveur Bière - Untappd Ratings
 
 Fetch your own beer ratings from Untappd and inject them in the search results to facilitate orders.
 
