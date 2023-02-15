@@ -12,6 +12,7 @@
 (function GooglePhotosEasyDelete () {
   /* global Shuutils */
   const app = { id: 'gp-ed', debug: false, init: false }
+  // @ts-ignore
   const utils = new Shuutils(app)
   const selectors = {
     trash: '[data-delete-origin] button',

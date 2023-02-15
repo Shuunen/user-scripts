@@ -67,6 +67,7 @@ const score20Styled = (rating, reviews) => {
 (function AmazonAIO () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
+  // @ts-ignore
   const utils = new Shuutils({ id: 'amz-aio', debug: true })
   const selectors = {
     product: '[data-asin][data-component-type="s-search-result"]:not(.AdHolder):not(.amz-processed)',
@@ -93,13 +94,13 @@ const score20Styled = (rating, reviews) => {
     needHelp: '[data-cel-widget^="MAIN-FEEDBACK"]',
   }
   function deleteUseless () {
-    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((/** @type HTMLElement */ node) => {
       // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       node.remove()
     })
   }
   function clearClassnames () {
-    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((/** @type HTMLElement */ node) => {
       // eslint-disable-next-line unicorn/no-keyword-prefix
       node.className = ''
     })
@@ -147,9 +148,9 @@ const score20Styled = (rating, reviews) => {
   function injectScore () {
     const products = utils.findAll(selectors.product, document, true)
     // set amz-aio-score
-    products.forEach((product) => {
+    products.forEach((/** @type HTMLElement */ product) => {
       product.classList.add('amz-processed')
-      product.dataset.amzAioScore = 0
+      product.dataset.amzAioScore = '0'
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
       if (!ratingSection) return
       const { children } = ratingSection.firstChild
@@ -158,11 +159,11 @@ const score20Styled = (rating, reviews) => {
       const { score, color, size } = score20Styled(rating, reviews)
       const { scoreSection, scoreByCurrency } = generateScoreSection(product, score, color, size)
       ratingSection.parentNode.insertBefore(scoreSection, ratingSection.nextSibling)
-      product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70)
+      product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70).toString()
     })
     // sort by score & apply position
-    products.sort((productA, productB) => (productB.dataset.amzAioScore - productA.dataset.amzAioScore)).forEach((product, index) => {
-      product.style.order = index
+    products.sort((/** @type HTMLElement */ productA, /** @type HTMLElement */ productB) => (Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0'))).forEach((/** @type HTMLElement */ product, /** @type number */ index) => {
+      product.style.order = index.toString()
     })
   }
   const process = () => {
