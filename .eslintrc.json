@@ -16,7 +16,6 @@
       ],
       "rules": {
         "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/explicit-function-return-type": "off",
         "import/no-commonjs": "off",
         "import/unambiguous": "off",
         "max-lines": "off",
@@ -44,7 +43,7 @@
     ],
     "@typescript-eslint/consistent-indexed-object-style": "off",
     "@typescript-eslint/consistent-type-definitions": "off",
-    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/indent": [
       "error",
       2
