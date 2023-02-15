@@ -15,6 +15,7 @@
   /* global Shuutils */
   if (typeof window === 'undefined') return
   const appId = 'amz-gm-aio'
+  // @ts-ignore
   const utils = new Shuutils({ id: appId, debug: true })
   // non word characters will be removed
   const dlcToHide = [
@@ -83,13 +84,15 @@
     productLine: '.s-item-container',
   }
   const deleteUselessSelectors = {
-    sections: '#SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-FGWP"], [data-a-target="offer-section-EXPIRING"]',
-    badges: '[data-a-target="badge-new"], [data-a-target="badge-ends-soon"]',
+    sections: '[data-a-target="hero-banner"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-FGWP"], [data-a-target="offer-section-EXPIRING"]',
+    badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
   }
   function deleteUseless () {
     for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((/** @type {HTMLElement} */ node) => {
       // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-      node.remove()
+      node.style.display = 'none'
+      node.style.opacity = '0'
+      node.dataset.hiddenCause = 'useless'
     })
   }
   function clearClassnames () {
