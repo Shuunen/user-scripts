@@ -7,7 +7,7 @@
     "@babel/core": "*",
     "@types/node": "18",
     "eslint": "8.34",
-    "eslint-config-hardcore": "26",
+    "eslint-config-hardcore": "29",
     "eslint-plugin-filenames": "1",
     "eslint-plugin-unicorn": "45",
     "repo-check": "1.30",
