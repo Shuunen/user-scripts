@@ -6,7 +6,7 @@
   "devDependencies": {
     "@babel/core": "*",
     "@types/node": "18",
-    "eslint": "8.36",
+    "eslint": "8.37",
     "eslint-config-hardcore": "35",
     "eslint-plugin-filenames": "1",
     "eslint-plugin-unicorn": "46",
