@@ -37,6 +37,7 @@
   }
   const regex = {
     sizes: /(?<size>\d+)\s?(?<unit>gb|go|tb|to)\b/giu,
+    // eslint-disable-next-line regexp/no-misleading-capturing-group
     size: /(?<size>\d+)\s?(?<unit>\w+)/u,
     price: /(?<price>\d+[,.\\€]\d+)/u,
   }
@@ -86,8 +87,8 @@
     utils.findAll(selectors.desc, document, true).forEach(descElement => {
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // first close last opened console group, else closing nothing without throwing error
-      console.groupEnd()
-      console.groupCollapsed(utils.ellipsisWords(text, 15))
+      console.groupEnd() // eslint-disable-line no-console
+      console.groupCollapsed(utils.ellipsisWords(text, 15)) // eslint-disable-line no-console
       const size = getSize(text)
       if (!size) {
         utils.error('fail at finding size')
@@ -111,7 +112,7 @@
       }
     })
     // if at least one iteration above, there's an open console group, else closing nothing without throwing error
-    console.groupEnd()
+    console.groupEnd() // eslint-disable-line no-console
   }
   function process () {
     utils.log('processing')

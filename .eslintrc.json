@@ -19,6 +19,7 @@
         "import/no-commonjs": "off",
         "import/unambiguous": "off",
         "max-lines": "off",
+        "no-unsanitized/property": "off",
         "putout/putout": "off"
       }
     }
@@ -48,6 +49,7 @@
       "error",
       2
     ],
+    "@typescript-eslint/lines-around-comment": "off",
     "@typescript-eslint/member-delimiter-style": [
       "error",
       {
@@ -89,6 +91,7 @@
     "eslint-comments/no-use": "off",
     "etc/no-const-enum": "off",
     "etc/no-enum": "off",
+    "etc/prefer-interface": "off",
     "ext/lines-between-object-properties": "off",
     "filenames/match-regex": [
       2,
@@ -142,7 +145,7 @@
     "logical-assignment-operators": "off",
     "max-len": "off",
     "max-statements-per-line": "off",
-    "no-console": "off",
+    "no-console": "error",
     "no-inline-comments": "off",
     "object-curly-spacing": [
       "error",
@@ -169,6 +172,7 @@
       "error",
       "always"
     ],
+    "total-functions/no-partial-division": "off",
     "unicorn/no-array-for-each": "off",
     "unicorn/no-process-exit": "off",
     "unicorn/prefer-module": "off",

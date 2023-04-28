@@ -33,12 +33,11 @@
     "url": "https://github.com/Shuunen/user-scripts.git"
   },
   "scripts": {
-    "check": "repo-check",
-    "ci": "npm run lint && npm run check && npm run test && echo ci success",
-    "lint": "tsc --noEmit && eslint --cache --fix --ignore-path .gitignore --ext .js,.ts . && echo lint success",
-    "lint:watch": "watchlist src tests -eager -- npm run lint",
+    "check": "pnpm lint && repo-check && pnpm test && echo check success",
+    "lint": "tsc --noEmit && eslint --cache --fix --ext .js,.ts . && echo lint success",
+    "lint:watch": "watchlist src tests -eager -- pnpm lint",
     "postversion": "git push && git push --tags",
-    "preversion": "npm run ci",
+    "preversion": "pnpm ci",
     "test": "uvu -r tsm tests && echo test success",
     "test:watch": "watchlist src tests -eager -- npm test"
   },

@@ -38,7 +38,7 @@
       if (nb < 1) badge.style.backgroundColor = '#1aaa55'
       return nb
       // eslint-disable-next-line promise/prefer-await-to-then
-    }).catch(error => console.error(error))
+    }).catch(error => utils.error(error))
     return button
   }
   async function enhanceLinks () {

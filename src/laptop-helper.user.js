@@ -151,12 +151,10 @@ function a2b (a) {
 /* eslint-enable */
 
 function stringToBase64 (str) {
-  console.log('stringToBase64', str)
   return b2a(str)
 }
 
 function base64ToString (str) {
-  console.log('base64ToString', str)
   return a2b(str)
 }
 
@@ -362,18 +360,18 @@ function LaptopHelper () {
     utils.findAll(selectors.desc, document, true).forEach((/** @type HTMLElement */descElement) => {
       descElement.classList.add(cls.mark)
       // first close last opened console group, else closing nothing without throwing error
-      console.groupEnd()
+      console.groupEnd() // eslint-disable-line no-console
       // eslint-disable-next-line no-param-reassign
       descElement.innerHTML = descElement.innerHTML.replace(/&nbsp;/gu, '')
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // eslint-disable-next-line no-magic-numbers
-      console.groupCollapsed(utils.ellipsisWords(text, 15))
+      console.groupCollapsed(utils.ellipsisWords(text, 15)) // eslint-disable-line no-console
       utils.log('checking :', text)
       // eslint-disable-next-line no-param-reassign
       descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)
       utils.findAll(`.${cls.mark}`, descElement, true).forEach(markElement => { annotate(markElement) })
     })
-    console.groupEnd()
+    console.groupEnd() // eslint-disable-line no-console
   }
   function clearLinks () {
     utils.findAll(selectors.clearLinks, document, true).forEach((/** @type HTMLAnchorElement */ link) => {

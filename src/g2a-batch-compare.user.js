@@ -57,9 +57,11 @@
   function injectStyles (string = '') {
     if (string.length === 0) { utils.log('cannot inject empty style stuff'); return }
     if (string.includes('://') && string.includes('.css')) {
+      // eslint-disable-next-line no-unsanitized/method
       document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
       return
     }
+    // eslint-disable-next-line no-unsanitized/method
     document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
   }
   function generateTable () {
