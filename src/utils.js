@@ -7,7 +7,7 @@ class Shuutils {
   constructor (app) {
     Object.apply(app, { id: 'shu-app', debug: true })
     this.app = app
-    this.version = '1.4.1'
+    this.version = '2.1.0'
     if (this.debug) this.log('using Shuutils', this.version)
   }
 
@@ -142,6 +142,23 @@ class Shuutils {
     const current = document.location.href
     if (current !== last) callback(current)
     this.onPageChange(callback, current, wait)
+  }
+
+  getRandomNumber (min = 0, max = 100) {
+    return Math.floor(Math.random() * (max - min + 1) + min)
+  }
+
+  async fillLikeHuman (input, value) {
+    this.debug('fillLikeHuman', input, value)
+    input.focus()
+    for (const char of value) {
+      input.value += char // eslint-disable-line no-param-reassign
+      await this.sleep(this.getRandomNumber(40, 80)) // eslint-disable-line no-await-in-loop, no-magic-numbers
+    }
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    input.dispatchEvent(new Event('change', { bubbles: true }))
+    input.dispatchEvent(new Event('blur', { bubbles: true }))
+    input.blur()
   }
 }
 
