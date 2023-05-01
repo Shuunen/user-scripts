@@ -37,7 +37,7 @@
     "lint": "tsc --noEmit && eslint --cache --fix --ext .js,.ts . && echo lint success",
     "lint:watch": "watchlist src tests -eager -- pnpm lint",
     "postversion": "git push && git push --tags",
-    "preversion": "pnpm ci",
+    "preversion": "pnpm check",
     "test": "uvu -r tsm tests && echo test success",
     "test:watch": "watchlist src tests -eager -- npm test"
   },
