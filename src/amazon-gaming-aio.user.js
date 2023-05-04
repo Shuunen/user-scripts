@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         Amazon Gaming - All in one
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.0.1
 // @description  Hide games
 // @author       Romain Racamier-Lafon
 // @match        https://gaming.amazon.com/home
@@ -30,6 +30,7 @@
     'BTS Island',
     'Call of Duty',
     'Candy Crush',
+    'Company of Heroes',
     'Dead by Daylight',
     'Deathloop',
     'Destiny 2',
@@ -37,9 +38,12 @@
     'Fall Guys',
     'Farm Heroes',
     'FIFA',
+    'Forspoken',
     'Fortnite',
     'Genshin Impact',
     'Guild Wars',
+    'Hearthstone',
+    'Just Dance',
     'Kartrider',
     'Legends of Runeterra',
     'Lineage',
@@ -48,10 +52,13 @@
     'Madden',
     'Marvel s Avengers',
     'Minecraft',
+    'Naraka Bladepoint',
     'NBA 2K',
     'New World',
     'NHL',
+    'Overwatch',
     'Paladins',
+    'Partie',
     'Path of Exile',
     'Phantasy Star Online',
     'PlanetSide 2',
@@ -65,6 +72,7 @@
     'Roller Champions',
     'Runescape',
     'Smite',
+    'Teamfight Tactics',
     'Total War',
     'Two Point Campus',
     'Two Point Hospital',
@@ -72,10 +80,11 @@
     'Warframe',
     'Wild Rift',
     'World of Tanks',
+    'World of Warcraft',
     'World of Warships',
   ]
   const selectors = {
-    product: 'div[class="tw-block"]:not(.amz-gm-aio-processed)',
+    product: 'div.tw-block:not(.amz-gm-aio-processed)',
     grid: '.offer-list__content__grid',
     dlcName: '.item-card-details__body > div > p[title]:not(.amz-gm-aio-processed)',
     claimedTag: '[data-a-target="notification-success"]:not(.amz-gm-aio-processed)',
@@ -139,7 +148,7 @@
       node.classList.add(`${appId}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
-      if (!product) { utils.error('no product found for game name', node); return }
+      if (!product) { utils.error('no product found in game node', node); return }
       /** @type {string} */
       const gameName = cleanDLCName(node.title)
       if (gameName.length === 0) { utils.error('no game name found', node); return }
