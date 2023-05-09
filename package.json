@@ -11,7 +11,7 @@
     "eslint-plugin-filenames": "1",
     "eslint-plugin-unicorn": "47",
     "repo-check": "1.31",
-    "shuutils": "7.2",
+    "shuutils": "7.3",
     "tsm": "2",
     "typescript": "5",
     "uvu": "0",
