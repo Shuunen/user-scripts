@@ -30,11 +30,12 @@
     confirmButton.click()
   }
   /**
-   * @param {KeyboardEvent} event
+   * Handle keypress events
+   * @param {KeyboardEvent} event the keypress event
+   * @returns {void}
    */
   function onKeyPress (event) {
-    if (event.key === '!')
-      deleteCurrentPhoto()
+    if (event.key === '!') deleteCurrentPhoto()
   }
   function init () {
     if (app.init) return

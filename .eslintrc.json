@@ -43,7 +43,8 @@
         "unicorn/no-array-for-each": "off",
         "unicorn/prefer-module": "off",
         "unicorn/prefer-string-replace-all": "off",
-        "unicorn/prevent-abbreviations": "off"
+        "unicorn/prevent-abbreviations": "off",
+        "valid-jsdoc": "error"
       }
     },
     {
@@ -54,7 +55,8 @@
         "hardcore/ts-for-js"
       ],
       "files": [
-        "**/lbc-*.js"
+        "src/lbc-*.js",
+        "src/utils.js"
       ],
       "parserOptions": {
         "project": "tsconfig.json",
@@ -67,6 +69,7 @@
           "multi"
         ],
         "eslint-comments/no-use": "off",
+        "import/no-commonjs": "off",
         "line-comment-position": "off",
         "lines-around-comment": "off",
         "max-len": "off",
@@ -80,11 +83,24 @@
           "error",
           "single"
         ],
+        "require-jsdoc": [
+          "error",
+          {
+            "require": {
+              "ArrowFunctionExpression": false,
+              "ClassDeclaration": false,
+              "FunctionDeclaration": false,
+              "MethodDefinition": true
+            }
+          }
+        ],
         "strict": [
           "error",
           "global"
         ],
-        "unicorn/prefer-module": "off"
+        "unicorn/prefer-module": "off",
+        "unicorn/prefer-string-replace-all": "off",
+        "valid-jsdoc": "error"
       }
     },
     {

@@ -13,7 +13,9 @@
 'use strict'
 
 /**
+ * A fake function to enable tailwindcss intellisense
  * @param {string} classes the string to translate
+ * @returns {string} the translated string
  */
 function tw (classes) { return classes }
 
@@ -39,8 +41,10 @@ function getListingId (url = document.location.href) {
     marker: `${utils.app.id}-processed`,
   }
   /**
-   * @param {string} id
-   * @param {string} note
+   * Save a note to storage
+   * @param {string} id the note id
+   * @param {string} note the note content to save
+   * @returns {void}
    */
   function saveNote (id, note) {
     // eslint-disable-next-line no-console
@@ -50,13 +54,17 @@ function getListingId (url = document.location.href) {
   // eslint-disable-next-line no-magic-numbers
   const saveNoteDebounced = utils.debounce(saveNote, 300)
   /**
-   * @param {string} id
+   * Load a note from storage
+   * @param {string} id the note id
+   * @returns {string} the note content
    */
   function loadNote (id) {
-    return localStorage.getItem(`lbc-nts-${id}`)
+    return localStorage.getItem(`lbc-nts-${id}`) || ''
   }
   /**
-   * @param {string} id
+   * Create a note element
+   * @param {string} id the note id
+   * @returns {HTMLTextAreaElement} the note element
    */
   function createNoteElement (id) {
     const note = document.createElement('textarea')
@@ -70,9 +78,11 @@ function getListingId (url = document.location.href) {
     utils.log('addNotesToList')
   }
   /**
-   * @param {string} id
+   * Add a note to the current page
+   * @param {string} id the note id
+   * @returns {void}
    */
-  function addNotesToPage (id) {
+  function addNoteToPage (id) {
     utils.log('addNotesToPage', id)
     const note = createNoteElement(id)
     document.body.append(note)
@@ -82,7 +92,7 @@ function getListingId (url = document.location.href) {
     document.body.classList.add(cls.marker)
     const id = getListingId()
     if (id === undefined) addNotesToList()
-    else addNotesToPage(id)
+    else addNoteToPage(id)
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 300)

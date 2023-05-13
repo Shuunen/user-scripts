@@ -15,9 +15,9 @@
 
 /**
  * Return the position of a value in an interval
- * @param {number} value
- * @param {number[]} intervals
- * @returns {number}
+ * @param {number} value The value
+ * @param {number[]} intervals The intervals
+ * @returns {number} the position of the value in the interval
  */
 const positionInInterval = (value, intervals) => {
   let weight = 0
@@ -49,9 +49,9 @@ const calcScore = (rating, reviews, explanation = false) => {
 
 /**
  * Get the score of a product /20 and give its style
- * @param {number} rating
- * @param {number} reviews
- * @returns {{ score: number, color: string, size: number }}
+ * @param {number} rating The product rating
+ * @param {number} reviews The product reviews count
+ * @returns {{ score: number, color: string, size: number }} The score, its color and its size
  */
 const score20Styled = (rating, reviews) => {
   const data = { score: 0, color: 'black', size: 1 }
@@ -107,9 +107,10 @@ const score20Styled = (rating, reviews) => {
   }
   /**
    * Calculate the score by currency, eg: 0.52 pts/€
-   * @param {HTMLElement} product
-   * @param {number} score
-   * @param {HTMLDivElement} scoreSection
+   * @param {HTMLElement} product The product
+   * @param {number} score The score
+   * @param {HTMLDivElement} scoreSection The score section
+   * @returns {number} The score by currency
    */
   function getScoreByCurrency (product, score, scoreSection) {
     let scoreByCurrency = 0

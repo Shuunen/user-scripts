@@ -43,7 +43,9 @@
   }
   const utils = new Shuutils(app)
   /**
-   * @param {string} text
+   * Get the size from a text
+   * @param {string} text the text to search in
+   * @returns {number|false} the size in Go or false if not found
    */
   function getSize (text) {
     const matches = text.match(regex.sizes)

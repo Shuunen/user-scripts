@@ -16,7 +16,8 @@
   }
   /**
    * Trigger a change event on an input element
-   * @param {HTMLInputElement} element
+   * @param {HTMLInputElement} element the input element
+   * @returns {void}
    */
   function triggerChange (element) {
     element.dispatchEvent(new KeyboardEvent('change'))

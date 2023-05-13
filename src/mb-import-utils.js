@@ -2,12 +2,12 @@
 
 /**
  * Get the text content from the node behind a css selector
- * @param {string} sel
- * @param {HTMLElement} context
- * @returns {string}
+ * @param {string} selector the css selector
+ * @param {HTMLElement} context the context
+ * @returns {string} the text content
  */
-function textFromSelector (sel, context) {
-  const element = (context || document).querySelector(sel)
+function textFromSelector (selector, context) {
+  const element = (context || document).querySelector(selector)
   if (!element) return ''
   return element.textContent?.trim() || ''
 }
