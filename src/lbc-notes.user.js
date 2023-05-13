@@ -34,6 +34,7 @@ function getListingId (url = document.location.href) {
       preflight: false,
     },
   }
+  /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const utils = new Shuutils({ id: 'lbc-nts', debug: true })
@@ -96,7 +97,7 @@ function getListingId (url = document.location.href) {
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 300)
-  window.addEventListener('scroll', processDebounced)
-  window.addEventListener('load', processDebounced)
-  utils.onPageChange(processDebounced)
+  window.addEventListener('scroll', () => processDebounced())
+  window.addEventListener('load', () => processDebounced())
+  void utils.onPageChange(processDebounced)
 })()

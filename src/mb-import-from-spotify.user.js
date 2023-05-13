@@ -15,6 +15,7 @@
 
 (function SpotifyMusicBrainzExport () {
   /* global textFromSelector, insertMbForm, Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: 'spotify-mb-export', debug: false })
   const selectors = {
     title: '.entity-info.media h1, .os-content h1[as="h1"]',

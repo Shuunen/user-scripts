@@ -13,6 +13,7 @@
 
 (function LolKpmCounter () {
   /* global Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: 'lol-kpm', debug: false })
   const maxKpm = 1.8
   function coolPercents (kpm) {

@@ -13,6 +13,7 @@
 
 (function AmazonMusicBrainzExport () {
   /* global textFromSelector, insertMbForm, Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: 'amazon-mb-export', debug: false })
   const selectors = {
     title: '[data-feature-name="dmusicProductTitle"]',

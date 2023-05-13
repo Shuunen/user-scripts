@@ -67,6 +67,7 @@ const score20Styled = (rating, reviews) => {
 (function AmazonAIO () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
+  /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils({ id: 'amz-aio', debug: true })
   const selectors = {
@@ -94,13 +95,13 @@ const score20Styled = (rating, reviews) => {
     needHelp: '[data-cel-widget^="MAIN-FEEDBACK"]',
   }
   function deleteUseless () {
-    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((/** @type HTMLElement */ node) => {
+    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {
       // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       node.remove()
     })
   }
   function clearClassnames () {
-    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((/** @type HTMLElement */ node) => {
+    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((node) => {
       // eslint-disable-next-line unicorn/no-keyword-prefix
       node.className = ''
     })
@@ -117,8 +118,8 @@ const score20Styled = (rating, reviews) => {
     const priceElement = utils.findOne(selectors.productPrice, product, true)
     if (!priceElement) return scoreByCurrency
     const scoreByCurrencySection = document.createElement('div')
-    const price = Number.parseFloat(priceElement.textContent.replace(',', '.').replace(' ', ''))
-    const currency = utils.findOne(selectors.productPriceCurrency, product, true).textContent
+    const price = Number.parseFloat(priceElement.textContent?.replace(',', '.')?.replace(' ', '') ?? '0')
+    const currency = utils.findOne(selectors.productPriceCurrency, product, true)?.textContent ?? '€'
     scoreByCurrency = Math.round(score / price * 100) / 100
     scoreByCurrencySection.textContent += `${scoreByCurrency.toFixed(2)}pts/${currency}`
     const index = positionInInterval(scoreByCurrency, [0.2, 0.3, 0.4])
@@ -149,21 +150,22 @@ const score20Styled = (rating, reviews) => {
   function injectScore () {
     const products = utils.findAll(selectors.product, document, true)
     // set amz-aio-score
-    products.forEach((/** @type HTMLElement */ product) => {
+    products.forEach((product) => {
       product.classList.add('amz-processed')
       product.dataset.amzAioScore = '0'
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
       if (!ratingSection) return
-      const { children } = ratingSection.firstChild
+      // @ts-ignore
+      const children = ratingSection.firstChild?.children
       const rating = Number.parseFloat(children[0].getAttribute('aria-label').split(' ')[0].replace(',', '.'))
       const reviews = Number.parseInt(children[1].getAttribute('aria-label').replace(/\W/gu, ''), 10)
       const { score, color, size } = score20Styled(rating, reviews)
       const { scoreSection, scoreByCurrency } = generateScoreSection(product, score, color, size)
-      ratingSection.parentNode.insertBefore(scoreSection, ratingSection.nextSibling)
+      ratingSection.parentNode?.insertBefore(scoreSection, ratingSection.nextSibling)
       product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70).toString()
     })
     // sort by score & apply position
-    products.sort((/** @type HTMLElement */ productA, /** @type HTMLElement */ productB) => (Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0'))).forEach((/** @type HTMLElement */ product, /** @type number */ index) => {
+    products.sort((productA, productB) => (Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0'))).forEach((product, index) => {
       product.style.order = index.toString()
     })
   }
@@ -175,7 +177,7 @@ const score20Styled = (rating, reviews) => {
   }
   const processDebounced = utils.debounce(process, 500)
   utils.onPageChange(processDebounced)
-  window.addEventListener('scroll', processDebounced)
+  window.addEventListener('scroll', () => processDebounced())
 })()
 
 if (module) module.exports = {

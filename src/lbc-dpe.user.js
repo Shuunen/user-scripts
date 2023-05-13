@@ -28,9 +28,9 @@
 // eslint-disable-next-line max-statements
 (function LeBonCoinDpe () {
   /* global Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const utils = new Shuutils({ id: 'lbc-dpe', debug: true })
+  const utils = new Shuutils({ id: 'lbc-dpe', debug: false }) // eslint-disable-line @typescript-eslint/naming-convention
   const cls = {
     marker: `${utils.app.id}-processed`,
   }
@@ -73,7 +73,7 @@
   // eslint-disable-next-line max-statements
   function addLocationInfo (element, ad, positionTop) {
     const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
-    if (districtId === undefined) { utils.console.warn('no district id found in ad', ad); return }
+    if (districtId === undefined) { utils.warn('no district id found in ad', ad); return }
     // @ts-ignore
     const district = districts[districtId] ?? districtId
     // eslint-disable-next-line no-param-reassign
@@ -121,6 +121,6 @@
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 1000)
-  window.addEventListener('scroll', processDebounced)
-  window.addEventListener('load', processDebounced)
+  window.addEventListener('scroll', () => processDebounced())
+  window.addEventListener('load', () => processDebounced())
 })()

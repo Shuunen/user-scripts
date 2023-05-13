@@ -16,6 +16,7 @@
   /* global Shuutils */
   const marker = 'stm-wex'
   const app = { id: marker, debug: false, games: [] }
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)
   const selectors = {
     row: `.wishlist_row:not(.${marker})`,

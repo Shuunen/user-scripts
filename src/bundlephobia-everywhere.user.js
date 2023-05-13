@@ -13,6 +13,7 @@
 
 (function BundlePhobiaEverywhere () {
   /* global Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils({ id: 'bdl-evr', debug: false })
   /**

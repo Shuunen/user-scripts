@@ -11,7 +11,8 @@
 
 (function GooglePhotosEasyDelete () {
   /* global Shuutils */
-  const app = { id: 'gp-ed', debug: false, init: false }
+  const app = { id: 'gp-ed', debug: false, init: false, timeToWait: 200 }
+  /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils(app)
   const selectors = {
@@ -24,7 +25,7 @@
     const trash = utils.findOne(selectors.trash)
     if (!trash) { utils.error('failed to find trash button'); return }
     trash.click()
-    await utils.sleep('200')
+    await utils.sleep(app.timeToWait)
     const confirmButton = utils.findOne(selectors.confirmBtn)
     if (!confirmButton) { utils.error('failed to find confirm button'); return }
     confirmButton.click()

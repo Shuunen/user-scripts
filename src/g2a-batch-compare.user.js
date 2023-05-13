@@ -19,6 +19,7 @@
   /* global Shuutils, didYouMean */
   const marker = 'g2a-bcp'
   let list = []
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: marker, debug: false })
   function cleanGameName (string) {
     // eslint-disable-next-line prefer-destructuring

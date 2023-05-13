@@ -15,6 +15,7 @@
   /* global Shuutils */
   if (typeof window === 'undefined') return
   const appId = 'amz-gm-aio'
+  /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils({ id: appId, debug: true })
   // non word characters will be removed
@@ -97,7 +98,7 @@
     badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
   }
   function deleteUseless () {
-    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((/** @type {HTMLElement} */ node) => {
+    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {
       // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       node.style.display = 'none'
       node.style.opacity = '0'
@@ -105,13 +106,13 @@
     })
   }
   function clearClassnames () {
-    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((/** @type {HTMLElement} */ node) => {
+    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((node) => {
       // eslint-disable-next-line unicorn/no-keyword-prefix
       node.className = ''
     })
   }
   function checkEmptyGrids () {
-    utils.findAll(selectors.grid, document, true).forEach((/** @type {HTMLElement} */ node) => {
+    utils.findAll(selectors.grid, document, true).forEach((node) => {
       // @ts-expect-error
       // eslint-disable-next-line array-func/prefer-array-from
       const visibleChildren = [...node.children].filter(child => !child.hasAttribute('data-hidden-cause')).length // eslint-disable-line unicorn/prefer-dom-node-dataset
@@ -122,7 +123,13 @@
       node.style.filter = visibleChildren === 0 ? 'invert(0.4)' : ''
     })
   }
-  function hideElement (/** @type {HTMLElement} */ element, cause = '') {
+  /**
+   * Hide an element for a reason... or not ^^
+   * @param {HTMLElement} element The element to hide
+   * @param {string} [cause] The cause/reason of the hide
+   * @returns {void}
+   */
+  function hideElement (element, cause = '') {
     element.dataset.hiddenCause = cause
     element.classList.remove('tw-block')
     element.style.display = 'none'
@@ -130,7 +137,7 @@
     element.style.opacity = '0'
   }
   function hideClaimed () {
-    utils.findAll(selectors.claimedTag, document, true).forEach((/** @type {HTMLElement} */ node) => {
+    utils.findAll(selectors.claimedTag, document, true).forEach((node) => {
       node.classList.add(`${appId}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
@@ -144,7 +151,7 @@
   }
   function hideUnwantedDLC () {
     // eslint-disable-next-line max-statements
-    utils.findAll(selectors.dlcName, document, true).forEach((/** @type {HTMLElement} */ node) => {
+    utils.findAll(selectors.dlcName, document, true).forEach((node) => {
       node.classList.add(`${appId}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
@@ -175,5 +182,5 @@
 
   window.addEventListener('scroll', () => processDebounced('scroll'))
 
-  window.addEventListener('DOMNodeInserted', (event) => processDebounced(`dom-node-inserted:${   /** @type {HTMLElement} * */ (event.target)?.className || 'unknown'}`))
+  window.addEventListener('DOMNodeInserted', (event) => processDebounced(`dom-node-inserted:${ /** @type {HTMLElement} */ (event.target)?.className || 'unknown'}`))
 })()

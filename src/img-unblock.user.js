@@ -13,12 +13,14 @@
 (function ImageUnblock () {
   /* global Shuutils */
   const PROXY_URL = 'https://proxy.duckduckgo.com/iu/?u='
+  /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils({ id: 'img-unblock', debug: true })
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }
   function process () {
+    // @ts-ignore
     // eslint-disable-next-line max-statements
     return utils.findAll(selectors.images).forEach((/** @type HTMLAnchorElement */ element) => {
       element.classList.add('img-unblock')
@@ -38,6 +40,6 @@
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
   utils.log('set scroll listener')
-  document.addEventListener('scroll', processDebounced)
+  document.addEventListener('scroll', () => processDebounced())
   utils.onPageChange(processDebounced)
 })()

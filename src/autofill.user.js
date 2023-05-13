@@ -9,6 +9,7 @@
 
 (function AutofillLogin () {
   /* global Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils({ id: 'auto-fill', debug: false })
   const selectors = {
@@ -25,6 +26,7 @@
   }
   function fill (email = 'romain.racamier@gmail.com') {
     utils.log('autofill start')
+    // @ts-ignore
     utils.findAll(selectors.input).forEach((/** @type HTMLInputElement */ input) => {
       if (input.type === 'password' || input.value.length > 0) return
       // eslint-disable-next-line no-param-reassign

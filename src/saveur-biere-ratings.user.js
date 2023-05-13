@@ -34,6 +34,7 @@ function cleanTitle (title) {
   const marker = 'svb-rat'
   // eslint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: marker, debug: true })
   const user = localStorage.untappdUser || ''
   if (user === '') { utils.error('please set localStorage.untappdUser to use this script'); return }

@@ -153,39 +153,38 @@ class Shuutils {
   /**
    * Find the first element in the DOM
    * @param {string} selector the css selector to find
-   * @param {HTMLElement} context the context to search in
+   * @param {HTMLElement|Document} scope the context to search in
    * @param {boolean} canFail if true, will not log a warning if not found
    * @returns {HTMLElement|undefined} the element found or undefined
    * @example utils.findOne('div') // returns the first div found
    */
-  findOne (selector, context, canFail) {
-    return this.findAll(selector, context, canFail)[0]
+  findOne (selector, scope = document, canFail = false) {
+    return this.findAll(selector, scope, canFail)[0]
   }
 
   /**
  * Find the first element in the DOM
  * @param {string} selector the css selector to find
- * @param {HTMLElement} context the context to search in
+ * @param {HTMLElement|Document} scope the context to search in
  * @param {boolean} canFail if true, will not log a warning if not found
  * @returns {HTMLElement|undefined} the element found or undefined
- * @example utils.findOne('div') // returns the first div found
+ * @example utils.findFirst('div') // returns the first div found
  */
-  findFirst (selector, context, canFail) {
-    return this.findAll(selector, context, canFail)[0]
+  findFirst (selector, scope = document, canFail = false) {
+    return this.findAll(selector, scope, canFail)[0]
   }
 
   /**
    * Find all elements in the DOM
    * @param {string} selector the css selector to find
-   * @param {HTMLElement} context the context to search in
+   * @param {HTMLElement|Document} scope the scope/context to search in
    * @param {boolean} canFail if true, will not log a warning if not found
-   * @returns {Array<HTMLElement|undefined>} the elements found
+   * @returns {HTMLElement[]} the elements found
    * @example utils.findAll('div') // returns all div found
    * @example utils.findAll('.not-exits') // returns an empty array
    */
-  findAll (selector, context, canFail) {
+  findAll (selector, scope = document, canFail = false) {
     if (!selector || selector.length === 0 || selector.length === 1) this.error('incorrect selector : ', selector)
-    const scope = context || document
     const items = Array.prototype.slice.call(scope.querySelectorAll(selector))
     if (items.length > 0 && this.app.debug) this.log('found', items.length, `elements matching "${selector}"`)
     else if (items.length <= 0 && !canFail) this.warn(`found no elements for selector "${selector}"`)

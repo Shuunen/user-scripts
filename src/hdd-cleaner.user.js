@@ -41,6 +41,7 @@
     size: /(?<size>\d+)\s?(?<unit>\w+)/u,
     price: /(?<price>\d+[,.\\€]\d+)/u,
   }
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)
   /**
    * Get the size from a text

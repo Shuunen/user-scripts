@@ -41,6 +41,7 @@
   const uselessClasses = {
     descriptions: '.cept-description-container',
   }
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)
   function cleanElements () {
     Object.keys(uselessElements).forEach(key => {

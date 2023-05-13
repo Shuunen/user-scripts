@@ -449,6 +449,7 @@ function LePetitBallonRatings () {
   }
   const fuse = new Fuse(ratings, fuseSettings)
   const marker = 'lpb-ratings'
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: marker, debug: false })
   const selectors = {
     items: `.product-item:not(.${marker})`,

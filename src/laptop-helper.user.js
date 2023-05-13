@@ -328,6 +328,7 @@ function LaptopHelper () {
       '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3',
     ].map(sel => `${sel}:not(.${cls.mark})`).join(','),
   }
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)
 
   const keywords = Object.keys(scoresByKeyword)

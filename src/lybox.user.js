@@ -13,6 +13,7 @@
 
 (function LyBoxEnhanced () {
   /* global Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: 'lyb-enhanced', debug: false })
   class Store {
     constructor (provider) {

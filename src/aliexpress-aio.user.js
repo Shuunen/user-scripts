@@ -18,6 +18,7 @@
 
 (function AliExpressAIO () {
   /* global Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: 'ali-express-aio', debug: false })
   function extendsImage (img, size = 600) {
     // img.src = img.src.split('.jpg_')[0] + '.jpg'

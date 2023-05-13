@@ -43,6 +43,7 @@
     productTitle: ['a.s-access-detail-page > h2.s-access-title', '.a-size-medium.a-color-base.a-text-normal'].join(','),
   }
 
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)
 
   function clearSuggestions () {

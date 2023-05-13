@@ -13,6 +13,7 @@
 
 (function GitlabMR () {
   /* global Shuutils */
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ id: 'gitlab-mr', debug: false, debounceTime: 300 })
   // eslint-disable-next-line max-statements
   function addButton (element, label, href) {

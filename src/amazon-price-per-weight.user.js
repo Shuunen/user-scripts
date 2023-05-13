@@ -61,6 +61,7 @@
     pricePerKilo: `<span class="a-color-price s-price a-text-bold ${cls.pricePer}">EUR {{pricePerKilo}}/kg</span>`,
   }
 
+  /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)
 
   const products = []
