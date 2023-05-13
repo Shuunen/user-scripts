@@ -39,6 +39,10 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 
 ![demo](docs/demo-saveur-biere-untappd-rating.jpg)
 
+## Todo
+
+- [ ] Move all script to hardcore/ts-for-js override in .eslintrc
+
 ## Thanks
 
 - [Eslint](https://eslint.org) : super tool to find & fix problems
