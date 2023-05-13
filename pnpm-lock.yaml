@@ -16,6 +16,9 @@ devDependencies:
   eslint-plugin-filenames:
     specifier: '1'
     version: 1.3.2(eslint@8.40.0)
+  eslint-plugin-tailwindcss:
+    specifier: ^3.11.0
+    version: 3.11.0(tailwindcss@3.3.2)
   eslint-plugin-unicorn:
     specifier: '47'
     version: 47.0.0(eslint@8.40.0)
@@ -4224,6 +4227,17 @@ packages:
       eslint-plugin-jsx-a11y: 6.7.1(eslint@8.40.0)
     transitivePeerDependencies:
       - eslint
+    dev: true
+
+  /eslint-plugin-tailwindcss@3.11.0(tailwindcss@3.3.2):
+    resolution: {integrity: sha512-RaraOG4D6VXutKnoNvFQ4+frTWGJDKtezy1yCrGFS7Um1to/npDNdh2GL19IRoGB/eanbtwhxFXy+xyEw0grAg==}
+    engines: {node: '>=12.13.0'}
+    peerDependencies:
+      tailwindcss: ^3.2.2
+    dependencies:
+      fast-glob: 3.2.12
+      postcss: 8.4.23
+      tailwindcss: 3.3.2
     dev: true
 
   /eslint-plugin-testing-library@5.11.0(eslint@8.40.0)(typescript@5.0.2):
