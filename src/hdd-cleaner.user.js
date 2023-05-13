@@ -87,8 +87,8 @@
     utils.findAll(selectors.desc, document, true).forEach(descElement => {
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // first close last opened console group, else closing nothing without throwing error
-      console.groupEnd() // eslint-disable-line no-console
-      console.groupCollapsed(utils.ellipsisWords(text, 15)) // eslint-disable-line no-console
+      console.groupEnd()
+      console.groupCollapsed(utils.ellipsisWords(text, 15))
       const size = getSize(text)
       if (!size) {
         utils.error('fail at finding size')
@@ -112,7 +112,7 @@
       }
     })
     // if at least one iteration above, there's an open console group, else closing nothing without throwing error
-    console.groupEnd() // eslint-disable-line no-console
+    console.groupEnd()
   }
   function process () {
     utils.log('processing')

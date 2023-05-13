@@ -1,4 +1,4 @@
-import { check, checksRun } from 'shuutils'
+import { check, checksRun } from './temporary'
 import { Shuutils } from '../src/utils'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

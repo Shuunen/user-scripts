@@ -10,10 +10,12 @@
 // @version     0.0.1
 // ==/UserScript==
 
+'use strict'
+
 /**
- * @param {string} str
+ * @param {string} classes the string to translate
  */
-function tw (str) { return str }
+function tw (classes) { return classes }
 
 function getListingId (url = document.location.href) {
   return /(?<id>\d{5,15})\.htm/u.exec(url)?.groups?.id
@@ -26,10 +28,12 @@ function getListingId (url = document.location.href) {
   // @ts-ignore
   tailwind.config = {
     corePlugins: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       preflight: false,
     },
   }
   // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const utils = new Shuutils({ id: 'lbc-nts', debug: true })
   const cls = {
     marker: `${utils.app.id}-processed`,
@@ -57,7 +61,7 @@ function getListingId (url = document.location.href) {
   function createNoteElement (id) {
     const note = document.createElement('textarea')
     // eslint-disable-next-line unicorn/no-keyword-prefix
-    note.className = tw('fixed top-56 right-5 z-10 w-96 h-56 px-2 py-1 border border-gray-400 rounded-md bg-gray-100')
+    note.className = tw('fixed right-5 top-56 z-10 h-56  w-96 rounded-md border border-gray-400 bg-gray-100 px-2 py-1')
     note.addEventListener('keypress', () => saveNoteDebounced(id, note.value))
     note.textContent = loadNote(id)
     return note
@@ -69,13 +73,13 @@ function getListingId (url = document.location.href) {
    * @param {string} id
    */
   function addNotesToPage (id) {
-    if (document.body.classList.contains(cls.marker)) return
-    document.body.classList.add(cls.marker)
     utils.log('addNotesToPage', id)
     const note = createNoteElement(id)
     document.body.append(note)
   }
   function process () {
+    if (document.body.classList.contains(cls.marker)) return
+    document.body.classList.add(cls.marker)
     const id = getListingId()
     if (id === undefined) addNotesToList()
     else addNotesToPage(id)

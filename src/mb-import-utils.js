@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-/* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
+/* eslint-disable unused-imports/no-unused-vars */
 
 /**
  * Get the text content from the node behind a css selector

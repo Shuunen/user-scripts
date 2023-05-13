@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /* eslint-disable promise/avoid-new */
 /* eslint-disable sonarjs/elseif-without-else */
 // @ts-nocheck

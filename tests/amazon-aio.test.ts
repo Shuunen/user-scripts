@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
-import { check, checksRun } from 'shuutils'
+import { check, checksRun } from './temporary'
 import { maxScore, score, score20Styled } from '../src/amazon-aio.user.js'
 
 // eslint-disable-next-line max-params

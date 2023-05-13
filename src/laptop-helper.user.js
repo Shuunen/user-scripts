@@ -360,18 +360,18 @@ function LaptopHelper () {
     utils.findAll(selectors.desc, document, true).forEach((/** @type HTMLElement */descElement) => {
       descElement.classList.add(cls.mark)
       // first close last opened console group, else closing nothing without throwing error
-      console.groupEnd() // eslint-disable-line no-console
+      console.groupEnd()
       // eslint-disable-next-line no-param-reassign
       descElement.innerHTML = descElement.innerHTML.replace(/&nbsp;/gu, '')
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // eslint-disable-next-line no-magic-numbers
-      console.groupCollapsed(utils.ellipsisWords(text, 15)) // eslint-disable-line no-console
+      console.groupCollapsed(utils.ellipsisWords(text, 15))
       utils.log('checking :', text)
       // eslint-disable-next-line no-param-reassign
       descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)
       utils.findAll(`.${cls.mark}`, descElement, true).forEach(markElement => { annotate(markElement) })
     })
-    console.groupEnd() // eslint-disable-line no-console
+    console.groupEnd()
   }
   function clearLinks () {
     utils.findAll(selectors.clearLinks, document, true).forEach((/** @type HTMLAnchorElement */ link) => {

@@ -1,4 +1,4 @@
-import { check, checksRun } from 'shuutils'
+import { check, checksRun } from './temporary'
 import { cleanTitle } from '../src/saveur-biere-ratings.user'
 
 check('sb clean title A', cleanTitle('Bière de garde'), 'biere de garde')

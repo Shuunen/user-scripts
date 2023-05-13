@@ -9,10 +9,27 @@
 // @version     1.0.1
 // ==/UserScript==
 
-// @ts-nocheck
+'use strict';
+
+/**
+ * @typedef LbcAdAttribute
+ * @type {Object}
+ * @property {string} key the attribute key
+ * @property {string} value the attribute value
+ */
+
+/**
+  @typedef LbcAd
+  @type {Object}
+  @property {string} list_id the ad id
+  @property {LbcAdAttribute[]} attributes the ad attributes
+ */
+
 // eslint-disable-next-line max-statements
-(function LeBonCoinDPE () {
+(function LeBonCoinDpe () {
   /* global Shuutils */
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const utils = new Shuutils({ id: 'lbc-dpe', debug: true })
   const cls = {
     marker: `${utils.app.id}-processed`,
@@ -29,48 +46,78 @@
     67_218: 'Illkirch',
   }
   utils.log(districts)
+  /**
+   * Add DPE info to an element
+   * @param {HTMLElement} element the element to append the DPE info to
+   * @param {string} name the name of the DPE info
+   * @param {string} value the value of the DPE info
+   * @param {number} positionTop the top position of the line
+   */
   // eslint-disable-next-line max-params
-  function addDpeInfo (element, name, value, positionTop) {
+  function addDpeInfo (element, name, value = '', positionTop = 0) {
     // eslint-disable-next-line no-nested-ternary
-    const color = /[a-c]/u.test(value) ? 'green' : (/d/u.test(value) ? 'orange' : 'red')
+    const color = /[a-c]/u.test(value) ? 'green' : (value.includes('d') ? 'orange' : 'red')
     const line = document.createElement('div')
     line.textContent = `${name} : ${value.toUpperCase()}`
+    // @ts-ignore
     line.style = `color: ${color}; top: ${positionTop}px; font-weight: bold; position: absolute; right: 0;`
     element.append(line)
   }
+  /**
+   * Add location info to the ad
+   * @param {HTMLElement} element the element to append the location info to
+   * @param {LbcAd} ad the ad to process
+   * @param {number} positionTop the top position of the line
+   * @returns {void}
+   */
+  // eslint-disable-next-line max-statements
   function addLocationInfo (element, ad, positionTop) {
-    const districtId = ad.attributes.find(attribute => attribute.key === 'district_id').value
-    const district = districts[districtId] || districtId
+    const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
+    if (districtId === undefined) { utils.console.warn('no district id found in ad', ad); return }
+    // @ts-ignore
+    const district = districts[districtId] ?? districtId
     // eslint-disable-next-line no-param-reassign
     if (['Cronenbourg', 'Hautepierre'].includes(district)) { element.style.display = 'none'; return }
     const line = document.createElement('div')
     line.textContent = district
+    // @ts-ignore
     line.style = `top: ${positionTop}px; font-weight: bold; position: absolute; right: 0;`
     element.append(line)
   }
-  // eslint-disable-next-line max-statements, consistent-return
+  /**
+   * Process a single ad
+   * @param {LbcAd} ad the ad to process
+   * @returns {void}
+   */
+  // eslint-disable-next-line max-statements
   function processAd (ad) {
     const id = ad.list_id
     const link = document.querySelector(`[href*="${id}"]`)
-    if (!link) return document.location.reload() // we need to have that next data in page
+    if (!link) { document.location.reload(); return } // we need to have that next data in page
     const element = link.parentElement
-    if (element.classList.contains(cls.marker)) return utils.log('ad already processed', id)
+    if (!element) { utils.log('no parent element found for link', link); return }
+    if (element.classList.contains(cls.marker)) { utils.log('ad already processed', id); return }
     utils.log('process ad :', ad)
     element.classList.add(cls.marker)
     element.style.position = 'relative'
-    const energy = ad.attributes.find(attribute => attribute.key === 'energy_rate').value
-    const ges = ad.attributes.find(attribute => attribute.key === 'ges').value
+    const energy = ad.attributes.find(attribute => attribute.key === 'energy_rate')?.value ?? ''
+    if (energy === '') utils.warn('no energy rate found in ad', ad)
+    const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
+    if (ges === '') utils.warn('no GES found in ad', ad)
     if (!/[a-c]/u.test(energy) || !/[a-c]/u.test(ges)) element.style.display = 'none'
     addDpeInfo(element, 'Classe', energy, 25) // eslint-disable-line no-magic-numbers
     addDpeInfo(element, 'GES', ges, 45) // eslint-disable-line no-magic-numbers
     addLocationInfo(element, ad, 65) // eslint-disable-line no-magic-numbers
   }
+  // eslint-disable-next-line max-statements
   function process () {
-    const { props } = JSON.parse(document.querySelector('#__NEXT_DATA__').innerHTML)
-    if (!props.pageProps || !props.pageProps.searchData) { utils.log('no page props data to parse'); return }
+    const dataElement = document.querySelector('#__NEXT_DATA__')
+    if (!dataElement) { utils.error('no data element found'); return }
+    const { props } = JSON.parse(dataElement.innerHTML)
+    if (props.pageProps?.searchData === undefined) { utils.log('no page props data to parse'); return }
     const { ads } = props.pageProps.searchData
     utils.log(`processing ${ads.length} ads listing...`)
-    ads.forEach(ad => { processAd(ad) })
+    for (const ad of ads) processAd(ad)
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 1000)
