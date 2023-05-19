@@ -26,13 +26,14 @@ function tw (classes) { return classes }
  * @returns {number|undefined} the listing id
  */
 function getListingId (url = document.location.href) {
-  const id = /(?<id>\d{5,15})\.htm/u.exec(url)?.groups?.id
+  const id = /\/(?<id>\d{5,15})\.htm$/u.exec(url)?.groups?.id
   return id ? Number.parseInt(id, 10) : undefined
 }
 
 // @ts-nocheck
 // eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
 (function LeBonCoinNotes () {
+  if (typeof window === 'undefined') return
   /* global Shuutils, tailwind, Appwrite */
   // @ts-ignore
   tailwind.config = {
@@ -131,3 +132,8 @@ function getListingId (url = document.location.href) {
   window.addEventListener('load', () => processDebounced())
   void utils.onPageChange(processDebounced)
 })()
+
+// eslint-disable-next-line no-undef, putout/putout
+if (module) module.exports = {
+  getListingId
+}
