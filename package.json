@@ -4,7 +4,6 @@
   "bugs": "https://github.com/Shuunen/user-scripts/issues",
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
-    "@babel/core": "*",
     "@types/node": "18",
     "eslint": "8.40",
     "eslint-config-hardcore": "36",
@@ -14,10 +13,8 @@
     "repo-check": "1.31",
     "shuutils": "7.3",
     "tailwindcss": "3",
-    "tsm": "2",
     "typescript": "5",
-    "uvu": "0",
-    "watchlist": "0"
+    "vitest": "0.31"
   },
   "files": [
     "src",
@@ -37,11 +34,11 @@
   "scripts": {
     "check": "pnpm lint && repo-check && pnpm test && echo check success",
     "lint": "tsc --noEmit && eslint --cache --fix --ext .js,.ts . && echo lint success",
-    "lint:watch": "watchlist src tests -eager -- pnpm lint",
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",
-    "test": "uvu -r tsm tests && echo test success",
-    "test:watch": "watchlist src tests -eager -- npm test"
+    "test": "vitest --run && echo test success",
+    "test:update": "vitest --run --update && echo test update success",
+    "test:watch": "vitest"
   },
   "version": "2.1.0"
 }

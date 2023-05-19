@@ -1,5 +1,5 @@
-import { check, checksRun } from './temporary'
 import { cleanTitle } from '../src/saveur-biere-ratings.user'
+import { check } from './utils'
 
 check('sb clean title A', cleanTitle('Bière de garde'), 'biere de garde')
 check('sb clean title B', cleanTitle('Bière de garde (Bière de garde) 2'), 'biere de garde 2')
@@ -14,4 +14,3 @@ check('sb clean title J', cleanTitle('Bud 25cl'), 'bud')
 check('sb clean title K', cleanTitle('Tiny Rebel Cwtch - Can'), 'tiny rebel cwtch')
 check('sb clean title L', cleanTitle('Basqueland Imparable IPA - Can'), 'basqueland imparable ipa')
 
-checksRun()

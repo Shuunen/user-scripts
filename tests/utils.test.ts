@@ -1,5 +1,5 @@
-import { check, checksRun } from './temporary'
 import { Shuutils } from '../src/utils'
+import { check } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const utils = new Shuutils({ id: 'tst', debug: false })
@@ -11,5 +11,3 @@ check('readableString B', utils.readableString(' another_Pretty.??complicated__n
 
 check('ellipsisWords A', utils.ellipsisWords('This is a test', 3), 'This is a...')
 check('ellipsisWords B', utils.ellipsisWords('This is a test', 4), 'This is a test')
-
-checksRun()

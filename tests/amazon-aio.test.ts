@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
-import { check, checksRun } from './temporary'
+import { expect, it } from 'vitest'
 import { maxScore, score, score20Styled } from '../src/amazon-aio.user.js'
+import { check } from './utils'
 
 // eslint-disable-next-line max-params
 function checkGreaterThan (title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number): void {
-  const scoreA = score(ratingA, reviewsA)
-  const scoreB = score(ratingB, reviewsB)
-  check(`${title}, expect ${score(ratingA, reviewsA, true)} to be greater than ${score(ratingB, reviewsB, true)}`, scoreA > scoreB, true)
+  const scoreA = score(ratingA, reviewsA) as number // eslint-disable-line @typescript-eslint/consistent-type-assertions
+  const scoreB = score(ratingB, reviewsB) as number // eslint-disable-line @typescript-eslint/consistent-type-assertions
+  it(`${title}, expect ${score(ratingA, reviewsA, true)} to be greater than ${score(ratingB, reviewsB, true)}`, () => {
+    expect(scoreA).toBeGreaterThan(scoreB)
+  })
 }
 
 checkGreaterThan('amazon-aio same ratings is better with more reviews A', 4.2, 30, 4.2, 15)
@@ -93,5 +96,3 @@ const score0_20 = score20Styled(0, 0)
 check('amazon-aio 0/20 score', score0_20.score, 0)
 check('amazon-aio 0/20 score is red', score0_20.color, 'red')
 check('amazon-aio 0/20 score is small', score0_20.size, 1)
-
-checksRun()
