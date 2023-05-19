@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name        LeBonCoin Notes
 // @namespace   https://github.com/Shuunen
-// @description Add notes to LeBonCoin listings (for personal use only) (WIP) (not working yet) (not even started) (just a copy of lbc-dpe) (I'm lazy)
+// @description Add notes to LeBonCoin listings
 // @author      Romain Racamier-Lafon
 // @match       https://www.leboncoin.fr/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require     https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require     https://cdn.tailwindcss.com
-// @version     0.0.1
+// @version     0.0.2
 // ==/UserScript==
 
 'use strict'
@@ -19,14 +20,20 @@
  */
 function tw (classes) { return classes }
 
+/**
+ * Return the listing id from the given url
+ * @param {string} url the url to parse
+ * @returns {number|undefined} the listing id
+ */
 function getListingId (url = document.location.href) {
-  return /(?<id>\d{5,15})\.htm/u.exec(url)?.groups?.id
+  const id = /(?<id>\d{5,15})\.htm/u.exec(url)?.groups?.id
+  return id ? Number.parseInt(id, 10) : undefined
 }
 
 // @ts-nocheck
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
 (function LeBonCoinNotes () {
-  /* global Shuutils, tailwind */
+  /* global Shuutils, tailwind, Appwrite */
   // @ts-ignore
   tailwind.config = {
     corePlugins: {
@@ -36,43 +43,67 @@ function getListingId (url = document.location.href) {
   }
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const utils = new Shuutils({ id: 'lbc-nts', debug: true })
+  const utils = new Shuutils({ id: 'lbc-nts', debug: true }) // eslint-disable-line @typescript-eslint/naming-convention
   const cls = {
     marker: `${utils.app.id}-processed`,
   }
+  /* Init DB */
+  // @ts-ignore
+  const { Client, Query, Databases, ID } = Appwrite // eslint-disable-line @typescript-eslint/naming-convention
+  const db = { // eslint-disable-line unicorn/prevent-abbreviations
+    endpoint: 'https://cloud.appwrite.io/v1',
+    project: localStorage.getItem('lbcNotes_project'),
+    databaseId: localStorage.getItem('lbcNotes_databaseId'),
+    notesCollectionId: localStorage.getItem('lbcNotes_notesCollectionId'),
+    activeNoteId: '',
+  }
+  if (!db.databaseId || !db.notesCollectionId) { utils.error('missing lbcNotes_databaseId or lbcNotes_notesCollectionId in localStorage'); return }
+  const client = new Client()
+  const databases = new Databases(client)
+  client.setEndpoint(db.endpoint).setProject(db.project)
+
   /**
-   * Save a note to storage
-   * @param {string} id the note id
-   * @param {string} note the note content to save
-   * @returns {void}
+   * Save a note
+   * @param {number} listingId the listing id
+   * @param {HTMLTextAreaElement} noteElement the note element
+   * @returns {Promise<void>} a promise
    */
-  function saveNote (id, note) {
-    // eslint-disable-next-line no-console
-    console.log(`note ${id} saved with content : ${note}`)
-    localStorage.setItem(`lbc-nts-${id}`, note)
+  async function saveNote (listingId, noteElement) {
+    const note = noteElement.value
+    const noteId = db.activeNoteId
+    utils.log(`${noteId ? 'update' : 'create'} note for listing ${listingId} with content : ${note}`)
+    try {
+      const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note })) // eslint-disable-line putout/putout
+      db.activeNoteId = response.$id // eslint-disable-line require-atomic-updates
+    } catch (error) {
+      utils.error(`failed to ${noteId ? 'update' : 'create'} note for listing ${listingId}`, error)
+    }
   }
   // eslint-disable-next-line no-magic-numbers
-  const saveNoteDebounced = utils.debounce(saveNote, 300)
+  const saveNoteDebounced = utils.debounce(saveNote, 500)
   /**
    * Load a note from storage
-   * @param {string} id the note id
-   * @returns {string} the note content
+   * @param {number} listingId the listing id
+   * @returns {Promise<string>} the note content for the given listing
    */
-  function loadNote (id) {
-    return localStorage.getItem(`lbc-nts-${id}`) || ''
+  async function loadNote (listingId) {
+    utils.log(`loading note for listing ${listingId}`)
+    const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [Query.equal('listingId', getListingId())])
+    const [first] = notesByListingId.documents
+    db.activeNoteId = first?.$id || '' // eslint-disable-line require-atomic-updates
+    return first?.note || ''
   }
   /**
    * Create a note element
-   * @param {string} id the note id
+   * @param {number} listingId the listing id
    * @returns {HTMLTextAreaElement} the note element
    */
-  function createNoteElement (id) {
+  function createNoteElement (listingId) {
     const note = document.createElement('textarea')
-    // eslint-disable-next-line unicorn/no-keyword-prefix
-    note.className = tw('fixed right-5 top-56 z-10 h-56  w-96 rounded-md border border-gray-400 bg-gray-100 px-2 py-1')
-    note.addEventListener('keypress', () => saveNoteDebounced(id, note.value))
-    note.textContent = loadNote(id)
+    note.className = tw('fixed right-5 top-56 z-10 h-56  w-96 rounded-md border border-gray-400 bg-gray-100 px-2 py-1') // eslint-disable-line unicorn/no-keyword-prefix
+    note.addEventListener('keypress', () => saveNoteDebounced(listingId, note))
+    note.textContent = 'Loading...'
+    void loadNote(listingId).then((content) => { note.textContent = content }) // eslint-disable-line promise/always-return, promise/prefer-await-to-then
     return note
   }
   function addNotesToList () {
@@ -80,12 +111,12 @@ function getListingId (url = document.location.href) {
   }
   /**
    * Add a note to the current page
-   * @param {string} id the note id
+   * @param {number} listingId the listing id
    * @returns {void}
    */
-  function addNoteToPage (id) {
-    utils.log('addNotesToPage', id)
-    const note = createNoteElement(id)
+  function addNoteToPage (listingId) {
+    utils.log('addNotesToPage', listingId)
+    const note = createNoteElement(listingId)
     document.body.append(note)
   }
   function process () {
@@ -95,8 +126,7 @@ function getListingId (url = document.location.href) {
     if (id === undefined) addNotesToList()
     else addNoteToPage(id)
   }
-  // eslint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 300)
+  const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
   window.addEventListener('scroll', () => processDebounced())
   window.addEventListener('load', () => processDebounced())
   void utils.onPageChange(processDebounced)
