@@ -96,7 +96,7 @@
     if (!link) { document.location.reload(); return } // we need to have that next data in page
     const element = link.parentElement
     if (!element) { utils.log('no parent element found for link', link); return }
-    if (element.classList.contains(cls.marker)) { utils.log('ad already processed', id); return }
+    if (element.classList.contains(cls.marker)) { utils.debug('ad already processed', id); return }
     utils.log('process ad :', ad)
     element.classList.add(cls.marker)
     element.style.position = 'relative'
