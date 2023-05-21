@@ -161,7 +161,7 @@ function getClearStoreButton (clearStoreCallback) {
       saveNoteSuccess({ noteId: response.$id, listingId, noteContent }, noteElement) /* @ts-ignore */
     } catch (/** @type Error */ error) { saveNoteFailure({ noteId: '', listingId, noteContent }, noteElement, error) }
   }
-  const saveNoteDebounced = utils.debounce(saveNote, 500) // eslint-disable-line no-magic-numbers
+  const saveNoteDebounced = utils.debounce(saveNote, 2000) // eslint-disable-line no-magic-numbers
   /**
    * Load a note from AppWrite
    * @param {number} listingId the listing id
