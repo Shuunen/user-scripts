@@ -69,6 +69,7 @@
           "multi"
         ],
         "eslint-comments/no-use": "off",
+        "ext/lines-between-object-properties": "off",
         "import/no-commonjs": "off",
         "line-comment-position": "off",
         "lines-around-comment": "off",

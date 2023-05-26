@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 // ==UserScript==
 // @name        LeBonCoin DPE
 // @namespace   https://github.com/Shuunen
@@ -9,7 +10,22 @@
 // @version     1.0.1
 // ==/UserScript==
 
-'use strict';
+'use strict'
+
+const districts = {
+  3_001_199: 'Cronenbourg',
+  3_001_211: 'Hautepierre',
+  3_001_183: 'Meinau',
+  3_001_201: 'Stockfeld',
+  3_001_187: 'Cathédrale',
+  3_001_181: 'Neudorf centre',
+  3_001_203: 'Petite France',
+  100_102: 'Illkirch centre ouest',
+  67_218: 'Illkirch',
+}
+
+// eslint-disable-next-line no-magic-numbers
+const districtsToHide = new Set([districts[3_001_199], districts[3_001_211]]);
 
 /**
  * @typedef LbcAdAttribute
@@ -22,10 +38,10 @@
   @typedef LbcAd
   @type {Object}
   @property {string} list_id the ad id
+  @property {string} subject the ad title
   @property {LbcAdAttribute[]} attributes the ad attributes
  */
 
-// eslint-disable-next-line max-statements
 (function LeBonCoinDpe () {
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
@@ -34,18 +50,22 @@
   const cls = {
     marker: `${utils.app.id}-processed`,
   }
-  const districts = {
-    3_001_199: 'Cronenbourg',
-    3_001_211: 'Hautepierre',
-    3_001_183: 'Meinau',
-    3_001_201: 'Stockfeld',
-    3_001_187: 'Cathédrale',
-    3_001_181: 'Neudorf centre',
-    3_001_203: 'Petite France',
-    100_102: 'Illkirch centre ouest',
-    67_218: 'Illkirch',
-  }
   utils.log(districts)
+  /**
+   * Get the ad element from the ad object
+   * @param {LbcAd} ad the ad object
+   * @returns {HTMLElement|undefined} the ad element
+   */
+  function getAdElement (ad) {
+    const id = ad.list_id
+    const link = document.querySelector(`[href*="${id}"]`)
+    if (!link) { document.location.reload(); return } // we need to have that next data in page
+    const element = link.parentElement
+    if (!element) { utils.error('no element found for link', link); return }
+    if (element.classList.contains('hidden')) { utils.debug('ad is hidden', id); return }
+    if (element.classList.contains(cls.marker)) { utils.debug('ad already processed', id); return }
+    return element // eslint-disable-line consistent-return
+  }
   /**
    * Add DPE info to an element
    * @param {HTMLElement} element the element to append the DPE info to
@@ -70,14 +90,13 @@
    * @param {number} positionTop the top position of the line
    * @returns {void}
    */
-  // eslint-disable-next-line max-statements
   function addLocationInfo (element, ad, positionTop) {
     const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
     if (districtId === undefined) { utils.warn('no district id found in ad', ad); return }
     // @ts-ignore
     const district = districts[districtId] ?? districtId
     // eslint-disable-next-line no-param-reassign
-    if (['Cronenbourg', 'Hautepierre'].includes(district)) { element.style.display = 'none'; return }
+    if (districtsToHide.has(district)) { element.style.display = 'none'; return }
     const line = document.createElement('div')
     line.textContent = district
     // @ts-ignore
@@ -86,18 +105,13 @@
   }
   /**
    * Process a single ad
-   * @param {LbcAd} ad the ad to process
+   * @param {LbcAd} ad the ad object
    * @returns {void}
    */
-  // eslint-disable-next-line max-statements
   function processAd (ad) {
-    const id = ad.list_id
-    const link = document.querySelector(`[href*="${id}"]`)
-    if (!link) { document.location.reload(); return } // we need to have that next data in page
-    const element = link.parentElement
-    if (!element) { utils.log('no parent element found for link', link); return }
-    if (element.classList.contains(cls.marker)) { utils.debug('ad already processed', id); return }
-    utils.log('process ad :', ad)
+    const element = getAdElement(ad)
+    if (!element) return
+    utils.log('process ad :', ad.subject, ad)
     element.classList.add(cls.marker)
     element.style.position = 'relative'
     const energy = ad.attributes.find(attribute => attribute.key === 'energy_rate')?.value ?? ''
@@ -109,7 +123,10 @@
     addDpeInfo(element, 'GES', ges, 45) // eslint-disable-line no-magic-numbers
     addLocationInfo(element, ad, 65) // eslint-disable-line no-magic-numbers
   }
-  // eslint-disable-next-line max-statements
+  /**
+   * Start the process
+   * @returns {void}
+   */
   function process () {
     const dataElement = document.querySelector('#__NEXT_DATA__')
     if (!dataElement) { utils.error('no data element found'); return }
