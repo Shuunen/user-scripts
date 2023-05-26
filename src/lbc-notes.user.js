@@ -9,7 +9,7 @@
 // @require     https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require     https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require     https://cdn.tailwindcss.com
-// @version     0.0.2
+// @version     0.0.3
 // ==/UserScript==
 
 'use strict'
@@ -78,6 +78,17 @@ function getClearStoreButton (clearStoreCallback) {
   return button
 }
 
+/**
+ * Update note style
+ * @param {HTMLTextAreaElement} noteElement the note element
+ * @returns {void}
+ */
+function updateNoteStyle (noteElement) {
+  const noteContent = noteElement.value
+  noteElement.classList.toggle('bg-orange-100', noteContent.includes('Bof'))
+  noteElement.classList.toggle('bg-red-100', noteContent.includes('Nope'))
+}
+
 // @ts-nocheck
 // eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
 (function LeBonCoinNotes () {
@@ -131,7 +142,7 @@ function getClearStoreButton (clearStoreCallback) {
     noteElement.dataset.noteId = note.noteId // eslint-disable-line no-param-reassign
     noteElement.classList.remove(...tw('bg-yellow-200'))
     noteElement.classList.add(...tw('bg-green-200'))
-    setTimeout(() => { noteElement.classList.remove(...tw('bg-green-200')) }, 1000) // eslint-disable-line no-magic-numbers
+    setTimeout(() => { noteElement.classList.remove(...tw('bg-green-200')); updateNoteStyle(noteElement) }, 1000) // eslint-disable-line no-magic-numbers
   }
   /**
    * Callback when a note failed to save
@@ -198,6 +209,7 @@ function getClearStoreButton (clearStoreCallback) {
     noteElement.textContent = noteContent // eslint-disable-line require-atomic-updates, no-param-reassign
     noteElement.classList.add(...tw('h-56 w-96'))
     noteElement.disabled = false // eslint-disable-line no-param-reassign
+    updateNoteStyle(noteElement)
   }
   /**
    * Create a note element
