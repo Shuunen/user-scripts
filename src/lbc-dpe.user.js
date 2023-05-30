@@ -7,7 +7,7 @@
 // @match       https://www.leboncoin.fr/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
-// @version     1.0.1
+// @version     1.0.2
 // ==/UserScript==
 
 'use strict'
@@ -17,6 +17,7 @@ const districts = {
   3_001_211: 'Hautepierre',
   3_001_183: 'Meinau',
   3_001_201: 'Stockfeld',
+  3_001_197: 'Esplanade - Université',
   3_001_187: 'Cathédrale',
   3_001_181: 'Neudorf centre',
   3_001_203: 'Petite France',
@@ -35,11 +36,19 @@ const districtsToHide = new Set([districts[3_001_199], districts[3_001_211]]);
  */
 
 /**
+ * @typedef LbcAdOwner
+ * @type {Object}
+ * @property {string} name the name of the ad owner
+ * @property {string} type the type of the ad owner, like "pro"
+ */
+
+/**
   @typedef LbcAd
   @type {Object}
+  @property {LbcAdAttribute[]} attributes the ad attributes
+  @property {LbcAdOwner} owner the ad owner
   @property {string} list_id the ad id
   @property {string} subject the ad title
-  @property {LbcAdAttribute[]} attributes the ad attributes
  */
 
 (function LeBonCoinDpe () {
@@ -104,6 +113,22 @@ const districtsToHide = new Set([districts[3_001_199], districts[3_001_211]]);
     element.append(line)
   }
   /**
+   * Add owner info to the ad
+   * @param {HTMLElement} element the element to append the owner info to
+   * @param {LbcAd} ad the ad to process
+   * @param {number} positionTop the top position of the line
+   * @returns {void}
+   */
+  function addOwnerInfo (element, ad, positionTop) {
+    const { owner } = ad
+    if (!owner) { utils.warn('no owner found in ad', ad); return }
+    const line = document.createElement('div')
+    line.textContent = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
+    // @ts-ignore
+    line.style = `top: ${positionTop}px; font-weight: bold; position: absolute; right: 0;`
+    element.append(line)
+  }
+  /**
    * Process a single ad
    * @param {LbcAd} ad the ad object
    * @returns {void}
@@ -122,6 +147,7 @@ const districtsToHide = new Set([districts[3_001_199], districts[3_001_211]]);
     addDpeInfo(element, 'Classe', energy, 25) // eslint-disable-line no-magic-numbers
     addDpeInfo(element, 'GES', ges, 45) // eslint-disable-line no-magic-numbers
     addLocationInfo(element, ad, 65) // eslint-disable-line no-magic-numbers
+    addOwnerInfo(element, ad, 85) // eslint-disable-line no-magic-numbers
   }
   /**
    * Start the process
