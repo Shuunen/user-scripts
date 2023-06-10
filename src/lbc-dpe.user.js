@@ -13,20 +13,29 @@
 'use strict'
 
 const districts = {
-  3_001_199: 'Cronenbourg',
-  3_001_211: 'Hautepierre',
-  3_001_183: 'Meinau',
-  3_001_201: 'Stockfeld',
-  3_001_197: 'Esplanade - Université',
-  3_001_187: 'Cathédrale',
   3_001_181: 'Neudorf centre',
+  3_001_182: 'Neudorf-Musau-Port du Rhin',
+  3_001_183: 'Meinau',
+  3_001_184: 'Neuhof',
+  3_001_187: 'Cathédrale',
+  3_001_189: 'Robertsau',
+  3_001_197: 'Esplanade - Université',
+  3_001_199: 'Cronenbourg',
+  3_001_201: 'Stockfeld',
   3_001_203: 'Petite France',
+  3_001_211: 'Hautepierre',
+  100_101: 'Illkirch nord',
   100_102: 'Illkirch centre ouest',
   67_218: 'Illkirch',
 }
 
-// eslint-disable-next-line no-magic-numbers
-const districtsToHide = new Set([districts[3_001_199], districts[3_001_211]]);
+/* eslint-disable no-magic-numbers */
+const districtsToHide = new Set([
+  districts[3_001_189], // Robertsau
+  districts[3_001_199], // Cronenbourg
+  districts[3_001_211], // Hautepierre
+]);
+/* eslint-enable no-magic-numbers */
 
 /**
  * @typedef LbcAdAttribute
