@@ -13,6 +13,8 @@
 'use strict'
 
 const districts = {
+  3_001_193: 'Tribunal',
+  3_001_192: 'Les Halles',
   3_001_181: 'Neudorf centre',
   3_001_182: 'Neudorf-Musau-Port du Rhin',
   3_001_183: 'Meinau',
@@ -32,6 +34,7 @@ const districts = {
 /* eslint-disable no-magic-numbers */
 const districtsToHide = new Set([
   districts[3_001_189], // Robertsau
+  districts[3_001_192], // Les Halles
   districts[3_001_199], // Cronenbourg
   districts[3_001_211], // Hautepierre
 ]);
