@@ -7,7 +7,7 @@
 
 class Shuutils {
 
-  version = '2.1.0'
+  version = '2.1.1'
 
   /**
    * The ShuUserScriptUtils constructor
@@ -219,6 +219,13 @@ class Shuutils {
   getRandomNumber (min = 0, max = 100) {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
+
+  /**
+   * Enable tailwindcss intellisense and return an array of classes
+   * @param {string} classes the classes to split, e.g. 'h-56 w-96 rounded-md'
+   * @returns {string[]} the array of classes, e.g. ['h-56', 'w-96', 'rounded-md']
+   */
+  tw (classes) { return classes.split(' ') }
 
   /**
    * Sleep for a given time
