@@ -100,6 +100,7 @@
           "global"
         ],
         "unicorn/prefer-module": "off",
+        "unicorn/prefer-spread": "off",
         "unicorn/prefer-string-replace-all": "off",
         "valid-jsdoc": "error"
       }
@@ -181,7 +182,7 @@
         "ext/lines-between-object-properties": "off",
         "filenames/match-regex": [
           2,
-          "(\\.user|utils|\\.test|\\.d|\\.config)$",
+          "(\\.user|utils|types|\\.test|\\.d|\\.config)$",
           true
         ],
         "func-names": [

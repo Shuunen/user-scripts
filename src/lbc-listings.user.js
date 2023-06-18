@@ -1,16 +1,20 @@
 /* eslint-disable max-statements */
 // ==UserScript==
-// @name        LeBonCoin DPE
+// @name        LeBonCoin Listing Plus Plus
 // @namespace   https://github.com/Shuunen
-// @description Show DPE on LeBonCoin listings
+// @description Show more infos on LeBonCoin listings
 // @author      Romain Racamier-Lafon
 // @match       https://www.leboncoin.fr/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
-// @version     1.0.2
+// @version     1.0.3
 // ==/UserScript==
 
 'use strict'
+
+/**
+ * @typedef {import('./lbc.types').LbcAd} LbcAd
+ */
 
 const districts = {
   3_001_193: 'Tribunal',
@@ -37,41 +41,23 @@ const districtsToHide = new Set([
   districts[3_001_192], // Les Halles
   districts[3_001_199], // Cronenbourg
   districts[3_001_211], // Hautepierre
-]);
+])
 /* eslint-enable no-magic-numbers */
 
-/**
- * @typedef LbcAdAttribute
- * @type {Object}
- * @property {string} key the attribute key
- * @property {string} value the attribute value
- */
+const citiesToHide = new Set([
+  'Eschau',
+]);
 
-/**
- * @typedef LbcAdOwner
- * @type {Object}
- * @property {string} name the name of the ad owner
- * @property {string} type the type of the ad owner, like "pro"
- */
-
-/**
-  @typedef LbcAd
-  @type {Object}
-  @property {LbcAdAttribute[]} attributes the ad attributes
-  @property {LbcAdOwner} owner the ad owner
-  @property {string} list_id the ad id
-  @property {string} subject the ad title
- */
 
 (function LeBonCoinDpe () {
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ id: 'lbc-dpe', debug: false }) // eslint-disable-line @typescript-eslint/naming-convention
+  const utils = new Shuutils({ id: 'lbc-lpp', debug: false }) // eslint-disable-line @typescript-eslint/naming-convention
   const cls = {
     marker: `${utils.app.id}-processed`,
   }
-  utils.log(districts)
+
   /**
    * Get the ad element from the ad object
    * @param {LbcAd} ad the ad object
@@ -87,6 +73,7 @@ const districtsToHide = new Set([
     if (element.classList.contains(cls.marker)) { utils.debug('ad already processed', id); return }
     return element // eslint-disable-line consistent-return
   }
+
   /**
    * Add DPE info to an element
    * @param {HTMLElement} element the element to append the DPE info to
@@ -97,13 +84,64 @@ const districtsToHide = new Set([
   // eslint-disable-next-line max-params
   function addDpeInfo (element, name, value = '', positionTop = 0) {
     // eslint-disable-next-line no-nested-ternary
-    const color = /[a-c]/u.test(value) ? 'green' : (value.includes('d') ? 'orange' : 'red')
+    const color = /[a-c]/u.test(value) ? 'text-green-600' : (value.includes('d') ? 'text-yellow-600' : 'text-red-600')
     const line = document.createElement('div')
     line.textContent = `${name} : ${value.toUpperCase()}`
-    // @ts-ignore
-    line.style = `color: ${color}; top: ${positionTop}px; font-weight: bold; position: absolute; right: 0;`
+    line.style.top = `${positionTop}px`
+    line.classList.add(color, 'font-bold', 'absolute', 'right-0')
     element.append(line)
   }
+
+  /**
+   * Determine if the ad should be hidden
+   * @param {LbcAd} ad the ad to process
+   * @returns {boolean} true if the ad should be hidden
+   */
+  function shouldHideBasedOnLocation (ad) {
+    const { city } = ad.location
+    if (city === undefined) utils.warn('no city found in ad', ad)
+    if (citiesToHide.has(city)) return true
+    return districtsToHide.has(ad.district)
+  }
+
+  /**
+   * Add district info to the ad object
+   * @param {LbcAd} ad the ad to augment
+   * @returns {void}
+   */
+  function addDistrictToAd (ad) {
+    const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
+    if (districtId === undefined) { utils.warn('no district id found in ad', ad); return }
+    // @ts-ignore
+    // eslint-disable-next-line no-param-reassign
+    ad.district = districts[districtId] ?? districtId
+  }
+
+  /**
+   * Hide the ad element
+   * @param {HTMLElement} element the element to hide
+   * @returns {void}
+   */
+  function hideAdElement (element) {
+    element.classList.add(
+      'h-24', 'overflow-hidden', 'transition-all', 'duration-500',
+      'ease-in-out', 'filter', 'grayscale', 'opacity-50',
+      'hover:opacity-100', 'hover:h-80', 'hover:filter-none',
+    )
+    element.parentElement?.classList.add(`${utils.app.id}-hidden`, `${utils.app.id}-hidden-cause-location`)
+  }
+
+  /**
+   * Remove the pro tag from the ad
+   * @param {HTMLElement} element the element to remove the pro tag from
+   * @returns {void}
+   */
+  function removeProTag (element) {
+    const tag = utils.findOne('div[color="black"] span', element)
+    if (tag?.textContent?.toLowerCase() === 'pro') tag.parentElement?.remove()
+    utils.warn('no pro tag found in ad', element)
+  }
+
   /**
    * Add location info to the ad
    * @param {HTMLElement} element the element to append the location info to
@@ -112,18 +150,17 @@ const districtsToHide = new Set([
    * @returns {void}
    */
   function addLocationInfo (element, ad, positionTop) {
-    const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
-    if (districtId === undefined) { utils.warn('no district id found in ad', ad); return }
-    // @ts-ignore
-    const district = districts[districtId] ?? districtId
-    // eslint-disable-next-line no-param-reassign
-    if (districtsToHide.has(district)) { element.style.display = 'none'; return }
+    addDistrictToAd(ad)
+    if (ad.owner.type === 'pro') removeProTag(element)
+    if (shouldHideBasedOnLocation(ad)) hideAdElement(element)
     const line = document.createElement('div')
-    line.textContent = district
-    // @ts-ignore
-    line.style = `top: ${positionTop}px; font-weight: bold; position: absolute; right: 0;`
+    line.textContent = ad.location.city
+    if (ad.district !== undefined && !ad.location.city.includes(ad.district)) line.textContent += ` - ${ad.district}`
+    line.style.top = `${positionTop}px`
+    line.classList.add('font-bold', 'absolute', 'right-0')
     element.append(line)
   }
+
   /**
    * Add owner info to the ad
    * @param {HTMLElement} element the element to append the owner info to
@@ -136,10 +173,12 @@ const districtsToHide = new Set([
     if (!owner) { utils.warn('no owner found in ad', ad); return }
     const line = document.createElement('div')
     line.textContent = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
-    // @ts-ignore
-    line.style = `top: ${positionTop}px; font-weight: bold; position: absolute; right: 0;`
+    line.style.top = `${positionTop}px`
+    line.classList.add('font-bold', 'absolute', 'right-0')
+    if (owner.type === 'pro') line.classList.add('text-red-800')
     element.append(line)
   }
+
   /**
    * Process a single ad
    * @param {LbcAd} ad the ad object
@@ -150,17 +189,21 @@ const districtsToHide = new Set([
     if (!element) return
     utils.log('process ad :', ad.subject, ad)
     element.classList.add(cls.marker)
-    element.style.position = 'relative'
+    // @ts-ignore
+    const /** @type HTMLElement[] */[, link] = Array.from(element.children)
+    if (!link) { utils.warn('no link found in ad', ad); return }
+    link.classList.add('relative')
     const energy = ad.attributes.find(attribute => attribute.key === 'energy_rate')?.value ?? ''
     if (energy === '') utils.warn('no energy rate found in ad', ad)
     const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
     if (ges === '') utils.warn('no GES found in ad', ad)
     if (!/[a-c]/u.test(energy) || !/[a-c]/u.test(ges)) element.style.display = 'none'
-    addDpeInfo(element, 'Classe', energy, 25) // eslint-disable-line no-magic-numbers
-    addDpeInfo(element, 'GES', ges, 45) // eslint-disable-line no-magic-numbers
-    addLocationInfo(element, ad, 65) // eslint-disable-line no-magic-numbers
-    addOwnerInfo(element, ad, 85) // eslint-disable-line no-magic-numbers
+    addDpeInfo(link, 'Classe', energy, 0)
+    addDpeInfo(link, 'GES', ges, 20) // eslint-disable-line no-magic-numbers
+    addLocationInfo(link, ad, 45) // eslint-disable-line no-magic-numbers
+    addOwnerInfo(link, ad, 65) // eslint-disable-line no-magic-numbers
   }
+
   /**
    * Start the process
    * @returns {void}
@@ -169,13 +212,16 @@ const districtsToHide = new Set([
     const dataElement = document.querySelector('#__NEXT_DATA__')
     if (!dataElement) { utils.error('no data element found'); return }
     const { props } = JSON.parse(dataElement.innerHTML)
-    if (props.pageProps?.searchData === undefined) { utils.log('no page props data to parse'); return }
-    const { ads } = props.pageProps.searchData
+    const searchData = props.pageProps?.initialProps?.searchData
+    if (searchData === undefined) { utils.log('no page props data to parse'); return }
+    const { ads } = searchData
     utils.log(`processing ${ads.length} ads listing...`)
     for (const ad of ads) processAd(ad)
   }
+
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 1000)
   window.addEventListener('scroll', () => processDebounced())
   window.addEventListener('load', () => processDebounced())
 })()
+

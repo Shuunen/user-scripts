@@ -55,7 +55,7 @@ function tw (classes) { return classes.split(' ') }
  * @returns {number|undefined} the listing id
  */
 function getListingId (url = document.location.href) {
-  const id = /\/(?<id>\d{5,15})\.htm$/u.exec(url)?.groups?.id
+  const id = /\/(?<id>\d{5,15})\.htm/u.exec(url)?.groups?.id
   return id ? Number.parseInt(id, 10) : undefined
 }
 
@@ -89,7 +89,7 @@ function getNoteIdFromNote (noteElement) {
 function getClearStoreButton (clearStoreCallback) {
   const button = document.createElement('button')
   button.textContent = 'Clear notes store'
-  button.classList.add(...tw('fixed bottom-5 right-5 z-10 rounded-md border border-gray-400 bg-gray-100 px-2 py-1 opacity-30 transition-opacity duration-500 ease-in-out hover:opacity-100'))
+  button.classList.add(...tw('fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100'))
   button.addEventListener('click', () => {
     if (!confirm('Are you sure you want to clear all notes ?')) return // eslint-disable-line no-alert, no-restricted-globals
     clearStoreCallback()
@@ -131,7 +131,7 @@ function updateNoteStyle (noteElement, isInList = false) {
   }
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ id: 'lbc-nts', debug: true }) // eslint-disable-line @typescript-eslint/naming-convention
+  const utils = new Shuutils({ id: 'lbc-nts', debug: false }) // eslint-disable-line @typescript-eslint/naming-convention
   const cls = {
     marker: `${utils.app.id}-processed`,
   }
@@ -230,7 +230,7 @@ function updateNoteStyle (noteElement, isInList = false) {
    */
   async function loadNote (noteElement, isInList = false) {
     const listingId = getListingIdFromNote(noteElement)
-    utils.log(`loading note for listing ${listingId}`)
+    utils.debug(`loading note for listing ${listingId}`)
     const { noteId, noteContent } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
     noteElement.dataset.noteId = noteId // eslint-disable-line require-atomic-updates, no-param-reassign
     noteElement.textContent = noteContent // eslint-disable-line require-atomic-updates, no-param-reassign
@@ -249,7 +249,7 @@ function updateNoteStyle (noteElement, isInList = false) {
     const note = document.createElement('textarea')
     note.placeholder = 'Add a note...'
     note.dataset.listingId = listingId.toString()
-    note.classList.add(`${utils.app.id}--note`, config.loading.class, ...tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out'))
+    note.classList.add(`${utils.app.id}--note`, config.loading.class, ...tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20'))
     note.addEventListener('keyup', () => saveNoteDebounced(note)) // keypress will not detect backspace
     note.disabled = true
     void loadNote(note, isInList)
@@ -262,14 +262,14 @@ function updateNoteStyle (noteElement, isInList = false) {
    * @returns {void}
    */
   function addNoteToListing (listingElement, listingId) {
-    utils.log('addNotesToListing', listingId)
+    utils.debug('add the note to listing', listingId)
     const note = createNoteElement(listingId, true)
     listingElement.parentElement?.classList.add(...tw('relative'))
     listingElement.parentElement?.append(note)
     note.classList.add(...tw('absolute top-0 translate-x-[350%]'))
   }
   function addNotesToListings () {
-    utils.log('addNotesToList')
+    utils.log('add note to each listing')
     /** @type HTMLAnchorElement[] */
     // @ts-ignore
     const listings = utils.findAll(`a[data-test-id="ad"]:not(.${cls.marker})`)
@@ -324,6 +324,12 @@ function updateNoteStyle (noteElement, isInList = false) {
       100% {
         background-position: 0% 50%;
       }
+    }
+    .lbc-lpp-hidden .${utils.app.id}--note {
+      max-height: 60px;
+    }
+    .lbc-lpp-hidden .${utils.app.id}--note:hover {
+      max-height: inherit;
     }
   `)
   const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
