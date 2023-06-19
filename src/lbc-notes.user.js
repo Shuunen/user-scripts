@@ -43,13 +43,6 @@ const config = {
  */
 
 /**
- * Enable tailwindcss intellisense and return an array of classes
- * @param {string} classes the classes to split, e.g. 'h-56 w-96 rounded-md'
- * @returns {string[]} the array of classes, e.g. ['h-56', 'w-96', 'rounded-md']
- */
-function tw (classes) { return classes.split(' ') }
-
-/**
  * Return the listing id from the given url
  * @param {string} url the url to parse
  * @returns {number|undefined} the listing id
@@ -89,60 +82,6 @@ function getNoteIdFromNote (noteElement) {
   return noteIdString
 }
 
-/**
- * Clear all notes from local store
- * @param {function} clearStoreCallback the clear store function
- * @returns {HTMLButtonElement} the clear store button
- */
-function getClearStoreButton (clearStoreCallback) {
-  const button = document.createElement('button')
-  button.textContent = 'Clear notes store'
-  button.classList.add(...tw('fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100'))
-  button.addEventListener('click', () => {
-    if (!confirm('Are you sure you want to clear all notes ?')) return // eslint-disable-line no-alert, no-restricted-globals
-    clearStoreCallback()
-    window.location.reload()
-  })
-  return button
-}
-
-/**
- * Hide the ad element
- * @param {Element?} element the element to hide
- * @param {string} cause the cause of the hide
- * @param {boolean} willHide true if the hide is active
- * @returns {void}
- */
-function hideAdElement (element, cause = 'unknown', willHide = true) {
-  const id = 'lbc-nts'
-  if (!element) throw new Error(`no element to hide for cause "${cause}"`)
-  element.classList.add(
-    'overflow-hidden', 'transition-all', 'duration-500', 'ease-in-out',
-    'filter', 'hover:opacity-100', 'hover:h-[215px]', 'hover:filter-none',
-  )
-  element.classList.toggle('h-24', willHide)
-  element.classList.toggle('grayscale', willHide)
-  element.classList.toggle('opacity-50', willHide)
-  element.parentElement?.classList.toggle(`${id}-hidden`, willHide)
-  element.parentElement?.classList.toggle(`${id}-hidden-cause-${cause}`, willHide)
-}
-
-/**
- * Update note style
- * @param {HTMLTextAreaElement} noteElement the note element
- * @returns {void}
- */
-function updateNoteStyle (noteElement) {
-  const noteContent = noteElement.value
-  const isAverage = noteContent.includes(config.averageNote.keyword)
-  const isBad = noteContent.includes(config.badNote.keyword)
-  noteElement.classList.toggle(config.averageNote.class, isAverage)
-  noteElement.classList.toggle(config.badNote.class, isBad)
-  if (!multipleAdDisplayed()) return
-  if (!config.averageNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'average-keyword', isAverage)
-  if (isBad && !config.badNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'bad-keyword')
-}
-
 // @ts-nocheck
 // eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
 (function LeBonCoinNotes () {
@@ -176,6 +115,58 @@ function updateNoteStyle (noteElement) {
   const client = new Client()
   const databases = new Databases(client)
   client.setEndpoint(db.endpoint).setProject(db.project)
+
+  /**
+   * Clear all notes from local store
+   * @param {function} clearStoreCallback the clear store function
+   * @returns {HTMLButtonElement} the clear store button
+   */
+  function getClearStoreButton (clearStoreCallback) {
+    const button = document.createElement('button')
+    button.textContent = 'Clear notes store'
+    button.classList.add(...utils.tw('fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100'))
+    button.addEventListener('click', () => {
+      if (!confirm('Are you sure you want to clear all notes ?')) return // eslint-disable-line no-alert, no-restricted-globals
+      clearStoreCallback()
+      window.location.reload()
+    })
+    return button
+  }
+
+  /**
+   * Hide the ad element
+   * @param {Element?} element the element to hide
+   * @param {string} cause the cause of the hide
+   * @param {boolean} willHide true if the hide is active
+   * @returns {void}
+   */
+  function hideAdElement (element, cause = 'unknown', willHide = true) {
+    const id = 'lbc-nts'
+    if (!element) throw new Error(`no element to hide for cause "${cause}"`)
+    element.classList.add(...utils.tw('overflow-hidden transition-all duration-500 ease-in-out hover:h-[215px] hover:opacity-100 hover:filter-none'))
+    element.classList.toggle('h-24', willHide)
+    element.classList.toggle('grayscale', willHide)
+    element.classList.toggle('opacity-50', willHide)
+    element.parentElement?.classList.toggle(`${id}-hidden`, willHide)
+    element.parentElement?.classList.toggle(`${id}-hidden-cause-${cause}`, willHide)
+  }
+
+  /**
+   * Update note style
+   * @param {HTMLTextAreaElement} noteElement the note element
+   * @returns {void}
+   */
+  function updateNoteStyle (noteElement) {
+    const noteContent = noteElement.value
+    const isAverage = noteContent.includes(config.averageNote.keyword)
+    const isBad = noteContent.includes(config.badNote.keyword)
+    noteElement.classList.toggle(config.averageNote.class, isAverage)
+    noteElement.classList.toggle(config.badNote.class, isBad)
+    if (!multipleAdDisplayed()) return
+    if (!config.averageNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'average-keyword', isAverage)
+    if (isBad && !config.badNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'bad-keyword')
+  }
+
   /**
    * Save a note to local store
    * @param {LbcNote} note the note to save
@@ -195,8 +186,8 @@ function updateNoteStyle (noteElement) {
     saveNoteToStore(note)
     noteElement.dataset.noteId = note.noteId // eslint-disable-line no-param-reassign
     noteElement.classList.remove(config.loading.class)
-    noteElement.classList.add(...tw('bg-green-200'))
-    setTimeout(() => { noteElement.classList.remove(...tw('bg-green-200')); updateNoteStyle(noteElement) }, 1000) // eslint-disable-line no-magic-numbers
+    noteElement.classList.add(...utils.tw('bg-green-200'))
+    setTimeout(() => { noteElement.classList.remove(...utils.tw('bg-green-200')); updateNoteStyle(noteElement) }, 1000) // eslint-disable-line no-magic-numbers
   }
   /**
    * Callback when a note failed to save
@@ -208,7 +199,7 @@ function updateNoteStyle (noteElement) {
   function saveNoteFailure (note, noteElement, error) {
     utils.error(`failed to ${note.noteId ? 'update' : 'create'} note for listing ${note.listingId}`, error)
     noteElement.classList.remove(config.loading.class)
-    noteElement.classList.add(...tw('border-4 border-red-500'))
+    noteElement.classList.add(...utils.tw('border-4 border-red-500'))
   }
   /**
    * Save a note
@@ -262,7 +253,7 @@ function updateNoteStyle (noteElement) {
     const { noteId, noteContent } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
     noteElement.dataset.noteId = noteId // eslint-disable-line require-atomic-updates, no-param-reassign
     noteElement.textContent = noteContent // eslint-disable-line require-atomic-updates, no-param-reassign
-    noteElement.classList.add(...tw('h-56 w-96'))
+    noteElement.classList.add(...utils.tw('h-56 w-96'))
     noteElement.classList.remove(config.loading.class)
     noteElement.disabled = false // eslint-disable-line no-param-reassign
     updateNoteStyle(noteElement)
@@ -276,7 +267,7 @@ function updateNoteStyle (noteElement) {
     const note = document.createElement('textarea')
     note.placeholder = 'Add a note...'
     note.dataset.listingId = listingId.toString()
-    note.classList.add(`${utils.app.id}--note`, config.loading.class, ...tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20'))
+    note.classList.add(`${utils.app.id}--note`, config.loading.class, ...utils.tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20'))
     note.addEventListener('keyup', () => saveNoteDebounced(note)) // keypress will not detect backspace
     note.disabled = true
     void loadNote(note)
@@ -291,9 +282,9 @@ function updateNoteStyle (noteElement) {
   function addNoteToListing (listingElement, listingId) {
     utils.debug('add the note to listing', listingId)
     const note = createNoteElement(listingId)
-    listingElement.parentElement?.classList.add(...tw('relative'))
+    listingElement.parentElement?.classList.add(...utils.tw('relative'))
     listingElement.parentElement?.append(note)
-    note.classList.add(...tw('absolute top-0 translate-x-[350%]'))
+    note.classList.add(...utils.tw('absolute top-0 translate-x-[350%]'))
   }
   function addNotesToListings () {
     utils.log('add note to each listing')
@@ -315,7 +306,7 @@ function updateNoteStyle (noteElement) {
   function addNoteToPage (listingId) {
     utils.log('addNoteToPage', listingId)
     const note = createNoteElement(listingId)
-    note.classList.add(...tw('fixed right-5 top-56'))
+    note.classList.add(...utils.tw('fixed right-5 top-56'))
     document.body.append(note)
   }
   let isProcessing = false

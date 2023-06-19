@@ -286,6 +286,7 @@
     "tailwindcss": {
       "callees": [
         "tw",
+        "utils.tw",
         "classnames"
       ],
       "whitelist": [

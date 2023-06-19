@@ -88,7 +88,7 @@ const citiesToHide = new Set([
     const line = document.createElement('div')
     line.textContent = `${name} : ${value.toUpperCase()}`
     line.style.top = `${positionTop}px`
-    line.classList.add(color, 'font-bold', 'absolute', 'right-0')
+    line.classList.add(color, ...utils.tw('absolute right-0 font-bold'))
     element.append(line)
   }
 
@@ -123,11 +123,7 @@ const citiesToHide = new Set([
    * @returns {void}
    */
   function hideAdElement (element) {
-    element.classList.add(
-      'h-24', 'overflow-hidden', 'transition-all', 'duration-500',
-      'ease-in-out', 'filter', 'grayscale', 'opacity-50',
-      'hover:opacity-100', 'hover:h-[215px]', 'hover:filter-none',
-    )
+    element.classList.add(...utils.tw('h-24 overflow-hidden opacity-50 grayscale transition-all duration-500 ease-in-out hover:h-[215px] hover:opacity-100 hover:filter-none'))
     element.parentElement?.classList.add(`${utils.app.id}-hidden`, `${utils.app.id}-hidden-cause-location`)
   }
 
@@ -156,7 +152,7 @@ const citiesToHide = new Set([
     line.textContent = ad.location.city
     if (ad.district !== undefined && !ad.location.city.includes(ad.district)) line.textContent += ` - ${ad.district}`
     line.style.top = `${positionTop}px`
-    line.classList.add('font-bold', 'absolute', 'right-0')
+    line.classList.add(...utils.tw('absolute right-0 font-bold'))
     element.append(line)
   }
 
@@ -173,8 +169,8 @@ const citiesToHide = new Set([
     const line = document.createElement('div')
     line.textContent = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
     line.style.top = `${positionTop}px`
-    line.classList.add('font-bold', 'absolute', 'right-0')
-    if (owner.type === 'pro') line.classList.add('text-red-800')
+    line.classList.add(...utils.tw('absolute right-0 font-bold'))
+    if (owner.type === 'pro') line.classList.add(...utils.tw('text-red-700'))
     element.append(line)
   }
 
@@ -191,7 +187,7 @@ const citiesToHide = new Set([
     const line = document.createElement('div')
     line.textContent = `surface : ${square.value} m²`
     line.style.top = `${positionTop}px`
-    line.classList.add('absolute', 'right-0')
+    line.classList.add(...utils.tw('absolute right-0'))
     element.append(line)
   }
 
@@ -208,7 +204,7 @@ const citiesToHide = new Set([
     const line = document.createElement('div')
     line.textContent = `${rooms.value} pièces`
     line.style.top = `${positionTop}px`
-    line.classList.add('absolute', 'right-0')
+    line.classList.add(...utils.tw('absolute right-0'))
     element.append(line)
   }
 
@@ -236,8 +232,8 @@ const citiesToHide = new Set([
     const line = document.createElement('div')
     line.textContent = humanReadableFloor(floorNumber.value)
     line.style.top = `${positionTop}px`
-    line.classList.add('absolute', 'right-0')
-    if (floorNumber.value === '0') line.classList.add('text-red-700')
+    line.classList.add(...utils.tw('absolute right-0'))
+    if (floorNumber.value === '0') line.classList.add(...utils.tw('text-red-700'))
     element.append(line)
   }
 
@@ -254,8 +250,8 @@ const citiesToHide = new Set([
     const line = document.createElement('div')
     line.textContent = elevator.value === '1' ? 'ascenseur' : 'pas d\'ascenseur'
     line.style.top = `${positionTop}px`
-    line.classList.add('absolute', 'right-0')
-    if (elevator.value === '0') line.classList.add('text-red-700')
+    line.classList.add(...utils.tw('absolute right-0'))
+    if (elevator.value === '0') line.classList.add(...utils.tw('text-red-700'))
     element.append(line)
   }
 
