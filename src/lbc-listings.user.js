@@ -58,6 +58,10 @@ const citiesToHide = new Set([
     marker: `${utils.app.id}-processed`,
   }
 
+  // Remove me one day :)
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  utils.tw ||= (classes) => classes.split(' ')
+
   /**
    * Get the ad element from the ad object
    * @param {LbcAd} ad the ad object
@@ -296,7 +300,7 @@ const citiesToHide = new Set([
   function removeParagraphViewedStyle (paragraph) {
     // eslint-disable-next-line no-param-reassign
     paragraph.style.opacity = '1'
-    paragraph.classList.add('max-w-md')
+    paragraph.classList.add(...utils.tw('max-w-md'))
     paragraph.classList.add(cls.marker)
   }
 

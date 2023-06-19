@@ -99,6 +99,9 @@ function getNoteIdFromNote (noteElement) {
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils({ id: 'lbc-nts', debug: false }) // eslint-disable-line @typescript-eslint/naming-convention
+  // Remove me one day :)
+  // eslint-disable-next-line @typescript-eslint/unbound-method
+  utils.tw ||= (classes) => classes.split(' ')
   const cls = {
     marker: `${utils.app.id}-processed`,
   }
