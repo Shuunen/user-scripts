@@ -7,7 +7,7 @@
 // @match       https://www.leboncoin.fr/*
 // @grant       none
 // @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
-// @version     1.0.3
+// @version     1.0.4
 // ==/UserScript==
 
 'use strict'
@@ -252,10 +252,11 @@ const citiesToHide = new Set([
     const elevator = ad.attributes.find(attribute => attribute.key === 'elevator')
     if (elevator === undefined) return
     const line = document.createElement('div')
-    line.textContent = elevator.value === '1' ? 'ascenseur' : 'pas d\'ascenseur'
+    // eslint-disable-next-line no-nested-ternary
+    line.textContent = elevator.value === '1' ? 'ascenseur' : (elevator.value === '2' ? 'pas d\'ascenseur' : `unknown elevator value "${elevator.value}"`)
     line.style.top = `${positionTop}px`
     line.classList.add(...utils.tw('absolute right-0'))
-    if (elevator.value === '0') line.classList.add(...utils.tw('text-red-700'))
+    if (elevator.value === '2') line.classList.add(...utils.tw('text-red-700'))
     element.append(line)
   }
 
