@@ -111,7 +111,7 @@ const citiesToHide = new Set([
    */
   function addDistrictToAd (ad) {
     const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
-    if (districtId === undefined) { utils.warn('no district id found in ad', ad); return }
+    if (districtId === undefined) return
     // @ts-ignore
     // eslint-disable-next-line no-param-reassign
     ad.district = districts[districtId] ?? districtId
@@ -126,7 +126,7 @@ const citiesToHide = new Set([
     element.classList.add(
       'h-24', 'overflow-hidden', 'transition-all', 'duration-500',
       'ease-in-out', 'filter', 'grayscale', 'opacity-50',
-      'hover:opacity-100', 'hover:h-80', 'hover:filter-none',
+      'hover:opacity-100', 'hover:h-[215px]', 'hover:filter-none',
     )
     element.parentElement?.classList.add(`${utils.app.id}-hidden`, `${utils.app.id}-hidden-cause-location`)
   }
@@ -139,7 +139,6 @@ const citiesToHide = new Set([
   function removeProTag (element) {
     const tag = utils.findOne('div[color="black"] span', element)
     if (tag?.textContent?.toLowerCase() === 'pro') tag.parentElement?.remove()
-    utils.warn('no pro tag found in ad', element)
   }
 
   /**
@@ -180,6 +179,139 @@ const citiesToHide = new Set([
   }
 
   /**
+   * Add square info to the ad
+   * @param {HTMLElement} element the element to append the square info to
+   * @param {LbcAd} ad the ad to process
+   * @param {number} positionTop the top position of the line
+   * @returns {void}
+   */
+  function addSquareInfo (element, ad, positionTop) {
+    const square = ad.attributes.find(attribute => attribute.key === 'square')
+    if (square === undefined) { utils.warn('no square attribute found in ad', ad); return }
+    const line = document.createElement('div')
+    line.textContent = `surface : ${square.value} m²`
+    line.style.top = `${positionTop}px`
+    line.classList.add('absolute', 'right-0')
+    element.append(line)
+  }
+
+  /**
+   * Add rooms info to the ad
+   * @param {HTMLElement} element the element to append the rooms info to
+   * @param {LbcAd} ad the ad to process
+   * @param {number} positionTop the top position of the line
+   * @returns {void}
+   */
+  function addRoomsInfo (element, ad, positionTop) {
+    const rooms = ad.attributes.find(attribute => attribute.key === 'rooms')
+    if (rooms === undefined) { utils.warn('no rooms attribute found in ad', ad); return }
+    const line = document.createElement('div')
+    line.textContent = `${rooms.value} pièces`
+    line.style.top = `${positionTop}px`
+    line.classList.add('absolute', 'right-0')
+    element.append(line)
+  }
+
+  /**
+   * Readable floor number
+   * @param {string} floorNumber the floor number
+   * @returns {string} the human readable floor number
+   */
+  function humanReadableFloor (floorNumber) {
+    if (floorNumber === '0') return 'étage : rdc'
+    if (floorNumber === '1') return '1er étage'
+    return `${floorNumber}e étage`
+  }
+
+  /**
+   * Add floor info to the ad
+   * @param {HTMLElement} element the element to append the floor info to
+   * @param {LbcAd} ad the ad to process
+   * @param {number} positionTop the top position of the line
+   * @returns {void}
+   */
+  function addFloorNumberInfo (element, ad, positionTop) {
+    const floorNumber = ad.attributes.find(attribute => attribute.key === 'floor_number')
+    if (floorNumber === undefined) return
+    const line = document.createElement('div')
+    line.textContent = humanReadableFloor(floorNumber.value)
+    line.style.top = `${positionTop}px`
+    line.classList.add('absolute', 'right-0')
+    if (floorNumber.value === '0') line.classList.add('text-red-700')
+    element.append(line)
+  }
+
+  /**
+   * Add elevator info to the ad
+   * @param {HTMLElement} element the element to append the elevator info to
+   * @param {LbcAd} ad the ad to process
+   * @param {number} positionTop the top position of the line
+   * @returns {void}
+   */
+  function addElevatorInfo (element, ad, positionTop) {
+    const elevator = ad.attributes.find(attribute => attribute.key === 'elevator')
+    if (elevator === undefined) return
+    const line = document.createElement('div')
+    line.textContent = elevator.value === '1' ? 'ascenseur' : 'pas d\'ascenseur'
+    line.style.top = `${positionTop}px`
+    line.classList.add('absolute', 'right-0')
+    if (elevator.value === '0') line.classList.add('text-red-700')
+    element.append(line)
+  }
+
+  /**
+   * Get the DPE infos from the ad
+   * @param {LbcAd} ad the ad to process
+   * @param {HTMLElement} element the ad element
+   * @returns {{energy: string, ges: string}} the DPE infos
+   */
+  function getDpeInfos (ad, element) {
+    const energy = ad.attributes.find(attribute => attribute.key === 'energy_rate')?.value ?? ''
+    if (energy === '') utils.warn('no energy rate found in ad', ad)
+    const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
+    if (ges === '') utils.warn('no GES found in ad', ad)
+    // eslint-disable-next-line no-param-reassign
+    if (!/[a-c]/u.test(energy) || !/[a-c]/u.test(ges)) element.style.display = 'none'
+    return { energy, ges }
+  }
+
+  /**
+   * Remove the native LBC viewed style from the ad picture
+   * @param {HTMLElement} picture the picture element
+   * @returns {void} nothing
+   */
+  function removePictureViewedStyle (picture) {
+    const nbParents = 4
+    let cursor = picture
+    for (let index = 0; index < nbParents; index += 1) {
+      const { parentElement } = cursor
+      if (!parentElement) { utils.warn(`no parent found for picture at level ${index}`, picture); return }
+      parentElement.style.opacity = '1'
+      cursor = parentElement
+    }
+    picture.classList.add(cls.marker)
+  }
+
+  /**
+   * Remove the native LBC viewed style from the ad paragraph
+   * @param {HTMLElement} paragraph the paragraph element
+   * @returns {void} nothing
+   */
+  function removeParagraphViewedStyle (paragraph) {
+    // eslint-disable-next-line no-param-reassign
+    paragraph.style.opacity = '1'
+    paragraph.classList.add('max-w-md')
+    paragraph.classList.add(cls.marker)
+  }
+
+  function removeViewedStyles () {
+    const pictures = utils.findAll(`.${cls.marker} picture:not(.${cls.marker})`, document, true)
+    for (const picture of pictures) removePictureViewedStyle(picture)
+    const paragraphs = utils.findAll(`.${cls.marker} p:not(.${cls.marker})`, document, true)
+    for (const paragraph of paragraphs) removeParagraphViewedStyle(paragraph)
+  }
+
+  /**
    * Process a single ad
    * @param {LbcAd} ad the ad object
    * @returns {void}
@@ -192,16 +324,15 @@ const citiesToHide = new Set([
     // @ts-ignore
     const /** @type HTMLElement[] */[, link] = Array.from(element.children)
     if (!link) { utils.warn('no link found in ad', ad); return }
-    link.classList.add('relative')
-    const energy = ad.attributes.find(attribute => attribute.key === 'energy_rate')?.value ?? ''
-    if (energy === '') utils.warn('no energy rate found in ad', ad)
-    const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
-    if (ges === '') utils.warn('no GES found in ad', ad)
-    if (!/[a-c]/u.test(energy) || !/[a-c]/u.test(ges)) element.style.display = 'none'
+    const { energy, ges } = getDpeInfos(ad, element)
     addDpeInfo(link, 'Classe', energy, 0)
     addDpeInfo(link, 'GES', ges, 20) // eslint-disable-line no-magic-numbers
     addLocationInfo(link, ad, 45) // eslint-disable-line no-magic-numbers
     addOwnerInfo(link, ad, 65) // eslint-disable-line no-magic-numbers
+    addSquareInfo(link, ad, 85) // eslint-disable-line no-magic-numbers
+    addRoomsInfo(link, ad, 105) // eslint-disable-line no-magic-numbers
+    addFloorNumberInfo(link, ad, 125) // eslint-disable-line no-magic-numbers
+    addElevatorInfo(link, ad, 145) // eslint-disable-line no-magic-numbers
   }
 
   /**
@@ -217,6 +348,7 @@ const citiesToHide = new Set([
     const { ads } = searchData
     utils.log(`processing ${ads.length} ads listing...`)
     for (const ad of ads) processAd(ad)
+    removeViewedStyles()
   }
 
   // eslint-disable-next-line no-magic-numbers
@@ -224,4 +356,6 @@ const citiesToHide = new Set([
   window.addEventListener('scroll', () => processDebounced())
   window.addEventListener('load', () => processDebounced())
 })()
+
+
 

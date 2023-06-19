@@ -2,7 +2,7 @@
 
 
 export interface LbcAdAttribute {
-  key: string
+  key: 'district_id' | 'elevator' | 'energy_rate' | 'floor_number' | 'ges' | 'rooms' | 'square'
   value: string
   values: string[]
   value_label: string
