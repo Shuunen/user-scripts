@@ -60,6 +60,14 @@ function getListingId (url = document.location.href) {
 }
 
 /**
+ * Return true if multiple ads are shown on the current page
+ * @returns {boolean} true if multiple ads are shown on the current page
+ */
+function multipleAdDisplayed () {
+  return getListingId() === undefined
+}
+
+/**
  * Return the listing id from the given note element
  * @param {HTMLTextAreaElement} noteElement the note element
  * @returns {number} the listing id
@@ -99,20 +107,40 @@ function getClearStoreButton (clearStoreCallback) {
 }
 
 /**
- * Update note style
- * @param {HTMLTextAreaElement} noteElement the note element
- * @param {boolean} isInList is the note in the list
+ * Hide the ad element
+ * @param {Element?} element the element to hide
+ * @param {string} cause the cause of the hide
+ * @param {boolean} willHide true if the hide is active
  * @returns {void}
  */
-function updateNoteStyle (noteElement, isInList = false) {
+function hideAdElement (element, cause = 'unknown', willHide = true) {
+  const id = 'lbc-nts'
+  if (!element) throw new Error(`no element to hide for cause "${cause}"`)
+  element.classList.add(
+    'overflow-hidden', 'transition-all', 'duration-500', 'ease-in-out',
+    'filter', 'hover:opacity-100', 'hover:h-[215px]', 'hover:filter-none',
+  )
+  element.classList.toggle('h-24', willHide)
+  element.classList.toggle('grayscale', willHide)
+  element.classList.toggle('opacity-50', willHide)
+  element.parentElement?.classList.toggle(`${id}-hidden`, willHide)
+  element.parentElement?.classList.toggle(`${id}-hidden-cause-${cause}`, willHide)
+}
+
+/**
+ * Update note style
+ * @param {HTMLTextAreaElement} noteElement the note element
+ * @returns {void}
+ */
+function updateNoteStyle (noteElement) {
   const noteContent = noteElement.value
   const isAverage = noteContent.includes(config.averageNote.keyword)
   const isBad = noteContent.includes(config.badNote.keyword)
   noteElement.classList.toggle(config.averageNote.class, isAverage)
   noteElement.classList.toggle(config.badNote.class, isBad)
-  if (!isInList) return
-  if (isAverage && !config.averageNote.isDisplayed) noteElement.parentElement?.classList.add('hidden')
-  if (isBad && !config.badNote.isDisplayed) noteElement.parentElement?.classList.add('hidden')
+  if (!multipleAdDisplayed()) return
+  if (!config.averageNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'average-keyword', isAverage)
+  if (isBad && !config.badNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'bad-keyword')
 }
 
 // @ts-nocheck
@@ -195,7 +223,8 @@ function updateNoteStyle (noteElement, isInList = false) {
     utils.log(`${noteId ? 'update' : 'create'} note for listing ${listingId} with content : ${noteContent}`)
     try {
       const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent })) // eslint-disable-line putout/putout
-      saveNoteSuccess({ noteId: response.$id, listingId, noteContent }, noteElement) /* @ts-ignore */
+      saveNoteSuccess({ noteId: response.$id, listingId, noteContent }, noteElement)
+      updateNoteStyle(noteElement) /* @ts-ignore */
     } catch (/** @type Error */ error) { saveNoteFailure({ noteId: '', listingId, noteContent }, noteElement, error) }
   }
   const saveNoteDebounced = utils.debounce(saveNote, 2000) // eslint-disable-line no-magic-numbers
@@ -225,10 +254,9 @@ function updateNoteStyle (noteElement, isInList = false) {
   /**
    * Load a note
    * @param {HTMLTextAreaElement} noteElement the note element
-   * @param {boolean} isInList whether the note is in the list
    * @returns {Promise<void>} a promise
    */
-  async function loadNote (noteElement, isInList = false) {
+  async function loadNote (noteElement) {
     const listingId = getListingIdFromNote(noteElement)
     utils.debug(`loading note for listing ${listingId}`)
     const { noteId, noteContent } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
@@ -237,22 +265,21 @@ function updateNoteStyle (noteElement, isInList = false) {
     noteElement.classList.add(...tw('h-56 w-96'))
     noteElement.classList.remove(config.loading.class)
     noteElement.disabled = false // eslint-disable-line no-param-reassign
-    updateNoteStyle(noteElement, isInList)
+    updateNoteStyle(noteElement)
   }
   /**
    * Create a note element
    * @param {number} listingId the listing id
-   * @param {boolean} isInList whether the note is in the list or not
    * @returns {HTMLTextAreaElement} the note element
    */
-  function createNoteElement (listingId, isInList = false) {
+  function createNoteElement (listingId) {
     const note = document.createElement('textarea')
     note.placeholder = 'Add a note...'
     note.dataset.listingId = listingId.toString()
     note.classList.add(`${utils.app.id}--note`, config.loading.class, ...tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20'))
     note.addEventListener('keyup', () => saveNoteDebounced(note)) // keypress will not detect backspace
     note.disabled = true
-    void loadNote(note, isInList)
+    void loadNote(note)
     return note
   }
   /**
@@ -263,7 +290,7 @@ function updateNoteStyle (noteElement, isInList = false) {
    */
   function addNoteToListing (listingElement, listingId) {
     utils.debug('add the note to listing', listingId)
-    const note = createNoteElement(listingId, true)
+    const note = createNoteElement(listingId)
     listingElement.parentElement?.classList.add(...tw('relative'))
     listingElement.parentElement?.append(note)
     note.classList.add(...tw('absolute top-0 translate-x-[350%]'))
@@ -302,8 +329,8 @@ function updateNoteStyle (noteElement, isInList = false) {
     isProcessing = true
     utils.log('process cause :', reason)
     const id = getListingId()
-    if (id === undefined) addNotesToListings()
-    else addNoteToPage(id)
+    if (id) addNoteToPage(id)
+    else addNotesToListings()
     document.body.append(getClearStoreButton(clearStore))
   }
   // @ts-ignore
@@ -325,11 +352,13 @@ function updateNoteStyle (noteElement, isInList = false) {
         background-position: 0% 50%;
       }
     }
+    .${utils.app.id}-hidden .${utils.app.id}--note,
     .lbc-lpp-hidden .${utils.app.id}--note {
       max-height: 60px;
     }
+    .${utils.app.id}-hidden .${utils.app.id}--note:hover,
     .lbc-lpp-hidden .${utils.app.id}--note:hover {
-      max-height: inherit;
+      max-height: 140px;
     }
   `)
   const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
