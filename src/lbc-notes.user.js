@@ -176,6 +176,7 @@ function getNoteIdFromNote (noteElement) {
    * @returns {void}
    */
   function saveNoteToStore (note) {
+    if (note.noteContent === '') return
     utils.debug('save note to local store', note)
     setInStore(`lbcNotes_${note.listingId}`, note)
   }
@@ -222,6 +223,7 @@ function getNoteIdFromNote (noteElement) {
     } catch (/** @type Error */ error) { saveNoteFailure({ noteId: '', listingId, noteContent }, noteElement, error) }
   }
   const saveNoteDebounced = utils.debounce(saveNote, 2000) // eslint-disable-line no-magic-numbers
+
   /**
    * Load a note from AppWrite
    * @param {number} listingId the listing id
@@ -229,21 +231,27 @@ function getNoteIdFromNote (noteElement) {
    */
   async function loadNoteFromAppWrite (listingId) {
     const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [Query.equal('listingId', listingId)])
+    /** @type [{ note: string; $id: string } | undefined] */
     const [first] = notesByListingId.documents
     const note = { listingId, noteContent: first?.note || '', noteId: first?.$id || '' }
-    utils.debug(`loaded note for listing ${listingId} from AppWrite`, { first, note })
+    if (note) utils.debug(`loaded note for listing ${listingId} from AppWrite`, note)
+    else utils.debug(`no note found for listing ${listingId} in AppWrite`)
     saveNoteToStore(note)
     return note
   }
+
   /**
    * Load a note from local store
    * @param {number} listingId the listing id
-   * @returns {Promise<LbcNote>} a promise
+   * @returns {Promise<LbcNote|undefined>} a promise
    */
   async function loadNoteFromLocalStore (listingId) {
+    /** @type LbcNote */
     const note = await getFromStore(`lbcNotes_${listingId}`)
-    if (note) utils.debug(`loaded note for listing ${listingId} from local store`)
-    return note
+    if (note) utils.debug(`loaded note for listing ${listingId} from local store :`, note)
+    if (note.noteId) return note
+    // eslint-disable-next-line unicorn/no-useless-undefined
+    return undefined
   }
   /**
    * Load a note
@@ -252,7 +260,7 @@ function getNoteIdFromNote (noteElement) {
    */
   async function loadNote (noteElement) {
     const listingId = getListingIdFromNote(noteElement)
-    utils.debug(`loading note for listing ${listingId}`)
+    utils.debug(`loading note for listing ${listingId}...`)
     const { noteId, noteContent } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
     noteElement.dataset.noteId = noteId // eslint-disable-line require-atomic-updates, no-param-reassign
     noteElement.textContent = noteContent // eslint-disable-line require-atomic-updates, no-param-reassign
