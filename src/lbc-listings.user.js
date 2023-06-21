@@ -310,6 +310,19 @@ const citiesToHide = new Set([
   }
 
   /**
+   * Add the ad id to the element
+   * @param {HTMLElement} element the element to append the id to
+   * @param {LbcAd} ad the ad to process
+   * @returns {void}
+   */
+  function addId (element, ad) {
+    const line = document.createElement('div')
+    line.textContent = ad.list_id.toString()
+    line.classList.add(...utils.tw('absolute bottom-0 left-0 rounded-lg bg-white/50 text-gray-500'))
+    element.append(line)
+  }
+
+  /**
    * Process a single ad
    * @param {LbcAd} ad the ad object
    * @returns {void}
@@ -323,6 +336,7 @@ const citiesToHide = new Set([
     const /** @type HTMLElement[] */[, link] = Array.from(element.children)
     if (!link) { utils.warn('no link found in ad', ad); return }
     const { energy, ges } = getDpeInfos(ad)
+    addId(link, ad)
     addDpeInfo(link, 'Classe', energy, 0)
     addDpeInfo(link, 'GES', ges, 20) // eslint-disable-line no-magic-numbers
     addLocationInfo(link, ad, 45) // eslint-disable-line no-magic-numbers
