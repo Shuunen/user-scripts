@@ -263,16 +263,13 @@ const citiesToHide = new Set([
   /**
    * Get the DPE infos from the ad
    * @param {LbcAd} ad the ad to process
-   * @param {HTMLElement} element the ad element
    * @returns {{energy: string, ges: string}} the DPE infos
    */
-  function getDpeInfos (ad, element) {
+  function getDpeInfos (ad) {
     const energy = ad.attributes.find(attribute => attribute.key === 'energy_rate')?.value ?? ''
     if (energy === '') utils.warn('no energy rate found in ad', ad)
     const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
     if (ges === '') utils.warn('no GES found in ad', ad)
-    // eslint-disable-next-line no-param-reassign
-    if (!/[a-c]/u.test(energy) || !/[a-c]/u.test(ges)) element.style.display = 'none'
     return { energy, ges }
   }
 
@@ -325,7 +322,7 @@ const citiesToHide = new Set([
     // @ts-ignore
     const /** @type HTMLElement[] */[, link] = Array.from(element.children)
     if (!link) { utils.warn('no link found in ad', ad); return }
-    const { energy, ges } = getDpeInfos(ad, element)
+    const { energy, ges } = getDpeInfos(ad)
     addDpeInfo(link, 'Classe', energy, 0)
     addDpeInfo(link, 'GES', ges, 20) // eslint-disable-line no-magic-numbers
     addLocationInfo(link, ad, 45) // eslint-disable-line no-magic-numbers
