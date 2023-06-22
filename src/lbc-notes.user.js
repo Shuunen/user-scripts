@@ -35,6 +35,10 @@ const config = {
 }
 
 /**
+ * @typedef {import('./lbc.types').IdbKeyvalGetter<LbcNote>} IdbKeyvalNoteGetter
+ */
+
+/**
   @typedef LbcNote
   @type {Object}
   @property {string} noteId the note id in AppWrite
@@ -87,8 +91,8 @@ function getNoteIdFromNote (noteElement) {
 (function LeBonCoinNotes () {
   if (typeof window === 'undefined') return
   /* global Shuutils, tailwind, Appwrite, idbKeyval, GM_addStyle */
-  // @ts-ignore
-  const { get: getFromStore, set: setInStore, clear: clearStore } = idbKeyval
+  /** @type {{get: IdbKeyvalNoteGetter, set: function, clear: function}} */ // @ts-ignore
+  const { get: getNoteFromStore, set: setInStore, clear: clearStore } = idbKeyval
   // @ts-ignore
   tailwind.config = {
     corePlugins: {
@@ -246,13 +250,11 @@ function getNoteIdFromNote (noteElement) {
    * @returns {Promise<LbcNote|undefined>} a promise
    */
   async function loadNoteFromLocalStore (listingId) {
-    /** @type LbcNote */
-    const note = await getFromStore(`lbcNotes_${listingId}`)
-    if (note) utils.debug(`loaded note for listing ${listingId} from local store :`, note)
-    if (note.noteId) return note
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    return undefined
+    const note = await getNoteFromStore(`lbcNotes_${listingId}`)
+    utils.debug(`${note?.noteId ? 'loaded note' : 'found no note'} for listing ${listingId} from local store :`, note)
+    return note?.noteId ? note : undefined
   }
+
   /**
    * Load a note
    * @param {HTMLTextAreaElement} noteElement the note element

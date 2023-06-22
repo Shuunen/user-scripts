@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-
 export interface LbcAdAttribute {
   key: 'district_id' | 'elevator' | 'energy_rate' | 'floor_number' | 'ges' | 'rooms' | 'square'
   value: string
@@ -90,3 +89,5 @@ export interface LbcAd {
   subject: string
   url: string
 }
+
+export type IdbKeyvalGetter<Type> = (key: string) => Promise<Type | undefined>
