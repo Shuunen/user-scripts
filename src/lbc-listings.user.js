@@ -137,8 +137,10 @@ const citiesToHide = new Set([
    * @returns {void}
    */
   function removeProTag (element) {
-    const tag = utils.findOne('div[color="black"] span', element)
-    if (tag?.textContent?.toLowerCase() === 'pro') tag.parentElement?.remove()
+    const tag = utils.findOne('div[color="black"] span, [data-spark-component="tag"]', element)
+    if (tag?.textContent?.toLowerCase() !== 'pro') return
+    if (tag.parentElement?.textContent?.toLowerCase() === 'pro') tag.parentElement.remove()
+    else tag.remove()
   }
 
   /**
