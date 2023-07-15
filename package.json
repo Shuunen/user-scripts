@@ -9,7 +9,7 @@
     "eslint-config-hardcore": "40",
     "eslint-plugin-filenames": "1",
     "eslint-plugin-tailwindcss": "3",
-    "eslint-plugin-unicorn": "47",
+    "eslint-plugin-unicorn": "48",
     "repo-check": "1.32",
     "shuutils": "7.3",
     "tailwindcss": "3",
