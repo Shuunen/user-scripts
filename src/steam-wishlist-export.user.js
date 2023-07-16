@@ -6,7 +6,7 @@
 // @author       Romain Racamier-Lafon
 // @match        https://store.steampowered.com/wishlist/profiles/*
 // @match        https://store.steampowered.com/wishlist/id/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant none
 // ==/UserScript==
 

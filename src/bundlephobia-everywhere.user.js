@@ -7,7 +7,7 @@
 // @match       https://github.com/*
 // @match       https://www.npmjs.com/package/*
 // @grant       none
-// @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version     1.1.1
 // ==/UserScript==
 

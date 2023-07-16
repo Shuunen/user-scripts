@@ -4,7 +4,7 @@
 // @description Show how many kills per minutes you did, isn't the title that obvious ?
 // @author      Romain Racamier-Lafon
 // @match       https://matchhistory.euw.leagueoflegends.com/*
-// @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant       none
 // @version     1.1.3
 // ==/UserScript==

@@ -6,7 +6,7 @@
 // @description  See your ratings when buying
 // @author       Romain Racamier-Lafon
 // @match        https://www.lepetitballon.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/fuse.js@6.6.2
 // @grant none
 // ==/UserScript==

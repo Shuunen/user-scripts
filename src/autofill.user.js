@@ -3,7 +3,7 @@
 // @namespace    https://github.com/Shuunen
 // @version      1.0.3
 // @description  Simply fill your login everywhere
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @author       Romain Racamier-Lafon
 // ==/UserScript==
 

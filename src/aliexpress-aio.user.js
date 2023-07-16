@@ -10,7 +10,7 @@
 // @description  Bigger listing
 // @author       Romain Racamier-Lafon
 // @match        https://*.aliexpress.com/*
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
 

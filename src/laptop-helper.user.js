@@ -28,7 +28,7 @@
 // @match        https://www.notebookcheck.net/*
 // @match        https://www.topachat.com/*
 // @match        https://www.tuxedocomputers.com/*
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @grant        none
 // ==/UserScript==

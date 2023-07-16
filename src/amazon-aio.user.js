@@ -9,7 +9,7 @@
 // @description  Bigger listing
 // @author       Romain Racamier-Lafon
 // @match        https://*.amazon.fr/*
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
 

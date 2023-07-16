@@ -7,7 +7,7 @@
 // @author       Romain Racamier-Lafon
 // @match        https://www.g2a.com/*
 // @require      https://cdn.jsdelivr.net/npm/didyoumean/didYouMean-1.2.1.min.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/simple-datatables
 // @grant none
 // ==/UserScript==

@@ -5,7 +5,7 @@
 // @author      Romain Racamier-Lafon
 // @match       https://www.lybox.fr/app/search/*
 // @grant       none
-// @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version     1.0.0
 // ==/UserScript==
 

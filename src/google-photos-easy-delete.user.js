@@ -5,7 +5,7 @@
 // @description  Delete a photo by pressing ! (bang)
 // @author       Romain Racamier-Lafon
 // @match        https://photos.google.com/*
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
 

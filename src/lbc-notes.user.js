@@ -5,7 +5,7 @@
 // @author      Romain Racamier-Lafon
 // @match       https://www.leboncoin.fr/*
 // @grant       GM_addStyle
-// @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require     https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require     https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require     https://cdn.tailwindcss.com

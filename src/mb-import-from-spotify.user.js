@@ -4,8 +4,8 @@
 // @match       https://open.spotify.com/album/*
 // @match       https://open.spotify.com/playlist/*
 // @grant       none
-// @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/mb-import-utils.js
-// @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/mb-import-utils.js
+// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version     1.0.4
 // @author      Shuunen
 // @description This script let you import releases on Spotify to the great MusicBrainz db <3

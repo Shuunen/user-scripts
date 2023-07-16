@@ -4,7 +4,7 @@
 // @match       https://www.amazon.fr/*
 // @grant       none
 // @version     1.0.3
-// @require     https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/mb-import-utils.js
+// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/mb-import-utils.js
 // @author      Shuunen
 // @description This script let you import releases on Amazon Music to the great MusicBrainz db <3
 // ==/UserScript==

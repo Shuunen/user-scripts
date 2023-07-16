@@ -6,7 +6,7 @@
 // @description  Hide games
 // @author       Romain Racamier-Lafon
 // @match        https://gaming.amazon.com/home
-// @require      https://raw.githubusercontent.com/Shuunen/user-scripts/master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
 
