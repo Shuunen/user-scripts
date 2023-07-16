@@ -16,27 +16,27 @@
 (function DealabsAIO () {
   /* global Shuutils, autosize */
   const app = {
-    id: 'dlb-clr',
-    filter: '',
-    excluders: [],
     debug: false,
+    excluders: [],
+    filter: '',
+    id: 'dlb-clr',
   }
   app.excluders = (window.localStorage[`${app.id}.filter`] || 'my-keyword, other-keyword').split(',')
   const selectors = {
-    dealList: '.js-threadList',
     deal: '.thread--type-list',
+    dealList: '.js-threadList',
   }
   const cls = {
     filter: `${app.id}-filter`,
   }
   const uselessElements = {
-    rightNav: '.listLayout-side',
-    subNav: '.subNavMenu--morph',
     banner: '.box--all-b, div.js-banner',
-    flash: '.cept-threadUpdate',
     buttons: '.threadGrid-body > .boxAlign-ai--all-c',
-    showMore: '.thread-link.linkPlain.text--b.overflow--wrap-off',
     data: '.threadGrid-footerMeta, .metaRibbon',
+    flash: '.cept-threadUpdate',
+    rightNav: '.listLayout-side',
+    showMore: '.thread-link.linkPlain.text--b.overflow--wrap-off',
+    subNav: '.subNavMenu--morph',
   }
   const uselessClasses = {
     descriptions: '.cept-description-container',

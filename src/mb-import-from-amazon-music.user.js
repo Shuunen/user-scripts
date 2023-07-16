@@ -14,16 +14,16 @@
 (function AmazonMusicBrainzExport () {
   /* global textFromSelector, insertMbForm, Shuutils */
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ id: 'amazon-mb-export', debug: false })
+  const utils = new Shuutils({ debug: false, id: 'amazon-mb-export' })
   const selectors = {
-    title: '[data-feature-name="dmusicProductTitle"]',
     artist: '[data-feature-name="artistLink"',
+    title: '[data-feature-name="dmusicProductTitle"]',
   }
   function getTracks () {
     return utils.findAll('[id^="dmusic_tracklist_player_row"]').map((element, index) => ({
-      number: String(index + 1),
-      name: textFromSelector('.TitleLink', element),
       duration: textFromSelector('[id^="dmusic_tracklist_duration"]', element),
+      name: textFromSelector('.TitleLink', element),
+      number: String(index + 1),
     }))
   }
   // eslint-disable-next-line max-statements
@@ -34,13 +34,13 @@
         id: 'mb-import-from-amazon-music',
         title: 'Amazon to MB',
       },
-      title: textFromSelector(selectors.title),
       artist: textFromSelector(selectors.artist),
-      date: { year: 0, month: 0, day: 0 },
+      date: { day: 0, month: 0, year: 0 },
       label: (details.match(/Label: (?<name>\S+)/u) || [])[1] || '',
+      title: textFromSelector(selectors.title),
+      tracks: getTracks(),
       url: document.location.href,
       urlType: '77',
-      tracks: getTracks(),
     }
     const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u)
     if (dateMatches.groups?.year) {

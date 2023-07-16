@@ -17,41 +17,41 @@
 (function AmazonPricePerWeight () {
   /* global Shuutils */
   const app = {
-    id: 'amz-kg',
-    processOne: false,
-    processOnce: false,
-    hideStuff: false,
-    showDebug: false,
     debug: false,
+    hideStuff: false,
+    id: 'amz-kg',
     injectRealPrice: true,
+    processOnce: false,
+    processOne: false,
+    showDebug: false,
     sortProducts: true,
   }
 
   const cls = {
-    handled: `${app.id}-handled`,
     avoided: `${app.id}-avoided`,
     debug: `${app.id}-debug`,
+    handled: `${app.id}-handled`,
     pricePer: `${app.id}-price-per`,
   }
 
   const selectors = {
+    debug: `.${cls.debug}`,
+    debugContainer: '.a-fixed-left-grid-col.a-col-right .a-row:not(.a-spacing-small) .a-column.a-span7',
     item: `.s-result-item[data-asin^="B"]:not(.aok-hidden):not(.${cls.handled}):not(.${cls.avoided})`,
     otherPrice: '.a-size-base.a-color-price.s-price.a-text-bold',
+    pantry: 'img.sprPantry',
     price: 'span.a-price',
     pricePer: 'span.a-price + .a-size-base.a-color-secondary',
-    debugContainer: '.a-fixed-left-grid-col.a-col-right .a-row:not(.a-spacing-small) .a-column.a-span7',
-    debug: `.${cls.debug}`,
-    pantry: 'img.sprPantry',
   }
 
   // selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
 
   const regex = {
     /* eslint-disable regexp/prefer-named-capture-group, prefer-named-capture-group, regexp/no-super-linear-move */
-    price: /(eur|€)\s?(\d+,\d{2})/iu,
-    weight: /(\d+)\s?(g|kg|-)/iu,
     bulk: /lot de (\d+)/iu,
+    price: /(eur|€)\s?(\d+,\d{2})/iu,
     pricePer: /(\d+,\d{2})\s€\/(\w+)/u,
+    weight: /(\d+)\s?(g|kg|-)/iu,
     /* eslint-enable regexp/prefer-named-capture-group, prefer-named-capture-group, regexp/no-super-linear-move */
   }
 
@@ -101,7 +101,7 @@
   function getWeightAndUnit (text) {
     const matches = text.toLowerCase().match(regex.weight)
     if (app.processOne) utils.log('found weight matches & unit :', matches)
-    const data = { weight: 0, unit: '' }
+    const data = { unit: '', weight: 0 }
     if (matches && matches.length === 3) {
       data.weight = matches[1]
       data.unit = matches[2]
@@ -126,10 +126,10 @@
   function getProductDataViaPricePer (text) {
     const matches = text.replace('&nbsp;', ' ').match(regex.pricePer) || []
     const data = {
-      price: 0,
-      weight: 0,
-      unit: '',
       bulk: 1,
+      price: 0,
+      unit: '',
+      weight: 0,
     }
     if (matches.length === 0) {
       utils.warn('failed to find data in :', text)

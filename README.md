@@ -2,8 +2,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/shuunen/user-scripts.svg?color=informational)](https://github.com/Shuunen/user-scripts/blob/master/LICENSE)
 
-[![David](https://img.shields.io/david/shuunen/user-scripts.svg)](https://david-dm.org/shuunen/user-scripts)
-[![LGTM Grade](https://img.shields.io/lgtm/grade/javascript/github/Shuunen/user-scripts.svg)](https://lgtm.com/projects/g/Shuunen/user-scripts)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Shuunen/user-scripts?style=flat)](https://codeclimate.com/github/Shuunen/user-scripts)
 [![Scrutinizer Score](https://scrutinizer-ci.com/g/Shuunen/user-scripts/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Shuunen/user-scripts)
 
 > Personal heavily opinionated script I make to enhance my daily web experience.
@@ -52,4 +51,5 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 - [Shuutils](https://github.com/Shuunen/shuutils) : collection of pure JS utils
 - [TailwindCss](https://tailwindcss.com) : awesome lib to produce maintainable style
 - [UvU](https://github.com/lukeed/uvu) : extremely fast and lightweight test runner for Node.js and the browser
+- [Vitest](https://github.com/vitest-dev/vitest) : super fast vite-native testing framework
 - [Watchlist](https://github.com/lukeed/watchlist) : recursively watch a list of directories & run a command on any file system

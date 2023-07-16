@@ -2,7 +2,7 @@ import { Shuutils } from '../src/utils'
 import { check } from './utils'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const utils = new Shuutils({ id: 'tst', debug: false })
+const utils = new Shuutils({ debug: false, id: 'tst' })
 
 check('utils is defined', typeof utils, 'object')
 

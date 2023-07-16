@@ -11,13 +11,13 @@
 
 (function GooglePhotosEasyDelete () {
   /* global Shuutils */
-  const app = { id: 'gp-ed', debug: false, init: false, timeToWait: 200 }
+  const app = { debug: false, id: 'gp-ed', init: false, timeToWait: 200 }
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils(app)
   const selectors = {
-    trash: '[data-delete-origin] button',
     confirmBtn: 'button[autofocus]',
+    trash: '[data-delete-origin] button',
   }
   // eslint-disable-next-line max-statements
   async function deleteCurrentPhoto () {

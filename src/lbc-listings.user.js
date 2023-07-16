@@ -17,22 +17,22 @@
  */
 
 const districts = {
-  3_001_193: 'Tribunal',
-  3_001_192: 'Les Halles',
+  67_218: 'Illkirch',
+  100_101: 'Illkirch nord',
+  100_102: 'Illkirch centre ouest',
   3_001_181: 'Neudorf centre',
   3_001_182: 'Neudorf-Musau-Port du Rhin',
   3_001_183: 'Meinau',
   3_001_184: 'Neuhof',
   3_001_187: 'Cathédrale',
   3_001_189: 'Robertsau',
+  3_001_192: 'Les Halles',
+  3_001_193: 'Tribunal',
   3_001_197: 'Esplanade - Université',
   3_001_199: 'Cronenbourg',
   3_001_201: 'Stockfeld',
   3_001_203: 'Petite France',
   3_001_211: 'Hautepierre',
-  100_101: 'Illkirch nord',
-  100_102: 'Illkirch centre ouest',
-  67_218: 'Illkirch',
 }
 
 /* eslint-disable no-magic-numbers */
@@ -53,7 +53,7 @@ const citiesToHide = new Set([
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ id: 'lbc-lpp', debug: false }) // eslint-disable-line @typescript-eslint/naming-convention
+  const utils = new Shuutils({ debug: false, id: 'lbc-lpp' }) // eslint-disable-line @typescript-eslint/naming-convention
   const cls = {
     marker: `${utils.app.id}-processed`,
   }

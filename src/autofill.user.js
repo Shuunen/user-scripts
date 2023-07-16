@@ -11,7 +11,7 @@
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ id: 'auto-fill', debug: false })
+  const utils = new Shuutils({ debug: false, id: 'auto-fill' })
   const selectors = {
     input: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
   }

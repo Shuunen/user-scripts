@@ -14,7 +14,7 @@
 (function GitlabMR () {
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ id: 'gitlab-mr', debug: false, debounceTime: 300 })
+  const utils = new Shuutils({ debounceTime: 300, debug: false, id: 'gitlab-mr' })
   // eslint-disable-next-line max-statements
   function addButton (element, label, href) {
     const button = element.cloneNode(true)

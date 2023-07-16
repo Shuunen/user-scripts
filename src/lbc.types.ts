@@ -1,58 +1,58 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 export interface LbcAdAttribute {
-  key: 'district_id' | 'elevator' | 'energy_rate' | 'floor_number' | 'ges' | 'rooms' | 'square'
-  value: string
-  values: string[]
-  value_label: string
   generic: boolean
+  key: 'district_id' | 'elevator' | 'energy_rate' | 'floor_number' | 'ges' | 'rooms' | 'square'
   key_label?: string
+  value: string
+  value_label: string
+  values: string[]
 }
 
 export interface LbcAdImages {
-  thumb_url: string
-  small_url: string
   nb_images: number
+  small_url: string
+  thumb_url: string
   urls: string[]
-  urls_thumb: string[]
   urls_large: string[]
+  urls_thumb: string[]
 }
 
 export interface LbcAdLocationFeatureGeometry {
-  type: string
   coordinates: number[]
+  type: string
 }
 
 export interface LbcAdLocationFeature {
-  type: string
   geometry: LbcAdLocationFeatureGeometry
   properties: null
+  type: string
 }
 
 export interface LbcAdLocation {
+  city: string
+  city_label: string
   country_id: string
-  region_id: string
-  region_name: string
   department_id: string
   department_name: string
-  city_label: string
-  city: string
-  zipcode: string
+  feature: LbcAdLocationFeature
+  is_shape: boolean
   lat: number
   lng: number
-  source: string
   provider: string
-  is_shape: boolean
-  feature: LbcAdLocationFeature
+  region_id: string
+  region_name: string
+  source: string
+  zipcode: string
 }
 
 export interface LbcAdOptions {
-  has_option: boolean
   booster: boolean
-  photosup: boolean
-  urgent: boolean
   gallery: boolean
+  has_option: boolean
+  photosup: boolean
   sub_toplist: boolean
+  urgent: boolean
 }
 
 export interface LbcAdOwner {
@@ -82,8 +82,8 @@ export interface LbcAd {
   location: LbcAdLocation
   options: LbcAdOptions
   owner: LbcAdOwner
-  price_cents: number
   price: number[]
+  price_cents: number
   similar: null
   status: string
   subject: string

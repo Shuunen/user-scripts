@@ -131,6 +131,13 @@
         ],
         "@typescript-eslint/consistent-indexed-object-style": "off",
         "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          {
+            "fixStyle": "inline-type-imports",
+            "prefer": "type-imports"
+          }
+        ],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/indent": [
           "error",
@@ -255,11 +262,13 @@
           "error",
           "never"
         ],
+        "simple-import-sort/imports": "off",
         "space-before-function-paren": [
           "error",
           "always"
         ],
         "total-functions/no-partial-division": "off",
+        "total-functions/no-unsafe-readonly-mutable-assignment": "off",
         "unicorn/no-array-for-each": "off",
         "unicorn/no-process-exit": "off",
         "unicorn/prefer-module": "off",
@@ -282,6 +291,7 @@
   "plugins": [
     "filenames"
   ],
+  "rules": {},
   "settings": {
     "tailwindcss": {
       "callees": [

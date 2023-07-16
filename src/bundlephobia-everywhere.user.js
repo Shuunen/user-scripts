@@ -15,7 +15,7 @@
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ id: 'bdl-evr', debug: false })
+  const utils = new Shuutils({ debug: false, id: 'bdl-evr' })
   /**
    * Inject bundlephobia badges into the page
    * @param {string} name

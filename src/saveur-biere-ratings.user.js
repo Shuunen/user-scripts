@@ -35,15 +35,15 @@ function cleanTitle (title) {
   // eslint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ id: marker, debug: true })
+  const utils = new Shuutils({ debug: true, id: marker })
   const user = localStorage.untappdUser || ''
   if (user === '') { utils.error('please set localStorage.untappdUser to use this script'); return }
   const wrapAPIKey = localStorage.wrapAPIKey || ''
   if (wrapAPIKey === '') { utils.error('please set localStorage.wrapAPIKey to use this script'); return }
   const selectors = {
+    banner: 'span > p, div[class^="styled__Banner-sc"]',
     items: 'div > div > div > div > div > div > div > img[class^="Box-sc"] + div[class^="Box-sc"],[data-insights-object-id], div[class^="styled__List"] > div[class^="styled__Container-sc"],[class^="styled__Products"] > div[class^="styled__Container-sc"], div[class^="styled__Content"] > h1[class^="styled__Title"]:first-child, div[class^="styled__Column-sc"] > span[class^="styled__Title-sc"]',
     title: 'p[class^="Paragraph"]:first-child, div > div + div > div > a:first-child, a[class*="styled__Name-sc"]',
-    banner: 'span > p, div[class^="styled__Banner-sc"]',
     useless: '[class^="styled__List"]>a, [class^="styled__DiscountContainer"]',
   }
   function injectRating (element, data) {

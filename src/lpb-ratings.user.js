@@ -414,8 +414,8 @@ function cleanTitle (title) {
 const ratings = ratingsCsv.split('\n').map((line) => {
   const [title, rating] = line.split(',')
   return {
-    title: cleanTitle(title),
     rating: Number.parseFloat(rating, 10),
+    title: cleanTitle(title),
   }
 })
 
@@ -442,19 +442,19 @@ function LePetitBallonRatings () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
   const fuseSettings = {
-    keys: ['title'],
     includeScore: true,
-    threshold: 0.4,
+    keys: ['title'],
     minMatchCharLength: 4,
+    threshold: 0.4,
   }
   const fuse = new Fuse(ratings, fuseSettings)
   const marker = 'lpb-ratings'
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ id: marker, debug: false })
+  const utils = new Shuutils({ debug: false, id: marker })
   const selectors = {
     items: `.product-item:not(.${marker})`,
-    wineTitle: '.product-catalog__title',
     useless: '.product-catalog--out-stock, .footer-trustpilot, .footer-legal',
+    wineTitle: '.product-catalog__title',
   }
   function hideUseless () {
     utils.findAll(selectors.useless, document, true).forEach(node => {
@@ -471,10 +471,10 @@ function LePetitBallonRatings () {
     const [result] = results
     const percent = 100 - Math.round(result.score * 100)
     if (percent < 50) return { doesMatch: false }
-    const { title = '', rating = 0 } = result.item
+    const { rating = 0, title = '' } = result.item
     if (wine.includes('rouge') && title.includes('blanc')) return { doesMatch: false }
     if (wine.includes('blanc') && title.includes('rouge')) return { doesMatch: false }
-    return { search: wine, title, percent, doesMatch: true, rating }
+    return { doesMatch: true, percent, rating, search: wine, title }
   }
 
   // eslint-disable-next-line max-statements

@@ -15,14 +15,14 @@
 (function SteamWishlistExport () {
   /* global Shuutils */
   const marker = 'stm-wex'
-  const app = { id: marker, debug: false, games: [] }
+  const app = { debug: false, games: [], id: marker }
   /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)
   const selectors = {
-    row: `.wishlist_row:not(.${marker})`,
-    title: 'a.title',
     img: '.capsule img',
     price: '.discount_final_price',
+    row: `.wishlist_row:not(.${marker})`,
+    title: 'a.title',
   }
   function getGameData (row) {
     row.classList.add(marker)
@@ -33,7 +33,7 @@
     const id = row.dataset.appId
     const priceElement = utils.findOne(selectors.price, row)
     const price = priceElement ? Math.round(Number.parseFloat(priceElement.textContent.replace(',', '.'))) : 0
-    return { title, id, img, price }
+    return { id, img, price, title }
   }
   async function getGames (list = []) {
     // eslint-disable-next-line no-magic-numbers

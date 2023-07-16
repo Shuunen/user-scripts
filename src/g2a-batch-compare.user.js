@@ -20,7 +20,7 @@
   const marker = 'g2a-bcp'
   let list = []
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ id: marker, debug: false })
+  const utils = new Shuutils({ debug: false, id: marker })
   function cleanGameName (string) {
     // eslint-disable-next-line prefer-destructuring
     const output = string.toLowerCase()
@@ -96,12 +96,12 @@
   function enhanceTable (table) {
     injectStyles('https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css')
     const dataTable = new window.simpleDatatables.DataTable(`#${table.id}`, {
-      perPage: 4,
       columns: [
         // eslint-disable-next-line no-magic-numbers
         { select: [1, 2, 4], sortable: false },
-        { select: 3, sort: 'asc', hidden: true, render: value => (value === '0' ? '?' : value) }, // raw price
+        { hidden: true, render: value => (value === '0' ? '?' : value), select: 3, sort: 'asc' }, // raw price
       ],
+      perPage: 4,
     })
     utils.log('dataTable init', dataTable)
   }

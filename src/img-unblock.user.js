@@ -15,7 +15,7 @@
   const PROXY_URL = 'https://proxy.duckduckgo.com/iu/?u='
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ id: 'img-unblock', debug: true })
+  const utils = new Shuutils({ debug: true, id: 'img-unblock' })
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }

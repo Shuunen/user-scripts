@@ -22,24 +22,24 @@
 (function HDDCleaner () {
   /* global Shuutils */
   const app = {
-    id: 'hdd-clr',
     debug: false,
-    minSize: 4000, // in Gb or Go
+    id: 'hdd-clr',
     maxSize: 12_000,
+    minSize: 4000, // in Gb or Go
   }
   const cls = {
     mark: `${app.id}-mark`,
   }
   const selectors = {
     desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
-    product: ['.productContainer', 'div[data-asin]', '.c-products-list__item', '.pdt-item', 'article.thread', 'article.grille-produit'].join(','),
     price: ['.productPriceTableTdLargeS', '.a-offscreen', '.o-product__price', 'br + span.a-color-base', '.price > .price', '.thread-price', '[itemprop="price"]'].join(','),
+    product: ['.productContainer', 'div[data-asin]', '.c-products-list__item', '.pdt-item', 'article.thread', 'article.grille-produit'].join(','),
   }
   const regex = {
-    sizes: /(?<size>\d+)\s?(?<unit>gb|go|tb|to)\b/giu,
+    price: /(?<price>\d+[,.\\€]\d+)/u,
     // eslint-disable-next-line regexp/no-misleading-capturing-group
     size: /(?<size>\d+)\s?(?<unit>\w+)/u,
-    price: /(?<price>\d+[,.\\€]\d+)/u,
+    sizes: /(?<size>\d+)\s?(?<unit>gb|go|tb|to)\b/giu,
   }
   /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)

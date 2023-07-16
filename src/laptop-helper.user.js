@@ -87,20 +87,20 @@ function getScoreForResolution (resolution, score) {
 }
 
 const scoresByKeyword = {
-  'gtx': 70,
-  'led': 70,
-  'Oled': 70,
-  'Full HD': 30,
-  'FHD': 30,
-  'NvmE': 80,
-  'rtx': 70,
-  'backlit': 70,
-  'fingerprint': 70,
-  'power delivery': 70,
-  'Keyboard Light': 70,
-  'ssd': 70,
-  'lock': 70,
   ' tn ': 50,
+  'backlit': 70,
+  'FHD': 30,
+  'fingerprint': 70,
+  'Full HD': 30,
+  'gtx': 70,
+  'Keyboard Light': 70,
+  'led': 70,
+  'lock': 70,
+  'NvmE': 80,
+  'Oled': 70,
+  'power delivery': 70,
+  'rtx': 70,
+  'ssd': 70,
   ...getScoreForResolution('1080', 30),
   ...getScoreForResolution('1200', 60),
   ...getScoreForResolution('1440', 70),
@@ -304,8 +304,8 @@ data.split('\n').forEach(line => {
 function LaptopHelper () {
   /* global Shuutils, RoughNotation */
   const app = {
-    id: 'lpt-hlp',
     debug: true,
+    id: 'lpt-hlp',
   }
   const cls = {
     mark: `${app.id}-mark`,
@@ -348,11 +348,11 @@ function LaptopHelper () {
     // eslint-disable-next-line no-param-reassign
     element.title = `Score : ${score}%`
     const color = getColorForScore(score)
-    let annotation = RoughNotation.annotate(element, { type: 'highlight', color })
+    let annotation = RoughNotation.annotate(element, { color, type: 'highlight' })
     annotation.show()
     // eslint-disable-next-line no-magic-numbers
     if (score >= 80) {
-      annotation = RoughNotation.annotate(element.parentElement, { type: 'bracket', color: 'darkgreen' })
+      annotation = RoughNotation.annotate(element.parentElement, { color: 'darkgreen', type: 'bracket' })
       annotation.show()
     }
   }

@@ -15,22 +15,22 @@
 'use strict'
 
 const config = {
-  badNote: {
-    keyword: 'Nope',
-    isDisplayed: false,
-    class: 'bg-red-200',
-  },
   averageNote: {
-    keyword: 'Bof',
-    isDisplayed: false,
     class: 'bg-yellow-200',
+    isDisplayed: false,
+    keyword: 'Bof',
   },
-  normalNote: {
-    isDisplayed: true,
-    class: 'bg-gray-100',
+  badNote: {
+    class: 'bg-red-200',
+    isDisplayed: false,
+    keyword: 'Nope',
   },
   loading: {
     class: 'loading',
+  },
+  normalNote: {
+    class: 'bg-gray-100',
+    isDisplayed: true,
   }
 }
 
@@ -92,7 +92,7 @@ function getNoteIdFromNote (noteElement) {
   if (typeof window === 'undefined') return
   /* global Shuutils, tailwind, Appwrite, idbKeyval, GM_addStyle */
   /** @type {{get: IdbKeyvalNoteGetter, set: function, clear: function}} */ // @ts-ignore
-  const { get: getNoteFromStore, set: setInStore, clear: clearStore } = idbKeyval
+  const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval
   // @ts-ignore
   tailwind.config = {
     corePlugins: {
@@ -102,7 +102,7 @@ function getNoteIdFromNote (noteElement) {
   }
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ id: 'lbc-nts', debug: false }) // eslint-disable-line @typescript-eslint/naming-convention
+  const utils = new Shuutils({ debug: false, id: 'lbc-nts' }) // eslint-disable-line @typescript-eslint/naming-convention
   // Remove me one day :)
   // eslint-disable-next-line @typescript-eslint/unbound-method
   utils.tw ||= (classes) => classes.split(' ')
@@ -111,12 +111,12 @@ function getNoteIdFromNote (noteElement) {
   }
   /* Init DB */
   // @ts-ignore
-  const { Client, Query, Databases, ID } = Appwrite // eslint-disable-line @typescript-eslint/naming-convention
+  const { Client, Databases, ID, Query } = Appwrite // eslint-disable-line @typescript-eslint/naming-convention
   const db = { // eslint-disable-line unicorn/prevent-abbreviations
-    endpoint: 'https://cloud.appwrite.io/v1',
-    project: localStorage.getItem('lbcNotes_project'),
     databaseId: localStorage.getItem('lbcNotes_databaseId'),
+    endpoint: 'https://cloud.appwrite.io/v1',
     notesCollectionId: localStorage.getItem('lbcNotes_notesCollectionId'),
+    project: localStorage.getItem('lbcNotes_project'),
   }
   if (!db.databaseId || !db.notesCollectionId) { utils.error('missing lbcNotes_databaseId or lbcNotes_notesCollectionId in localStorage'); return }
   const client = new Client()
@@ -222,9 +222,9 @@ function getNoteIdFromNote (noteElement) {
     utils.log(`${noteId ? 'update' : 'create'} note for listing ${listingId} with content : ${noteContent}`)
     try {
       const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent })) // eslint-disable-line putout/putout
-      saveNoteSuccess({ noteId: response.$id, listingId, noteContent }, noteElement)
+      saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement)
       updateNoteStyle(noteElement) /* @ts-ignore */
-    } catch (/** @type Error */ error) { saveNoteFailure({ noteId: '', listingId, noteContent }, noteElement, error) }
+    } catch (/** @type Error */ error) { saveNoteFailure({ listingId, noteContent, noteId: '' }, noteElement, error) }
   }
   const saveNoteDebounced = utils.debounce(saveNote, 2000) // eslint-disable-line no-magic-numbers
 
@@ -263,7 +263,7 @@ function getNoteIdFromNote (noteElement) {
   async function loadNote (noteElement) {
     const listingId = getListingIdFromNote(noteElement)
     utils.debug(`loading note for listing ${listingId}...`)
-    const { noteId, noteContent } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
+    const { noteContent, noteId } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
     noteElement.dataset.noteId = noteId // eslint-disable-line require-atomic-updates, no-param-reassign
     noteElement.textContent = noteContent // eslint-disable-line require-atomic-updates, no-param-reassign
     noteElement.classList.add(...utils.tw('h-56 w-96'))

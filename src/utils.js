@@ -19,7 +19,7 @@ class Shuutils {
    */
   constructor (app) {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    Object.apply(app, { id: 'shu-app', debug: true })
+    Object.apply(app, { debug: true, id: 'shu-app' })
     this.app = app
     if (this.debug) this.log('using Shuutils', this.version)
   }
@@ -192,40 +192,34 @@ class Shuutils {
   }
 
   /**
-   * Copy stuff to clipboard
-   * @param {string|object} stuff the stuff to copy
-   * @returns {void}
-   * @example utils.copyToClipboard('hello world')
-   * @example utils.copyToClipboard({ hello: 'world' })
-   */
-  copyToClipboard (stuff) {
-    const element = document.createElement('textarea')
-    const text = typeof stuff === 'string' ? stuff : JSON.stringify(stuff)
-    this.log(`copying to clipboard : ${this.ellipsis(text)}`)
-    element.value = text
-    document.body.append(element)
-    element.select()
-    document.execCommand('copy')
-    element.remove()
-  }
-
-  /**
-   * Get a random number between min and max
-   * @param {number} min the minimum number
-   * @param {number} max the maximum number
-   * @returns {number} the random number
-   * @example utils.getRandomNumber(0, 100) // returns a number between 0 and 100
-   */
+     * Get a random number between min and max
+     * @param {number} min the minimum number
+     * @param {number} max the maximum number
+     * @returns {number} the random number
+     * @example utils.getRandomNumber(0, 100) // returns a number between 0 and 100
+     */
   getRandomNumber (min = 0, max = 100) {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
   /**
-   * Enable tailwindcss intellisense and return an array of classes
-   * @param {string} classes the classes to split, e.g. 'h-56 w-96 rounded-md'
-   * @returns {string[]} the array of classes, e.g. ['h-56', 'w-96', 'rounded-md']
-   */
+     * Enable tailwindcss intellisense and return an array of classes
+     * @param {string} classes the classes to split, e.g. 'h-56 w-96 rounded-md'
+     * @returns {string[]} the array of classes, e.g. ['h-56', 'w-96', 'rounded-md']
+     */
   tw (classes) { return classes.split(' ') }
+
+  /**
+   * Copy data to the clipboard
+   * @param {string} stuff the data to copy
+   * @returns {Promise<void>} nothing
+   * @example await utils.copyToClipboard('hello world') // copies 'hello world' to the clipboard
+   */
+  async copyToClipboard (stuff) {
+    const text = typeof stuff === 'string' ? stuff : JSON.stringify(stuff)
+    console.log(`copying to clipboard : ${this.ellipsis(text)}`)
+    await navigator.clipboard.writeText(text)
+  }
 
   /**
    * Sleep for a given time
@@ -254,7 +248,6 @@ class Shuutils {
     return await this.waitToDetect(selector, wait, nbTries + 1)
   }
 
-
   /**
    * Read clipboard content
    * @returns {Promise<string>} the clipboard content
@@ -281,7 +274,6 @@ class Shuutils {
     if (current !== last) callback(current)
     void this.onPageChange(callback, current, wait)
   }
-
 
   /**
    * Fill an input like a human would do

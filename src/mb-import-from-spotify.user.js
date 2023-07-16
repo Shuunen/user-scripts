@@ -16,16 +16,16 @@
 (function SpotifyMusicBrainzExport () {
   /* global textFromSelector, insertMbForm, Shuutils */
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ id: 'spotify-mb-export', debug: false })
+  const utils = new Shuutils({ debug: false, id: 'spotify-mb-export' })
   const selectors = {
     title: '.entity-info.media h1, .os-content h1[as="h1"]',
   }
   function getTracks () {
     return utils.findAll('.tracklist-row, [data-testid="tracklist-row"]').map((element, index) => ({
-      number: String(index + 1),
-      name: textFromSelector('.track-name, .tracklist-name, [as="div"]', element),
       artist: textFromSelector('.artists-inline, .tracklist-row__artist-name-link, a[href^="/artist/"]', element),
       duration: textFromSelector('.total-duration, .tracklist-duration, [as="div"][style]', element),
+      name: textFromSelector('.track-name, .tracklist-name, [as="div"]', element),
+      number: String(index + 1),
     }))
   }
   function mbImport () {
@@ -34,13 +34,13 @@
         id: 'mb-import-from-spotify',
         title: 'Spotify to MB',
       },
-      title: textFromSelector(selectors.title),
       artist: textFromSelector('.entity-info.media h2 a, .os-content a[href^="/artist/"]') || textFromSelector('.entity-info.media h2').match(/^.+\b\s(?<artist>.+)$/u)?.groups?.artist || '',
-      date: { year: 0, month: 0, day: 0 },
+      date: { day: 0, month: 0, year: 0 },
       label: textFromSelector('.copyrights li, .os-content p[as="p"]').match(/[\d\s©℗]+(?<label>.*)/u)?.groups?.label || '',
+      title: textFromSelector(selectors.title),
+      tracks: getTracks(),
       url: document.location.href,
       urlType: '85',
-      tracks: getTracks(),
     }
     const dateMatches = textFromSelector('script[type="application/ld+json"]').match(/datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u)
     if (dateMatches.groups?.day) {

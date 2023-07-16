@@ -15,26 +15,26 @@
 (function AmazonHide () {
   /* global Shuutils, autosize */
   const app = {
-    id: 'amz-xd',
-    debug: false,
-    filter: '',
-    excluders: [],
-    suggestions: {},
-    minLengthSuggestion: 2,
-    maxSuggestions: 7,
     debounceTime: 500,
+    debug: false,
+    excluders: [],
+    filter: '',
+    id: 'amz-xd',
+    maxSuggestions: 7,
+    minLengthSuggestion: 2,
+    suggestions: {},
   }
 
   app.excluders = (window.localStorage[`${app.id}.filter`] || 'my-keyword, other-keyword').split(',')
 
   const cls = {
     base: app.id,
-    title: `${app.id}-title`,
+    filter: `${app.id}-filter`,
     first: `${app.id}-first`,
     plus: `${app.id}-plus`,
     suggestion: `${app.id}-suggestion`,
     suggestions: `${app.id}-suggestions`,
-    filter: `${app.id}-filter`,
+    title: `${app.id}-title`,
   }
 
   const selectors = {

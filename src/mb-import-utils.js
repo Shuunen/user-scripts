@@ -96,9 +96,9 @@ function addMbSubmit (form) {
  * @returns
  */
 // eslint-disable-next-line max-statements
-function insertMbForm ({ app, title, artist, date, tracks, label, url, urlType }) {
+function insertMbForm ({ app, artist, date, label, title, tracks, url, urlType }) {
   if (!title || !artist) { console.info(app.id, 'cannot work without data, exiting...'); return }
-  console.log(app.id, 'got data :', { title, artist, date, tracks, label, url, urlType })
+  console.log(app.id, 'got data :', { artist, date, label, title, tracks, url, urlType })
   const form = createMbForm(app)
   addMbField(form, 'name', title)
   addMbField(form, 'artist_credit.names.0.name', artist)

@@ -17,7 +17,7 @@
   const appId = 'amz-gm-aio'
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ id: appId, debug: true })
+  const utils = new Shuutils({ debug: true, id: appId })
   // non word characters will be removed
   const dlcToHide = [
     'Aion Classic',
@@ -85,17 +85,17 @@
     'World of Warships',
   ]
   const selectors = {
-    product: 'div.tw-block:not(.amz-gm-aio-processed)',
-    grid: '.offer-list__content__grid',
-    dlcName: '.item-card-details__body > div > p[title]:not(.amz-gm-aio-processed)',
     claimedTag: '[data-a-target="notification-success"]:not(.amz-gm-aio-processed)',
+    dlcName: '.item-card-details__body > div > p[title]:not(.amz-gm-aio-processed)',
+    grid: '.offer-list__content__grid',
+    product: 'div.tw-block:not(.amz-gm-aio-processed)',
   }
   const clearClassSelectors = {
     productLine: '.s-item-container',
   }
   const deleteUselessSelectors = {
-    sections: '[data-a-target="hero-banner"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-FGWP"], [data-a-target="offer-section-EXPIRING"]',
     badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
+    sections: '[data-a-target="hero-banner"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-FGWP"], [data-a-target="offer-section-EXPIRING"]',
   }
   function deleteUseless () {
     for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {

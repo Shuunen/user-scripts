@@ -14,7 +14,7 @@
 (function LolKpmCounter () {
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ id: 'lol-kpm', debug: false })
+  const utils = new Shuutils({ debug: false, id: 'lol-kpm' })
   const maxKpm = 1.8
   function coolPercents (kpm) {
     // eslint-disable-next-line no-magic-numbers
