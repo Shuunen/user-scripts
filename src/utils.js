@@ -1,3 +1,5 @@
+/* eslint-disable userscripts/filename-user */
+/* eslint-disable userscripts/no-invalid-metadata */
 /* eslint-disable no-console */
 /* eslint-disable promise/avoid-new */
 /* eslint-disable sonarjs/elseif-without-else */

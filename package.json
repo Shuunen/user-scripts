@@ -10,6 +10,7 @@
     "eslint-plugin-filenames": "1",
     "eslint-plugin-tailwindcss": "3",
     "eslint-plugin-unicorn": "48",
+    "eslint-plugin-userscripts": "0.3",
     "repo-check": "1.32",
     "shuutils": "7.3",
     "tailwindcss": "3",
@@ -34,7 +35,7 @@
   "scripts": {
     "check": "pnpm lint && pnpm lint:master && pnpm lint:gh-content && repo-check && pnpm test && echo check success",
     "lint": "tsc --noEmit && eslint --cache --fix --ext .js,.ts . && echo lint success",
-    "lint:master": "echo These files should not use user-scripts/src directly : && grep -R user-scripts\/src src; if [ $? -eq 1 ]; then echo lint:master success; else echo Use this instead : https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js && exit 1; fi",
+    "lint:master": "echo These files should not use user-scripts/src directly : && grep -R user-scripts/src src; if [ $? -eq 1 ]; then echo lint:master success; else echo Use this instead : https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js && exit 1; fi",
     "lint:gh-content": "echo These files should not use githubusercontent directly : && grep -R githubusercontent src; if [ $? -eq 1 ]; then echo lint:gh-content success; else echo Migrate to https://www.jsdelivr.com/github && exit 1; fi",
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",

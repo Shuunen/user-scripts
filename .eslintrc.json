@@ -9,7 +9,8 @@
       "extends": [
         "plugin:tailwindcss/recommended",
         "plugin:unicorn/all",
-        "hardcore"
+        "hardcore",
+        "plugin:userscripts/recommended"
       ],
       "files": [
         "**/*.js"
@@ -52,7 +53,8 @@
         "plugin:tailwindcss/recommended",
         "plugin:unicorn/all",
         "hardcore",
-        "hardcore/ts-for-js"
+        "hardcore/ts-for-js",
+        "plugin:userscripts/recommended"
       ],
       "files": [
         "src/lbc-*.js",

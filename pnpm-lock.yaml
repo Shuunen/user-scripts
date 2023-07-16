@@ -23,6 +23,9 @@ devDependencies:
   eslint-plugin-unicorn:
     specifier: '48'
     version: 48.0.0(eslint@8.45.0)
+  eslint-plugin-userscripts:
+    specifier: '0.3'
+    version: 0.3.0(eslint@8.45.0)
   repo-check:
     specifier: '1.32'
     version: 1.32.0
@@ -4565,6 +4568,17 @@ packages:
       '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.45.0)(typescript@5.0.2)
       eslint: 8.45.0
       eslint-rule-composer: 0.3.0
+    dev: true
+
+  /eslint-plugin-userscripts@0.3.0(eslint@8.45.0):
+    resolution: {integrity: sha512-2pmZOPKBtv1iy0LMXmq7KC9AWjGc6eyovnyxNyyNJvWOZnjaw4uBnIf70D37EqfWSscJ0Go+/kzfEY4vcxnMPQ==}
+    engines: {node: '>=16.0.0 <21.0.0'}
+    peerDependencies:
+      eslint: '>=8.0.0 <9'
+    dependencies:
+      eslint: 8.45.0
+      requireindex: 1.2.0
+      semver: 7.5.4
     dev: true
 
   /eslint-plugin-validate-jsx-nesting@0.1.1(eslint@8.45.0):

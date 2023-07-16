@@ -1,14 +1,15 @@
-/* eslint-disable max-statements */
 // ==UserScript==
-// @name        LeBonCoin Listing Plus Plus
-// @namespace   https://github.com/Shuunen
-// @description Show more infos on LeBonCoin listings
-// @author      Romain Racamier-Lafon
-// @match       https://www.leboncoin.fr/*
-// @grant       none
-// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @version     1.0.4
+// @name         LeBonCoin Listing Plus Plus
+// @namespace    https://github.com/Shuunen
+// @description  Show more infos on LeBonCoin listings
+// @author       Romain Racamier-Lafon
+// @match        https://www.leboncoin.fr/*
+// @grant        none
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @version      1.0.4
 // ==/UserScript==
+
+/* eslint-disable max-statements */
 
 'use strict'
 

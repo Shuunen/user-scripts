@@ -1,6 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable no-magic-numbers */
 // ==UserScript==
 // @name         Amazon - Price per weight
 // @namespace    https://github.com/Shuunen
@@ -11,6 +8,10 @@
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
+
+/* eslint-disable no-param-reassign */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable no-magic-numbers */
 
 // @ts-nocheck
 // eslint-disable-next-line max-statements

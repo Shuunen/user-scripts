@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 // ==UserScript==
 // @name         Le Petit Ballon - Ratings
 // @namespace    https://github.com/Shuunen
@@ -8,8 +7,10 @@
 // @match        https://www.lepetitballon.com/*
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/fuse.js@6.6.2
-// @grant none
+// @grant        none
 // ==/UserScript==
+
+/* eslint-disable no-magic-numbers */
 
 // @ts-nocheck
 /* globals Fuse */

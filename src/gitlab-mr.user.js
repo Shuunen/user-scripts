@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name        Gitlab - MR Shortcuts
-// @namespace   https://github.com/Shuunen
-// @description Ease access to my affected MR / opened MR
-// @author      Romain Racamier-Lafon
-// @match       https://some-gitlab.fr/*
-// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @grant       none
-// @version     1.1.4
+// @name         Gitlab - MR Shortcuts
+// @namespace    https://github.com/Shuunen
+// @description  Ease access to my affected MR / opened MR
+// @author       Romain Racamier-Lafon
+// @match        https://some-gitlab.fr/*
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @grant        none
+// @version      1.1.4
 // ==/UserScript==
 
 // @ts-nocheck

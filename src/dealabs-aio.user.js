@@ -7,7 +7,7 @@
 // @match        https://www.dealabs.com/*
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js
-// @grant none
+// @grant        none
 // ==/UserScript==
 
 // @ts-nocheck

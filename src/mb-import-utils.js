@@ -1,3 +1,5 @@
+/* eslint-disable userscripts/filename-user */
+/* eslint-disable userscripts/no-invalid-metadata */
 /* eslint-disable unused-imports/no-unused-vars */
 
 /**

@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name        LeBonCoin Notes
-// @namespace   https://github.com/Shuunen
-// @description Add notes to LeBonCoin listings
-// @author      Romain Racamier-Lafon
-// @match       https://www.leboncoin.fr/*
-// @grant       GM_addStyle
-// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @require     https://cdn.jsdelivr.net/npm/appwrite@10.1.0
-// @require     https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
-// @require     https://cdn.tailwindcss.com
-// @version     0.0.3
+// @name         LeBonCoin Notes
+// @namespace    https://github.com/Shuunen
+// @description  Add notes to LeBonCoin listings
+// @author       Romain Racamier-Lafon
+// @match        https://www.leboncoin.fr/*
+// @grant        GM_addStyle
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
+// @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
+// @require      https://cdn.tailwindcss.com
+// @version      0.0.3
 // ==/UserScript==
 
 'use strict'

@@ -1,8 +1,3 @@
-/* eslint-disable func-style */
-/* eslint-disable no-magic-numbers */
-/* eslint-disable no-param-reassign */
-/* eslint-disable max-statements */
-/* eslint-disable consistent-return */
 // ==UserScript==
 // @name         AliExpress - All in one
 // @namespace    https://github.com/Shuunen
@@ -14,6 +9,11 @@
 // @grant        none
 // ==/UserScript==
 
+/* eslint-disable func-style */
+/* eslint-disable no-magic-numbers */
+/* eslint-disable no-param-reassign */
+/* eslint-disable max-statements */
+/* eslint-disable consistent-return */
 // @ts-nocheck
 
 (function AliExpressAIO () {

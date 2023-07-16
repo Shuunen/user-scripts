@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 // ==UserScript==
 // @name         Amazon Gaming - All in one
 // @namespace    https://github.com/Shuunen
@@ -9,6 +8,8 @@
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
+
+/* eslint-disable no-param-reassign */
 
 // eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
 (function amazonGamingAIO () {

@@ -1,5 +1,3 @@
-/* eslint-disable no-magic-numbers */
-/* eslint-disable regexp/no-super-linear-move */
 // ==UserScript==
 // @name         HDD Cleaner
 // @namespace    https://github.com/Shuunen
@@ -16,6 +14,9 @@
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
+
+/* eslint-disable no-magic-numbers */
+/* eslint-disable regexp/no-super-linear-move */
 
 // @ts-nocheck
 // eslint-disable-next-line max-statements

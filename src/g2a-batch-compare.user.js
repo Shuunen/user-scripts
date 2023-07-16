@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 // ==UserScript==
 // @name         G2A Batch Compare
 // @namespace    https://github.com/Shuunen
@@ -9,8 +8,10 @@
 // @require      https://cdn.jsdelivr.net/npm/didyoumean/didYouMean-1.2.1.min.js
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/simple-datatables
-// @grant none
+// @grant        none
 // ==/UserScript==
+
+/* eslint-disable no-param-reassign */
 
 // @ts-nocheck
 

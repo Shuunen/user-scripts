@@ -1,7 +1,3 @@
-/* eslint-disable func-style */
-/* eslint-disable no-magic-numbers */
-/* eslint-disable no-param-reassign */
-/* eslint-disable max-statements */
 // ==UserScript==
 // @name         Amazon - All in one
 // @namespace    https://github.com/Shuunen
@@ -12,6 +8,11 @@
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
+
+/* eslint-disable func-style */
+/* eslint-disable no-magic-numbers */
+/* eslint-disable no-param-reassign */
+/* eslint-disable max-statements */
 
 /**
  * Return the position of a value in an interval

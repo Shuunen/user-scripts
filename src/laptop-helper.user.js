@@ -1,6 +1,3 @@
-/* eslint-disable eslint-comments/no-unlimited-disable */
-/* eslint-disable no-magic-numbers */
-/* eslint-disable unicorn/no-abusive-eslint-disable */
 // ==UserScript==
 // @name         Laptop Helper
 // @namespace    https://github.com/Shuunen
@@ -32,6 +29,10 @@
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @grant        none
 // ==/UserScript==
+
+/* eslint-disable eslint-comments/no-unlimited-disable */
+/* eslint-disable no-magic-numbers */
+/* eslint-disable unicorn/no-abusive-eslint-disable */
 
 // @ts-nocheck
 

@@ -1,14 +1,15 @@
-/* eslint-disable no-param-reassign */
 // ==UserScript==
-// @name        Image Unblock
-// @namespace   https://github.com/Shuunen
-// @description Use DuckDuckGo image proxy
-// @author      Romain Racamier-Lafon
-// @match       https://www.reddit.com/*
-// @grant       none
-// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @version     1.1.3
+// @name         Image Unblock
+// @namespace    https://github.com/Shuunen
+// @description  Use DuckDuckGo image proxy
+// @author       Romain Racamier-Lafon
+// @match        https://www.reddit.com/*
+// @grant        none
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @version      1.1.3
 // ==/UserScript==
+
+/* eslint-disable no-param-reassign */
 
 (function ImageUnblock () {
   /* global Shuutils */

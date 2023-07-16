@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name        BundlePhobia <3 Everywhere
-// @namespace   https://github.com/Shuunen
-// @description Show size of npm packages on Github & Npm
-// @author      Romain Racamier-Lafon
-// @inject-into content
-// @match       https://github.com/*
-// @match       https://www.npmjs.com/package/*
-// @grant       none
-// @require     https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @version     1.1.1
+// @name         BundlePhobia <3 Everywhere
+// @namespace    https://github.com/Shuunen
+// @description  Show size of npm packages on Github & Npm
+// @author       Romain Racamier-Lafon
+// @inject-into  content
+// @match        https://github.com/*
+// @match        https://www.npmjs.com/package/*
+// @grant        none
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @version      1.1.1
 // ==/UserScript==
 
 (function BundlePhobiaEverywhere () {
