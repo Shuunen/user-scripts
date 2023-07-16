@@ -26,6 +26,9 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2020",
+    "types": [
+      "node/fs/promises"
+    ],
     "verbatimModuleSyntax": true
   },
   "include": [
