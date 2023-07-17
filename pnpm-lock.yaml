@@ -24,8 +24,8 @@ devDependencies:
     specifier: '48'
     version: 48.0.0(eslint@8.45.0)
   eslint-plugin-userscripts:
-    specifier: '0.3'
-    version: 0.3.0(eslint@8.45.0)
+    specifier: '0.4'
+    version: 0.4.0(eslint@8.45.0)
   repo-check:
     specifier: '1.33'
     version: 1.33.0
@@ -4425,8 +4425,8 @@ packages:
       eslint-rule-composer: 0.3.0
     dev: true
 
-  /eslint-plugin-userscripts@0.3.0(eslint@8.45.0):
-    resolution: {integrity: sha512-2pmZOPKBtv1iy0LMXmq7KC9AWjGc6eyovnyxNyyNJvWOZnjaw4uBnIf70D37EqfWSscJ0Go+/kzfEY4vcxnMPQ==}
+  /eslint-plugin-userscripts@0.4.0(eslint@8.45.0):
+    resolution: {integrity: sha512-SqYXsAo4Lb4jLYjMYh4ws/SX4kWXO6Iq4l2eQUqqxitmbnkYXr18SPIGY8/MjV2G3X3ckGVLgZAL5ynlsqNo7g==}
     engines: {node: '>=16.0.0 <21.0.0'}
     peerDependencies:
       eslint: '>=8.0.0 <9'
