@@ -11,7 +11,7 @@
     "eslint-plugin-tailwindcss": "3",
     "eslint-plugin-unicorn": "48",
     "eslint-plugin-userscripts": "0.3",
-    "repo-check": "1.32",
+    "repo-check": "1.33",
     "shuutils": "7.3",
     "tailwindcss": "3",
     "typescript": "5",
