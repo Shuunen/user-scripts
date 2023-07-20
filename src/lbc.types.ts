@@ -1,12 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-export interface LbcAdAttribute {
+type LbcAdAttribute = {
   generic: boolean
-  key: 'district_id' | 'elevator' | 'energy_rate' | 'floor_number' | 'ges' | 'rooms' | 'square'
   key_label?: string
   value: string
   value_label: string
   values: string[]
+}
+
+type LbcHousingAdAttribute = LbcAdAttribute & {
+  key: 'district_id' | 'elevator' | 'energy_rate' | 'floor_number' | 'ges' | 'rooms' | 'square'
+}
+
+type LbcCarAdAttribute = LbcAdAttribute & {
+  key: 'ad_warranty_type' | 'brand' | 'doors' | 'fuel' | 'gearbox' | 'horse_power_din' | 'is_import' | 'issuance_date' | 'mileage' | 'model' | 'profile_picture_url' | 'regdate' | 'seats' | 'u_utility_brand' | 'u_utility_model' | 'vehicle_is_eligible_p2p' | 'vehicle_vsp' | 'vehicule_color'
 }
 
 export interface LbcAdImages {
@@ -66,14 +73,18 @@ export interface LbcAdOwner {
   user_id: string
 }
 
-export interface LbcAd {
+export type LbcAd = {
   ad_type: string
-  attributes: LbcAdAttribute[]
+  attributes: LbcCarAdAttribute[] | LbcHousingAdAttribute[]
   body: string
   brand: string
   category_id: string
   category_name: string
   district: string
+  /**
+   * DOM element of the ad, come from user script
+   */
+  element: HTMLElement
   first_publication_date: Date
   has_phone: boolean
   images: LbcAdImages
@@ -90,4 +101,26 @@ export interface LbcAd {
   url: string
 }
 
+export type LbcHousingAd = LbcAd & { attributes: LbcHousingAdAttribute[] }
+
+export type LbcCarAd = LbcAd & { attributes: LbcCarAdAttribute[] }
+
 export type IdbKeyvalGetter<Type> = (key: string) => Promise<Type | undefined>
+
+export type LbcCustomInfo = {
+  /**
+   * info tailwind classes to enhance display & UX
+   * @example ['bg-red-500', 'text-white']
+  */
+  classes?: string[]
+  /**
+   * info flag to let the user know if the ad is good or bad
+   */
+  flag?: 'bad' | 'good' | 'neutral'
+  /**
+   * info label/text to display
+   */
+  text?: string
+}
+
+export type LbcAdType = 'car' | 'housing' | 'unknown'

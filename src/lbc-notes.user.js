@@ -9,7 +9,7 @@
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require      https://cdn.tailwindcss.com
-// @version      0.0.3
+// @version      0.0.4
 // ==/UserScript==
 
 'use strict'
@@ -52,7 +52,7 @@ const config = {
  * @returns {number|undefined} the listing id
  */
 function getListingId (url = document.location.href) {
-  const id = /\/(?<id>\d{5,15})\.htm/u.exec(url)?.groups?.id
+  const id = /\/(?<id>\d{5,15})\b/u.exec(url)?.groups?.id
   return id ? Number.parseInt(id, 10) : undefined
 }
 

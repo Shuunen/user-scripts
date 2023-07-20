@@ -6,7 +6,7 @@
 // @match        https://www.leboncoin.fr/*
 // @grant        none
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @version      1.0.4
+// @version      1.0.5
 // ==/UserScript==
 
 /* eslint-disable max-statements */
@@ -14,7 +14,11 @@
 'use strict'
 
 /**
+ * @typedef {import('./lbc.types').LbcCustomInfo} LbcCustomInfo
+ * @typedef {import('./lbc.types').LbcAdType} LbcAdType
  * @typedef {import('./lbc.types').LbcAd} LbcAd
+ * @typedef {import('./lbc.types').LbcHousingAd} LbcHousingAd
+ * @typedef {import('./lbc.types').LbcCarAd} LbcCarAd
  */
 
 const districts = {
@@ -50,7 +54,7 @@ const citiesToHide = new Set([
 ]);
 
 
-(function LeBonCoinDpe () {
+(function LeBonCoinListing () {
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
@@ -79,201 +83,21 @@ const citiesToHide = new Set([
     return element // eslint-disable-line consistent-return
   }
 
-  /**
-   * Add DPE info to an element
-   * @param {HTMLElement} element the element to append the DPE info to
-   * @param {string} name the name of the DPE info
-   * @param {string} value the value of the DPE info
-   * @param {number} positionTop the top position of the line
-   */
-  // eslint-disable-next-line max-params
-  function addDpeInfo (element, name, value = '', positionTop = 0) {
-    // eslint-disable-next-line no-nested-ternary
-    const color = /[a-c]/u.test(value) ? 'text-green-600' : (value.includes('d') ? 'text-yellow-600' : 'text-red-600')
-    const line = document.createElement('div')
-    line.textContent = `${name} : ${value.toUpperCase()}`
-    line.style.top = `${positionTop}px`
-    line.classList.add(color, ...utils.tw('absolute right-0 font-bold'))
-    element.append(line)
-  }
-
-  /**
-   * Determine if the ad should be hidden
-   * @param {LbcAd} ad the ad to process
-   * @returns {boolean} true if the ad should be hidden
-   */
-  function shouldHideBasedOnLocation (ad) {
-    const { city } = ad.location
-    if (city === undefined) utils.warn('no city found in ad', ad)
-    if (citiesToHide.has(city)) return true
-    return districtsToHide.has(ad.district)
-  }
-
-  /**
-   * Add district info to the ad object
-   * @param {LbcAd} ad the ad to augment
-   * @returns {void}
-   */
-  function addDistrictToAd (ad) {
-    const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
-    if (districtId === undefined) return
-    // @ts-ignore
-    // eslint-disable-next-line no-param-reassign
-    ad.district = districts[districtId] ?? districtId
-  }
-
-  /**
-   * Hide the ad element
-   * @param {HTMLElement} element the element to hide
-   * @returns {void}
-   */
-  function hideAdElement (element) {
-    element.classList.add(...utils.tw('h-24 overflow-hidden opacity-50 grayscale transition-all duration-500 ease-in-out hover:h-[215px] hover:opacity-100 hover:filter-none'))
-    element.parentElement?.classList.add(`${utils.app.id}-hidden`, `${utils.app.id}-hidden-cause-location`)
-  }
-
-  /**
-   * Remove the pro tag from the ad
-   * @param {HTMLElement} element the element to remove the pro tag from
-   * @returns {void}
-   */
-  function removeProTag (element) {
-    const tag = utils.findOne('div[color="black"] span, [data-spark-component="tag"]', element)
-    if (tag?.textContent?.toLowerCase() !== 'pro') return
-    if (tag.parentElement?.textContent?.toLowerCase() === 'pro') tag.parentElement.remove()
-    else tag.remove()
-  }
-
-  /**
-   * Add location info to the ad
-   * @param {HTMLElement} element the element to append the location info to
-   * @param {LbcAd} ad the ad to process
-   * @param {number} positionTop the top position of the line
-   * @returns {void}
-   */
-  function addLocationInfo (element, ad, positionTop) {
-    addDistrictToAd(ad)
-    if (ad.owner.type === 'pro') removeProTag(element)
-    if (shouldHideBasedOnLocation(ad)) hideAdElement(element)
-    const line = document.createElement('div')
-    line.textContent = ad.location.city
-    if (ad.district !== undefined && !ad.location.city.includes(ad.district)) line.textContent += ` - ${ad.district}`
-    line.style.top = `${positionTop}px`
-    line.classList.add(...utils.tw('absolute right-0 font-bold'))
-    element.append(line)
-  }
-
-  /**
-   * Add owner info to the ad
-   * @param {HTMLElement} element the element to append the owner info to
-   * @param {LbcAd} ad the ad to process
-   * @param {number} positionTop the top position of the line
-   * @returns {void}
-   */
-  function addOwnerInfo (element, ad, positionTop) {
-    const { owner } = ad
-    if (!owner) { utils.warn('no owner found in ad', ad); return }
-    const line = document.createElement('div')
-    line.textContent = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
-    line.style.top = `${positionTop}px`
-    line.classList.add(...utils.tw('absolute right-0 font-bold'))
-    if (owner.type === 'pro') line.classList.add(...utils.tw('text-red-700'))
-    element.append(line)
-  }
-
-  /**
-   * Add square info to the ad
-   * @param {HTMLElement} element the element to append the square info to
-   * @param {LbcAd} ad the ad to process
-   * @param {number} positionTop the top position of the line
-   * @returns {void}
-   */
-  function addSquareInfo (element, ad, positionTop) {
-    const square = ad.attributes.find(attribute => attribute.key === 'square')
-    if (square === undefined) { utils.warn('no square attribute found in ad', ad); return }
-    const line = document.createElement('div')
-    line.textContent = `surface : ${square.value} m²`
-    line.style.top = `${positionTop}px`
-    line.classList.add(...utils.tw('absolute right-0'))
-    element.append(line)
-  }
-
-  /**
-   * Add rooms info to the ad
-   * @param {HTMLElement} element the element to append the rooms info to
-   * @param {LbcAd} ad the ad to process
-   * @param {number} positionTop the top position of the line
-   * @returns {void}
-   */
-  function addRoomsInfo (element, ad, positionTop) {
-    const rooms = ad.attributes.find(attribute => attribute.key === 'rooms')
-    if (rooms === undefined) { utils.warn('no rooms attribute found in ad', ad); return }
-    const line = document.createElement('div')
-    line.textContent = `${rooms.value} pièces`
-    line.style.top = `${positionTop}px`
-    line.classList.add(...utils.tw('absolute right-0'))
-    element.append(line)
-  }
-
-  /**
-   * Readable floor number
-   * @param {string} floorNumber the floor number
-   * @returns {string} the human readable floor number
-   */
-  function humanReadableFloor (floorNumber) {
-    if (floorNumber === '0') return 'étage : rdc'
-    if (floorNumber === '1') return '1er étage'
-    return `${floorNumber}e étage`
-  }
-
-  /**
-   * Add floor info to the ad
-   * @param {HTMLElement} element the element to append the floor info to
-   * @param {LbcAd} ad the ad to process
-   * @param {number} positionTop the top position of the line
-   * @returns {void}
-   */
-  function addFloorNumberInfo (element, ad, positionTop) {
-    const floorNumber = ad.attributes.find(attribute => attribute.key === 'floor_number')
-    if (floorNumber === undefined) return
-    const line = document.createElement('div')
-    line.textContent = humanReadableFloor(floorNumber.value)
-    line.style.top = `${positionTop}px`
-    line.classList.add(...utils.tw('absolute right-0'))
-    if (floorNumber.value === '0') line.classList.add(...utils.tw('text-red-700'))
-    element.append(line)
-  }
-
-  /**
-   * Add elevator info to the ad
-   * @param {HTMLElement} element the element to append the elevator info to
-   * @param {LbcAd} ad the ad to process
-   * @param {number} positionTop the top position of the line
-   * @returns {void}
-   */
-  function addElevatorInfo (element, ad, positionTop) {
-    const elevator = ad.attributes.find(attribute => attribute.key === 'elevator')
-    if (elevator === undefined) return
-    const line = document.createElement('div')
-    // eslint-disable-next-line no-nested-ternary
-    line.textContent = elevator.value === '1' ? 'ascenseur' : (elevator.value === '2' ? 'pas d\'ascenseur' : `unknown elevator value "${elevator.value}"`)
-    line.style.top = `${positionTop}px`
-    line.classList.add(...utils.tw('absolute right-0'))
-    if (elevator.value === '2') line.classList.add(...utils.tw('text-red-700'))
-    element.append(line)
-  }
 
   /**
    * Get the DPE infos from the ad
-   * @param {LbcAd} ad the ad to process
-   * @returns {{energy: string, ges: string}} the DPE infos
+   * @param {LbcHousingAd} ad the housing ad to process
+   * @returns {LbcCustomInfo} the DPE infos
    */
   function getDpeInfos (ad) {
     const energy = ad.attributes.find(attribute => attribute.key === 'energy_rate')?.value ?? ''
     if (energy === '') utils.warn('no energy rate found in ad', ad)
     const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
     if (ges === '') utils.warn('no GES found in ad', ad)
-    return { energy, ges }
+    const text = `DPE : ${energy} / GES : ${ges}`
+    // eslint-disable-next-line no-nested-ternary
+    const flag = ['A', 'B'].includes(energy) ? 'good' : (energy === 'C' ? 'neutral' : 'bad')
+    return { flag, text }
   }
 
   /**
@@ -314,15 +138,220 @@ const citiesToHide = new Set([
 
   /**
    * Add the ad id to the element
-   * @param {HTMLElement} element the element to append the id to
    * @param {LbcAd} ad the ad to process
    * @returns {void}
    */
-  function addId (element, ad) {
+  function addId (ad) {
     const line = document.createElement('div')
     line.textContent = ad.list_id.toString()
     line.classList.add(...utils.tw('absolute bottom-0 left-0 rounded-lg bg-white/50 text-gray-500'))
-    element.append(line)
+    ad.element.append(line)
+  }
+
+  /**
+   * Get the ad location district
+   * @param {LbcHousingAd} ad the ad to process
+   * @returns {string} the district
+   */
+  function getDistrict (ad) {
+    const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
+    if (districtId === undefined) return ''
+    // @ts-expect-error type conversion from string to number
+    return districts[districtId] ?? districtId
+  }
+
+
+  /**
+   * Hide the ad element
+   * @param {HTMLElement} element the element to hide
+   * @param {string} cause the cause of the hide
+   * @returns {void}
+   */
+  function hideAdElement (element, cause = 'unknown') {
+    element.classList.add(...utils.tw('h-24 overflow-hidden opacity-50 grayscale transition-all duration-500 ease-in-out hover:h-[215px] hover:opacity-100 hover:filter-none'))
+    element.parentElement?.classList.add(`${utils.app.id}-hidden`, `${utils.app.id}-hidden-cause-${cause}`)
+  }
+
+  /**
+   * Get ad location info
+   * @param {LbcHousingAd} ad the ad to process
+   * @returns {LbcCustomInfo} the custom info
+   */
+  function getLocationInfo (ad) {
+    const district = getDistrict(ad)
+    const { city } = ad.location
+    const shouldHide = citiesToHide.has(city) || districtsToHide.has(district)
+    if (shouldHide) hideAdElement(ad.element, 'location')
+    let text = city
+    if (!city.includes(district)) text += ` - ${district}`
+    const flag = shouldHide ? 'bad' : 'neutral'
+    return { flag, text }
+  }
+
+  /**
+   * Get the owner infos
+   * @param {LbcAd} ad the ad to process
+   * @returns {LbcCustomInfo} the custom info
+   */
+  function getOwnerInfo (ad) {
+    const { owner } = ad
+    if (!owner) { utils.warn('no owner found in ad', ad); return {} }
+    const text = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
+    const flag = owner.type === 'pro' ? 'bad' : 'neutral'
+    return { flag, text }
+  }
+
+  /**
+   * Get square info from the ad
+   * @param {LbcHousingAd} ad the ad to process
+   * @returns {LbcCustomInfo} the custom info
+   */
+  function getSquareInfo (ad) {
+    const square = ad.attributes.find(attribute => attribute.key === 'square')
+    const text = square ? `surface : ${square.value} m²` : ''
+    return { text }
+  }
+
+  /**
+   * Get rooms info from the ad
+   * @param {LbcHousingAd} ad the ad to process
+   * @returns {LbcCustomInfo} the custom info
+   */
+  function getRoomsInfo (ad) {
+    const rooms = ad.attributes.find(attribute => attribute.key === 'rooms')
+    const text = rooms ? `${rooms.value} pièces` : ''
+    return { text }
+  }
+
+  /**
+   * Readable floor number
+   * @param {string} floorNumber the floor number
+   * @returns {string} the human readable floor number
+   */
+  function humanReadableFloor (floorNumber) {
+    if (floorNumber === '0') return 'étage : rdc'
+    if (floorNumber === '1') return '1er étage'
+    return `${floorNumber}e étage`
+  }
+
+  /**
+   * Get floor info from the ad
+   * @param {LbcHousingAd} ad the ad to process
+   * @returns {LbcCustomInfo} the custom info
+   */
+  function getFloorNumberInfo (ad) {
+    const floorNumber = ad.attributes.find(attribute => attribute.key === 'floor_number')
+    if (floorNumber === undefined) return {}
+    const text = humanReadableFloor(floorNumber.value)
+    const flag = floorNumber.value === '0' ? 'bad' : 'neutral'
+    return { flag, text }
+  }
+
+  /**
+   * Get elevator info from the ad
+   * @param {LbcHousingAd} ad the ad to process
+   * @returns {LbcCustomInfo} the custom info
+   */
+  function getElevatorInfo (ad) {
+    const elevator = ad.attributes.find(attribute => attribute.key === 'elevator')
+    if (elevator === undefined) return {}
+    // eslint-disable-next-line no-nested-ternary
+    const text = elevator.value === '1' ? 'ascenseur' : (elevator.value === '2' ? 'pas d\'ascenseur' : `unknown elevator value "${elevator.value}"`)
+    const flag = elevator.value === '2' ? 'bad' : 'neutral'
+    return { flag, text }
+  }
+
+  /**
+   * Add custom infos to the element
+   * @param {LbcHousingAd} ad the housing ad to process
+   * @returns {LbcCustomInfo[]} the custom infos
+   */
+  function getCustomInfosHousing (ad) {
+    return [
+      getDpeInfos(ad),
+      getLocationInfo(ad),
+      getSquareInfo(ad),
+      getRoomsInfo(ad),
+      getFloorNumberInfo(ad),
+      getElevatorInfo(ad),
+    ]
+  }
+
+  /**
+  * Get custom infos from a car ad
+  * @param {LbcCarAd} ad the car ad to process
+  * @returns {LbcCustomInfo[]} the custom infos
+  */
+  function getCustomInfosCar (ad) {
+    return [{ text: ad.ad_type }]
+  }
+
+  /**
+   * Get the ad type
+   * @param {LbcAd} ad the ad to process
+   * @returns {LbcAdType} the ad type
+   */
+  function getAdType (ad) {
+    const category = ad.category_id
+    if (category === '5') return 'car'
+    return 'unknown'
+  }
+
+  /**
+   * Create a custom infos panel
+   * @param {LbcCustomInfo[]} infos the infos to display
+   * @returns {HTMLElement} the custom infos panel
+   */
+  function createCustomInfosPanel (infos) {
+    const panel = document.createElement('div')
+    panel.classList.add(...utils.tw('absolute bottom-0 left-0 rounded-lg bg-white/50 text-gray-500'))
+    for (const info of infos) {
+      const line = document.createElement('div')
+      if (info.text) line.textContent = info.text
+      if (info.classes) line.classList.add(...info.classes)
+      panel.append(line)
+    }
+    return panel
+  }
+
+  /**
+   * Remove the pro tag from the ad
+   * @param {LbcAd} ad the ad to process
+   * @returns {void}
+   */
+  function removeProTag (ad) {
+    const tag = utils.findOne('div[color="black"] span, [data-spark-component="tag"]', ad.element)
+    if (tag?.textContent?.toLowerCase() !== 'pro') return
+    if (tag.parentElement?.textContent?.toLowerCase() === 'pro') tag.parentElement.remove()
+    else tag.remove()
+  }
+
+  /**
+   * Get common infos from the ad
+   * @param {LbcAd} ad the ad to process
+   * @returns {LbcCustomInfo[]} the custom infos
+   */
+  function getCommonInfos (ad) {
+    if (ad.owner.type === 'pro') removeProTag(ad)
+    return [
+      getOwnerInfo(ad),
+    ]
+  }
+
+  /**
+   * Add custom infos to the element
+   * @param {LbcAd} ad the ad to process
+   * @returns {void}
+   */
+  function addInfos (ad) {
+    const type = getAdType(ad)
+    const infos = getCommonInfos(ad)
+    // @ts-expect-error type conversion from LbcAd to LbcHousingAd
+    if (type === 'housing') infos.push(...getCustomInfosHousing(ad))
+    // @ts-expect-error type conversion from LbcAd to LbcCarAd
+    else if (type === 'car') infos.push(...getCustomInfosCar(ad))
+    else utils.warn('un handled ad type', { ad, type })
+    ad.element.append(createCustomInfosPanel(infos))
   }
 
   /**
@@ -338,16 +367,9 @@ const citiesToHide = new Set([
     // @ts-ignore
     const /** @type HTMLElement[] */[, link] = Array.from(element.children)
     if (!link) { utils.warn('no link found in ad', ad); return }
-    const { energy, ges } = getDpeInfos(ad)
-    addId(link, ad)
-    addDpeInfo(link, 'Classe', energy, 0)
-    addDpeInfo(link, 'GES', ges, 20) // eslint-disable-line no-magic-numbers
-    addLocationInfo(link, ad, 45) // eslint-disable-line no-magic-numbers
-    addOwnerInfo(link, ad, 65) // eslint-disable-line no-magic-numbers
-    addSquareInfo(link, ad, 85) // eslint-disable-line no-magic-numbers
-    addRoomsInfo(link, ad, 105) // eslint-disable-line no-magic-numbers
-    addFloorNumberInfo(link, ad, 125) // eslint-disable-line no-magic-numbers
-    addElevatorInfo(link, ad, 145) // eslint-disable-line no-magic-numbers
+    ad.element = link // eslint-disable-line no-param-reassign
+    addId(ad)
+    addInfos(ad)
   }
 
   /**
