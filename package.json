@@ -5,7 +5,7 @@
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
     "@types/node": "18",
-    "eslint": "8.45",
+    "eslint": "8.46",
     "eslint-config-hardcore": "41",
     "eslint-plugin-filenames": "1",
     "eslint-plugin-tailwindcss": "3",
