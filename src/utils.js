@@ -9,7 +9,7 @@
 
 class Shuutils {
 
-  version = '2.1.1'
+  version = '2.1.2'
 
   /**
    * The ShuUserScriptUtils constructor
@@ -83,6 +83,16 @@ class Shuutils {
       .replace(/\W/gu, ' ') // remove non words
       .replace(/\s+/gu, ' ') // replace spaces with single space
       .trim() // final trim
+  }
+
+  /**
+   * Remove accents from a string
+   * @param {string} string the string to remove accents from
+   * @returns {string} the string without accents
+   * @example utils.removeAccents('éàù') // returns 'eau'
+   */
+  removeAccents (string) {
+    return string.normalize('NFD').replace(/[\u0300-\u036F]/gu, '')
   }
 
   /**
