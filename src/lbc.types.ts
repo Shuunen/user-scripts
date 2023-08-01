@@ -12,7 +12,7 @@ type LbcHousingAdAttribute = LbcAdAttribute & {
   key: 'district_id' | 'elevator' | 'energy_rate' | 'floor_number' | 'ges' | 'rooms' | 'square'
 }
 
-type LbcCarAdAttribute = LbcAdAttribute & {
+export type LbcCarAdAttribute = LbcAdAttribute & {
   key: 'ad_warranty_type' | 'brand' | 'doors' | 'fuel' | 'gearbox' | 'horse_power_din' | 'is_import' | 'issuance_date' | 'mileage' | 'model' | 'profile_picture_url' | 'regdate' | 'seats' | 'u_utility_brand' | 'u_utility_model' | 'vehicle_is_eligible_p2p' | 'vehicle_vsp' | 'vehicule_color'
 }
 
@@ -114,9 +114,9 @@ export type LbcCustomInfo = {
   */
   classes?: string[]
   /**
-   * info flag to let the user know if the ad is good or bad
+   * a score between 0 (bad), 1 (normal) and 2 (super)
    */
-  flag?: 'bad' | 'good' | 'neutral'
+  score?: number
   /**
    * info label/text to display
    */

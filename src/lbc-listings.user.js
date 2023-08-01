@@ -9,7 +9,7 @@
 // @version      1.0.5
 // ==/UserScript==
 
-/* eslint-disable max-statements */
+/* eslint-disable max-statements, no-magic-numbers */
 
 'use strict'
 
@@ -40,19 +40,16 @@ const districts = {
   3_001_211: 'Hautepierre',
 }
 
-/* eslint-disable no-magic-numbers */
 const districtsToHide = new Set([
   districts[3_001_189], // Robertsau
   districts[3_001_192], // Les Halles
   districts[3_001_199], // Cronenbourg
   districts[3_001_211], // Hautepierre
 ])
-/* eslint-enable no-magic-numbers */
 
 const citiesToHide = new Set([
   'Eschau',
 ]);
-
 
 (function LeBonCoinListing () {
   /* global Shuutils */
@@ -96,8 +93,8 @@ const citiesToHide = new Set([
     if (ges === '') utils.warn('no GES found in ad', ad)
     const text = `DPE : ${energy} / GES : ${ges}`
     // eslint-disable-next-line no-nested-ternary
-    const flag = ['A', 'B'].includes(energy) ? 'good' : (energy === 'C' ? 'neutral' : 'bad')
-    return { flag, text }
+    const score = ['A', 'B'].includes(energy) ? 1.5 : (energy === 'C' ? 1 : 0.5)
+    return { score, text }
   }
 
   /**
@@ -184,8 +181,8 @@ const citiesToHide = new Set([
     if (shouldHide) hideAdElement(ad.element, 'location')
     let text = city
     if (!city.includes(district)) text += ` - ${district}`
-    const flag = shouldHide ? 'bad' : 'neutral'
-    return { flag, text }
+    const score = shouldHide ? 0.1 : 1
+    return { score, text }
   }
 
   /**
@@ -197,8 +194,8 @@ const citiesToHide = new Set([
     const { owner } = ad
     if (!owner) { utils.warn('no owner found in ad', ad); return {} }
     const text = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
-    const flag = owner.type === 'pro' ? 'bad' : 'neutral'
-    return { flag, text }
+    const score = owner.type === 'pro' ? 0.5 : 1.2
+    return { score, text }
   }
 
   /**
@@ -243,8 +240,8 @@ const citiesToHide = new Set([
     const floorNumber = ad.attributes.find(attribute => attribute.key === 'floor_number')
     if (floorNumber === undefined) return {}
     const text = humanReadableFloor(floorNumber.value)
-    const flag = floorNumber.value === '0' ? 'bad' : 'neutral'
-    return { flag, text }
+    const score = floorNumber.value === '0' ? 0.5 : 1
+    return { score, text }
   }
 
   /**
@@ -257,8 +254,8 @@ const citiesToHide = new Set([
     if (elevator === undefined) return {}
     // eslint-disable-next-line no-nested-ternary
     const text = elevator.value === '1' ? 'ascenseur' : (elevator.value === '2' ? 'pas d\'ascenseur' : `unknown elevator value "${elevator.value}"`)
-    const flag = elevator.value === '2' ? 'bad' : 'neutral'
-    return { flag, text }
+    const score = elevator.value === '2' ? 0.5 : 1
+    return { score, text }
   }
 
   /**
@@ -282,8 +279,21 @@ const citiesToHide = new Set([
   * @param {LbcCarAd} ad the car ad to process
   * @returns {LbcCustomInfo[]} the custom infos
   */
+  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   function getCustomInfosCar (ad) {
-    return [{ text: ad.ad_type }]
+    /** @type {LbcCustomInfo[]} */
+    const infos = []
+    const year = Number.parseInt(ad.attributes.find(attribute => attribute.key === 'regdate')?.value ?? '', 10)
+    if (year) infos.push({ score: year > 2010 ? 1.5 : 0.5, text: `année : ${year}` })
+    const mileage = Number.parseInt(ad.attributes.find(attribute => attribute.key === 'mileage')?.value ?? '', 10)
+    if (mileage) infos.push({ score: mileage <= 100_000 ? 1.5 : 0.5, text: `kilométrage : ${mileage} km` })
+    const fuel = ad.attributes.find(attribute => attribute.key === 'fuel')?.value_label.toLowerCase() ?? ''
+    if (fuel) infos.push({ text: `carburant : ${fuel}` })
+    const gearbox = ad.attributes.find(attribute => attribute.key === 'gearbox')?.value_label.toLowerCase() ?? ''
+    if (gearbox) infos.push({ score: gearbox === 'automatique' ? 1.2 : 1, text: `boite : ${gearbox}` })
+    const price = ad.price_cents / 100
+    if (price) infos.push({ text: `prix : ${price} €` })
+    return infos
   }
 
   /**
@@ -298,17 +308,47 @@ const citiesToHide = new Set([
   }
 
   /**
+   * Get display classes from the score
+   * @param {number} score the score to get the classes from
+   * @returns {string[]} the css classes
+   */
+  function getScoreClasses (score) {
+    const classes = []
+    if (score > 1) classes.push(...utils.tw('text-green-600'))
+    if (score > 2) classes.push(...utils.tw('text-2xl font-bold'))
+    if (score < 1) classes.push(...utils.tw('text-red-600'))
+    return classes
+  }
+
+  /**
+   * Compute the custom classes for the info
+   * @param {LbcCustomInfo} info the info to get the classes from
+   * @returns {string[]} the css classes
+   */
+  function getInfoClasses (info) {
+    const classes = []
+    if (info.classes) classes.push(...info.classes)
+    classes.push(...getScoreClasses(info.score ?? 1))
+    return classes
+  }
+
+  /**
    * Create a custom infos panel
    * @param {LbcCustomInfo[]} infos the infos to display
    * @returns {HTMLElement} the custom infos panel
    */
   function createCustomInfosPanel (infos) {
     const panel = document.createElement('div')
-    panel.classList.add(...utils.tw('absolute bottom-0 left-0 rounded-lg bg-white/50 text-gray-500'))
+    panel.classList.add(...utils.tw('app-lbc-lpp-panel absolute right-0 top-0 rounded-lg bg-white p-2 shadow'))
     for (const info of infos) {
       const line = document.createElement('div')
+      line.classList.add(...utils.tw('text-right'))
       if (info.text) line.textContent = info.text
-      if (info.classes) line.classList.add(...info.classes)
+      if (info.score !== undefined && !info.text?.includes('score')) {
+        line.title += `${info.text?.split(' : ')[0] ?? ''} score : ${info.score}`
+        line.textContent += ' *'
+      }
+      line.classList.add(...getInfoClasses(info))
       panel.append(line)
     }
     return panel
@@ -351,6 +391,9 @@ const citiesToHide = new Set([
     // @ts-expect-error type conversion from LbcAd to LbcCarAd
     else if (type === 'car') infos.push(...getCustomInfosCar(ad))
     else utils.warn('un handled ad type', { ad, type })
+    const score = infos.reduce((total, info) => total * (info.score ?? 1), 1)
+    const scoreRounded = Math.round(score * 100) / 100
+    infos.push({ score: scoreRounded, text: `score : ${scoreRounded}` })
     ad.element.append(createCustomInfosPanel(infos))
   }
 
@@ -388,7 +431,7 @@ const citiesToHide = new Set([
     removeViewedStyles()
   }
 
-  // eslint-disable-next-line no-magic-numbers
+
   const processDebounced = utils.debounce(process, 1000)
   window.addEventListener('scroll', () => processDebounced())
   window.addEventListener('load', () => processDebounced())
