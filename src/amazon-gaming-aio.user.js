@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Amazon Gaming - All in one
 // @namespace    https://github.com/Shuunen
-// @version      1.0.1
+// @version      1.0.2
 // @description  Hide games
 // @author       Romain Racamier-Lafon
 // @match        https://gaming.amazon.com/home
@@ -18,7 +18,7 @@
   const appId = 'amz-gm-aio'
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ debug: true, id: appId })
+  const utils = new Shuutils({ debug: false, id: appId })
   // non word characters will be removed
   const dlcToHide = [
     'Aion Classic',
@@ -27,6 +27,7 @@
     'Battlefield',
     'Black Desert',
     'Blade Soul',
+    'blankos block party',
     'Bloons TD',
     'Brawlhalla',
     'BTS Island',
@@ -34,8 +35,10 @@
     'Candy Crush',
     'Company of Heroes',
     'Dead by Daylight',
+    'dead island 2',
     'Deathloop',
     'Destiny 2',
+    'diablo iv',
     'Divine Knockout',
     'Fall Guys',
     'Farm Heroes',
@@ -45,6 +48,8 @@
     'Genshin Impact',
     'Guild Wars',
     'Hearthstone',
+    'hi fi rush',
+    'honkai star rail',
     'Just Dance',
     'Kartrider',
     'Legends of Runeterra',
@@ -64,6 +69,7 @@
     'Path of Exile',
     'Phantasy Star Online',
     'PlanetSide 2',
+    'pokemon go',
     'PUBG',
     'Raid Shadow Legends',
     'Rainbow Six',
@@ -73,8 +79,12 @@
     'Rogue Company',
     'Roller Champions',
     'Runescape',
+    'shadow fight 3',
     'Smite',
+    'star trek timelines',
     'Teamfight Tactics',
+    'the elder scrolls online',
+    'time princess',
     'Total War',
     'Two Point Campus',
     'Two Point Hospital',
@@ -86,7 +96,7 @@
     'World of Warships',
   ]
   const selectors = {
-    claimedTag: '[data-a-target="notification-success"]:not(.amz-gm-aio-processed)',
+    claimedTag: '[data-a-target="notification-success"]:not(.amz-gm-aio-processed), [title="Récupéré"]:not(.amz-gm-aio-processed)',
     dlcName: '.item-card-details__body > div > p[title]:not(.amz-gm-aio-processed)',
     grid: '.offer-list__content__grid',
     product: 'div.tw-block:not(.amz-gm-aio-processed)',
@@ -130,8 +140,13 @@
    * @param {string} [cause] The cause/reason of the hide
    * @returns {void}
    */
-  function hideElement (element, cause = '') {
+  function hideElement (element, cause = 'unknown') {
     element.dataset.hiddenCause = cause
+    if (utils.app.debug) {
+      // element.style.border = '2px solid red'
+      element.style.boxShadow = 'inset darkred 0 100vh, red 0 0 10px'
+      return
+    }
     element.classList.remove('tw-block')
     element.style.display = 'none'
     element.style.visibility = 'hidden'
@@ -142,13 +157,17 @@
       node.classList.add(`${appId}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
-      if (!product) { utils.error('no product found for claimed tag', node); return }
+      if (!product) return
       hideElement(product, 'claimed')
     })
     checkEmptyGrids()
   }
   function cleanDLCName (name = '') {
-    return name.replace(/\W/gu, ' ').replace(/\s+/gu, ' ').trim().toLowerCase() || ''
+    return name
+      .normalize("NFD").replace(/[\u0300-\u036F]/gu, '') // remove accents
+      .replace(/\W/gu, ' ') // remove non word characters
+      .replace(/\s+/gu, ' ').trim() // remove multiple spaces
+      .toLowerCase() || '' // lowercase
   }
   function hideUnwantedDLC () {
     // eslint-disable-next-line max-statements
