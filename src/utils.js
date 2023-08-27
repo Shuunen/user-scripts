@@ -9,7 +9,7 @@
 
 class Shuutils {
 
-  version = '2.1.2'
+  version = '2.1.3'
 
   /**
    * The ShuUserScriptUtils constructor
@@ -204,22 +204,38 @@ class Shuutils {
   }
 
   /**
-     * Get a random number between min and max
-     * @param {number} min the minimum number
-     * @param {number} max the maximum number
-     * @returns {number} the random number
-     * @example utils.getRandomNumber(0, 100) // returns a number between 0 and 100
-     */
+   * Get a random number between min and max
+   * @param {number} min the minimum number
+   * @param {number} max the maximum number
+   * @returns {number} the random number
+   * @example utils.getRandomNumber(0, 100) // returns a number between 0 and 100
+   */
   getRandomNumber (min = 0, max = 100) {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
   /**
-     * Enable tailwindcss intellisense and return an array of classes
-     * @param {string} classes the classes to split, e.g. 'h-56 w-96 rounded-md'
-     * @returns {string[]} the array of classes, e.g. ['h-56', 'w-96', 'rounded-md']
-     */
+   * Enable tailwindcss intellisense and return an array of classes
+   * @param {string} classes the classes to split, e.g. 'h-56 w-96 rounded-md'
+   * @returns {string[]} the array of classes, e.g. ['h-56', 'w-96', 'rounded-md']
+   */
   tw (classes) { return classes.split(' ') }
+
+  /**
+   * Get a ranged score
+   * @param {{ isHigherBetter: boolean, valueMin: number, valueMax: number, scoreMin: number, scoreMax: number }} rules the rules to apply
+   * @param {number} value the value to score
+   * @returns {number} the ranged score
+   */
+  rangedScore ({ isHigherBetter, scoreMax, scoreMin, valueMax, valueMin }, value) {
+    if (value <= valueMin) return isHigherBetter ? scoreMin : scoreMax
+    if (value >= valueMax) return isHigherBetter ? scoreMax : scoreMin
+    const valueRange = valueMax - valueMin
+    const scoreRange = scoreMax - scoreMin
+    const valueRatio = ((value - valueMin) / valueRange)
+    const scoreRatio = valueRatio * scoreRange
+    return isHigherBetter ? scoreMin + scoreRatio : scoreMax - scoreRatio
+  }
 
   /**
    * Copy data to the clipboard
