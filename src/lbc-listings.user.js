@@ -303,7 +303,7 @@ const citiesToHide = new Set([
    */
   function getAdType (ad) {
     const category = ad.category_id
-    if (category === '5') return 'car'
+    if (['2', '4', '5'].includes(category)) return 'car'
     return 'unknown'
   }
 
