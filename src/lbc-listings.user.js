@@ -21,6 +21,11 @@
  * @typedef {import('./lbc.types').LbcCarAd} LbcCarAd
  */
 
+const scoreRules = { scoreMax: 2, scoreMin: 0 }
+const priceRules = { ...scoreRules, isHigherBetter: false, valueMax: 12_000, valueMin: 6000 }
+const mileageRules = { ...scoreRules, isHigherBetter: false, valueMax: 130_000, valueMin: 70_000 }
+const yearRules = { ...scoreRules, isHigherBetter: true, valueMax: (new Date()).getFullYear(), valueMin: (new Date()).getFullYear() - 12 }
+
 const districts = {
   67_218: 'Illkirch',
   100_101: 'Illkirch nord',
@@ -188,13 +193,15 @@ const citiesToHide = new Set([
   /**
    * Get the owner infos
    * @param {LbcAd} ad the ad to process
+   * @param {boolean} isPrivateBetter is a private owner better than a pro ?
    * @returns {LbcCustomInfo} the custom info
    */
-  function getOwnerInfo (ad) {
+  function getOwnerInfo (ad, isPrivateBetter) {
     const { owner } = ad
     if (!owner) { utils.warn('no owner found in ad', ad); return {} }
     const text = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
-    const score = owner.type === 'pro' ? 0.5 : 1.2
+    // eslint-disable-next-line no-nested-ternary
+    const score = isPrivateBetter ? (owner.type === 'pro' ? 0.5 : 1.2) : 1
     return { score, text }
   }
 
@@ -265,6 +272,7 @@ const citiesToHide = new Set([
    */
   function getCustomInfosHousing (ad) {
     return [
+      getOwnerInfo(ad, true),
       getDpeInfos(ad),
       getLocationInfo(ad),
       getSquareInfo(ad),
@@ -282,17 +290,17 @@ const citiesToHide = new Set([
   // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
   function getCustomInfosCar (ad) {
     /** @type {LbcCustomInfo[]} */
-    const infos = []
+    const infos = [getOwnerInfo(ad, false)]
     const year = Number.parseInt(ad.attributes.find(attribute => attribute.key === 'regdate')?.value ?? '', 10)
-    if (year) infos.push({ score: year > 2010 ? 1.5 : 0.5, text: `année : ${year}` })
+    if (year) infos.push({ score: utils.rangedScore(yearRules, year), text: `année : ${year}` })
     const mileage = Number.parseInt(ad.attributes.find(attribute => attribute.key === 'mileage')?.value ?? '', 10)
-    if (mileage) infos.push({ score: mileage <= 100_000 ? 1.5 : 0.5, text: `kilométrage : ${mileage} km` })
+    if (mileage) infos.push({ score: utils.rangedScore(mileageRules, mileage), text: `kilométrage : ${mileage} km` })
     const fuel = ad.attributes.find(attribute => attribute.key === 'fuel')?.value_label.toLowerCase() ?? ''
     if (fuel) infos.push({ text: `carburant : ${fuel}` })
     const gearbox = ad.attributes.find(attribute => attribute.key === 'gearbox')?.value_label.toLowerCase() ?? ''
     if (gearbox) infos.push({ score: gearbox === 'automatique' ? 1.2 : 1, text: `boite : ${gearbox}` })
     const price = ad.price_cents / 100
-    if (price) infos.push({ text: `prix : ${price} €` })
+    if (price) infos.push({ score: utils.rangedScore(priceRules, price), text: `prix : ${price} €` })
     return infos
   }
 
@@ -344,10 +352,7 @@ const citiesToHide = new Set([
       const line = document.createElement('div')
       line.classList.add(...utils.tw('text-right'))
       if (info.text) line.textContent = info.text
-      if (info.score !== undefined && !info.text?.includes('score')) {
-        line.title += `${info.text?.split(' : ')[0] ?? ''} score : ${info.score}`
-        line.textContent += ' *'
-      }
+      if (info.score !== undefined && !info.text?.includes('score')) line.title += `${info.text?.split(' : ')[0] ?? ''} score : ${info.score.toFixed(2)}`
       line.classList.add(...getInfoClasses(info))
       panel.append(line)
     }
@@ -373,9 +378,7 @@ const citiesToHide = new Set([
    */
   function getCommonInfos (ad) {
     if (ad.owner.type === 'pro') removeProTag(ad)
-    return [
-      getOwnerInfo(ad),
-    ]
+    return []
   }
 
   /**
@@ -393,7 +396,9 @@ const citiesToHide = new Set([
     else utils.warn('un handled ad type', { ad, type })
     const score = infos.reduce((total, info) => total * (info.score ?? 1), 1)
     const scoreRounded = Math.round(score * 100) / 100
-    infos.push({ score: scoreRounded, text: `score : ${scoreRounded}` })
+    // eslint-disable-next-line no-nested-ternary
+    const classes = scoreRounded > 1 ? (scoreRounded > 2 ? ['text-4xl', 'font-bold'] : ['text-2xl', 'font-bold']) : []
+    infos.push({ classes, score: scoreRounded, text: `score : ${scoreRounded}` })
     ad.element.append(createCustomInfosPanel(infos))
   }
 
