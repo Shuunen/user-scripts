@@ -238,6 +238,22 @@ class Shuutils {
   }
 
   /**
+   * Inject styles in the DOM
+   * @param {string} string the string to inject, can be a url or a css string
+   * @returns {void}
+   */
+  injectStyles (string = '') {
+    if (string.length === 0) { this.log('cannot inject empty style stuff'); return }
+    if (string.includes('://') && string.includes('.css')) {
+      // eslint-disable-next-line no-unsanitized/method
+      document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
+      return
+    }
+    // eslint-disable-next-line no-unsanitized/method
+    document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
+  }
+
+  /**
    * Copy data to the clipboard
    * @param {string} stuff the data to copy
    * @returns {Promise<void>} nothing
