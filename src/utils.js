@@ -9,7 +9,7 @@
 
 class Shuutils {
 
-  version = '2.2.0'
+  version = '2.3.0'
 
   /**
    * The ShuUserScriptUtils constructor
@@ -244,13 +244,33 @@ class Shuutils {
    */
   injectStyles (string = '') {
     if (string.length === 0) { this.log('cannot inject empty style stuff'); return }
-    if (string.includes('://') && string.includes('.css')) {
+    if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
       // eslint-disable-next-line no-unsanitized/method
       document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
       return
     }
     // eslint-disable-next-line no-unsanitized/method
     document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
+  }
+
+  /**
+   * Animate an element with animate.css
+   * @param {HTMLElement} element the element to animate
+   * @param {string} animation the name of the animation to use like 'bounce', 'fadeIn', 'zoomOut'
+   * @returns {Promise<void>} nothing
+   */
+  async animateCss (element, animation) {
+    await new Promise((resolve) => {
+      const animationName = `animate__${animation}`
+      element.classList.add('animate__animated', animationName)
+      // When the animation ends, we clean the classes and resolve the Promise
+      function handleAnimationEnd (event) {
+        event.stopPropagation()
+        element.classList.remove('animate__animated', animationName)
+        resolve('Animation ended')
+      }
+      element.addEventListener('animationend', handleAnimationEnd, { once: true }) // eslint-disable-line @typescript-eslint/naming-convention
+    })
   }
 
   /**
