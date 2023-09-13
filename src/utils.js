@@ -257,12 +257,14 @@ class Shuutils {
    * Animate an element with animate.css
    * @param {HTMLElement} element the element to animate
    * @param {string} animation the name of the animation to use like 'bounce', 'fadeIn', 'zoomOut'
+   * @param {boolean} canRemoveAfter if true, will remove the animation classes after the animation ends
    * @returns {Promise<void>} nothing
    */
-  async animateCss (element, animation) {
+  async animateCss (element, animation, canRemoveAfter = true) {
     await new Promise((resolve) => {
       const animationName = `animate__${animation}`
       element.classList.add('animate__animated', animationName)
+      if (!canRemoveAfter) { resolve('Animation ended, no need to remove'); return }
       // When the animation ends, we clean the classes and resolve the Promise
       function handleAnimationEnd (event) {
         event.stopPropagation()
