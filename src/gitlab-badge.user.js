@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gitlab - Contribution badge
 // @namespace    https://github.com/Shuunen
-// @version      0.0.2
+// @version      0.0.3
 // @description  Display a badge on the top right corner of the page with the number of contributions you made today on Gitlab
 // @author       Romain Racamier-Lafon
 // @match        https://gitlab.com/*
@@ -12,7 +12,7 @@
 // @ts-nocheck
 
 const app = {
-  debug: true,
+  debug: false,
   id: 'gtb-bdg'
 }
 
@@ -79,7 +79,8 @@ function animateCSS (element, animation, canRemoveAfter = true) {
     return badge
   }
   const badge = getBadge()
-  badge.addEventListener('click', () => { animateCSS(badge, 'bounceOutUp', false) })
+  let isHidden = false
+  badge.addEventListener('click', () => { isHidden = true; animateCSS(badge, 'bounceOutUp', false) })
   document.body.append(badge)
   let animationCount = 0
   function animateBadge (contributionsChanged = false) {
@@ -88,6 +89,7 @@ function animateCSS (element, animation, canRemoveAfter = true) {
     animationCount += 1
   }
   async function process (reason = 'unknown') {
+    if (isHidden) { utils.debug(`process called because ${reason} but badge has been hidden`); return }
     const todayContributions = await getNbContributions()
     utils.log(`process, reason ${reason}, found ${todayContributions} contributions`)
     const previousContributions = Number(badge.textContent)
