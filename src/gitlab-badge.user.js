@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Gitlab - Contribution badge
 // @namespace    https://github.com/Shuunen
-// @version      0.0.1
+// @version      0.0.2
 // @description  Display a badge on the top right corner of the page with the number of contributions you made today on Gitlab
 // @author       Romain Racamier-Lafon
 // @match        https://gitlab.com/*
@@ -87,10 +87,9 @@ function animateCSS (element, animation, canRemoveAfter = true) {
     else animateCSS(badge, contributionsChanged ? 'tada' : 'pulse')
     animationCount += 1
   }
-  async function process () {
-    utils.log('process')
+  async function process (reason = 'unknown') {
     const todayContributions = await getNbContributions()
-    utils.log('found', todayContributions, 'contributions')
+    utils.log(`process, reason ${reason}, found ${todayContributions} contributions`)
     const previousContributions = Number(badge.textContent)
     badge.textContent = todayContributions
     if (todayContributions < steps.bronze) badge.style.backgroundImage = `url(${badges.bronze})`
@@ -98,9 +97,10 @@ function animateCSS (element, animation, canRemoveAfter = true) {
     else badge.style.backgroundImage = `url(${badges.gold})`
     animateBadge(todayContributions !== previousContributions)
   }
-  const processDebounced = utils.debounce(process, 500) // eslint-disable-line no-magic-numbers
-  window.addEventListener('focus', processDebounced)
-  utils.onPageChange(processDebounced)
+  const processDebounced = utils.debounce(process, 1000) // eslint-disable-line no-magic-numbers
+  window.addEventListener('focus', () => process('focus'))
+  window.addEventListener('click', () => processDebounced('click'))
+  utils.onPageChange(() => process('page-change'))
 })()
 
 injectStyles(`
