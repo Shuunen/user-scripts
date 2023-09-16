@@ -14,7 +14,7 @@
     "repo-check": "1.33",
     "shuutils": "7.3",
     "tailwindcss": "3",
-    "typescript": "5.2",
+    "typescript": "5.1",
     "vitest": "0.34"
   },
   "files": [
@@ -33,7 +33,7 @@
     "url": "https://github.com/Shuunen/user-scripts.git"
   },
   "scripts": {
-    "check": "pnpm lint && repo-check && pnpm test && echo check success",
+    "check": "pnpm install && pnpm lint && repo-check && pnpm test && echo check success",
     "lint": "sh ./bin/lint.sh && tsc --noEmit && echo tsc success && eslint --cache --fix --ext .js,.ts . && echo lint success",
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",
