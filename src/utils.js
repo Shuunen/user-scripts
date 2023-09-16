@@ -222,19 +222,31 @@ class Shuutils {
   tw (classes) { return classes.split(' ') }
 
   /**
+   * Round a number to a given number of decimals
+   * @param {number} number the number to round
+   * @param {number} nbDecimals the number of decimals to keep
+   * @returns {number} the rounded number
+   * @example utils.round(1.2345, 2) // returns 1.23
+   */
+  round (number, nbDecimals = 2) {
+    return Math.round(number * 10 ** nbDecimals) / 10 ** nbDecimals // eslint-disable-line no-magic-numbers
+  }
+
+  /**
    * Get a ranged score
    * @param {{ isHigherBetter: boolean, valueMin: number, valueMax: number, scoreMin: number, scoreMax: number }} rules the rules to apply
    * @param {number} value the value to score
    * @returns {number} the ranged score
    */
   rangedScore ({ isHigherBetter, scoreMax, scoreMin, valueMax, valueMin }, value) {
-    if (value <= valueMin) return isHigherBetter ? scoreMin : scoreMax
-    if (value >= valueMax) return isHigherBetter ? scoreMax : scoreMin
-    const valueRange = valueMax - valueMin
-    const scoreRange = scoreMax - scoreMin
-    const valueRatio = ((value - valueMin) / valueRange)
-    const scoreRatio = valueRatio * scoreRange
-    return isHigherBetter ? scoreMin + scoreRatio : scoreMax - scoreRatio
+    const lineA = (scoreMin - scoreMax) / (valueMin - valueMax)
+    const lineB = scoreMax - valueMax * lineA
+    const score = value * lineA + lineB
+    if (score < scoreMin) return isHigherBetter ? scoreMin : scoreMax
+    if (score > scoreMax) return isHigherBetter ? scoreMax : scoreMin
+    const nbDecimals = (scoreMax - scoreMin) > 10 ? 0 : 2 // eslint-disable-line no-magic-numbers
+    const finalScore = isHigherBetter ? score : scoreMax - score
+    return this.round(finalScore, nbDecimals)
   }
 
   /**
