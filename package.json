@@ -12,10 +12,10 @@
     "eslint-plugin-unicorn": "48",
     "eslint-plugin-userscripts": "0.4",
     "repo-check": "1.33",
-    "shuutils": "7.3.2",
+    "shuutils": "7.3",
     "tailwindcss": "3",
     "typescript": "5.1",
-    "vitest": "0.34.6"
+    "vitest": "0.34"
   },
   "files": [
     "src",
