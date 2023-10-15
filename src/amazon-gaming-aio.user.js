@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Amazon Gaming - All in one
 // @namespace    https://github.com/Shuunen
-// @version      1.0.2
+// @version      1.0.3
 // @description  Hide games
 // @author       Romain Racamier-Lafon
-// @match        https://gaming.amazon.com/home
+// @match        https://gaming.amazon.com/*
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @grant        none
 // ==/UserScript==
@@ -24,7 +24,9 @@
     'Aion Classic',
     'Angry Birds',
     'Apex Legends',
+    'asphalt 9 legends',
     'Battlefield',
+    'big farm mobile harvest',
     'Black Desert',
     'Blade Soul',
     'blankos block party',
@@ -59,6 +61,8 @@
     'Madden',
     'Marvel s Avengers',
     'Minecraft',
+    'mojo melee',
+    'my pet hooligan',
     'Naraka Bladepoint',
     'NBA 2K',
     'New World',
@@ -74,6 +78,7 @@
     'Raid Shadow Legends',
     'Rainbow Six',
     'Realm Royale',
+    'risk global domination',
     'Roblox',
     'Rocket League',
     'Rogue Company',
@@ -83,6 +88,7 @@
     'Smite',
     'star trek timelines',
     'Teamfight Tactics',
+    'the crew motorfest',
     'the elder scrolls online',
     'time princess',
     'Total War',
@@ -96,23 +102,31 @@
     'World of Warships',
   ]
   const selectors = {
-    claimedTag: '[data-a-target="notification-success"]:not(.amz-gm-aio-processed), [title="Récupéré"]:not(.amz-gm-aio-processed)',
-    dlcName: '.item-card-details__body > div > p[title]:not(.amz-gm-aio-processed)',
+    claimedTag: '[title="Récupéré"]:not(.amz-gm-aio-processed)',
     grid: '.offer-list__content__grid',
-    product: 'div.tw-block:not(.amz-gm-aio-processed)',
+    product: 'div.tw-block.tw-relative:not(.amz-gm-aio-processed)',
+    productAlt: '[data-a-target="learn-more-card"]:not(.amz-gm-aio-processed)',
+    productDlcName: '[data-a-target="ItemCardDetailPrimaryText"]:not(.amz-gm-aio-processed)',
+    productName: '[data-a-target="ItemCardDetailSecondaryText"]',
   }
   const clearClassSelectors = {
     productLine: '.s-item-container',
   }
   const deleteUselessSelectors = {
     badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
-    sections: '[data-a-target="hero-banner"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-FGWP"], [data-a-target="offer-section-EXPIRING"]',
+    sections: '[data-a-target="hero-banner"],[data-a-target="offer-section-FGWP"],[data-a-target="offer-section-RECOMMENDED"],[data-a-target="offer-section-WEB_GAMES"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-EXPIRING"]',
   }
   function deleteUseless () {
     for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {
-      // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-      node.style.display = 'none'
-      node.style.opacity = '0'
+      if (utils.app.debug) {
+        node.style.backgroundColor = 'red !important'
+        node.style.color = 'white !important'
+        node.style.boxShadow = '0 0 10px red'
+        node.style.opacity = '70'
+      } else {
+        node.style.display = 'none'
+        node.style.opacity = '0'
+      }
       node.dataset.hiddenCause = 'useless'
     })
   }
@@ -135,15 +149,30 @@
     })
   }
   /**
+   * Double check if an element should be hidden
+   * @param {HTMLElement} element the element to check if it should be hidden
+   * @param {string} cause the cause of the hide
+   * @returns {boolean} true if the element should not be hidden
+   */
+  function preventElementHide (element, cause) {
+    const len = element.innerHTML.length
+    utils.debug('checkElementToHide', cause, 'with length', len)
+    if (['claimed', 'unwanted-dlc'].includes(cause)) {
+      if (len > 8500) { utils.error(`element is too big (${len} > 8500) to be hidden`, element); return true } // eslint-disable-line no-magic-numbers
+      if (len < 6500) { utils.error(`element is too small (${len} < 6500) to be hidden`, element); return true } // eslint-disable-line no-magic-numbers
+    }
+    return false
+  }
+  /**
    * Hide an element for a reason... or not ^^
    * @param {HTMLElement} element The element to hide
    * @param {string} [cause] The cause/reason of the hide
    * @returns {void}
    */
   function hideElement (element, cause = 'unknown') {
+    if (preventElementHide(element, cause)) return
     element.dataset.hiddenCause = cause
     if (utils.app.debug) {
-      // element.style.border = '2px solid red'
       element.style.boxShadow = 'inset darkred 0 100vh, red 0 0 10px'
       return
     }
@@ -156,7 +185,7 @@
     utils.findAll(selectors.claimedTag, document, true).forEach((node) => {
       node.classList.add(`${appId}-processed`)
       /** @type {HTMLElement | null} */
-      const product = node.closest(selectors.product)
+      const product = node.closest(selectors.productAlt)
       if (!product) return
       hideElement(product, 'claimed')
     })
@@ -170,14 +199,18 @@
       .toLowerCase() || '' // lowercase
   }
   function hideUnwantedDLC () {
+    const list = utils.findAll(selectors.productDlcName, document, true)
+    utils.log(list.length, 'dlc found')
     // eslint-disable-next-line max-statements
-    utils.findAll(selectors.dlcName, document, true).forEach((node) => {
+    list.forEach((node) => {
       node.classList.add(`${appId}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
-      if (!product) { utils.error('no product found in game node', node); return }
+      if (!product) { utils.error('no product found in product :', node); return }
+      const title = product.querySelector(selectors.productName)
+      if (!title) { utils.error('no title found in product :', node); return }
       /** @type {string} */
-      const gameName = cleanDLCName(node.title)
+      const gameName = cleanDLCName(title.textContent ?? '')
       if (gameName.length === 0) { utils.error('no game name found', node); return }
       node.title = gameName
       const shouldHide = dlcToHide.some((dlc) => gameName.includes(cleanDLCName(dlc)))
