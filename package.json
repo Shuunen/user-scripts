@@ -6,16 +6,16 @@
   "devDependencies": {
     "@types/node": "18",
     "eslint": "8.51",
-    "eslint-config-hardcore": "41",
+    "eslint-config-hardcore": "41.3",
     "eslint-plugin-filenames": "1",
     "eslint-plugin-tailwindcss": "3",
     "eslint-plugin-unicorn": "48",
     "eslint-plugin-userscripts": "0.4",
     "repo-check": "1.33",
-    "shuutils": "7.3",
+    "shuutils": "7.3.2",
     "tailwindcss": "3",
     "typescript": "5.1",
-    "vitest": "0.34"
+    "vitest": "0.34.6"
   },
   "files": [
     "src",
