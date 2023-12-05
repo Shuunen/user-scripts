@@ -22,6 +22,8 @@
           "multi"
         ],
         "eslint-comments/no-use": "off",
+        "etc/no-deprecated": "off",
+        "etc/no-internal": "off",
         "ext/lines-between-object-properties": "off",
         "import/no-commonjs": "off",
         "import/unambiguous": "off",
@@ -57,6 +59,7 @@
         "plugin:userscripts/recommended"
       ],
       "files": [
+        "src/auchan-*.js",
         "src/lbc-*.js",
         "src/utils.js"
       ],
@@ -71,6 +74,8 @@
           "multi"
         ],
         "eslint-comments/no-use": "off",
+        "etc/no-deprecated": "off",
+        "etc/no-internal": "off",
         "ext/lines-between-object-properties": "off",
         "import/no-commonjs": "off",
         "line-comment-position": "off",
@@ -82,6 +87,7 @@
         "no-inline-comments": "off",
         "padding-line-between-statements": "off",
         "prettier/prettier": "off",
+        "putout/putout": "off",
         "quotes": [
           "error",
           "single"

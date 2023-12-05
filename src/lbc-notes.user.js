@@ -221,7 +221,7 @@ function getNoteIdFromNote (noteElement) {
     const listingId = getListingIdFromNote(noteElement)
     utils.log(`${noteId ? 'update' : 'create'} note for listing ${listingId} with content : ${noteContent}`)
     try {
-      const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent })) // eslint-disable-line putout/putout
+      const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }))
       saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement)
       updateNoteStyle(noteElement) /* @ts-ignore */
     } catch (/** @type Error */ error) { saveNoteFailure({ listingId, noteContent, noteId: '' }, noteElement, error) }
@@ -371,5 +371,5 @@ function getNoteIdFromNote (noteElement) {
   void utils.onPageChange(() => processDebounced('page-change-event'))
 })()
 
-// eslint-disable-next-line no-undef, putout/putout
+// eslint-disable-next-line no-undef
 if (module) module.exports = { getListingId }

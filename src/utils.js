@@ -374,7 +374,7 @@ class Shuutils {
   }
 }
 
-// eslint-disable-next-line no-undef, putout/putout
+// eslint-disable-next-line no-undef
 if (module) module.exports = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Shuutils,
