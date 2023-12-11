@@ -4,7 +4,7 @@ import { expect, it } from 'vitest'
 import { maxScore, score, score20Styled } from '../src/amazon-aio.user.js'
 import { check } from './utils'
 
-// eslint-disable-next-line max-params
+// eslint-disable-next-line @typescript-eslint/max-params
 function checkGreaterThan (title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number): void {
   const scoreA = score(ratingA, reviewsA) as number // eslint-disable-line @typescript-eslint/consistent-type-assertions
   const scoreB = score(ratingB, reviewsB) as number // eslint-disable-line @typescript-eslint/consistent-type-assertions

@@ -17,6 +17,7 @@
       ],
       "rules": {
         "@typescript-eslint/ban-ts-comment": "off",
+        "compat/compat": "off",
         "curly": [
           "error",
           "multi"
@@ -24,6 +25,7 @@
         "eslint-comments/no-use": "off",
         "etc/no-deprecated": "off",
         "etc/no-internal": "off",
+        "etc/no-misused-generics": "off",
         "ext/lines-between-object-properties": "off",
         "import/no-commonjs": "off",
         "import/unambiguous": "off",
@@ -38,9 +40,11 @@
         "no-inline-comments": "off",
         "no-unsanitized/property": "off",
         "padding-line-between-statements": "off",
+        "prefer-destructuring": "off",
         "prettier/prettier": "off",
         "putout/putout": "off",
         "quotes": "off",
+        "regexp/require-unicode-sets-regexp": "off",
         "require-atomic-updates": "off",
         "strict": "off",
         "unicorn/no-array-for-each": "off",
@@ -69,6 +73,7 @@
       },
       "rules": {
         "@typescript-eslint/ban-ts-comment": "off",
+        "compat/compat": "off",
         "curly": [
           "error",
           "multi"
@@ -76,6 +81,7 @@
         "eslint-comments/no-use": "off",
         "etc/no-deprecated": "off",
         "etc/no-internal": "off",
+        "etc/no-misused-generics": "off",
         "ext/lines-between-object-properties": "off",
         "import/no-commonjs": "off",
         "line-comment-position": "off",
@@ -86,12 +92,14 @@
         "no-implicit-globals": "off",
         "no-inline-comments": "off",
         "padding-line-between-statements": "off",
+        "prefer-destructuring": "off",
         "prettier/prettier": "off",
         "putout/putout": "off",
         "quotes": [
           "error",
           "single"
         ],
+        "regexp/require-unicode-sets-regexp": "off",
         "require-jsdoc": [
           "error",
           {
@@ -186,13 +194,17 @@
           "error",
           "always-multiline"
         ],
+        "compat/compat": "off",
         "curly": [
           "error",
           "multi"
         ],
         "eslint-comments/no-use": "off",
         "etc/no-const-enum": "off",
+        "etc/no-deprecated": "off",
         "etc/no-enum": "off",
+        "etc/no-internal": "off",
+        "etc/no-misused-generics": "off",
         "etc/prefer-interface": "off",
         "ext/lines-between-object-properties": "off",
         "filenames/match-regex": [
@@ -254,12 +266,15 @@
           "always"
         ],
         "padding-line-between-statements": "off",
+        "prefer-destructuring": "off",
         "prettier/prettier": "off",
+        "putout/putout": "off",
         "quote-props": [
           "error",
           "consistent-as-needed"
         ],
         "quotes": "off",
+        "regexp/require-unicode-sets-regexp": "off",
         "require-atomic-updates": [
           "error",
           {

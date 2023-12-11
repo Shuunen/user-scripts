@@ -10,7 +10,6 @@
 // ==/UserScript==
 
 /* eslint-disable no-param-reassign */
-/* eslint-disable prefer-destructuring */
 /* eslint-disable no-magic-numbers */
 
 // @ts-nocheck

@@ -50,7 +50,6 @@
   function processRow (row) {
     row.classList.add('processed')
     // mark row id as... id
-    // eslint-disable-next-line prefer-destructuring
     const id = row.querySelector('.card-body').className.split(' ')[0].split('-')[1]
     if (id.length === 0) { utils.error('no id found on row', row); return }
     // eslint-disable-next-line no-param-reassign

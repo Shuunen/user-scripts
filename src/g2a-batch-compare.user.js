@@ -23,7 +23,6 @@
   /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils({ debug: false, id: marker })
   function cleanGameName (string) {
-    // eslint-disable-next-line prefer-destructuring
     const output = string.toLowerCase()
       .split(' deluxe edition')[0]
       .split(' definitive edition')[0]
