@@ -36,7 +36,7 @@ devDependencies:
     specifier: '3.3'
     version: 3.3.6
   typescript:
-    specifier: 5.3.3
+    specifier: '5.3'
     version: 5.3.3
   vitest:
     specifier: '1.0'
