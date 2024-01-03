@@ -24,8 +24,8 @@ devDependencies:
     specifier: '50.0'
     version: 50.0.0(eslint@8.56.0)
   eslint-plugin-userscripts:
-    specifier: '0.4'
-    version: 0.4.0(eslint@8.56.0)
+    specifier: '0.5'
+    version: 0.5.0(eslint@8.56.0)
   repo-check:
     specifier: '1.34'
     version: 1.34.0
@@ -4703,14 +4703,13 @@ packages:
       eslint-rule-composer: 0.3.0
     dev: true
 
-  /eslint-plugin-userscripts@0.4.0(eslint@8.56.0):
-    resolution: {integrity: sha512-SqYXsAo4Lb4jLYjMYh4ws/SX4kWXO6Iq4l2eQUqqxitmbnkYXr18SPIGY8/MjV2G3X3ckGVLgZAL5ynlsqNo7g==}
-    engines: {node: '>=16.0.0 <21.0.0'}
+  /eslint-plugin-userscripts@0.5.0(eslint@8.56.0):
+    resolution: {integrity: sha512-QIyIqbv/nMPqbe7FHnBZyBaNoZwGjVvan7tumeTdvKk7dVldlUMvrtcPLZwLZDePQPQpgGJ2co+tJ3AlfUxvoQ==}
+    engines: {node: '>=18.0.0 <22.0.0'}
     peerDependencies:
-      eslint: '>=8.0.0 <9'
+      eslint: '>=8.40.0 <10'
     dependencies:
       eslint: 8.56.0
-      requireindex: 1.2.0
       semver: 7.5.4
     dev: true
 
