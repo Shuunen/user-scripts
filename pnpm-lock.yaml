@@ -21,8 +21,8 @@ devDependencies:
     specifier: '3.14'
     version: 3.14.0(tailwindcss@3.4.0)
   eslint-plugin-unicorn:
-    specifier: '50.0'
-    version: 50.0.0(eslint@8.56.0)
+    specifier: '51.0'
+    version: 51.0.0(eslint@8.56.0)
   eslint-plugin-userscripts:
     specifier: '0.5'
     version: 0.5.0(eslint@8.56.0)
@@ -4662,8 +4662,8 @@ packages:
       strip-indent: 3.0.0
     dev: true
 
-  /eslint-plugin-unicorn@50.0.0(eslint@8.56.0):
-    resolution: {integrity: sha512-S830OrmnYzJFMXf2AsPVZE3BlLedAED0a3QNpB+o97eXvJTAdWqc5e+R8ozm1jh8nMV37HykU/h9HMwjZ7Fzbg==}
+  /eslint-plugin-unicorn@51.0.0(eslint@8.56.0):
+    resolution: {integrity: sha512-104L+VrZQ0RlyTYQPmF0ofoN1/rot1U/BoCSUDTTiPgumzA/QUzDwUqbR4Q0laOYXi5sYI2HDrJQ/b5PlJteCA==}
     engines: {node: '>=16'}
     peerDependencies:
       eslint: '>=8.56.0'
