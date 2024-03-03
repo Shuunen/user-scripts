@@ -14,7 +14,7 @@
 (function AmazonMusicBrainzExport () {
   /* global textFromSelector, insertMbForm, Shuutils */
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: 'amazon-mb-export' })
+  const utils = new Shuutils({ debug: false, id: 'amazon-mb-export' }) // eslint-disable-line @typescript-eslint/naming-convention
   const selectors = {
     artist: '[data-feature-name="artistLink"',
     title: '[data-feature-name="dmusicProductTitle"]',
@@ -36,12 +36,14 @@
       },
       artist: textFromSelector(selectors.artist),
       date: { day: 0, month: 0, year: 0 },
+      // eslint-disable-next-line regexp/prefer-regexp-exec
       label: (details.match(/Label: (?<name>\S+)/u) || [])[1] || '',
       title: textFromSelector(selectors.title),
       tracks: getTracks(),
       url: document.location.href,
       urlType: '77',
     }
+    // eslint-disable-next-line regexp/prefer-regexp-exec
     const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u)
     if (dateMatches.groups?.year) {
       const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
@@ -57,5 +59,5 @@
     if (title === undefined) { utils.log('no music title found on this page'); return }
     mbImport()
   }
-  utils.onPageChange(init)
+  void utils.onPageChange(init)
 })()

@@ -9,8 +9,6 @@
 // @grant        none
 // ==/UserScript==
 
-'use strict';
-
 // eslint-disable-next-line max-statements
 (function auchanAio () {
 
@@ -48,7 +46,7 @@
 
   function hideUseless () {
     let nb = 0
-    // eslint-disable-next-line unicorn/no-array-for-each, no-loop-func
+    // eslint-disable-next-line no-loop-func
     for (const selector of Object.values(uselessSelectors)) utils.findAll(`${selector}:not([data-hidden-cause])`, document, true).forEach((node) => {
       hideElement(node, 'useless')
       nb += 1

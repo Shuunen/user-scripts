@@ -90,15 +90,15 @@ function getScoreForResolution (resolution, score) {
 const scoresByKeyword = {
   ' tn ': 50,
   'backlit': 70,
-  'FHD': 30,
+  'FHD': 30, // eslint-disable-line @typescript-eslint/naming-convention
   'fingerprint': 70,
   'Full HD': 30,
   'gtx': 70,
   'Keyboard Light': 70,
   'led': 70,
   'lock': 70,
-  'NvmE': 80,
-  'Oled': 70,
+  'NvmE': 80, // eslint-disable-line @typescript-eslint/naming-convention
+  'Oled': 70, // eslint-disable-line @typescript-eslint/naming-convention
   'power delivery': 70,
   'rtx': 70,
   'ssd': 70,
@@ -302,10 +302,10 @@ data.split('\n').forEach(line => {
 })
 
 // eslint-disable-next-line max-statements
-function LaptopHelper () {
+function laptopHelper () {
   /* global Shuutils, RoughNotation */
   const app = {
-    debug: true,
+    debug: true, // eslint-disable-line @typescript-eslint/naming-convention
     id: 'lpt-hlp',
   }
   const cls = {
@@ -362,18 +362,18 @@ function LaptopHelper () {
     utils.findAll(selectors.desc, document, true).forEach((/** @type HTMLElement */descElement) => {
       descElement.classList.add(cls.mark)
       // first close last opened console group, else closing nothing without throwing error
-      console.groupEnd()
+      console.groupEnd() // eslint-disable-line no-console
       // eslint-disable-next-line no-param-reassign
       descElement.innerHTML = descElement.innerHTML.replace(/&nbsp;/gu, '')
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // eslint-disable-next-line no-magic-numbers
-      console.groupCollapsed(utils.ellipsisWords(text, 15))
+      console.groupCollapsed(utils.ellipsisWords(text, 15)) // eslint-disable-line no-console
       utils.log('checking :', text)
       // eslint-disable-next-line no-param-reassign
       descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)
       utils.findAll(`.${cls.mark}`, descElement, true).forEach(markElement => { annotate(markElement) })
     })
-    console.groupEnd()
+    console.groupEnd() // eslint-disable-line no-console
   }
   function clearLinks () {
     utils.findAll(selectors.clearLinks, document, true).forEach((/** @type HTMLAnchorElement */ link) => {
@@ -399,10 +399,9 @@ function LaptopHelper () {
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
   document.addEventListener('scroll', processDebounced)
-  utils.onPageChange(processDebounced)
+  void utils.onPageChange(processDebounced)
   // eslint-disable-next-line no-magic-numbers
   setTimeout(processDebounced, 1000)
 }
 
-// eslint-disable-next-line new-cap
-LaptopHelper()
+laptopHelper()

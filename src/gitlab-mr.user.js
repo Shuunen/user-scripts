@@ -11,10 +11,10 @@
 
 // @ts-nocheck
 
-(function GitlabMR () {
+(function gitlabMr () {
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debounceTime: 300, debug: false, id: 'gitlab-mr' })
+  const utils = new Shuutils({ debounceTime: 300, debug: false, id: 'gitlab-mr' }) // eslint-disable-line @typescript-eslint/naming-convention
   // eslint-disable-next-line max-statements
   function addButton (element, label, href) {
     const button = element.cloneNode(true)
@@ -31,7 +31,7 @@
     link.querySelector('.label').textContent = label
     element.insertAdjacentElement('afterEnd', button)
     // eslint-disable-next-line promise/prefer-await-to-then
-    fetch(href).then(response => response.text()).then(html => {
+    fetch(href).then(async response => await response.text()).then(html => {
       const matches = html.match(/class="merge-request" data-id/gu)
       const nb = matches ? matches.length : 0
       utils.log('found', nb, 'matches for', label)
@@ -59,9 +59,9 @@
     utils.findAll('.shortcuts-todos, .nav-item.header-help').forEach(element => { element.remove() })
   }
   function process () {
-    enhanceLinks()
+    void enhanceLinks()
     hideStuff()
   }
   const processDebounced = utils.debounce(process, utils.app.debounceTime)
-  utils.onPageChange(processDebounced)
+  void utils.onPageChange(processDebounced)
 })()

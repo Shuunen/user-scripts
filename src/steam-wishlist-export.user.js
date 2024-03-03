@@ -14,7 +14,7 @@
 (function SteamWishlistExport () {
   /* global Shuutils */
   const marker = 'stm-wex'
-  const app = { debug: false, games: [], id: marker }
+  const app = { debug: false, games: [], id: marker } // eslint-disable-line @typescript-eslint/naming-convention
   /** @type {import('./utils.js').Shuutils} */
   const utils = new Shuutils(app)
   const selectors = {
@@ -40,13 +40,13 @@
     if (row === undefined)
       return list
     list.push(getGameData(row))
-    return getGames(list)
+    return await getGames(list)
   }
   async function copyGames () {
-    if (app.games.length > 0) { utils.copyToClipboard(app.games); return }
+    if (app.games.length > 0) { void utils.copyToClipboard(app.games); return }
     const games = await getGames()
     utils.log('found games :', games)
-    utils.copyToClipboard(games)
+    void utils.copyToClipboard(games)
     app.button.style.backgroundColor = 'lightgreen'
     app.button.textContent = `${games.length} games copied to your clipboard`
     app.games = games
@@ -55,7 +55,7 @@
     const button = document.createElement('button')
     button.textContent = 'Export list to JSON'
     button.style = 'position: fixed; cursor: pointer; top: 3.5rem; right: 1rem; padding: 0.5rem 1.2rem; font-size: 1rem; z-index: 1000; '
-    button.addEventListener('click', () => copyGames())
+    button.addEventListener('click', () => { void copyGames() })
     app.button = button
     document.body.append(button)
   }
@@ -64,5 +64,5 @@
     if (row === undefined) { utils.log('no game found on this page'); return }
     injectButton()
   }
-  utils.onPageChange(init)
+  void utils.onPageChange(init)
 })()

@@ -11,14 +11,14 @@
 
 /* eslint-disable no-param-reassign */
 
-// eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
-(function amazonGamingAIO () {
+// eslint-disable-next-line max-statements
+(function amazonGamingAio () {
   /* global Shuutils */
   if (typeof window === 'undefined') return
   const appId = 'amz-gm-aio'
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ debug: false, id: appId })
+  const utils = new Shuutils({ debug: false, id: appId }) // eslint-disable-line @typescript-eslint/naming-convention
   // non word characters will be removed
   const dlcToHide = [
     'Aion Classic',
@@ -155,11 +155,11 @@
    * @returns {boolean} true if the element should not be hidden
    */
   function preventElementHide (element, cause) {
-    const len = element.innerHTML.length
-    utils.debug('checkElementToHide', cause, 'with length', len)
+    const length = element.innerHTML.length
+    utils.debug('checkElementToHide', cause, 'with length', length)
     if (['claimed', 'unwanted-dlc'].includes(cause)) {
-      if (len > 8500) { utils.error(`element is too big (${len} > 8500) to be hidden`, element); return true } // eslint-disable-line no-magic-numbers
-      if (len < 6500) { utils.error(`element is too small (${len} < 6500) to be hidden`, element); return true } // eslint-disable-line no-magic-numbers
+      if (length > 8500) { utils.error(`element is too big (${length} > 8500) to be hidden`, element); return true } // eslint-disable-line no-magic-numbers
+      if (length < 6500) { utils.error(`element is too small (${length} < 6500) to be hidden`, element); return true } // eslint-disable-line no-magic-numbers
     }
     return false
   }
@@ -191,14 +191,14 @@
     })
     checkEmptyGrids()
   }
-  function cleanDLCName (name = '') {
+  function cleanDlcName (name = '') {
     return name
-      .normalize("NFD").replace(/[\u0300-\u036F]/gu, '') // remove accents
+      .normalize('NFD').replace(/[\u0300-\u036F]/gu, '') // remove accents
       .replace(/\W/gu, ' ') // remove non word characters
       .replace(/\s+/gu, ' ').trim() // remove multiple spaces
       .toLowerCase() || '' // lowercase
   }
-  function hideUnwantedDLC () {
+  function hideUnwantedDlc () {
     const list = utils.findAll(selectors.productDlcName, document, true)
     utils.log(list.length, 'dlc found')
     // eslint-disable-next-line max-statements
@@ -210,10 +210,10 @@
       const title = product.querySelector(selectors.productName)
       if (!title) { utils.error('no title found in product :', node); return }
       /** @type {string} */
-      const gameName = cleanDLCName(title.textContent ?? '')
+      const gameName = cleanDlcName(title.textContent ?? '')
       if (gameName.length === 0) { utils.error('no game name found', node); return }
       node.title = gameName
-      const shouldHide = dlcToHide.some((dlc) => gameName.includes(cleanDLCName(dlc)))
+      const shouldHide = dlcToHide.some((dlc) => gameName.includes(cleanDlcName(dlc)))
       if (!shouldHide) { utils.log('game dlc is ok :', gameName); return }
       product.title = gameName
       hideElement(product, 'unwanted-dlc')
@@ -226,12 +226,12 @@
     deleteUseless()
     clearClassnames()
     hideClaimed()
-    hideUnwantedDLC()
+    hideUnwantedDlc()
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
 
-  utils.onPageChange(() => processDebounced('page-change'))
+  void utils.onPageChange(() => processDebounced('page-change'))
 
   window.addEventListener('scroll', () => processDebounced('scroll'))
 

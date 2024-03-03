@@ -11,7 +11,7 @@
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ debug: false, id: 'auto-fill' })
+  const utils = new Shuutils({ debug: false, id: 'auto-fill' }) // eslint-disable-line @typescript-eslint/naming-convention
   const selectors = {
     input: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
   }
@@ -22,7 +22,7 @@
    */
   function triggerChange (element) {
     element.dispatchEvent(new KeyboardEvent('change'))
-    element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
+    element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true })) // eslint-disable-line @typescript-eslint/naming-convention
   }
   function fill (email = 'romain.racamier@gmail.com') {
     utils.log('autofill start')
@@ -40,5 +40,5 @@
     setTimeout(fill, 3000) // eslint-disable-line no-magic-numbers
   }
   if (document.location.hostname === 'localhost') return
-  utils.onPageChange(init)
+  void utils.onPageChange(init)
 })()

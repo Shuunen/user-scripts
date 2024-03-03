@@ -27,7 +27,7 @@ function cleanTitle (title) {
     .trim()
 }
 
-// eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
+// eslint-disable-next-line max-statements
 (function SaveurBiereUntappd () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
@@ -35,11 +35,11 @@ function cleanTitle (title) {
   // eslint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: true, id: marker })
+  const utils = new Shuutils({ debug: true, id: marker }) // eslint-disable-line @typescript-eslint/naming-convention
   const user = localStorage.untappdUser || ''
   if (user === '') { utils.error('please set localStorage.untappdUser to use this script'); return }
-  const wrapAPIKey = localStorage.wrapAPIKey || ''
-  if (wrapAPIKey === '') { utils.error('please set localStorage.wrapAPIKey to use this script'); return }
+  const wrapApiKey = localStorage.wrapAPIKey || ''
+  if (wrapApiKey === '') { utils.error('please set localStorage.wrapAPIKey to use this script'); return }
   const selectors = {
     banner: 'span > p, div[class^="styled__Banner-sc"]',
     items: 'div > div > div > div > div > div > div > img[class^="Box-sc"] + div[class^="Box-sc"],[data-insights-object-id], div[class^="styled__List"] > div[class^="styled__Container-sc"],[class^="styled__Products"] > div[class^="styled__Container-sc"], div[class^="styled__Content"] > h1[class^="styled__Title"]:first-child, div[class^="styled__Column-sc"] > span[class^="styled__Title-sc"]',
@@ -60,7 +60,7 @@ function cleanTitle (title) {
     // eslint-disable-next-line no-param-reassign
     element.parentElement.style.height = 'auto'
   }
-  // eslint-disable-next-line max-statements, consistent-return
+  // eslint-disable-next-line max-statements, consistent-return, sonarjs/cognitive-complexity
   async function fetchRating (item) {
     const titleElement = utils.findOne(selectors.title, item)
     if (titleElement === null) return utils.error('cant find item title')
@@ -72,7 +72,7 @@ function cleanTitle (title) {
     let data = {}
     if (localStorage.getItem(storageKey) === null) {
       utils.log('fetching rating for :', name)
-      data = await fetch(`https://wrapapi.com/use/jojo/untappd/history/0.0.1?user=${user}&search=${name}&wrapAPIKey=${wrapAPIKey}`).then(response => response.json()).then(response => response.data)
+      data = await fetch(`https://wrapapi.com/use/jojo/untappd/history/0.0.1?user=${user}&search=${name}&wrapAPIKey=${wrapApiKey}`).then(async response => await response.json()).then(response => response.data)
       utils.log(`fetched ${data ? '' : 'EMPTY '}data`, data, 'for item', name)
       localStorage.setItem(storageKey, data ? JSON.stringify(data) : 'EMPTY')
       if (data === null) return utils.log(`no ratings found for item "${name}"`)
@@ -98,7 +98,7 @@ function cleanTitle (title) {
         utils.log('product not available', item)
         return
       }
-      fetchRating(item)
+      void fetchRating(item)
     })
   }
   function deleteUseless () {
@@ -114,7 +114,7 @@ function cleanTitle (title) {
     deleteUseless()
     injectRatings()
   }
-  utils.onPageChange(init)
+  void utils.onPageChange(init)
 })()
 
 if (module) module.exports = {

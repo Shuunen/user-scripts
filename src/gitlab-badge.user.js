@@ -12,14 +12,14 @@
 // @ts-nocheck
 
 const app = {
-  debug: false,
-  id: 'gtb-bdg'
+  debug: false, // eslint-disable-line @typescript-eslint/naming-convention
+  id: 'gtb-bdg',
 }
 
 const badges = {
   bronze: 'https://i.imgur.com/APbU15u.png',
   gold: 'https://i.imgur.com/hoWbQ3w.png',
-  silver: 'https://i.imgur.com/ZGeAId9.png'
+  silver: 'https://i.imgur.com/ZGeAId9.png',
 }
 
 const steps = {
@@ -41,6 +41,7 @@ async function getNbContributions () {
 }
 
 function injectStyles (string = '') {
+  // eslint-disable-next-line no-console
   if (string.length === 0) { console.log('cannot inject empty style stuff'); return }
   if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
     // eslint-disable-next-line no-unsanitized/method
@@ -51,19 +52,19 @@ function injectStyles (string = '') {
   document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
 }
 
-function animateCSS (element, animation, canRemoveAfter = true) {
+async function animateCss (element, animation, canRemoveAfter = true) {
   // eslint-disable-next-line promise/avoid-new
-  return new Promise((resolve) => {
+  return await new Promise((resolve) => {
     const animationName = `animate__${animation}`
-    element.classList.add(`animate__animated`, animationName)
+    element.classList.add('animate__animated', animationName)
     if (!canRemoveAfter) { resolve('Animation ended, no need to remove'); return }
     // When the animation ends, we clean the classes and resolve the Promise
     function handleAnimationEnd (event) {
       event.stopPropagation()
-      element.classList.remove(`animate__animated`, animationName)
+      element.classList.remove('animate__animated', animationName)
       resolve('Animation ended')
     }
-    element.addEventListener('animationend', handleAnimationEnd, { once: true })
+    element.addEventListener('animationend', handleAnimationEnd, { once: true }) // eslint-disable-line @typescript-eslint/naming-convention
   })
 }
 
@@ -80,12 +81,12 @@ function animateCSS (element, animation, canRemoveAfter = true) {
   }
   const badge = getBadge()
   let isHidden = false
-  badge.addEventListener('click', () => { isHidden = true; animateCSS(badge, 'bounceOutUp', false) })
+  badge.addEventListener('click', () => { isHidden = true; void animateCss(badge, 'bounceOutUp', false) })
   document.body.append(badge)
   let animationCount = 0
-  function animateBadge (contributionsChanged = false) {
-    if (animationCount === 0) animateCSS(badge, 'backInRight')
-    else animateCSS(badge, contributionsChanged ? 'tada' : 'pulse')
+  function animateBadge (hasContributionsChanged = false) {
+    if (animationCount === 0) void animateCss(badge, 'backInRight')
+    else void animateCss(badge, hasContributionsChanged ? 'tada' : 'pulse')
     animationCount += 1
   }
   async function process (reason = 'unknown') {
@@ -100,9 +101,9 @@ function animateCSS (element, animation, canRemoveAfter = true) {
     animateBadge(todayContributions !== previousContributions)
   }
   const processDebounced = utils.debounce(process, 1000) // eslint-disable-line no-magic-numbers
-  window.addEventListener('focus', () => process('focus'))
+  window.addEventListener('focus', () => { void process('focus') })
   window.addEventListener('click', () => processDebounced('click'))
-  utils.onPageChange(() => process('page-change'))
+  utils.onPageChange(async () => await process('page-change'))
 })()
 
 injectStyles(`

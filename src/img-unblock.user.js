@@ -13,10 +13,10 @@
 
 (function ImageUnblock () {
   /* global Shuutils */
-  const PROXY_URL = 'https://proxy.duckduckgo.com/iu/?u='
+  const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ debug: true, id: 'img-unblock' })
+  const utils = new Shuutils({ debug: true, id: 'img-unblock' }) // eslint-disable-line @typescript-eslint/naming-convention
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }
@@ -27,7 +27,7 @@
       element.classList.add('img-unblock')
       if (!element.href.includes('.jpg') && !element.href.includes('.png')) return
       utils.log('processing', element)
-      const source = PROXY_URL + element.href
+      const source = proxyUrl + element.href
       const img = document.createElement('img')
       img.src = source
       img.style.width = '100%'
@@ -42,5 +42,5 @@
   const processDebounced = utils.debounce(process, 500)
   utils.log('set scroll listener')
   document.addEventListener('scroll', () => processDebounced())
-  utils.onPageChange(processDebounced)
+  void utils.onPageChange(processDebounced)
 })()

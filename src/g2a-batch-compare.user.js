@@ -16,12 +16,12 @@
 // @ts-nocheck
 
 // eslint-disable-next-line max-statements
-(function G2ABatchCompare () {
+(function g2aBatchCompare () {
   /* global Shuutils, didYouMean */
   const marker = 'g2a-bcp'
   let list = []
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: marker })
+  const utils = new Shuutils({ debug: false, id: marker }) // eslint-disable-line @typescript-eslint/naming-convention
   function cleanGameName (string) {
     const output = string.toLowerCase()
       .split(' deluxe edition')[0]
@@ -32,9 +32,9 @@
     return utils.readableString(output)
   }
   function same (stringA, stringB) {
-    const result = Boolean(didYouMean(cleanGameName(stringA), [cleanGameName(stringB)]))
-    if (utils.app.debug) utils.log(`${result ? 'same' : 'different'} : "${stringA}" & "${stringB}"`)
-    return result
+    const hasResult = Boolean(didYouMean(cleanGameName(stringA), [cleanGameName(stringB)]))
+    if (utils.app.debug) utils.log(`${hasResult ? 'same' : 'different'} : "${stringA}" & "${stringB}"`)
+    return hasResult
   }
   function injectModal () {
     const backdrop = document.createElement('div')
@@ -97,7 +97,7 @@
     injectStyles('https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css')
     const dataTable = new window.simpleDatatables.DataTable(`#${table.id}`, {
       columns: [
-        // eslint-disable-next-line no-magic-numbers
+        // eslint-disable-next-line no-magic-numbers, @typescript-eslint/naming-convention
         { select: [1, 2, 4], sortable: false },
         { hidden: true, render: value => (value === '0' ? '?' : value), select: 3, sort: 'asc' }, // raw price
       ],
@@ -112,7 +112,7 @@
     const search = `${utils.readableString(game.title).toLowerCase()} steam`
     game.priceLocalSearchUrl = `https://www.g2a.com/search?query=${search}`
     const url = `https://www.g2a.com/search/api/v3/suggestions?itemsPerPage=5&phrase=${search}&currency=EUR&variantCategory=189`
-    const { data } = await window.fetch(url).then(response => response.json())
+    const { data } = await window.fetch(url).then(async response => await response.json())
     if (data === undefined || data.items === undefined || data.items.length === 0) return
     let lowestPrice = 0
     let lowestUrl = ''
@@ -155,15 +155,15 @@
     const button = document.createElement('button')
     button.textContent = `Compare ${list.length} prices`
     button.style = 'position: fixed; cursor: pointer; top: 3.5rem; right: 1rem; padding: 0.5rem 1.2rem; font-size: 1rem; z-index: 50; '
-    button.addEventListener('click', () => showModal())
+    button.addEventListener('click', () => { void showModal() })
     document.body.append(button)
   }
   async function init () {
     const string = await utils.readClipboard()
-    if (string[0] !== '[') { utils.log('no JSON array in clipboard'); return }
+    if (!string.startsWith('[')) { utils.log('no JSON array in clipboard'); return }
     list = JSON.parse(string)
     utils.log('got list from clipboard', list)
     injectButton()
   }
-  utils.onPageChange(init)
+  void utils.onPageChange(init)
 })()

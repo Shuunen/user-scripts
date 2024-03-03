@@ -16,7 +16,7 @@
   /* global Shuutils, autosize */
   const app = {
     debounceTime: 500,
-    debug: false,
+    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
     excluders: [],
     filter: '',
     id: 'amz-xd',
@@ -56,6 +56,7 @@
     Object.keys(app.suggestions).forEach(word => {
       if (app.excluders.includes(word))
         // if already excluded, no need to suggest it again
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete app.suggestions[word]
     })
     // add .map(key => `${key} (${app.suggestions[key]})`)
@@ -82,17 +83,17 @@
   }
 
   function checkProduct (titleString, titleElement) {
-    let found = false
+    let isFound = false
     let remaining = app.excluders.length
-    while (!found && remaining) {
-      found = titleString.includes(app.excluders[remaining - 1])
+    while (!isFound && remaining) {
+      isFound = titleString.includes(app.excluders[remaining - 1])
       remaining -= 1
     }
     // eslint-disable-next-line no-magic-numbers
-    if (found) utils.log(`"${titleString.slice(0, 40)}..."`, 'should be excluded')
+    if (isFound) utils.log(`"${titleString.slice(0, 40)}..."`, 'should be excluded')
     else addTitleToSuggestions(titleString)
     const product = titleElement.closest(selectors.product)
-    product.style.display = found ? 'none' : 'inline-block'
+    product.style.display = isFound ? 'none' : 'inline-block'
   }
 
   function checkProducts () {

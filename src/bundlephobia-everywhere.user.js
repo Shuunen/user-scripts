@@ -15,7 +15,7 @@
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ debug: false, id: 'bdl-evr' })
+  const utils = new Shuutils({ debug: false, id: 'bdl-evr' }) // eslint-disable-line @typescript-eslint/naming-convention
   /**
    * Inject bundlephobia badges into the page
    * @param {string} name
@@ -42,13 +42,15 @@
   function detectName () {
     let text = document.body.textContent
     if (!text) { utils.error('cannot find body text content'); return }
-    if (text.includes('npm') === false) { utils.log('does not seems like the good place to add a badge'); return }
+    if (!text.includes('npm')) { utils.log('does not seems like the good place to add a badge'); return }
     const copyBlock = utils.findOne('.lh-copy span')
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     if (copyBlock) text = `${copyBlock.textContent}\n${text}`
+    // eslint-disable-next-line regexp/prefer-regexp-exec
     const name = (text.match(/\b(?<provider>npm i|npm install|npx|yarn add).* (?<name>[^-][\w./@-]+)/iu) || text.match(/(?<provider>unpkg\.com)\/(?<name>@?[\w./-]+)/iu))?.groups?.name
     if (name === undefined) { utils.warn('failed to find a npm package name in this page'); return }
     utils.log('found package name :', name)
     injectBadge(name)
   }
-  utils.onPageChange(detectName)
+  void utils.onPageChange(detectName)
 })()

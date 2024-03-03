@@ -20,10 +20,10 @@
 
 // @ts-nocheck
 // eslint-disable-next-line max-statements
-(function HDDCleaner () {
+(function hddCleaner () {
   /* global Shuutils */
   const app = {
-    debug: false,
+    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
     id: 'hdd-clr',
     maxSize: 12_000,
     minSize: 4000, // in Gb or Go
@@ -54,7 +54,7 @@
     if (!matches) return false
     let size = 0
     matches.forEach(match => {
-      // eslint-disable-next-line prefer-const
+      // eslint-disable-next-line prefer-const, regexp/prefer-regexp-exec
       let [, mSize, mUnit] = match.match(regex.size) ?? []
       if (mUnit === 'to' || mUnit === 'tb') mSize *= 1000 // align sizes to Go, may be slightly different according to TO vs TB
       if (mSize > size) size = Number.parseInt(mSize, 10)
@@ -69,6 +69,7 @@
       return false
     }
     utils.log('found price element :', priceElement.textContent)
+    // eslint-disable-next-line regexp/prefer-regexp-exec
     const matches = priceElement.textContent.match(regex.price)
     if (matches.length !== 2) {
       utils.error('failed at finding price')
@@ -85,13 +86,15 @@
     descElement.textContent = `( ${rating}${pricePerTo}€ / to ) - ${descElement.textContent}`
     return true
   }
-  // eslint-disable-next-line sonarjs/cognitive-complexity
+
   function checkItems () {
     // eslint-disable-next-line max-statements
     utils.findAll(selectors.desc, document, true).forEach(descElement => {
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // first close last opened console group, else closing nothing without throwing error
+      // eslint-disable-next-line no-console
       console.groupEnd()
+      // eslint-disable-next-line no-console
       console.groupCollapsed(utils.ellipsisWords(text, 15))
       const size = getSize(text)
       if (!size) {
@@ -99,23 +102,24 @@
         return
       }
       utils.log('size found :', size, 'Go')
-      const sizeIsOk = (app.minSize <= size) && (size <= app.maxSize)
-      utils.log('size is', sizeIsOk ? 'good' : 'INVALID')
+      const isSizeOk = (app.minSize <= size) && (size <= app.maxSize)
+      utils.log('size is', isSizeOk ? 'good' : 'INVALID')
       const productElement = descElement.closest(selectors.product)
       if (!productElement) {
         utils.error('fail at finding closest product')
         return
       }
-      let markItem = true
-      if (sizeIsOk) markItem = insertPricePerSize(productElement, descElement, size)
+      let willMarkItem = true
+      if (isSizeOk) willMarkItem = insertPricePerSize(productElement, descElement, size)
       else productElement.style = app.debug ? 'background-color: lightcoral; opacity: 0.6;' : 'display: none;'
-      if (markItem) {
+      if (willMarkItem) {
         // only add mark class if check completed
         descElement.classList.add(cls.mark)
         utils.log('check complete, element marked')
       }
     })
     // if at least one iteration above, there's an open console group, else closing nothing without throwing error
+    // eslint-disable-next-line no-console
     console.groupEnd()
   }
   function process () {

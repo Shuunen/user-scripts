@@ -1,4 +1,5 @@
 /* eslint-disable userscripts/filename-user */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable userscripts/no-invalid-metadata */
 /* eslint-disable unused-imports/no-unused-vars */
 
@@ -99,7 +100,9 @@ function addMbSubmit (form) {
  */
 // eslint-disable-next-line max-statements
 function insertMbForm ({ app, artist, date, label, title, tracks, url, urlType }) {
+  // eslint-disable-next-line no-console
   if (!title || !artist) { console.info(app.id, 'cannot work without data, exiting...'); return }
+  // eslint-disable-next-line no-console
   console.log(app.id, 'got data :', { artist, date, label, title, tracks, url, urlType })
   const form = createMbForm(app)
   addMbField(form, 'name', title)

@@ -40,7 +40,7 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 
 ## Todo
 
-- [ ] Move all script to hardcore/ts-for-js override in .eslintrc
+- [ ] check/comment the disabled rules in `.eslintrc.js`
 
 ## Thanks
 

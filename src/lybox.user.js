@@ -14,7 +14,7 @@
 (function LyBoxEnhanced () {
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: 'lyb-enhanced' })
+  const utils = new Shuutils({ debug: false, id: 'lyb-enhanced' }) // eslint-disable-line @typescript-eslint/naming-convention
   class Store {
     constructor (provider) {
       this.provider = provider

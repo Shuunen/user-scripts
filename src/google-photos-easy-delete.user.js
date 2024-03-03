@@ -11,7 +11,7 @@
 
 (function GooglePhotosEasyDelete () {
   /* global Shuutils */
-  const app = { debug: false, id: 'gp-ed', init: false, timeToWait: 200 }
+  const app = { debug: false, id: 'gp-ed', init: false, timeToWait: 200 } // eslint-disable-line @typescript-eslint/naming-convention
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils(app)
@@ -36,7 +36,7 @@
    * @returns {void}
    */
   function onKeyPress (event) {
-    if (event.key === '!') deleteCurrentPhoto()
+    if (event.key === '!') void deleteCurrentPhoto()
   }
   function init () {
     if (app.init) return
@@ -44,5 +44,5 @@
     document.body.addEventListener('keypress', onKeyPress)
     app.init = true
   }
-  utils.onPageChange(init)
+  void utils.onPageChange(init)
 })()

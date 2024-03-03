@@ -438,12 +438,12 @@ function createReview (name, rating) {
   return review
 }
 
-// eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
-function LePetitBallonRatings () {
+// eslint-disable-next-line max-statements
+function lePetitBallonRatings () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
   const fuseSettings = {
-    includeScore: true,
+    includeScore: true, // eslint-disable-line @typescript-eslint/naming-convention
     keys: ['title'],
     minMatchCharLength: 4,
     threshold: 0.4,
@@ -451,7 +451,7 @@ function LePetitBallonRatings () {
   const fuse = new Fuse(ratings, fuseSettings)
   const marker = 'lpb-ratings'
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: marker })
+  const utils = new Shuutils({ debug: false, id: marker }) // eslint-disable-line @typescript-eslint/naming-convention
   const selectors = {
     items: `.product-item:not(.${marker})`,
     useless: '.product-catalog--out-stock, .footer-trustpilot, .footer-legal',
@@ -468,14 +468,14 @@ function LePetitBallonRatings () {
 
   function searchRating (wine = '') {
     const results = fuse.search(wine)
-    if (results.length === 0) return { doesMatch: false }
+    if (results.length === 0) return { isMatching: false }
     const [result] = results
     const percent = 100 - Math.round(result.score * 100)
-    if (percent < 50) return { doesMatch: false }
+    if (percent < 50) return { isMatching: false }
     const { rating = 0, title = '' } = result.item
-    if (wine.includes('rouge') && title.includes('blanc')) return { doesMatch: false }
-    if (wine.includes('blanc') && title.includes('rouge')) return { doesMatch: false }
-    return { doesMatch: true, percent, rating, search: wine, title }
+    if (wine.includes('rouge') && title.includes('blanc')) return { isMatching: false }
+    if (wine.includes('blanc') && title.includes('rouge')) return { isMatching: false }
+    return { isMatching: true, percent, rating, search: wine, title }
   }
 
   // eslint-disable-next-line max-statements
@@ -484,9 +484,10 @@ function LePetitBallonRatings () {
     const title = utils.findOne(selectors.wineTitle, item, true)
     if (!title) { utils.error('no title found on item', item); return }
     const domain = title.nextElementSibling
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const wine = cleanTitle(`${domain.textContent} ${title.textContent}`)
     const result = searchRating(wine)
-    if (!result.doesMatch) return
+    if (!result.isMatching) return
     utils.log('found', result)
     title.prepend(createReview(result.title, result.rating))
   }
@@ -503,12 +504,11 @@ function LePetitBallonRatings () {
     injectRatings()
   }
   const injectRatingsDebounced = utils.debounce(injectRatings, 500)
-  utils.onPageChange(init)
+  void utils.onPageChange(init)
   window.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
 }
 
-// eslint-disable-next-line new-cap
-LePetitBallonRatings()
+lePetitBallonRatings()
 
 if (module) module.exports = {
   cleanTitle,

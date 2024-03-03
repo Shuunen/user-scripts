@@ -11,7 +11,7 @@
 
 /* eslint-disable max-statements, no-magic-numbers */
 
-'use strict'
+
 
 /**
  * @typedef {import('./lbc.types').LbcCustomInfo} LbcCustomInfo
@@ -97,7 +97,7 @@ const citiesToHide = new Set([
     const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
     if (ges === '') utils.warn('no GES found in ad', ad)
     const text = `DPE : ${energy} / GES : ${ges}`
-    // eslint-disable-next-line no-nested-ternary
+     
     const score = ['A', 'B'].includes(energy) ? 1.5 : (energy === 'C' ? 1 : 0.5)
     return { score, text }
   }
@@ -200,7 +200,7 @@ const citiesToHide = new Set([
     const { owner } = ad
     if (!owner) { utils.warn('no owner found in ad', ad); return {} }
     const text = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
-    // eslint-disable-next-line no-nested-ternary
+     
     const score = isPrivateBetter ? (owner.type === 'pro' ? 0.5 : 1.2) : 1
     return { score, text }
   }
@@ -259,7 +259,7 @@ const citiesToHide = new Set([
   function getElevatorInfo (ad) {
     const elevator = ad.attributes.find(attribute => attribute.key === 'elevator')
     if (elevator === undefined) return {}
-    // eslint-disable-next-line no-nested-ternary
+     
     const text = elevator.value === '1' ? 'ascenseur' : (elevator.value === '2' ? 'pas d\'ascenseur' : `unknown elevator value "${elevator.value}"`)
     const score = elevator.value === '2' ? 0.5 : 1
     return { score, text }
@@ -287,7 +287,7 @@ const citiesToHide = new Set([
   * @param {LbcCarAd} ad the car ad to process
   * @returns {LbcCustomInfo[]} the custom infos
   */
-  // eslint-disable-next-line complexity, sonarjs/cognitive-complexity
+  // eslint-disable-next-line complexity
   function getCustomInfosCar (ad) {
     /** @type {LbcCustomInfo[]} */
     const infos = [getOwnerInfo(ad, false)]
@@ -396,7 +396,7 @@ const citiesToHide = new Set([
     else utils.warn('un handled ad type', { ad, type })
     const score = infos.reduce((total, info) => total * (info.score ?? 1), 1)
     const scoreRounded = Math.round(score * 100) / 100
-    // eslint-disable-next-line no-nested-ternary
+     
     const classes = scoreRounded > 1 ? (scoreRounded > 2 ? ['text-4xl', 'font-bold'] : ['text-2xl', 'font-bold']) : []
     infos.push({ classes, score: scoreRounded, text: `score : ${scoreRounded}` })
     ad.element.append(createCustomInfosPanel(infos))

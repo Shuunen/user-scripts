@@ -38,7 +38,7 @@ const maxScore = 16
  * @param {boolean} explanation If true, the score explanation string will be returned
  * @returns {number|string} a score between 0 and maxScore
  */
-const calcScore = (rating, reviews, explanation = false) => {
+const calcScore = (rating, reviews, explanation = false) => { // eslint-disable-line @typescript-eslint/naming-convention
   const ratingScore = positionInInterval(rating, [2, 3, 4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5])
   const reviewsScore = ratingScore ? positionInInterval(reviews, [4, 8, 16, 32]) : 0
   let score = ratingScore + reviewsScore
@@ -64,13 +64,12 @@ const score20Styled = (rating, reviews) => {
   return data
 }
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
-(function AmazonAIO () {
+(function amazonAio () {
   /* global Shuutils, module */
   if (typeof window === 'undefined') return
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
-  const utils = new Shuutils({ debug: true, id: 'amz-aio' })
+  const utils = new Shuutils({ debug: true, id: 'amz-aio' }) // eslint-disable-line @typescript-eslint/naming-convention
   const selectors = {
     product: '[data-asin][data-component-type="s-search-result"]:not(.AdHolder):not(.amz-processed)',
     productPrice: '.a-price-whole',
@@ -166,6 +165,7 @@ const score20Styled = (rating, reviews) => {
       product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70).toString()
     })
     // sort by score & apply position
+    // eslint-disable-next-line etc/no-assign-mutated-array
     products.sort((productA, productB) => (Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0'))).forEach((product, index) => {
       product.style.order = index.toString()
     })
@@ -177,7 +177,7 @@ const score20Styled = (rating, reviews) => {
     injectScore()
   }
   const processDebounced = utils.debounce(process, 500)
-  utils.onPageChange(processDebounced)
+  void utils.onPageChange(processDebounced)
   window.addEventListener('scroll', () => processDebounced())
 })()
 

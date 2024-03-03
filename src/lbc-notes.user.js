@@ -12,7 +12,7 @@
 // @version      0.0.4
 // ==/UserScript==
 
-'use strict'
+
 
 const config = {
   averageNote: {
@@ -28,10 +28,6 @@ const config = {
   loading: {
     class: 'loading',
   },
-  normalNote: {
-    class: 'bg-gray-100',
-    isDisplayed: true,
-  }
 }
 
 /**
@@ -87,7 +83,7 @@ function getNoteIdFromNote (noteElement) {
 }
 
 // @ts-nocheck
-// eslint-disable-next-line max-statements, sonarjs/cognitive-complexity
+// eslint-disable-next-line max-statements
 (function LeBonCoinNotes () {
   if (typeof window === 'undefined') return
   /* global Shuutils, tailwind, Appwrite, idbKeyval, GM_addStyle */
@@ -264,8 +260,8 @@ function getNoteIdFromNote (noteElement) {
     const listingId = getListingIdFromNote(noteElement)
     utils.debug(`loading note for listing ${listingId}...`)
     const { noteContent, noteId } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
-    noteElement.dataset.noteId = noteId // eslint-disable-line require-atomic-updates, no-param-reassign
-    noteElement.textContent = noteContent // eslint-disable-line require-atomic-updates, no-param-reassign
+    noteElement.dataset.noteId = noteId // eslint-disable-line no-param-reassign
+    noteElement.textContent = noteContent // eslint-disable-line no-param-reassign
     noteElement.classList.add(...utils.tw('h-56 w-96'))
     noteElement.classList.remove(config.loading.class)
     noteElement.disabled = false // eslint-disable-line no-param-reassign
@@ -338,7 +334,7 @@ function getNoteIdFromNote (noteElement) {
     document.body.append(getClearStoreButton(clearStore))
   }
   // @ts-ignore
-  // eslint-disable-next-line new-cap
+  // eslint-disable-next-line new-cap, sonar/new-cap
   GM_addStyle(`
     .${utils.app.id}--note.loading {
       background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);

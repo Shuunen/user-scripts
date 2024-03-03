@@ -13,10 +13,10 @@
 // @ts-nocheck
 
 // eslint-disable-next-line max-statements
-(function DealabsAIO () {
+(function dealabsAio () {
   /* global Shuutils, autosize */
   const app = {
-    debug: false,
+    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
     excluders: [],
     filter: '',
     id: 'dlb-clr',
@@ -92,18 +92,18 @@
     document.head.insertAdjacentElement('beforeend', styleTag)
   }
   function checkItem (text, element) {
-    let found = false
+    let isFound = false
     let remaining = app.excluders.length
-    while (!found && remaining) {
-      found = text.includes(app.excluders[remaining - 1])
+    while (!isFound && remaining) {
+      isFound = text.includes(app.excluders[remaining - 1])
       remaining -= 1
     }
-    // eslint-disable-next-line no-magic-numbers
-    if (found) utils.warn(`"${text.slice(0, 40)}..."`, `is excluded, it contains : "${app.excluders[remaining]}"`)
+    // eslint-disable-next-line no-magic-numbers, @typescript-eslint/restrict-template-expressions
+    if (isFound) utils.warn(`"${text.slice(0, 40)}..."`, `is excluded, it contains : "${app.excluders[remaining]}"`)
     // eslint-disable-next-line no-param-reassign, sonarjs/elseif-without-else
     else if (app.debug) element.style.backgroundColor = '#f0fbf0'
     // eslint-disable-next-line no-param-reassign
-    element.style.opacity = found ? '0.3' : '1'
+    element.style.opacity = isFound ? '0.3' : '1'
   }
   function checkItems () {
     utils.log('checking displayed items...')

@@ -17,14 +17,14 @@
 (function AmazonPricePerWeight () {
   /* global Shuutils */
   const app = {
-    debug: false,
-    hideStuff: false,
+    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
+    hideStuff: false, // eslint-disable-line @typescript-eslint/naming-convention
     id: 'amz-kg',
-    injectRealPrice: true,
-    processOnce: false,
-    processOne: false,
-    showDebug: false,
-    sortProducts: true,
+    injectRealPrice: true, // eslint-disable-line @typescript-eslint/naming-convention
+    processOnce: false, // eslint-disable-line @typescript-eslint/naming-convention
+    processOne: false, // eslint-disable-line @typescript-eslint/naming-convention
+    showDebug: false, // eslint-disable-line @typescript-eslint/naming-convention
+    sortProducts: true, // eslint-disable-line @typescript-eslint/naming-convention
   }
 
   const cls = {

@@ -5,7 +5,7 @@
 /* eslint-disable sonarjs/elseif-without-else */
 // @ts-nocheck
 
-'use strict'
+
 
 class Shuutils {
 

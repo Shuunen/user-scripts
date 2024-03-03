@@ -16,10 +16,10 @@
 /* eslint-disable consistent-return */
 // @ts-nocheck
 
-(function AliExpressAIO () {
+(function aliExpressAio () {
   /* global Shuutils */
   /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: 'ali-express-aio' })
+  const utils = new Shuutils({ debug: false, id: 'ali-express-aio' }) // eslint-disable-line @typescript-eslint/naming-convention
   function extendsImage (img, size = 600) {
     // img.src = img.src.split('.jpg_')[0] + '.jpg'
     img.style.height = `${size}px`
@@ -29,7 +29,7 @@
   }
   function processProductCard (element) {
     const img = element.querySelector('.item-img, img')
-    if (!img || !img.src)
+    if (!img?.src)
       return utils.error('cannot find image on card el', element)
     extendsImage(img)
     const wrapper = img.closest('.product-img, a')
@@ -48,7 +48,7 @@
   }
   function processItemRow (element) {
     const img = element.querySelector('.pic-core')
-    if (!img || !img.src)
+    if (!img?.src)
       return utils.error('cannot find image on row el', element)
     utils.log('image src was', img.src)
     extendsImage(img, 500)
