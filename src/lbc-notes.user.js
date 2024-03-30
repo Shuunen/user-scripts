@@ -12,8 +12,6 @@
 // @version      0.0.4
 // ==/UserScript==
 
-
-
 const config = {
   averageNote: {
     class: 'bg-yellow-200',
