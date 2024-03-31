@@ -57,7 +57,7 @@ function createButton (label = '') {
    * @returns {void}
    */
   function showError (message) {
-    toast.error({ message, duration: 0, dismissible: true })
+    toast.error({ dismissible: true, duration: 0, message }) // eslint-disable-line @typescript-eslint/naming-convention
     utils.error(message)
   }
   /**
