@@ -148,7 +148,7 @@
       else showLog(`Found warn word: ${word}`)
   }
   function report () {
-    if (app.counts.forbidden > 0) showError(`Stop, found ${app.counts.forbidden} forbidden words`)
+    if (app.counts.forbidden > 0) showError(`Found ${app.counts.forbidden} forbidden words`)
     else utils.log('Stop, no forbidden words found')
   }
   function init () {
