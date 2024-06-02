@@ -89,7 +89,7 @@ const rules = {
   'ext/lines-between-object-properties': 'off',
   'filenames/match-regex': [
     2,
-    '(\\.user|utils|types|\\.test|\\.d|\\.config)$',
+    String.raw`(\.user|utils|types|\.test|\.d|\.config)$`,
     true,
   ],
   'func-names': [
