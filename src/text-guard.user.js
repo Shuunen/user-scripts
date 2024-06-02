@@ -12,11 +12,10 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-// There is two ways to find elements in the document:
+// This script use two ways to find elements in the document:
 // 1. Using XPath expressions with document.evaluate
 // 2. Using querySelectorAll
-// the advantage of the first method is that it will find the end of the chain of elements that contain the word
-// the second method will only find all elements that contains the word, for exemple if the word is in a span inside a div, it will find html, body, div and span
+// both methods are used to find elements containing a specific word in their text content, sometimes one method is more efficient than the other ¯\_(ツ)_/¯
 
 // eslint-disable-next-line max-statements
 (function TextGuard () {
@@ -76,7 +75,7 @@
    * @returns {void}
    */
   function onForbidden (word, element) {
-    if (element.dataset.txtGrd !== undefined) return
+    if (element.dataset.txtGrd === 'forbidden') return
     // eslint-disable-next-line no-param-reassign
     element.dataset.txtGrd = 'forbidden'
     app.counts.forbidden += 1 // @ts-ignore
@@ -109,6 +108,8 @@
       const node = results.snapshotItem(index)
       if (node === null) continue // eslint-disable-line no-continue
       if (!(node instanceof HTMLElement)) { utils.error(node); showError('Node is not an HTMLElement'); continue } // eslint-disable-line no-continue
+      if (node.dataset.txtGrd !== undefined) continue // eslint-disable-line no-continue
+      node.dataset.txtGrd = 'found'
       elements.push(node)
     }
     return elements
@@ -118,8 +119,6 @@
    * @param {string} word - The word to search for.
    * @returns {Array<HTMLElement>} - An array of elements that contain the specified word.
    */
-  // @ts-ignore
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
   function findElementsByQueryAll (word) {
     const needle = sanitize(word)
     const elements = document.querySelectorAll('*')
@@ -127,10 +126,16 @@
      * @type {HTMLElement[]}
      */
     const results = []
+    // eslint-disable-next-line max-statements
     elements.forEach((element) => {
+      if (['circle', 'defs', 'ellipse', 'path', 'rect', 'svg', 'symbol'].includes(element.tagName.toLowerCase())) return
+      if (!(element instanceof HTMLElement)) { utils.error('Element is not an HTMLElement, tag is : ', element.tagName); return }
+      if (element.dataset.txtGrd !== undefined) return
+      const children = Array.from(element.children).filter(child => !['b', 'br'].includes(child.tagName.toLowerCase()))
+      if (children.length > 0) return
       const text = sanitize(element.textContent ?? '')
       if (!text.includes(needle)) return
-      if (!(element instanceof HTMLElement)) { utils.error(element); showError('Element is not an HTMLElement'); return }
+      element.dataset.txtGrd = 'found' // eslint-disable-line no-param-reassign
       results.push(element)
     })
     return results
@@ -141,8 +146,8 @@
    * @param {boolean} isForbidden - Indicates whether the word is forbidden.
    */
   function search (word, isForbidden) {
-    const elements = findElementsByXpath(word)
-    if (elements.length > 0) utils.debug('found elements :', elements)
+    const elements = [...findElementsByQueryAll(word), ...findElementsByXpath(word)]
+    if (elements.length > 0) utils.log(`found ${elements.length} element(s) :`, elements)
     for (const element of elements)
       if (isForbidden) onForbidden(word, element)
       else showLog(`Found warn word: ${word}`)
@@ -171,7 +176,7 @@
     if (!(target instanceof HTMLElement)) return
     if (['br', 'hr', 'iframe', 'link', 'meta', 'script', 'style'].includes(target.tagName.toLowerCase())) return
     if (target.className.includes('notyf')) return
-    utils.debug(target)
+    // utils.debug(target)
     initDebounced()
   }
   window.addEventListener('DOMNodeInserted', onDomInsert)
