@@ -35,6 +35,9 @@
   const forbiddenWords = [
     '23 rue du Berry',
   ]
+  const hostExceptions = new Set([
+    'localhost',
+  ])
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
   const utils = new Shuutils(app)
@@ -157,6 +160,7 @@
     else utils.log('Stop, no forbidden words found')
   }
   function init () {
+    if (hostExceptions.has(window.location.hostname)) return
     utils.log('Start...')
     app.counts.forbidden = 0
     const text = document.body.textContent ?? ''
