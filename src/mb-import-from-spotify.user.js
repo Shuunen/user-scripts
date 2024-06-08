@@ -14,7 +14,6 @@
 // @ts-nocheck
 
 (function SpotifyMusicBrainzExport () {
-  /* global textFromSelector, insertMbForm */
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('spotify-mb-export')
   const selectors = {

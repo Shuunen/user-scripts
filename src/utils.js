@@ -1,7 +1,5 @@
 /* eslint-disable userscripts/filename-user */
 /* eslint-disable userscripts/no-invalid-metadata */
-/* eslint-disable no-console */
-/* eslint-disable promise/avoid-new */
 /* eslint-disable sonarjs/elseif-without-else */
 // eslint-disable-next-line no-shadow
 class Shuutils {
@@ -30,7 +28,7 @@ class Shuutils {
   debug (...stuff) {
     if (!this.willDebug) return
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
-    console.log(...stuff)
+    console.log(...stuff) // eslint-disable-line no-console
   }
 
   /**
@@ -40,7 +38,7 @@ class Shuutils {
    */
   log (...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
-    console.log(...stuff)
+    console.log(...stuff) // eslint-disable-line no-console
   }
 
   /**
@@ -50,7 +48,7 @@ class Shuutils {
    */
   warn (...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
-    console.warn(...stuff)
+    console.warn(...stuff) // eslint-disable-line no-console
   }
 
   /**
@@ -61,7 +59,7 @@ class Shuutils {
    */
   error (...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
-    console.error(...stuff)
+    console.error(...stuff) // eslint-disable-line no-console
   }
 
   /**
@@ -128,7 +126,7 @@ class Shuutils {
    */
   debounce (callback, waitFor) { // @ts-ignore
     // eslint-disable-next-line init-declarations
-    let timeout // @ts-ignore
+    let timeout /* eslint-disable-next-line promise/avoid-new */// @ts-ignore
     return async (...parameters) => await new Promise((resolve) => { // @ts-ignore
       clearTimeout(timeout)
       timeout = setTimeout(() => {
@@ -353,7 +351,7 @@ class Shuutils {
    * @param {boolean} canRemoveAfter if true, will remove the animation classes after the animation ends
    * @returns {Promise<void>} nothing
    */
-  async animateCss (element, animation, canRemoveAfter = true) {
+  async animateCss (element, animation, canRemoveAfter = true) { // eslint-disable-next-line promise/avoid-new
     await new Promise((resolve) => {
       const animationName = `animate__${animation}`
       element.classList.add('animate__animated', animationName)
@@ -380,7 +378,7 @@ class Shuutils {
    */
   async copyToClipboard (stuff) {
     const text = typeof stuff === 'string' ? stuff : JSON.stringify(stuff)
-    console.log(`copying to clipboard : ${this.ellipsis(text)}`)
+    this.log(`copying to clipboard : ${this.ellipsis(text)}`)
     await navigator.clipboard.writeText(text)
   }
 
@@ -391,6 +389,7 @@ class Shuutils {
    * @example await utils.sleep(1000) // sleep for 1 second
    */
   async sleep (ms) {
+    // eslint-disable-next-line promise/avoid-new
     await new Promise(resolve => {
       setTimeout(resolve, ms)
     })
@@ -431,7 +430,7 @@ class Shuutils {
    * @returns {Promise<void>} nothing
    * @example utils.onPageChange((url) => { console.log('new url :', url) })
    */
-  async onPageChange (callback = () => { console.log('empty callback') }, last = '', wait = 1000) {
+  async onPageChange (callback = () => { this.log('empty callback') }, last = '', wait = 1000) {
     await this.sleep(wait)
     const current = document.location.href
     if (current !== last) callback(current)

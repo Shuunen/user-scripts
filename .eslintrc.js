@@ -1,6 +1,5 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable @typescript-eslint/naming-convention */
- 
 
 const rules = {
   '@typescript-eslint/array-type': 'off',
@@ -208,8 +207,13 @@ module.exports = {
     'hardcore/ts',
   ],
   globals: {
+    addMbField: true,
+    addMbSubmit: true,
+    createMbForm: true,
+    insertMbForm: true,
     module: true,
     Shuutils: true,
+    textFromSelector: true,
   },
   ignorePatterns: [
     'node_modules',

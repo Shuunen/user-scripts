@@ -12,7 +12,6 @@
 // @ts-nocheck
 
 (function AmazonMusicBrainzExport () {
-  /* global textFromSelector, insertMbForm */
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('amazon-mb-export')
   const selectors = {

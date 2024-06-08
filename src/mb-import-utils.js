@@ -1,4 +1,5 @@
 /* eslint-disable userscripts/filename-user */
+/* eslint-disable no-shadow */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable userscripts/no-invalid-metadata */
 /* eslint-disable unused-imports/no-unused-vars */
@@ -6,22 +7,25 @@
 /**
  * Get the text content from the node behind a css selector
  * @param {string} selector the css selector
- * @param {HTMLElement} context the context
+ * @param {HTMLElement} [context] the context
  * @returns {string} the text content
  */
 function textFromSelector (selector, context) {
-  const element = (context || document).querySelector(selector)
+  const element = (context ?? document).querySelector(selector)
   if (!element) return ''
-  return element.textContent?.trim() || ''
+  const text = element.textContent ?? ''
+  // eslint-disable-next-line regexp/no-super-linear-move
+  return text.trim().replace(/^\W+/gu, '').replace(/\W+$/gu, '')
 }
 
 /**
  * Generate a form to import a release to MusicBrainz
  * @param {{ id:string, title: string }} app
+ * @param {Function} [callback] a function to call with the data, prevent form submission is used
  * @returns
  */
 // eslint-disable-next-line max-statements
-function createMbForm (app) {
+function createMbForm (app, callback = () => ({})) {
   const existing = document.querySelector(`#${app.id}`)
   if (existing) existing.remove()
   const form = document.createElement('form')
@@ -30,6 +34,7 @@ function createMbForm (app) {
   form.target = 'blank'
   form.action = 'https://musicbrainz.org/release/add?tport=8000'
   form.acceptCharset = 'utf8'
+  form.style.boxShadow = '0 0 1rem rgba(0, 0, 0, 0.5)'
   form.style.position = 'absolute'
   form.style.zIndex = '1000'
   form.style.display = 'flex'
@@ -40,6 +45,17 @@ function createMbForm (app) {
   form.style.top = '60px'
   form.style.right = '1rem'
   form.style.borderRadius = '0.2rem'
+  const close = document.createElement('button')
+  close.textContent = '×'
+  close.style.position = 'absolute'
+  close.style.top = '0.2rem'
+  close.style.right = '0.2rem'
+  close.style.border = 'none'
+  close.style.backgroundColor = 'transparent'
+  close.style.cursor = 'pointer'
+  close.style.fontSize = '1rem'
+  close.addEventListener('click', () => form.remove())
+  form.append(close)
   const header = document.createElement('h2')
   header.textContent = app.title
   header.style.textAlign = 'center'
@@ -47,6 +63,12 @@ function createMbForm (app) {
   header.style.fontSize = '1.2rem'
   header.style.margin = '0'
   form.append(header)
+  if (callback) form.addEventListener('submit', (event) => {
+    event.preventDefault()
+    const formData = new FormData(form) // @ts-ignore it exists ^^'
+    const values = Object.fromEntries(formData.entries())
+    callback(values)
+  })
   return form
 }
 
@@ -57,9 +79,18 @@ function createMbForm (app) {
  * @param {string} value
  * @param {boolean} isHidden
  */
-// eslint-disable-next-line max-params
+// eslint-disable-next-line max-params, max-statements
 function addMbField (form, name, value, isHidden = false) {
+  const line = document.createElement('label')
+  line.style.display = 'flex'
+  line.style.flexDirection = 'row'
+  line.style.alignItems = 'center'
+  line.style.gap = '0.5rem'
+  const label = document.createElement('span')
+  label.textContent = `${name} : `
+  label.style.textTransform = 'capitalize'
   const field = document.createElement('input')
+  field.placeholder = name
   field.name = name
   field.title = name
   field.value = value
@@ -69,7 +100,8 @@ function addMbField (form, name, value, isHidden = false) {
   field.style.margin = '0.3rem 0 0'
   field.style.padding = '.2rem 0 .2rem 0.5rem'
   field.style.width = '220px'
-  form.append(field)
+  line.append(label, field)
+  form.append(line)
 }
 
 /**
@@ -77,10 +109,10 @@ function addMbField (form, name, value, isHidden = false) {
  * @param {HTMLFormElement} form
  */
 // eslint-disable-next-line max-statements
-function addMbSubmit (form) {
+function addMbSubmit (form, label = 'Export to MusicBrainz') {
   const submit = document.createElement('input')
   submit.type = 'submit'
-  submit.value = 'Export to MusicBrainz'
+  submit.value = label
   submit.style.borderRadius = '1rem'
   submit.style.cursor = 'pointer'
   submit.style.margin = '0.5rem auto 0'
