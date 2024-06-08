@@ -29,7 +29,7 @@ class Shuutils {
    */
   debug (...stuff) {
     if (!this.willDebug) return
-    stuff.unshift(`${this.id} :`)
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
     console.log(...stuff)
   }
 
@@ -39,7 +39,7 @@ class Shuutils {
    * @returns {void}
    */
   log (...stuff) {
-    stuff.unshift(`${this.id} :`)
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
     console.log(...stuff)
   }
 
@@ -49,7 +49,7 @@ class Shuutils {
    * @returns {void}
    */
   warn (...stuff) {
-    stuff.unshift(`${this.id} :`)
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
     console.warn(...stuff)
   }
 
@@ -60,7 +60,7 @@ class Shuutils {
    * @example utils.error('hello', 'world')
    */
   error (...stuff) {
-    stuff.unshift(`${this.id} :`)
+    if (this.id.length > 0) stuff.unshift(`${this.id} :`)
     console.error(...stuff)
   }
 
@@ -459,7 +459,7 @@ class Shuutils {
   }
 }
 
- 
+
 if (module) module.exports = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Shuutils,
