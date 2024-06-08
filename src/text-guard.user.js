@@ -39,8 +39,8 @@
     'localhost',
   ])
   const elementExceptions = new Set([
-    'circle', 'defs', 'ellipse', 'path', 'rect',
-    'svg', 'symbol', 'br', 'hr', 'iframe',
+    'circle', 'defs', 'ellipse', 'path', 'polygon', 'rect',
+    'svg', 'symbol', 'br', 'hr', 'iframe', 'g',
     'link', 'meta', 'script', 'style', 'title',
   ])
   /** @type {import('./utils.js').Shuutils} */
@@ -184,7 +184,7 @@
     if (target === null) return
     if (!(target instanceof HTMLElement)) return
     if (elementExceptions.has(target.tagName.toLowerCase())) return
-    if (target.className.includes('notyf')) return
+    if (target.className.includes('notyf') || target.className.includes('shu-toast')) return
     // utils.debug(target)
     initDebounced()
   }
