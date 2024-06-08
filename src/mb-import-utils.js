@@ -12,8 +12,8 @@
  */
 function textFromSelector (selector, context) {
   const element = (context ?? document).querySelector(selector)
-  if (!element) return ''
-  const text = element.textContent ?? ''
+  if (!element) return '' // @ts-ignore
+  const text = element.textContent || element.value || element.src || ''
   // eslint-disable-next-line regexp/no-super-linear-move
   return text.trim().replace(/^\W+/gu, '').replace(/\W+$/gu, '')
 }
@@ -81,14 +81,22 @@ function createMbForm (app, callback = () => ({})) {
  */
 // eslint-disable-next-line max-params, max-statements
 function addMbField (form, name, value, isHidden = false) {
+  const colors = ['darkblue', 'green', 'darkred', 'darkorange', 'teal', 'violet', 'brown', 'indigo']
+  const nbExistingFields = form.querySelectorAll('.mb-field').length
+  const color = colors[nbExistingFields % colors.length] ?? 'inherit'
   const line = document.createElement('label')
+  line.setAttribute('class', 'mb-field')
   line.style.display = 'flex'
   line.style.flexDirection = 'row'
   line.style.alignItems = 'center'
   line.style.gap = '0.5rem'
+  line.style.color = color
   const label = document.createElement('span')
-  label.textContent = `${name} : `
+  label.textContent = name
+  label.style.width = '60px'
   label.style.textTransform = 'capitalize'
+  label.style.textOverflow = 'ellipsis'
+  label.style.overflow = 'hidden'
   const field = document.createElement('input')
   field.placeholder = name
   field.name = name

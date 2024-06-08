@@ -345,6 +345,26 @@ class Shuutils {
   }
 
   /**
+   * Capitalizes the first letter of a string.
+   * @param {string} string - The input string like 'hello world'
+   * @returns {string} The capitalized string like 'Hello world'
+   */
+  capitalize (string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
+  /**
+   * Pick a random element from an array
+   * @param {unknown[]} array the array to pick from
+   * @returns {unknown} the random element
+   * @example utils.pickRandom([1, 2, 3, 4, 5]) // returns 3
+   * @example utils.pickRandom(['hello', 'world']) // returns 'world'
+   */
+  pickRandom (array) {
+    return array[Math.floor(Math.random() * array.length)]
+  }
+
+  /**
    * Animate an element with animate.css
    * @param {HTMLElement} element the element to animate
    * @param {string} animation the name of the animation to use like 'bounce', 'fadeIn', 'zoomOut'
