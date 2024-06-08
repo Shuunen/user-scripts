@@ -266,6 +266,82 @@ class Shuutils {
   }
 
   /**
+   * Adds a toast notification to the document body.
+   * @param {string} type - The type of the toast notification.
+   * @param {string} message - The message to be displayed in the toast notification.
+   * @param {number} delay - The delay in milliseconds before the toast notification is removed.
+   */
+  // eslint-disable-next-line max-params
+  #toastAdd (type, message, delay = 0, padding = 20) {
+    const element = document.createElement('div')
+    element.setAttribute('class', 'shu-toast')
+    const last = document.querySelector('.shu-toast:nth-last-child(1 of .shu-toast)')?.getBoundingClientRect().top
+    const bottom = last ? window.innerHeight - last : 0
+    const background = type === 'success' ? 'forestgreen' : 'firebrick'
+    const icon = type === 'success' ? '✔' : '✖' // @ts-ignore it works (๑◕ܫ◕๑)
+    element.style = `position: fixed; display: flex; gap: .6rem; bottom: ${bottom + padding}px; right: 20px; z-index: 9999; padding: .6rem .8rem; background-color: ${background}; color: white; border-radius: 0.3rem; box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5); font-size: 1rem; transition: transform 0.2s ease-in-out; transform: translateX(300px);`
+    element.innerHTML = `<span style="border-radius: 50%; border: 1px solid #ffffff90; width: 20px; height: 20px; text-align: center; font-size: 12px;">${icon}</span><span>${message}</span>`
+    this.#toastShow(element)
+    if (delay > 0) setTimeout(() => this.#toastHide(element), delay)
+  }
+
+  #toastHide (element, delay = 200) {
+    element.style.transform = 'translateX(300px)' // eslint-disable-line no-param-reassign
+    setTimeout(() => { element.remove() }, delay)
+  }
+
+  #toastShow (element, delay = 100) {
+    document.body.append(element)
+    setTimeout(() => { element.style.transform = 'translateX(0)' }, delay) // eslint-disable-line no-param-reassign
+  }
+
+  /**
+   * Displays an error toast message.
+   * @param {string} message - The error message to display.
+   * @param {number} [delay=4000] - The delay in milliseconds before the toast disappears. Default is 4000ms.
+   * @example utils.toastError('hello world')
+   */
+  toastError (message, delay = 4000) { this.#toastAdd('error', message, delay) }
+
+  /**
+   * Displays a success toast message.
+   * @param {string} message - The success message to display.
+   * @param {number} [delay=2000] - The delay in milliseconds before the toast disappears. Default is 2000ms.
+   * @example utils.toastSuccess('hello world')
+   */
+  toastSuccess (message, delay = 2000) { this.#toastAdd('success', message, delay) }
+
+  /**
+   * Display an error both in the console and as a toast
+   * @param {string} message
+   * @returns {void}
+   */
+  showError (message) {
+    this.toastError(message)
+    this.error(message)
+  }
+
+  /**
+   * Display a log both in the console and as a toast
+   * @param {string} message
+   * @returns {void}
+   */
+  showLog (message) {
+    this.toastSuccess(message)
+    this.log(message)
+  }
+
+  /**
+   * Display a success both in the console and as a toast
+   * @param {string} message
+   * @returns {void}
+   */
+  showSuccess (message) {
+    this.toastSuccess(message)
+    this.log(message)
+  }
+
+  /**
    * Animate an element with animate.css
    * @param {HTMLElement} element the element to animate
    * @param {string} animation the name of the animation to use like 'bounce', 'fadeIn', 'zoomOut'
