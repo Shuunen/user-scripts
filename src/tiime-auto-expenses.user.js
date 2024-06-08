@@ -5,7 +5,7 @@
 // @description  Generate expenses automatically
 // @author       Romain Racamier-Lafon
 // @match        https://apps.tiime.fr/companies/*/expense/advanced-expenses
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
 // @require      https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js
 // ==/UserScript==
 

@@ -2,7 +2,7 @@
 
 echo These files should not use user-scripts/src directly :
 
-grep -R user-scripts/src src; if [ $? -eq 1 ]; then echo lint:master success; else echo Use this instead : https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js && exit 1; fi
+grep -R user-scripts/src src; if [ $? -eq 1 ]; then echo lint:master success; else echo Use this instead : https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js && exit 1; fi
 
 echo These files should not use githubusercontent directly :
 

@@ -4,7 +4,7 @@
 // @description  Ease access to my affected MR / opened MR
 // @author       Romain Racamier-Lafon
 // @match        https://some-gitlab.fr/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
 // @grant        none
 // @version      1.1.4
 // ==/UserScript==

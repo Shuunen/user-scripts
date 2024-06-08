@@ -5,7 +5,7 @@
 // @author       Romain Racamier-Lafon
 // @match        https://www.leboncoin.fr/*
 // @grant        GM_addStyle
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require      https://cdn.tailwindcss.com
@@ -362,5 +362,5 @@ function getNoteIdFromNote (noteElement) {
   void utils.onPageChange(() => processDebounced('page-change-event'))
 })()
 
- 
+
 if (module) module.exports = { getListingId }
