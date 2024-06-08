@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Text Guard
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.0.1
 // @description  Check the text of the current page, show alerts if it contains weird/forbidden words
 // @author       Romain Racamier-Lafon
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
@@ -37,6 +37,11 @@
   ]
   const hostExceptions = new Set([
     'localhost',
+  ])
+  const elementExceptions = new Set([
+    'circle', 'defs', 'ellipse', 'path', 'rect',
+    'svg', 'symbol', 'br', 'hr', 'iframe',
+    'link', 'meta', 'script', 'style', 'title',
   ])
   /** @type {import('./utils.js').Shuutils} */
   // @ts-ignore
@@ -131,7 +136,7 @@
     const results = []
     // eslint-disable-next-line max-statements
     elements.forEach((element) => {
-      if (['circle', 'defs', 'ellipse', 'path', 'rect', 'svg', 'symbol'].includes(element.tagName.toLowerCase())) return
+      if (elementExceptions.has(element.tagName.toLowerCase())) return
       if (!(element instanceof HTMLElement)) { utils.error('Element is not an HTMLElement, tag is : ', element.tagName); return }
       if (element.dataset.txtGrd !== undefined) return
       const children = Array.from(element.children).filter(child => !['b', 'br'].includes(child.tagName.toLowerCase()))
@@ -178,7 +183,7 @@
     const { target } = event
     if (target === null) return
     if (!(target instanceof HTMLElement)) return
-    if (['br', 'hr', 'iframe', 'link', 'meta', 'script', 'style'].includes(target.tagName.toLowerCase())) return
+    if (elementExceptions.has(target.tagName.toLowerCase())) return
     if (target.className.includes('notyf')) return
     // utils.debug(target)
     initDebounced()
