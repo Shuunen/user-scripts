@@ -34,7 +34,7 @@
   },
   "scripts": {
     "check": "pnpm install && echo install success && pnpm lint && repo-check && echo repo-check success && pnpm test && echo check success",
-    "lint": "pnpm lint:sh && pnpm lint:eslint && pnpm lint:tsc && echo lint success",
+    "lint": "pnpm lint:sh && pnpm lint:tsc && pnpm lint:eslint && echo lint success",
     "lint:eslint": "eslint --cache --fix --ext .js,.ts . && echo lint:eslint success",
     "lint:sh": "sh ./bin/lint.sh && echo lint:sh success",
     "lint:tsc": "tsc --noEmit && echo lint:tsc success",
@@ -44,5 +44,5 @@
     "test:update": "vitest --run --update && echo test update success",
     "test:watch": "vitest"
   },
-  "version": "2.1.0"
+  "version": "2.3.0"
 }

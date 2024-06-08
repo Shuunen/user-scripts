@@ -12,9 +12,9 @@
 // @ts-nocheck
 
 (function gitlabMr () {
-  /* global Shuutils */
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debounceTime: 300, debug: false, id: 'gitlab-mr' }) // eslint-disable-line @typescript-eslint/naming-convention
+  const debounceTime = 300
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('gitlab-mr')
   // eslint-disable-next-line max-statements
   function addButton (element, label, href) {
     const button = element.cloneNode(true)
@@ -52,7 +52,7 @@
     link.insertAdjacentElement('afterBegin', text)
     link.parentElement.style.display = 'none'
     await addButton(link.parentElement, 'MR affectée(s)', link.href.replace('assignee_username', 'wip=no&assignee_username'))
-    await utils.sleep(utils.app.debounceTime)
+    await utils.sleep(debounceTime)
     await addButton(link.parentElement, 'MR ouverte(s)', `${link.href.replace('assignee_username', 'author_username')}&state=opened`)
   }
   function hideStuff () {
@@ -62,6 +62,6 @@
     void enhanceLinks()
     hideStuff()
   }
-  const processDebounced = utils.debounce(process, utils.app.debounceTime)
+  const processDebounced = utils.debounce(process, debounceTime)
   void utils.onPageChange(processDebounced)
 })()

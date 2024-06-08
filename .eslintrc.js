@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-undef */
+ 
 
 const rules = {
   '@typescript-eslint/array-type': 'off',
@@ -207,6 +207,10 @@ module.exports = {
     'hardcore',
     'hardcore/ts',
   ],
+  globals: {
+    module: true,
+    Shuutils: true,
+  },
   ignorePatterns: [
     'node_modules',
     'dist',

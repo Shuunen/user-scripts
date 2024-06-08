@@ -57,12 +57,10 @@ const citiesToHide = new Set([
 ]);
 
 (function LeBonCoinListing () {
-  /* global Shuutils */
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils({ debug: false, id: 'lbc-lpp' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('lbc-lpp')
   const cls = {
-    marker: `${utils.app.id}-processed`,
+    marker: `${utils.id}-processed`,
   }
 
   // Remove me one day :)
@@ -97,7 +95,7 @@ const citiesToHide = new Set([
     const ges = ad.attributes.find(attribute => attribute.key === 'ges')?.value ?? ''
     if (ges === '') utils.warn('no GES found in ad', ad)
     const text = `DPE : ${energy} / GES : ${ges}`
-     
+
     const score = ['A', 'B'].includes(energy) ? 1.5 : (energy === 'C' ? 1 : 0.5)
     return { score, text }
   }
@@ -171,7 +169,7 @@ const citiesToHide = new Set([
    */
   function hideAdElement (element, cause = 'unknown') {
     element.classList.add(...utils.tw('h-24 overflow-hidden opacity-50 grayscale transition-all duration-500 ease-in-out hover:h-[215px] hover:opacity-100 hover:filter-none'))
-    element.parentElement?.classList.add(`${utils.app.id}-hidden`, `${utils.app.id}-hidden-cause-${cause}`)
+    element.parentElement?.classList.add(`${utils.id}-hidden`, `${utils.id}-hidden-cause-${cause}`)
   }
 
   /**
@@ -200,7 +198,7 @@ const citiesToHide = new Set([
     const { owner } = ad
     if (!owner) { utils.warn('no owner found in ad', ad); return {} }
     const text = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
-     
+
     const score = isPrivateBetter ? (owner.type === 'pro' ? 0.5 : 1.2) : 1
     return { score, text }
   }
@@ -259,7 +257,7 @@ const citiesToHide = new Set([
   function getElevatorInfo (ad) {
     const elevator = ad.attributes.find(attribute => attribute.key === 'elevator')
     if (elevator === undefined) return {}
-     
+
     const text = elevator.value === '1' ? 'ascenseur' : (elevator.value === '2' ? 'pas d\'ascenseur' : `unknown elevator value "${elevator.value}"`)
     const score = elevator.value === '2' ? 0.5 : 1
     return { score, text }
@@ -396,7 +394,7 @@ const citiesToHide = new Set([
     else utils.warn('un handled ad type', { ad, type })
     const score = infos.reduce((total, info) => total * (info.score ?? 1), 1)
     const scoreRounded = Math.round(score * 100) / 100
-     
+
     const classes = scoreRounded > 1 ? (scoreRounded > 2 ? ['text-4xl', 'font-bold'] : ['text-2xl', 'font-bold']) : []
     infos.push({ classes, score: scoreRounded, text: `score : ${scoreRounded}` })
     ad.element.append(createCustomInfosPanel(infos))

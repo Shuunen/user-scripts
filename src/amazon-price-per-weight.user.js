@@ -5,7 +5,7 @@
 // @description  Display price per weight & sort ascending
 // @author       Romain Racamier-Lafon
 // @match        https://*.amazon.fr/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.1.0/src/utils.js
 // @grant        none
 // ==/UserScript==
 
@@ -15,7 +15,6 @@
 // @ts-nocheck
 // eslint-disable-next-line max-statements
 (function AmazonPricePerWeight () {
-  /* global Shuutils */
   const app = {
     debug: false, // eslint-disable-line @typescript-eslint/naming-convention
     hideStuff: false, // eslint-disable-line @typescript-eslint/naming-convention
@@ -61,7 +60,7 @@
     pricePerKilo: `<span class="a-color-price s-price a-text-bold ${cls.pricePer}">EUR {{pricePerKilo}}/kg</span>`,
   }
 
-  /** @type {import('./utils.js').Shuutils} */
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils(app)
 
   const products = []

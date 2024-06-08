@@ -3,27 +3,22 @@
 /* eslint-disable no-console */
 /* eslint-disable promise/avoid-new */
 /* eslint-disable sonarjs/elseif-without-else */
-// @ts-nocheck
-
-
-
+// eslint-disable-next-line no-shadow
 class Shuutils {
-
-  version = '2.3.0'
+  version = '2.4.0'
+  id = ''
+  willDebug = false
 
   /**
    * The ShuUserScriptUtils constructor
-   * @param {object} app the user script app infos
-   * @param {string} app.id the user script id/name/marker like "lbc-dpe", "amz-aio"
-   * @param {boolean} app.debug if true, will log more stuff
-   * @returns {Shuutils} the Shuutils instance
-   * @example const utils = new Shuutils({ id: 'lbc-dpe', debug: true })
+   * @param {string} id the user script id/name/marker like "lbc-dpe", "amz-aio"
+   * @param {boolean} willDebug if true, will log more stuff
+   * @example const utils = new Shuutils('lbc-dpe', true)
    */
-  constructor (app) {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    Object.apply(app, { debug: true, id: 'shu-app' })
-    this.app = app
-    if (this.debug) this.log('using Shuutils', this.version)
+  constructor (id = 'shu-app', willDebug = false) {
+    this.id = id
+    this.willDebug = willDebug
+    this.debug('using Shuutils', this.version)
   }
 
   /**
@@ -33,8 +28,8 @@ class Shuutils {
    * @example utils.debug('hello', 'world')
    */
   debug (...stuff) {
-    if (!this.app.debug) return
-    stuff.unshift(`${this.app.id} :`)
+    if (!this.willDebug) return
+    stuff.unshift(`${this.id} :`)
     console.log(...stuff)
   }
 
@@ -44,7 +39,7 @@ class Shuutils {
    * @returns {void}
    */
   log (...stuff) {
-    stuff.unshift(`${this.app.id} :`)
+    stuff.unshift(`${this.id} :`)
     console.log(...stuff)
   }
 
@@ -54,7 +49,7 @@ class Shuutils {
    * @returns {void}
    */
   warn (...stuff) {
-    stuff.unshift(`${this.app.id} :`)
+    stuff.unshift(`${this.id} :`)
     console.warn(...stuff)
   }
 
@@ -65,7 +60,7 @@ class Shuutils {
    * @example utils.error('hello', 'world')
    */
   error (...stuff) {
-    stuff.unshift(`${this.app.id} :`)
+    stuff.unshift(`${this.id} :`)
     console.error(...stuff)
   }
 
@@ -131,10 +126,10 @@ class Shuutils {
    * @example const debounced = utils.debounce(() => { console.log('hello world') }, 1000)
    * @example const debounced = utils.debounce(myFunction, 500)
    */
-  debounce (callback, waitFor) {
+  debounce (callback, waitFor) { // @ts-ignore
     // eslint-disable-next-line init-declarations
-    let timeout
-    return async (...parameters) => await new Promise((resolve) => {
+    let timeout // @ts-ignore
+    return async (...parameters) => await new Promise((resolve) => { // @ts-ignore
       clearTimeout(timeout)
       timeout = setTimeout(() => {
         resolve(callback(...parameters))
@@ -151,7 +146,7 @@ class Shuutils {
    * @example const throttled = utils.throttle(myFunction, 500)
    */
   throttle (callback, timeout) {
-    let isReady = true
+    let isReady = true // @ts-ignore
     return (...parameters) => {
       if (!isReady) return
       isReady = false
@@ -198,7 +193,7 @@ class Shuutils {
   findAll (selector, scope = document, canFail = false) {
     if (!selector || selector.length === 0 || selector.length === 1) this.error('incorrect selector : ', selector)
     const items = Array.prototype.slice.call(scope.querySelectorAll(selector))
-    if (items.length > 0 && this.app.debug) this.log('found', items.length, `elements matching "${selector}"`)
+    if (items.length > 0 && this.willDebug) this.log('found', items.length, `elements matching "${selector}"`)
     else if (items.length <= 0 && !canFail) this.warn(`found no elements for selector "${selector}"`)
     return items
   }
@@ -258,7 +253,7 @@ class Shuutils {
     if (string.length === 0) { this.log('cannot inject empty style stuff'); return }
     if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
       // eslint-disable-next-line no-unsanitized/method
-      document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
+      document.querySelector('head')?.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
       return
     }
     // eslint-disable-next-line no-unsanitized/method
@@ -285,11 +280,21 @@ class Shuutils {
     if (delay > 0) setTimeout(() => this.#toastHide(element), delay)
   }
 
+  /**
+   * Hides the toast element by applying a transform and removing it after a delay.
+   * @param {HTMLElement} element - The toast element to hide.
+   * @param {number} [delay=200] - The delay in milliseconds before removing the element.
+   */
   #toastHide (element, delay = 200) {
     element.style.transform = 'translateX(300px)' // eslint-disable-line no-param-reassign
     setTimeout(() => { element.remove() }, delay)
   }
 
+  /**
+   * Shows a toast element with a specified delay.
+   * @param {HTMLElement} element - The toast element to be shown.
+   * @param {number} [delay=100] - The delay in milliseconds before showing the toast.
+   */
   #toastShow (element, delay = 100) {
     document.body.append(element)
     setTimeout(() => { element.style.transform = 'translateX(0)' }, delay) // eslint-disable-line no-param-reassign
@@ -354,6 +359,10 @@ class Shuutils {
       element.classList.add('animate__animated', animationName)
       if (!canRemoveAfter) { resolve('Animation ended, no need to remove'); return }
       // When the animation ends, we clean the classes and resolve the Promise
+      /**
+       * Handle the animation end event
+       * @param {{ stopPropagation: () => void; }} event
+       */
       function handleAnimationEnd (event) {
         event.stopPropagation()
         element.classList.remove('animate__animated', animationName)
@@ -365,7 +374,7 @@ class Shuutils {
 
   /**
    * Copy data to the clipboard
-   * @param {string} stuff the data to copy
+   * @param {unknown} stuff the data to copy
    * @returns {Promise<void>} nothing
    * @example await utils.copyToClipboard('hello world') // copies 'hello world' to the clipboard
    */
@@ -450,7 +459,7 @@ class Shuutils {
   }
 }
 
-// eslint-disable-next-line no-undef
+ 
 if (module) module.exports = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   Shuutils,

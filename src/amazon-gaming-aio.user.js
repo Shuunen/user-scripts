@@ -13,12 +13,9 @@
 
 // eslint-disable-next-line max-statements
 (function amazonGamingAio () {
-  /* global Shuutils */
   if (typeof window === 'undefined') return
-  const appId = 'amz-gm-aio'
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils({ debug: false, id: appId }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('amz-gm-aio')
   // non word characters will be removed
   const dlcToHide = [
     'Aion Classic',
@@ -118,7 +115,7 @@
   }
   function deleteUseless () {
     for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {
-      if (utils.app.debug) {
+      if (utils.willDebug) {
         node.style.backgroundColor = 'red !important'
         node.style.color = 'white !important'
         node.style.boxShadow = '0 0 10px red'
@@ -172,7 +169,7 @@
   function hideElement (element, cause = 'unknown') {
     if (preventElementHide(element, cause)) return
     element.dataset.hiddenCause = cause
-    if (utils.app.debug) {
+    if (utils.willDebug) {
       element.style.boxShadow = 'inset darkred 0 100vh, red 0 0 10px'
       return
     }
@@ -183,7 +180,7 @@
   }
   function hideClaimed () {
     utils.findAll(selectors.claimedTag, document, true).forEach((node) => {
-      node.classList.add(`${appId}-processed`)
+      node.classList.add(`${utils.id}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.productAlt)
       if (!product) return
@@ -203,7 +200,7 @@
     utils.log(list.length, 'dlc found')
     // eslint-disable-next-line max-statements
     list.forEach((node) => {
-      node.classList.add(`${appId}-processed`)
+      node.classList.add(`${utils.id}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
       if (!product) { utils.error('no product found in product :', node); return }

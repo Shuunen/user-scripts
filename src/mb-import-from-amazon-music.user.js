@@ -12,9 +12,9 @@
 // @ts-nocheck
 
 (function AmazonMusicBrainzExport () {
-  /* global textFromSelector, insertMbForm, Shuutils */
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: 'amazon-mb-export' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /* global textFromSelector, insertMbForm */
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('amazon-mb-export')
   const selectors = {
     artist: '[data-feature-name="artistLink"',
     title: '[data-feature-name="dmusicProductTitle"]',

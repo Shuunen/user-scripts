@@ -11,11 +11,6 @@
 
 // @ts-nocheck
 
-const app = {
-  debug: false, // eslint-disable-line @typescript-eslint/naming-convention
-  id: 'gtb-bdg',
-}
-
 const badges = {
   bronze: 'https://i.imgur.com/APbU15u.png',
   gold: 'https://i.imgur.com/hoWbQ3w.png',
@@ -70,11 +65,12 @@ async function animateCss (element, animation, canRemoveAfter = true) {
 
 // eslint-disable-next-line max-statements
 (function GitlabBadge () {
-  /* global Shuutils, gon */
-  const utils = new Shuutils(app)
+  /* global gon */
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('gtb-bdg')
   function getBadge () {
     const badge = document.createElement('div')
-    badge.id = app.id
+    badge.id = utils.id
     badge.classList.add('animate__animated')
     badge.style = 'cursor: grab; background-repeat: no-repeat;filter: drop-shadow(black 2px 4px 6px);position: fixed;top: 3rem;right: 0px;z-index: 1000;width: 300px;height: 300px;font-size: 4rem;font-weight: 800;text-align: center;line-height: 12.5rem;'
     return badge
@@ -103,7 +99,7 @@ async function animateCss (element, animation, canRemoveAfter = true) {
   const processDebounced = utils.debounce(process, 1000) // eslint-disable-line no-magic-numbers
   window.addEventListener('focus', () => { void process('focus') })
   window.addEventListener('click', () => processDebounced('click'))
-  utils.onPageChange(async () => await process('page-change'))
+  void utils.onPageChange(async () => await process('page-change'))
 })()
 
 injectStyles(`

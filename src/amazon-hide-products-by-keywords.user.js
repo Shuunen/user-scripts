@@ -5,7 +5,7 @@
 // @description  Easily hide products from your searches by specifying a block list
 // @author       Romain Racamier-Lafon
 // @match        https://www.amazon.fr/s*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.1.0/src/utils.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js
 // @grant        none
 // ==/UserScript==
@@ -13,7 +13,7 @@
 // @ts-nocheck
 // eslint-disable-next-line max-statements
 (function AmazonHide () {
-  /* global Shuutils, autosize */
+  /* global autosize */
   const app = {
     debounceTime: 500,
     debug: false, // eslint-disable-line @typescript-eslint/naming-convention
@@ -43,7 +43,7 @@
     productTitle: ['a.s-access-detail-page > h2.s-access-title', '.a-size-medium.a-color-base.a-text-normal'].join(','),
   }
 
-  /** @type {import('./utils.js').Shuutils} */
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils(app)
 
   function clearSuggestions () {

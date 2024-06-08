@@ -5,15 +5,13 @@
 // @description  Delete a photo by pressing ! (bang)
 // @author       Romain Racamier-Lafon
 // @match        https://photos.google.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.1.0/src/utils.js
 // @grant        none
 // ==/UserScript==
 
 (function GooglePhotosEasyDelete () {
-  /* global Shuutils */
   const app = { debug: false, id: 'gp-ed', init: false, timeToWait: 200 } // eslint-disable-line @typescript-eslint/naming-convention
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils(app)
   const selectors = {
     confirmBtn: 'button[autofocus]',

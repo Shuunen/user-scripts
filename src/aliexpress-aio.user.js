@@ -14,12 +14,11 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable max-statements */
 /* eslint-disable consistent-return */
-// @ts-nocheck
 
 (function aliExpressAio () {
-  /* global Shuutils */
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: 'ali-express-aio' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('ali-express-aio')
+  /** @param {HTMLImageElement} img */
   function extendsImage (img, size = 600) {
     // img.src = img.src.split('.jpg_')[0] + '.jpg'
     img.style.height = `${size}px`
@@ -27,44 +26,57 @@
     img.style.maxHeight = 'inherit'
     img.style.maxWidth = 'inherit'
   }
+  /** @param {HTMLElement} element */
   function processProductCard (element) {
+    /** @type HTMLImageElement | null */
     const img = element.querySelector('.item-img, img')
     if (!img?.src)
       return utils.error('cannot find image on card el', element)
     extendsImage(img)
+    /** @type HTMLElement | null */
     const wrapper = img.closest('.product-img, a')
-    if (!wrapper)
-      return utils.error('failed to find wrapper of', img)
+    if (!wrapper) return utils.error('failed to find wrapper of', img)
     wrapper.style.height = 'inherit'
     wrapper.style.width = 'inherit'
     element.style.display = 'flex'
+    /** @type HTMLElement | null */
     const zone = element.querySelector('.right-zone')
-    if (!zone)
-      return utils.error('cannot find zone on card el', element)
+    if (!zone) return utils.error('cannot find zone on card el', element)
     zone.style.paddingLeft = '16px'
     zone.style.marginTop = '16px'
-    zone.previousElementSibling.style.width = '80%'
+    /** @type HTMLElement | null */// @ts-ignore
+    const sibling = zone.previousElementSibling
+    if (sibling) sibling.style.width = '80%'
     element.classList.add('ali-aio-handled')
   }
+  /** @param {HTMLElement} element */
   function processItemRow (element) {
+    /** @type HTMLImageElement | null */
     const img = element.querySelector('.pic-core')
-    if (!img?.src)
-      return utils.error('cannot find image on row el', element)
+    if (!img?.src) return utils.error('cannot find image on row el', element)
     utils.log('image src was', img.src)
     extendsImage(img, 500)
     utils.log('now image src is', img.src)
+    /** @type HTMLElement | null */
     let wrapper = img.closest('.pic')
+    if (!wrapper) return utils.error('failed to find wrapper of', img)
     wrapper.style.height = 'inherit'
     wrapper.style.width = 'inherit'
-    wrapper = wrapper.parentElement
-    wrapper.style.height = 'inherit'
+    wrapper = wrapper.parentElement // @ts-ignore
+    wrapper.style.height = 'inherit' // @ts-ignore
     wrapper.style.width = 'inherit'
     element.style.display = 'flex'
     element.style.height = 'inherit'
     element.classList.add('ali-aio-handled')
   }
-  // eslint-disable-next-line array-func/prefer-array-from
-  const all = (selector) => [...document.querySelectorAll(selector)]
+  /**
+   * Returns an array of all elements that match the given selector.
+   * @param {string} selector - The CSS selector to match elements against.
+   * @returns {Array<HTMLElement>} - An array of elements that match the selector.
+   */
+  function all (selector) {
+    return Array.from(document.querySelectorAll(selector))
+  }
   const processProductCards = () =>
     all('.list.product-card:not(.ali-aio-handled)').map((element) =>
       processProductCard(element),
@@ -78,6 +90,6 @@
     processProductCards()
     processItemRows()
   }
-  const processDebounced = utils.debounce(process, 1000)
+  const processDebounced = utils.debounce(process, 1000) // @ts-ignore
   window.addEventListener('scroll', processDebounced)
 })()

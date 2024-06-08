@@ -303,13 +303,11 @@ data.split('\n').forEach(line => {
 
 // eslint-disable-next-line max-statements
 function laptopHelper () {
-  /* global Shuutils, RoughNotation */
-  const app = {
-    debug: true, // eslint-disable-line @typescript-eslint/naming-convention
-    id: 'lpt-hlp',
-  }
+  /* global RoughNotation */
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('lpt-hlp')
   const cls = {
-    mark: `${app.id}-mark`,
+    mark: `${utils.id}-mark`,
   }
   const selectors = {
     clearLinks: '.comparo_table_description a, .contenttable td a',
@@ -329,9 +327,6 @@ function laptopHelper () {
       '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3',
     ].map(sel => `${sel}:not(.${cls.mark})`).join(','),
   }
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils(app)
-
   const keywords = Object.keys(scoresByKeyword)
   utils.log(keywords.length, 'keywords with associated scores')
   // eslint-disable-next-line security/detect-non-literal-regexp

@@ -11,7 +11,7 @@
 // @match        https://www.topachat.com/*
 // @match        https://www.materiel.net/*
 // @match        https://www.ldlc.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.1.0/src/utils.js
 // @grant        none
 // ==/UserScript==
 
@@ -21,7 +21,6 @@
 // @ts-nocheck
 // eslint-disable-next-line max-statements
 (function hddCleaner () {
-  /* global Shuutils */
   const app = {
     debug: false, // eslint-disable-line @typescript-eslint/naming-convention
     id: 'hdd-clr',
@@ -42,7 +41,7 @@
     size: /(?<size>\d+)\s?(?<unit>\w+)/u,
     sizes: /(?<size>\d+)\s?(?<unit>gb|go|tb|to)\b/giu,
   }
-  /** @type {import('./utils.js').Shuutils} */
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils(app)
   /**
    * Get the size from a text

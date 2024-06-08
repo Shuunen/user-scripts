@@ -12,11 +12,9 @@
 /* eslint-disable no-param-reassign */
 
 (function ImageUnblock () {
-  /* global Shuutils */
   const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils({ debug: true, id: 'img-unblock' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('img-unblock')
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }

@@ -29,13 +29,11 @@ function cleanTitle (title) {
 
 // eslint-disable-next-line max-statements
 (function SaveurBiereUntappd () {
-  /* global Shuutils, module */
   if (typeof window === 'undefined') return
-  const marker = 'svb-rat'
   // eslint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: true, id: marker }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('svb-rat')
   const user = localStorage.untappdUser || ''
   if (user === '') { utils.error('please set localStorage.untappdUser to use this script'); return }
   const wrapApiKey = localStorage.wrapAPIKey || ''
@@ -56,7 +54,7 @@ function cleanTitle (title) {
     else if (data.user_rating >= 3) rating.style.backgroundColor = 'lightyellow'
     else rating.style.backgroundColor = 'lightpink'
     element.append(rating)
-    element.classList.add(marker)
+    element.classList.add(utils.id)
     // eslint-disable-next-line no-param-reassign
     element.parentElement.style.height = 'auto'
   }
@@ -67,7 +65,7 @@ function cleanTitle (title) {
     const name = cleanTitle(utils.readableString(titleElement.textContent))
     if (name === '') return utils.error('cant find item name in', titleElement)
     titleElement.title = `Cleaned title : ${name}`
-    const storageKey = `${marker}-${cached}-${name}` // '2021-11-svb-rat-Gouden Carolus Tripel'
+    const storageKey = `${utils.id}-${cached}-${name}` // '2021-11-svb-rat-Gouden Carolus Tripel'
     utils.log(`looking for "${storageKey}" in localStorage`)
     let data = {}
     if (localStorage.getItem(storageKey) === null) {
@@ -90,7 +88,7 @@ function cleanTitle (title) {
     const items = utils.findAll(selectors.items)
     utils.log('found items', items)
     items.forEach(item => {
-      if (item.classList.contains(marker)) { utils.log('item already processed'); return }
+      if (item.classList.contains(utils.id)) { utils.log('item already processed'); return }
       // skip if product not available
       if (utils.findOne(selectors.banner, item)) {
         // eslint-disable-next-line no-param-reassign

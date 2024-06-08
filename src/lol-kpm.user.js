@@ -12,9 +12,8 @@
 // @ts-nocheck
 
 (function LolKpmCounter () {
-  /* global Shuutils */
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: 'lol-kpm' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('lol-kpm')
   const maxKpm = 1.8
   function coolPercents (kpm) {
     // eslint-disable-next-line no-magic-numbers

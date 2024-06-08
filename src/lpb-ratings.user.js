@@ -440,7 +440,6 @@ function createReview (name, rating) {
 
 // eslint-disable-next-line max-statements
 function lePetitBallonRatings () {
-  /* global Shuutils, module */
   if (typeof window === 'undefined') return
   const fuseSettings = {
     includeScore: true, // eslint-disable-line @typescript-eslint/naming-convention
@@ -449,11 +448,10 @@ function lePetitBallonRatings () {
     threshold: 0.4,
   }
   const fuse = new Fuse(ratings, fuseSettings)
-  const marker = 'lpb-ratings'
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: marker }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('lpb-ratings')
   const selectors = {
-    items: `.product-item:not(.${marker})`,
+    items: `.product-item:not(.${utils.id})`,
     useless: '.product-catalog--out-stock, .footer-trustpilot, .footer-legal',
     wineTitle: '.product-catalog__title',
   }
@@ -480,7 +478,7 @@ function lePetitBallonRatings () {
 
   // eslint-disable-next-line max-statements
   function injectRating (item) {
-    item.classList.add(marker)
+    item.classList.add(utils.id)
     const title = utils.findOne(selectors.wineTitle, item, true)
     if (!title) { utils.error('no title found on item', item); return }
     const domain = title.nextElementSibling

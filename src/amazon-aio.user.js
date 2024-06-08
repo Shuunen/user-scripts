@@ -65,11 +65,9 @@ const score20Styled = (rating, reviews) => {
 }
 
 (function amazonAio () {
-  /* global Shuutils, module */
   if (typeof window === 'undefined') return
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils({ debug: true, id: 'amz-aio' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('amz-aio')
   const selectors = {
     product: '[data-asin][data-component-type="s-search-result"]:not(.AdHolder):not(.amz-processed)',
     productPrice: '.a-price-whole',

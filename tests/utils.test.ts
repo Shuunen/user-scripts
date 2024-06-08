@@ -1,9 +1,8 @@
 import { expect, it } from 'vitest'
-import { Shuutils } from '../src/utils'
+import { Shuutils } from '../src/utils' // eslint-disable-line @typescript-eslint/no-shadow
 import { check } from './utils'
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const utils = new Shuutils({ debug: false, id: 'tst' })
+const utils = new Shuutils('tst')
 
 check('utils is defined', typeof utils, 'object')
 

@@ -14,9 +14,9 @@
 // @ts-nocheck
 
 (function SpotifyMusicBrainzExport () {
-  /* global textFromSelector, insertMbForm, Shuutils */
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: 'spotify-mb-export' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /* global textFromSelector, insertMbForm */
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('spotify-mb-export')
   const selectors = {
     title: '.entity-info.media h1, .os-content h1[as="h1"]',
   }

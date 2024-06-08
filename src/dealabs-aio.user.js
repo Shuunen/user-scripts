@@ -10,24 +10,20 @@
 // @grant        none
 // ==/UserScript==
 
-// @ts-nocheck
-
 // eslint-disable-next-line max-statements
 (function dealabsAio () {
-  /* global Shuutils, autosize */
-  const app = {
-    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
-    excluders: [],
-    filter: '',
-    id: 'dlb-clr',
-  }
-  app.excluders = (window.localStorage[`${app.id}.filter`] || 'my-keyword, other-keyword').split(',')
+  /* global autosize */
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('dlb-clr')
+  /** @type {string[]} */
+  let excluders = (window.localStorage[`${utils.id}.filter`] || 'my-keyword, other-keyword').split(',')
+  let filter = ''
   const selectors = {
     deal: '.thread--type-list',
     dealList: '.js-threadList',
   }
   const cls = {
-    filter: `${app.id}-filter`,
+    filter: `${utils.id}-filter`,
   }
   const uselessElements = {
     banner: '.box--all-b, div.js-banner',
@@ -41,16 +37,17 @@
   const uselessClasses = {
     descriptions: '.cept-description-container',
   }
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils(app)
   function cleanElements () {
     Object.keys(uselessElements).forEach(key => {
+      // @ts-ignore
       utils.findAll(uselessElements[key], document, true).forEach(node => { node.remove() })
     })
   }
   function cleanClasses () {
     Object.keys(uselessClasses).forEach(key => {
+      // @ts-ignore
       utils.findAll(uselessClasses[key], document, true).forEach(node => {
+        // @ts-ignore
         // eslint-disable-next-line unicorn/no-keyword-prefix, no-param-reassign
         node.classList = []
       })
@@ -91,45 +88,54 @@
       `
     document.head.insertAdjacentElement('beforeend', styleTag)
   }
+  /**
+   * @param {string} text
+   * @param {HTMLElement} element
+   */
   function checkItem (text, element) {
     let isFound = false
-    let remaining = app.excluders.length
+    let remaining = excluders.length
     while (!isFound && remaining) {
-      isFound = text.includes(app.excluders[remaining - 1])
+      const exclude = excluders[remaining - 1] ?? ''
+      isFound = text.includes(exclude)
       remaining -= 1
     }
-    // eslint-disable-next-line no-magic-numbers, @typescript-eslint/restrict-template-expressions
-    if (isFound) utils.warn(`"${text.slice(0, 40)}..."`, `is excluded, it contains : "${app.excluders[remaining]}"`)
+    // eslint-disable-next-line no-magic-numbers
+    if (isFound) utils.warn(`"${text.slice(0, 40)}..."`, `is excluded, it contains : "${excluders[remaining] || ''}"`)
     // eslint-disable-next-line no-param-reassign, sonarjs/elseif-without-else
-    else if (app.debug) element.style.backgroundColor = '#f0fbf0'
+    else if (utils.willDebug) element.style.backgroundColor = '#f0fbf0'
     // eslint-disable-next-line no-param-reassign
     element.style.opacity = isFound ? '0.3' : '1'
   }
   function checkItems () {
     utils.log('checking displayed items...')
     utils.findAll(selectors.deal).forEach(element => {
-      const text = utils.readableString(element.textContent).toLowerCase().trim()
+      const text = utils.readableString(element.textContent ?? '').toLowerCase().trim()
       checkItem(text, element)
     })
   }
-  function onExcludersUpdate (fromFilter) {
-    app.excluders = app.excluders
+  /** @param {boolean} [isFromFilter] */
+  function onExcludersUpdate (isFromFilter = false) {
+    excluders = excluders
       .map(entry => entry.trim().toLowerCase())
       .filter(entry => entry.length)
-    if (app.excluders.length <= 0) return
-    utils.log('new excluders :', app.excluders)
-    app.filter = app.excluders.join(', ')
-    window.localStorage[`${app.id}.filter`] = app.filter
-    if (!fromFilter) {
-      const filter = utils.findOne(`.${cls.filter}`)
-      filter.value = app.filter
+    if (excluders.length <= 0) return
+    utils.log('new excluders :', excluders)
+    filter = excluders.join(', ')
+    window.localStorage[`${utils.id}.filter`] = filter
+    if (!isFromFilter) {
+      const filterElement = utils.findOne(`.${cls.filter}`)
+      // @ts-ignore
+      filterElement.value = filter
+      // @ts-ignore
       autosize.update(filter)
     }
     checkItems()
   }
+  // @ts-ignore
   function onFilterChange (event) {
     utils.log('filter changed !')
-    app.excluders = event.target.value.split(',')
+    excluders = event.target.value.split(',')
     onExcludersUpdate(true)
   }
   // eslint-disable-next-line no-magic-numbers
@@ -142,12 +148,15 @@
       utils.error('cannot inject excluders without container')
       return
     }
-    const filter = document.createElement('textarea')
-    filter.spellcheck = false
-    filter.classList.add(cls.filter)
-    filter.value = app.filter
+    const filterElement = document.createElement('textarea')
+    filterElement.spellcheck = false
+    filterElement.classList.add(cls.filter)
+    filterElement.value = filter
+    // @ts-ignore
     autosize(filter)
+    // @ts-ignore
     filter.addEventListener('keyup', onFilterChangeDebounced)
+    // @ts-ignore
     container.insertAdjacentElement('beforeBegin', filter)
   }
 
@@ -166,5 +175,6 @@
   init()
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
+  // @ts-ignore
   document.addEventListener('scroll', processDebounced)
 })()

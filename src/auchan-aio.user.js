@@ -12,10 +12,8 @@
 // eslint-disable-next-line max-statements
 (function auchanAio () {
 
-  /* global Shuutils */
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils({ debug: false, id: 'auchan-aio' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('auchan-aio')
   const uselessSelectors = {
     productIcon: '.product-thumbnail__icon', // useless icon like "Frais", "Vegan", "Bio"...
     promoCard: 'article.picture-thumbnail',
@@ -31,7 +29,7 @@
    */
   function hideElement (element, reason) {
     /* eslint-disable no-param-reassign */
-    if (utils.app.debug) {
+    if (utils.willDebug) {
       element.style.backgroundColor = 'red !important'
       element.style.color = 'white !important'
       element.style.boxShadow = '0 0 10px red'

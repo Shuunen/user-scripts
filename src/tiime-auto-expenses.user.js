@@ -20,18 +20,9 @@ function createButton (label = '') {
 }
 
 (function TiimeAutoExpenses () {
-  /* global Shuutils, Notyf */
-  // @ts-ignore
-  const toast = new Notyf()
-  const marker = 'tim-aex'
-  const app = {
-    addOneBtn: document.createElement('button'),
-    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
-    id: marker,
-  }
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils(app)
+  let addOneButton = document.createElement('button')
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('tim-aex')
   utils.injectStyles('https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css')
   const selectors = {
     addExpenseBtn: '.right [tiime-button]',
@@ -52,35 +43,17 @@ function createButton (label = '') {
   const classes = {
     tableRowActive: 'row-active',
   }
-  /**
-   * @param {string} message
-   * @returns {void}
-   */
-  function showError (message) {
-    toast.error({ dismissible: true, duration: 0, message }) // eslint-disable-line @typescript-eslint/naming-convention
-    utils.error(message)
-  }
-  /**
-   * @param {string} message
-   * @returns {void}
-   */
-  function showLog (message) {
-    toast.success(message)
-    utils.log(message)
-  }
-  /**
-   * @param {HTMLElement} row
-   */
+  /** @param {HTMLElement} row */
   async function setDate (row) {
     utils.log('setting date to last day of previous month')
     const input = utils.findOne(selectors.tableRowDate, row)
-    if (input === undefined) { showError('tableRowDate not found'); return }
+    if (input === undefined) { utils.showError('tableRowDate not found'); return }
     input.click()
     const previous = await utils.waitToDetect(selectors.tableRowDatePrevMonth)
-    if (previous === undefined) { showError('previous button not found'); return }
+    if (previous === undefined) { utils.showError('previous button not found'); return }
     previous.click()
     const lastDay = await utils.waitToDetect(selectors.tableRowDateLastDay)
-    if (lastDay === undefined) { showError('lastDay not found'); return }
+    if (lastDay === undefined) { utils.showError('lastDay not found'); return }
     lastDay.click()
     utils.log('date set to the', lastDay.textContent, 'of previous month')
   }
@@ -88,22 +61,22 @@ function createButton (label = '') {
   /**
    * @param {HTMLElement} row the row to set the label for
    * @param {string} label the label to set, like "Abonnement Internet"
+   * @returns {Promise<void>}
    */
   async function setLabel (row, label) {
     utils.log(`setting label "${label}"`)
     const chip = row.querySelector('[data-cy="label-chip__txt-label-name"]')
     if (chip !== null) { utils.log('label already set'); return }
     const button = utils.findOne(selectors.tableRowLabel, row)
-    if (button === undefined) { showError('tableRowLabel not found'); return }
+    if (button === undefined) { utils.showError('tableRowLabel not found'); return }
     button.click()
-    /** @type {HTMLInputElement | undefined} */
-    // @ts-ignore
+    /** @type {HTMLInputElement | undefined} */// @ts-ignore
     const input = await utils.waitToDetect(selectors.tableRowLabelInput)
-    if (input === undefined) { showError('tableRowLabelInput not found'); return }
+    if (input === undefined) { utils.showError('tableRowLabelInput not found'); return }
     input.value = label
     input.dispatchEvent(new Event('input'))
     const firstChip = await utils.waitToDetect(selectors.tableRowLabelFirstChip)
-    if (firstChip === undefined) { showError('tableRowLabelFirstChip not found'); return }
+    if (firstChip === undefined) { utils.showError('tableRowLabelFirstChip not found'); return }
     firstChip.click()
     utils.log('label set to', firstChip.textContent)
   }
@@ -114,10 +87,9 @@ function createButton (label = '') {
    */
   async function setAmount (row, amount) {
     utils.log(`setting amount "${amount}"`)
-    /** @type {HTMLInputElement | undefined} */
-    // @ts-ignore
+    /** @type {HTMLInputElement | undefined} */// @ts-ignore
     const input = utils.findOne(selectors.tableRowAmountInput, row)
-    if (input === undefined) { showError('tableRowAmountInput not found'); return }
+    if (input === undefined) { utils.showError('tableRowAmountInput not found'); return }
     if (input.value !== '') { utils.log('amount already set'); return }
     input.parentElement?.click()
     input.focus()
@@ -138,24 +110,23 @@ function createButton (label = '') {
     const icon = await utils.waitToDetect(`${selectors.tableRow}.${classes.tableRowActive} ${selectors.tableRowHasCommentIcon}`)
     if (icon !== undefined) { utils.log('comment already set'); return }
     const button = await utils.waitToDetect(`${selectors.tableRow}.${classes.tableRowActive} ${selectors.tableRowMenu}`)
-    if (button === undefined) { showError('tableRowMenu not found'); return }
+    if (button === undefined) { utils.showError('tableRowMenu not found'); return }
     button.click()
     const entry = await utils.waitToDetect(selectors.tableRowMenuComment)
-    if (entry === undefined) { showError('tableRowMenuComment not found'); return }
+    if (entry === undefined) { utils.showError('tableRowMenuComment not found'); return }
     const entryText = entry.textContent?.trim() ?? ''
-    if (entryText !== 'Ajouter un commentaire') { showError(`tableRowMenuComment found but wrong text inside : ${entryText}`); return }
+    if (entryText !== 'Ajouter un commentaire') { utils.showError(`tableRowMenuComment found but wrong text inside : ${entryText}`); return }
     entry.click()
-    /** @type {HTMLTextAreaElement | undefined} */
-    // @ts-ignore
+    /** @type {HTMLTextAreaElement | undefined} */// @ts-ignore
     const textarea = await utils.waitToDetect(selectors.textareaComment)
-    if (textarea === undefined) { showError('textareaComment not found'); return }
+    if (textarea === undefined) { utils.showError('textareaComment not found'); return }
     textarea.value = comment
     await utils.sleep(100) // eslint-disable-line no-magic-numbers
     textarea.dispatchEvent(new Event('input', { bubbles: true, cancelable: true })) // eslint-disable-line @typescript-eslint/naming-convention
     await utils.sleep(100) // eslint-disable-line no-magic-numbers
     textarea.blur()
     const validate = await utils.waitToDetect(selectors.textareaCommentValidate)
-    if (validate === undefined) { showError('textareaCommentValidate not found'); return }
+    if (validate === undefined) { utils.showError('textareaCommentValidate not found'); return }
     validate.click()
   }
 
@@ -171,12 +142,12 @@ function createButton (label = '') {
       const hasSameLabel = text === label
       if (!hasSameLabel) return false
       const row = chip.closest('tr')
-      if (row === null) { showError('row closest to chip not found'); return false }
+      if (row === null) { utils.showError('row closest to chip not found'); return false }
       /** @type {HTMLInputElement | null} */
       const input = row.querySelector(selectors.tableRowAmountInput)
-      if (input === null) { showError('amount input not found'); return false }
+      if (input === null) { utils.showError('amount input not found'); return false }
       const hasSameAmount = input.value === amount.toString()
-      if (!hasSameAmount) showError(`found label "${label}" but current amount is ${input.value} instead of ${amount.toString()}`)
+      if (!hasSameAmount) utils.showError(`found label "${label}" but current amount is ${input.value} instead of ${amount.toString()}`)
       return hasSameLabel // still return hasSameLabel/true even if amount is different because we want to skip this expense
       // so we consider it as already filled
     })
@@ -193,9 +164,9 @@ function createButton (label = '') {
     await utils.sleep(300) // eslint-disable-line no-magic-numbers
     if (isExpenseFilled(label, amount)) { utils.log(`expense already filled : ${label}`); return }
     console.groupCollapsed(`addExpense "${label}" with ${amount}€ (${comment})`) // eslint-disable-line no-console
-    app.addOneBtn.click()
+    addOneButton.click()
     const row = await utils.waitToDetect(selectors.tableRow)
-    if (row === undefined) { showError('row not found'); return }
+    if (row === undefined) { utils.showError('row not found'); return }
     row.classList.add(classes.tableRowActive)
     await setDate(row)
     await setLabel(row, label)
@@ -207,13 +178,13 @@ function createButton (label = '') {
 
   async function addExpenses () {
     const lines = await utils.readClipboard()
-    if (lines.trim() === '') { showError('no data found in clipboard'); return }
-    if (!lines.includes('\t')) { showError('tabs not found in data, does not seems like you copied spreadsheet cells'); return }
+    if (lines.trim() === '') { utils.showError('no data found in clipboard'); return }
+    if (!lines.includes('\t')) { utils.showError('tabs not found in data, does not seems like you copied spreadsheet cells'); return }
     const [headers, ...expenses] = lines.split('\n').map(line => line.split('\t'))
     const headerHash = headers?.join('').trim() ?? ''
     const headerHashExpected = 'FraisCommentaireMontant'
-    if (headerHash !== headerHashExpected) { showError(`header not found or not matching, expected "${headerHashExpected}" but got "${headerHash}"`); return }
-    if (expenses.length === 0) { showError('no expenses found'); return }
+    if (headerHash !== headerHashExpected) { utils.showError(`header not found or not matching, expected "${headerHashExpected}" but got "${headerHash}"`); return }
+    if (expenses.length === 0) { utils.showError('no expenses found'); return }
     utils.log('adding expenses...', expenses)
     const subset = expenses
     for (const [label = '', comment = '', amount = ''] of subset) {
@@ -224,16 +195,15 @@ function createButton (label = '') {
   }
 
   async function init () {
-    /** @type {HTMLButtonElement | undefined} */
-    // @ts-ignore
+    /** @type {HTMLButtonElement | undefined} */// @ts-ignore
     const addOne = await utils.waitToDetect(selectors.addExpenseBtn)
     if (addOne === undefined) { utils.log('no add expense button found on this page'); return }
-    app.addOneBtn = addOne
+    addOneButton = addOne
     const addAll = createButton('Add common expenses')
     addAll.addEventListener('click', () => { void addExpenses() })
-    if (addOne.parentElement === null) { showError('button parent element not found'); return }
+    if (addOne.parentElement === null) { utils.showError('button parent element not found'); return }
     addOne.parentElement.append(addAll)
-    showLog('button injected, tiime-auto-expenses is ready')
+    utils.showLog('button injected, tiime-auto-expenses is ready')
   }
 
   const initDebounced = utils.debounce(init, 300) // eslint-disable-line no-magic-numbers

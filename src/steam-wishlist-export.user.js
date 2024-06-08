@@ -9,54 +9,62 @@
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // ==/UserScript==
 
-// @ts-nocheck
-
 (function SteamWishlistExport () {
-  /* global Shuutils */
-  const marker = 'stm-wex'
-  const app = { debug: false, games: [], id: marker } // eslint-disable-line @typescript-eslint/naming-convention
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils(app)
+  let appButton = document.createElement('button')
+  /** @type {{ id: string, img: string, price: number, title: string }[]} */
+  let appGames = []
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('stm-wex')
   const selectors = {
     img: '.capsule img',
     price: '.discount_final_price',
-    row: `.wishlist_row:not(.${marker})`,
+    row: `.wishlist_row:not(.${utils.id})`,
     title: 'a.title',
   }
+  /**
+   * Retrieves game data from a given row element.
+   * @param {HTMLElement} row - The row element containing the game data.
+   * @returns {{ id: string, img: string, price: number, title: string }} - The game data.
+   */
   function getGameData (row) {
-    row.classList.add(marker)
+    row.classList.add(utils.id)
     row.scrollIntoView()
     const titleElement = utils.findOne(selectors.title, row)
-    const title = titleElement ? utils.readableString(titleElement.textContent.trim()) : ''
-    const img = (utils.findOne(selectors.img, row) || { src: '' }).src
-    const id = row.dataset.appId
+    const title = titleElement ? utils.readableString(titleElement.textContent?.trim() ?? '') : '' // @ts-ignore
+    const img = utils.findOne(selectors.img, row)?.src ?? ''
+    const id = row.dataset.appId ?? ''
     const priceElement = utils.findOne(selectors.price, row)
-    const price = priceElement ? Math.round(Number.parseFloat(priceElement.textContent.replace(',', '.'))) : 0
+    const price = priceElement ? Math.round(Number.parseFloat(priceElement.textContent?.replace(',', '.') ?? '')) : 0
     return { id, img, price, title }
   }
+  /**
+   * Retrieves games from a list and returns them recursively.
+   * @param {{ id: string, img: string, price: number, title: string }[]} list - The list of games.
+   * @returns {Promise<{ id: string, img: string, price: number, title: string }[]>} - A promise that resolves to an array of games.
+   */
   async function getGames (list = []) {
     // eslint-disable-next-line no-magic-numbers
     const row = await utils.waitToDetect(selectors.row, 50)
-    if (row === undefined)
-      return list
+    if (row === undefined) return list
     list.push(getGameData(row))
     return await getGames(list)
   }
   async function copyGames () {
-    if (app.games.length > 0) { void utils.copyToClipboard(app.games); return }
+    if (appGames.length > 0) { void utils.copyToClipboard(appGames); return }
     const games = await getGames()
     utils.log('found games :', games)
     void utils.copyToClipboard(games)
-    app.button.style.backgroundColor = 'lightgreen'
-    app.button.textContent = `${games.length} games copied to your clipboard`
-    app.games = games
+    appButton.style.backgroundColor = 'lightgreen'
+    appButton.textContent = `${games.length} games copied to your clipboard`
+    // eslint-disable-next-line require-atomic-updates
+    appGames = games
   }
   function injectButton () {
     const button = document.createElement('button')
-    button.textContent = 'Export list to JSON'
+    button.textContent = 'Export list to JSON' // @ts-ignore it works ^^'
     button.style = 'position: fixed; cursor: pointer; top: 3.5rem; right: 1rem; padding: 0.5rem 1.2rem; font-size: 1rem; z-index: 1000; '
     button.addEventListener('click', () => { void copyGames() })
-    app.button = button
+    appButton = button
     document.body.append(button)
   }
   async function init () {

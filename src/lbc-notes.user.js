@@ -84,7 +84,7 @@ function getNoteIdFromNote (noteElement) {
 // eslint-disable-next-line max-statements
 (function LeBonCoinNotes () {
   if (typeof window === 'undefined') return
-  /* global Shuutils, tailwind, Appwrite, idbKeyval, GM_addStyle */
+  /* global tailwind, Appwrite, idbKeyval, GM_addStyle */
   /** @type {{get: IdbKeyvalNoteGetter, set: function, clear: function}} */ // @ts-ignore
   const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval
   // @ts-ignore
@@ -94,17 +94,15 @@ function getNoteIdFromNote (noteElement) {
       preflight: false,
     },
   }
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils({ debug: false, id: 'lbc-nts' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('lbc-nts')
   // Remove me one day :)
   // eslint-disable-next-line @typescript-eslint/unbound-method
   utils.tw ||= (classes) => classes.split(' ')
   const cls = {
-    marker: `${utils.app.id}-processed`,
+    marker: `${utils.id}-processed`,
   }
-  /* Init DB */
-  // @ts-ignore
+  /* Init DB */// @ts-ignore
   const { Client, Databases, ID, Query } = Appwrite // eslint-disable-line @typescript-eslint/naming-convention
   const db = { // eslint-disable-line unicorn/prevent-abbreviations
     databaseId: localStorage.getItem('lbcNotes_databaseId'),
@@ -274,7 +272,7 @@ function getNoteIdFromNote (noteElement) {
     const note = document.createElement('textarea')
     note.placeholder = 'Add a note...'
     note.dataset.listingId = listingId.toString()
-    note.classList.add(`${utils.app.id}--note`, config.loading.class, ...utils.tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20'))
+    note.classList.add(`${utils.id}--note`, config.loading.class, ...utils.tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20'))
     note.addEventListener('keyup', () => saveNoteDebounced(note)) // keypress will not detect backspace
     note.disabled = true
     void loadNote(note)
@@ -295,8 +293,7 @@ function getNoteIdFromNote (noteElement) {
   }
   function addNotesToListings () {
     utils.log('add note to each listing')
-    /** @type HTMLAnchorElement[] */
-    // @ts-ignore
+    /** @type HTMLAnchorElement[] */// @ts-ignore
     const listings = utils.findAll(`a[data-test-id="ad"]:not(.${cls.marker})`)
     for (const listing of listings) {
       listing.classList.add(cls.marker)
@@ -334,7 +331,7 @@ function getNoteIdFromNote (noteElement) {
   // @ts-ignore
   // eslint-disable-next-line new-cap, sonar/new-cap
   GM_addStyle(`
-    .${utils.app.id}--note.loading {
+    .${utils.id}--note.loading {
       background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
       background-size: 400% 400%;
       animation: gradient 5s ease infinite;
@@ -350,12 +347,12 @@ function getNoteIdFromNote (noteElement) {
         background-position: 0% 50%;
       }
     }
-    .${utils.app.id}-hidden .${utils.app.id}--note,
-    .lbc-lpp-hidden .${utils.app.id}--note {
+    .${utils.id}-hidden .${utils.id}--note,
+    .lbc-lpp-hidden .${utils.id}--note {
       max-height: 60px;
     }
-    .${utils.app.id}-hidden .${utils.app.id}--note:hover,
-    .lbc-lpp-hidden .${utils.app.id}--note:hover {
+    .${utils.id}-hidden .${utils.id}--note:hover,
+    .lbc-lpp-hidden .${utils.id}--note:hover {
       max-height: 140px;
     }
   `)
@@ -365,5 +362,5 @@ function getNoteIdFromNote (noteElement) {
   void utils.onPageChange(() => processDebounced('page-change-event'))
 })()
 
-// eslint-disable-next-line no-undef
+ 
 if (module) module.exports = { getListingId }

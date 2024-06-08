@@ -12,10 +12,8 @@
 // ==/UserScript==
 
 (function BundlePhobiaEverywhere () {
-  /* global Shuutils */
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils({ debug: false, id: 'bdl-evr' }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('bdl-evr')
   /**
    * Inject bundlephobia badges into the page
    * @param {string} name

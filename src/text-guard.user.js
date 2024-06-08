@@ -5,11 +5,7 @@
 // @description  Check the text of the current page, show alerts if it contains weird/forbidden words
 // @author       Romain Racamier-Lafon
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @require      https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
-// @resource     notyfCss https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css
-// @grant        GM_getResourceText
-// @grant        GM_addStyle
 // ==/UserScript==
 
 // This script use two ways to find elements in the document:
@@ -19,18 +15,9 @@
 
 // eslint-disable-next-line max-statements
 (function TextGuard () {
-  /* global Shuutils, Notyf, RoughNotation, GM_getResourceText, GM_addStyle */
-  // @ts-ignore
-  const toast = new Notyf()
-  const marker = 'txt-grd'
-  const app = {
-    counts: {
-      forbidden: 0,
-    },
-    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
-    hasLoadedCss: false,
-    hasScrolled: false,
-    id: marker,
+  /* global RoughNotation */
+  const counts = {
+    forbidden: 0,
   }
   const forbiddenWords = [
     '23 rue du Berry',
@@ -43,39 +30,8 @@
     'svg', 'symbol', 'br', 'hr', 'iframe', 'g',
     'link', 'meta', 'script', 'style', 'title',
   ])
-  /** @type {import('./utils.js').Shuutils} */
-  // @ts-ignore
-  const utils = new Shuutils(app)
-  /**
-   * Loads CSS styles for the toast notifications
-   */
-  function loadCss () {
-    app.hasLoadedCss = true
-    // @ts-ignore
-    // eslint-disable-next-line new-cap, sonar/new-cap
-    const css = GM_getResourceText('notyfCss')
-    // @ts-ignore
-    // eslint-disable-next-line new-cap, sonar/new-cap
-    GM_addStyle(css)
-  }
-  /**
-   * @param {string} message
-   * @returns {void}
-   */
-  function showError (message) {
-    if (!app.hasLoadedCss) loadCss()
-    toast.error({ dismissible: true, duration: 3000, message }) // eslint-disable-line @typescript-eslint/naming-convention
-    utils.error(message)
-  }
-  /**
-   * @param {string} message
-   * @returns {void}
-   */
-  function showLog (message) {
-    if (!app.hasLoadedCss) loadCss()
-    toast.success(message)
-    utils.log(message)
-  }
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('txt-grd')
   /**
    * Handles the detection of a forbidden word.
    * @param {string} word the forbidden word that was detected.
@@ -86,7 +42,7 @@
     if (element.dataset.txtGrd === 'forbidden') return
     // eslint-disable-next-line no-param-reassign
     element.dataset.txtGrd = 'forbidden'
-    app.counts.forbidden += 1 // @ts-ignore
+    counts.forbidden += 1 // @ts-ignore
     const annotation1 = RoughNotation.annotate(element, { color: 'red', strokeWidth: 4, type: 'box' })// @ts-ignore
     const annotation2 = RoughNotation.annotate(element, { color: 'yellow', type: 'highlight' })// @ts-ignore
     const annotationGroup = RoughNotation.annotationGroup([annotation1, annotation2])
@@ -115,7 +71,7 @@
     for (let index = 0; index < results.snapshotLength; index += 1) {
       const node = results.snapshotItem(index)
       if (node === null) continue // eslint-disable-line no-continue
-      if (!(node instanceof HTMLElement)) { utils.error(node); showError('Node is not an HTMLElement'); continue } // eslint-disable-line no-continue
+      if (!(node instanceof HTMLElement)) { utils.error(node); utils.showError('Node is not an HTMLElement'); continue } // eslint-disable-line no-continue
       if (node.dataset.txtGrd !== undefined) continue // eslint-disable-line no-continue
       node.dataset.txtGrd = 'found'
       elements.push(node)
@@ -158,18 +114,18 @@
     if (elements.length > 0) utils.log(`found ${elements.length} element(s) :`, elements)
     for (const element of elements)
       if (isForbidden) onForbidden(word, element)
-      else showLog(`Found warn word: ${word}`)
+      else utils.showLog(`Found warn word: ${word}`)
   }
   function report () {
-    if (app.counts.forbidden > 0) showError(`Found ${app.counts.forbidden} forbidden words`)
+    if (counts.forbidden > 0) utils.showError(`Found ${counts.forbidden} forbidden words`)
     else utils.log('Stop, no forbidden words found')
   }
   function init () {
     if (hostExceptions.has(window.location.hostname)) return
     utils.log('Start...')
-    app.counts.forbidden = 0
+    counts.forbidden = 0
     const text = document.body.textContent ?? ''
-    if (text === '') { showError('No text found in the current page'); return }
+    if (text === '') { utils.showError('No text found in the current page'); return }
     for (const word of forbiddenWords) search(word, true)
     report()
   }

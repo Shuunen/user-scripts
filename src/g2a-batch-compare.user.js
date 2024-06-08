@@ -17,11 +17,10 @@
 
 // eslint-disable-next-line max-statements
 (function g2aBatchCompare () {
-  /* global Shuutils, didYouMean */
-  const marker = 'g2a-bcp'
+  /* global didYouMean */
   let list = []
-  /** @type {import('./utils.js').Shuutils} */
-  const utils = new Shuutils({ debug: false, id: marker }) // eslint-disable-line @typescript-eslint/naming-convention
+  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  const utils = new Shuutils('g2a-bcp')
   function cleanGameName (string) {
     const output = string.toLowerCase()
       .split(' deluxe edition')[0]
@@ -84,12 +83,12 @@
       return `<tr><td>${cells.join('</td><td>')}</td></tr>`
     }).join('\n')
     table.append(body)
-    table.id = `${marker}--table`
+    table.id = `${utils.id}--table`
     injectStyles(`
-      #${marker}--table > tbody > tr > td { vertical-align: middle; padding: 0 0.6rem; font-size: 1rem; }
-      #${marker}--table > tbody > tr:nth-of-type(odd) { background-color: #f0f0f0; }
-      #${marker}--table a.title { font-weight: bold; }
-      #${marker}--table a.price { font-size: 1.7rem; }
+      #${utils.id}--table > tbody > tr > td { vertical-align: middle; padding: 0 0.6rem; font-size: 1rem; }
+      #${utils.id}--table > tbody > tr:nth-of-type(odd) { background-color: #f0f0f0; }
+      #${utils.id}--table a.title { font-weight: bold; }
+      #${utils.id}--table a.price { font-size: 1.7rem; }
     `)
     return table
   }
