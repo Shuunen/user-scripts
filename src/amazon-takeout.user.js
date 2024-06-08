@@ -14,12 +14,16 @@
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('amz-tko', true)
   const selectors = {
+    brand: '.po-brand .po-break-word',
+    details: '#productTitle',
+    name: '#productTitle',
+    photo: '#imgTagWrapperId img',
     price: '.a-price-whole',
-    title: '#productTitle',
+    reference: '#ASIN',
   }
   /**
    * Handles the form submission event.
-   * @param {Object} values - The form values.
+   * @param {typeof selectors} values - The form values.
    */
   async function onSubmit (values) {
     utils.log('Form submitted with', { values })
@@ -33,8 +37,8 @@
     document.body.append(form)
   }
   async function init () {
-    const title = await utils.waitToDetect(selectors.title)
-    if (title === undefined) { utils.log('no product title found on this page'); return }
+    const name = await utils.waitToDetect(selectors.name)
+    if (name === undefined) { utils.log('no product name found on this page'); return }
     startTakeout()
   }
   const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
