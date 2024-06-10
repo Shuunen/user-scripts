@@ -25,7 +25,7 @@
 // @match        https://www.notebookcheck.net/*
 // @match        https://www.topachat.com/*
 // @match        https://www.tuxedocomputers.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @grant        none
 // ==/UserScript==

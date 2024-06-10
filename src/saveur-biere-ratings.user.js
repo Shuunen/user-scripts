@@ -5,7 +5,7 @@
 // @description  See your ratings when buying
 // @author       Romain Racamier-Lafon
 // @match        https://www.saveur-biere.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @grant        none
 // ==/UserScript==
 

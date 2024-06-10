@@ -5,7 +5,7 @@
 // @description  Bigger listing
 // @author       Romain Racamier-Lafon
 // @match        https://*.amazon.fr/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @grant        none
 // ==/UserScript==
 

@@ -5,7 +5,7 @@
 // @description  Display a badge on the top right corner of the page with the number of contributions you made today on Gitlab
 // @author       Romain Racamier-Lafon
 // @match        https://gitlab.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @grant        none
 // ==/UserScript==
 

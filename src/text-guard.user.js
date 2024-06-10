@@ -4,7 +4,7 @@
 // @version      1.0.1
 // @description  Check the text of the current page, show alerts if it contains weird/forbidden words
 // @author       Romain Racamier-Lafon
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // ==/UserScript==
 

@@ -5,7 +5,7 @@
 // @author       Romain Racamier-Lafon
 // @match        https://www.reddit.com/*
 // @grant        none
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @version      1.1.3
 // ==/UserScript==
 

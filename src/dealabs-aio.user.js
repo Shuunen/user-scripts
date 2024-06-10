@@ -5,7 +5,7 @@
 // @description  Un-clutter & add filters to Dealabs
 // @author       Romain Racamier-Lafon
 // @match        https://www.dealabs.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.4.0/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @require      https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js
 // @grant        none
 // ==/UserScript==

@@ -4,8 +4,8 @@
 // @match        https://www.amazon.*/*
 // @grant        none
 // @version      1.0.0
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.0/src/utils.min.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.0/src/mb-import-utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/mb-import-utils.js
 // @author       Shuunen
 // @description  This script let you export data from Amazon
 // ==/UserScript==
