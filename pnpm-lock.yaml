@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 devDependencies:
+  '@custom/eslint-plugin':
+    specifier: link:lint
+    version: link:lint
   '@types/node':
     specifier: '20'
     version: 20.13.0

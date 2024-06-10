@@ -4,6 +4,7 @@
   "bugs": "https://github.com/Shuunen/user-scripts/issues",
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
+    "@custom/eslint-plugin": "link:lint",
     "@types/node": "20",
     "eslint": "8.57",
     "eslint-config-hardcore": "45.7",

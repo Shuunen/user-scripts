@@ -1,0 +1,9 @@
+{
+  "main": "index.js",
+  "name": "@custom/eslint-plugin",
+  "peerDependencies": {
+    "eslint": "^8"
+  },
+  "private": true,
+  "version": "1.0.0"
+}

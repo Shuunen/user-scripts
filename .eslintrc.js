@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 const rules = {
+  '@custom/enforce-download-url': 'error',
   '@typescript-eslint/array-type': 'off',
   '@typescript-eslint/brace-style': [
     'error',
@@ -199,6 +200,7 @@ const rules = {
     },
   ],
   'unicorn/switch-case-braces': 'off',
+  'userscripts/compat-headers': ['error', { requireAllCompatible: true }],
 }
 
 module.exports = {
@@ -242,6 +244,9 @@ module.exports = {
       parserOptions: {
         project: true,
       },
+      plugins: [
+        '@custom',
+      ],
       rules: {
         ...rules,
         '@typescript-eslint/ban-ts-comment': 'off',
@@ -252,6 +257,7 @@ module.exports = {
     {
       files: [
         '.eslintrc.js',
+        'lint/**/*.js',
       ],
       rules: {
         'filenames/match-regex': 'off',
@@ -278,6 +284,9 @@ module.exports = {
       whitelist: [
         'app-[a-z-]+',
       ],
+    },
+    userscriptVersions: {
+      violentmonkey: '*',
     },
   },
 }
