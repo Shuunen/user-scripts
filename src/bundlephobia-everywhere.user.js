@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         BundlePhobia <3 Everywhere
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/bundlephobia-everywhere.user.js
 // @namespace    https://github.com/Shuunen
 // @description  Show size of npm packages on Github & Npm
 // @author       Romain Racamier-Lafon

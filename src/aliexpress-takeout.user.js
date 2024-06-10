@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         AliExpress Takeout - Get data with you
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-takeout.user.js
 // @namespace    https://github.com/Shuunen
 // @match        https://www.aliexpress.*/*
 // @grant        none

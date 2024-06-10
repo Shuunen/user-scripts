@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Amazon - Hide products by keyword
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-hide-products-by-keywords.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.1.7
 // @description  Easily hide products from your searches by specifying a block list

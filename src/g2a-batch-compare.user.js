@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         G2A Batch Compare
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/g2a-batch-compare.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.1.0
 // @description  Compare prices with game list in the clipboard

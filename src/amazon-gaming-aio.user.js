@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Amazon Gaming - All in one
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-gaming-aio.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.3
 // @description  Hide games

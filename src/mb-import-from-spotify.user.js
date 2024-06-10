@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Spotify - Export to MusicBrainz
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/mb-import-from-spotify.user.js
 // @namespace    https://github.com/Shuunen
 // @match        https://open.spotify.com/album/*
 // @match        https://open.spotify.com/playlist/*

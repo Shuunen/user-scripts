@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Amazon Music - Export to MusicBrainz
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/mb-import-from-amazon-music.user.js
 // @namespace    https://github.com/Shuunen
 // @match        https://www.amazon.fr/*
 // @grant        none

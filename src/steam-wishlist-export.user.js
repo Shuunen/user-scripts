@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Steam Wishlist Export
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/steam-wishlist-export.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.1.1
 // @description  Export games from a wishlist page

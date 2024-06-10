@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Laptop Helper
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/laptop-helper.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.1
 // @description  Add annotations on displayed informations

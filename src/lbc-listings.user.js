@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         LeBonCoin Listing Plus Plus
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lbc-listings.user.js
 // @namespace    https://github.com/Shuunen
 // @description  Show more infos on LeBonCoin listings
 // @author       Romain Racamier-Lafon

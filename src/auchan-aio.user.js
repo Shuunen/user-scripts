@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Auchan - All in one
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/auchan-aio.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.0
 // @description  Improve Auchan UX

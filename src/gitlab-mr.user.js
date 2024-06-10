@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Gitlab - MR Shortcuts
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/gitlab-mr.user.js
 // @namespace    https://github.com/Shuunen
 // @description  Ease access to my affected MR / opened MR
 // @author       Romain Racamier-Lafon

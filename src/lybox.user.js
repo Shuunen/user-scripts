@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         LyBox Enhanced
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lybox.user.js
 // @namespace    https://github.com/Shuunen
 // @description  Add features to LyBox
 // @author       Romain Racamier-Lafon

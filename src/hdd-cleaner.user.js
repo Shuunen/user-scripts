@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         HDD Cleaner
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/hdd-cleaner.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.2.4
 // @description  Remove unwanted hard drives disks

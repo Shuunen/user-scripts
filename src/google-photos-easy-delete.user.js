@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Google Photos - Easy Delete
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/google-photos-easy-delete.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.4
 // @description  Delete a photo by pressing ! (bang)

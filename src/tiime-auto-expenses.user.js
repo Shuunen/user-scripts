@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Tiime Auto Expenses Filler
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/tiime-auto-expenses.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.1.0
 // @description  Generate expenses automatically

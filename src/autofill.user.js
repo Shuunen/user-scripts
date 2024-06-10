@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Autofill
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/autofill.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.3
 // @description  Simply fill your login everywhere

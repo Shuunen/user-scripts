@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Dealabs - All in one
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/dealabs-aio.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.1.3
 // @description  Un-clutter & add filters to Dealabs

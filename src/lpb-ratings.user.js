@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Le Petit Ballon - Ratings
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lpb-ratings.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.0
 // @description  See your ratings when buying

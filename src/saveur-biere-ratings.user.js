@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Saveur Bière - Untappd Ratings
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/saveur-biere-ratings.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.2.0
 // @description  See your ratings when buying

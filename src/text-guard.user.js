@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Text Guard
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/text-guard.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.1
 // @description  Check the text of the current page, show alerts if it contains weird/forbidden words

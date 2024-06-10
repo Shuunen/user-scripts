@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Amazon - Price per weight
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-price-per-weight.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.6
 // @description  Display price per weight & sort ascending

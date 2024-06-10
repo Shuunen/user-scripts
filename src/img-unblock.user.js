@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Image Unblock
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/img-unblock.user.js
 // @namespace    https://github.com/Shuunen
 // @description  Use DuckDuckGo image proxy
 // @author       Romain Racamier-Lafon

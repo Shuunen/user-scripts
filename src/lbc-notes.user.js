@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         LeBonCoin Notes
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lbc-notes.user.js
 // @namespace    https://github.com/Shuunen
 // @description  Add notes to LeBonCoin listings
 // @author       Romain Racamier-Lafon

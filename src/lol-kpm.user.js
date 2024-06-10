@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         LoL - KPM Counter - Kills per minutes
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lol-kpm.user.js
 // @namespace    https://github.com/Shuunen
 // @description  Show how many kills per minutes you did, isn't the title that obvious ?
 // @author       Romain Racamier-Lafon

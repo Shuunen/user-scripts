@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Temu Takeout - Get data with you
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/temu-takeout.user.js
 // @namespace    https://github.com/Shuunen
 // @match        https://www.temu.*/*
 // @grant        none

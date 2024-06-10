@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Lidl Takeout - Get data with you
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lidl-takeout.user.js
 // @namespace    https://github.com/Shuunen
 // @match        https://www.lidl.*/*
 // @grant        none

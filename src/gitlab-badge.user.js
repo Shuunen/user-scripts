@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Gitlab - Contribution badge
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/gitlab-badge.user.js
 // @namespace    https://github.com/Shuunen
 // @version      0.0.3
 // @description  Display a badge on the top right corner of the page with the number of contributions you made today on Gitlab

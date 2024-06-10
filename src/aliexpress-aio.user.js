@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         AliExpress - All in one
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-aio.user.js
 // @namespace    https://github.com/Shuunen
 // @version      1.0.2
 // @description  Bigger listing
