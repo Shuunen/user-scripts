@@ -4,6 +4,9 @@
   "peerDependencies": {
     "eslint": "^8"
   },
+  "scripts": {
+    "test": "node test && echo test success"
+  },
   "private": true,
   "version": "1.0.0"
 }

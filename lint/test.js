@@ -12,6 +12,10 @@ ruleTester.run('enforce-download-url', rule, {
 // ==/UserScript==`,
     // we can use messageId from the rule object
     errors: [{ messageId: 'specifyDownloadURL' }],
+    output: `// ==UserScript==
+// @name  A name
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/<input>
+// ==/UserScript==`,
   }],
   valid: [{
     code: `// ==UserScript==
