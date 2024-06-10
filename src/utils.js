@@ -272,8 +272,8 @@ class Shuutils {
     const bottom = last ? window.innerHeight - last : 0
     const background = type === 'success' ? 'forestgreen' : 'firebrick'
     const icon = type === 'success' ? '✔' : '✖' // @ts-ignore it works (๑◕ܫ◕๑)
-    element.style = `position: fixed; display: flex; gap: .6rem; bottom: ${bottom + padding}px; right: 20px; z-index: 9999; padding: .6rem .8rem; background-color: ${background}; color: white; border-radius: 0.3rem; box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5); font-size: 1rem; transition: transform 0.2s ease-in-out; transform: translateX(300px);`
-    element.innerHTML = `<span style="border-radius: 50%; border: 1px solid #ffffff90; width: 20px; height: 20px; text-align: center; font-size: 12px;">${icon}</span><span>${message}</span>`
+    element.style = `position: fixed; display: flex; align-items: center; gap: 8px; bottom: ${bottom + padding}px; right: 20px; z-index: 99999; padding: 5px 14px 6px 10px; background-color: ${background}; color: white; border-radius: 7px; box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5); font-size: 18px; transition: transform 0.2s ease-in-out; transform: translateX(300px);`
+    element.innerHTML = `<span style="border-radius: 50%; border: 1px solid #ffffff90; width: 20px; height: 20px; text-align: center; font-size: 12px;">${icon}</span><span style="margin-top: -1px;">${message}</span>`
     this.#toastShow(element)
     if (delay > 0) setTimeout(() => this.#toastHide(element), delay)
   }
@@ -345,9 +345,9 @@ class Shuutils {
   }
 
   /**
-   * Capitalizes the first letter of a string.
-   * @param {string} string - The input string like 'hello world'
-   * @returns {string} The capitalized string like 'Hello world'
+   * Capitalizes the first letter of a string, does not change the rest /!\
+   * @param {string} string - The input string like 'hello World'
+   * @returns {string} The capitalized string like 'Hello World'
    */
   capitalize (string) {
     return string.charAt(0).toUpperCase() + string.slice(1)

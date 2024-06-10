@@ -43,7 +43,7 @@
       if (event.target.dataset.close === 'true') backdrop.remove()
     })
     const modal = document.createElement('div')
-    modal.style = 'z-index: 200; position: relative; max-height: 90%; overflow-y: auto; margin: auto; padding: 1.6rem 1.2rem; background: floralwhite; width: 800px;'
+    modal.style = 'z-index: 200; position: relative; max-height: 90%; overflow-y: auto; margin: auto; padding: 32px 24px; background: floralwhite; width: 800px;'
     modal.innerHTML = `
       <h1 style=" margin: 1rem 0 2rem; text-align: center; text-decoration: underline; ">
         <a target="_blank" href="https://github.com/Shuunen/user-scripts/">G2A Batch Compare</a>
@@ -153,7 +153,7 @@
   function injectButton () {
     const button = document.createElement('button')
     button.textContent = `Compare ${list.length} prices`
-    button.style = 'position: fixed; cursor: pointer; top: 3.5rem; right: 1rem; padding: 0.5rem 1.2rem; font-size: 1rem; z-index: 50; '
+    button.style = 'position: fixed; cursor: pointer; top: 70px; right: 20px; padding: 10px 24px; font-size: 20px; z-index: 50; '
     button.addEventListener('click', () => { void showModal() })
     document.body.append(button)
   }

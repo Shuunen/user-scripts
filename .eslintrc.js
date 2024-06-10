@@ -142,6 +142,13 @@ const rules = {
   'max-statements-per-line': 'off',
   'no-console': 'error',
   'no-inline-comments': 'off',
+  'no-restricted-syntax': [
+    'error',
+    {
+      message: 'Dont use "rem" use "px" instead',
+      selector: String.raw`[value=/\drem/]`,
+    },
+  ],
   'no-unsanitized/property': 'off',
   'object-curly-spacing': [
     'error',

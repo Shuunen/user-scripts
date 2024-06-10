@@ -65,7 +65,7 @@
     row.className += ` ${cls}`
     // add a button to hide row
     const button = document.createElement('i')
-    button.style = 'cursor: pointer; float: right; font-size: 1.8rem; margin-left: 0.5rem; color: #666;'
+    button.style = 'cursor: pointer; float: right; font-size: 36px; margin-left: 10px; color: #666;'
     // eslint-disable-next-line unicorn/no-keyword-prefix
     button.className = 'fa fa-ban'
     button.title = 'Hide this row'

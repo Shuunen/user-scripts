@@ -72,7 +72,7 @@ async function animateCss (element, animation, canRemoveAfter = true) {
     const badge = document.createElement('div')
     badge.id = utils.id
     badge.classList.add('animate__animated')
-    badge.style = 'cursor: grab; background-repeat: no-repeat;filter: drop-shadow(black 2px 4px 6px);position: fixed;top: 3rem;right: 0px;z-index: 1000;width: 300px;height: 300px;font-size: 4rem;font-weight: 800;text-align: center;line-height: 12.5rem;'
+    badge.style = 'cursor: grab; background-repeat: no-repeat;filter: drop-shadow(black 2px 4px 6px);position: fixed;top: 60px;right: 0px;z-index: 1000;width: 300px;height: 300px;font-size: 80px;font-weight: 800;text-align: center;line-height: 250px;'
     return badge
   }
   const badge = getBadge()

@@ -62,7 +62,7 @@
   function injectButton () {
     const button = document.createElement('button')
     button.textContent = 'Export list to JSON' // @ts-ignore it works ^^'
-    button.style = 'position: fixed; cursor: pointer; top: 3.5rem; right: 1rem; padding: 0.5rem 1.2rem; font-size: 1rem; z-index: 1000; '
+    button.style = 'position: fixed; cursor: pointer; top: 70px; right: 20px; padding: 10px 24px; font-size: 20px; z-index: 1000; '
     button.addEventListener('click', () => { void copyGames() })
     appButton = button
     document.body.append(button)

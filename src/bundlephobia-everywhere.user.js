@@ -27,11 +27,11 @@
     link.href = `https://bundlephobia.com/package/${name}`
     link.target = '_blank'
     link.style.position = 'absolute'
-    link.style.right = '0.8rem'
-    link.style.top = '0.9rem'
+    link.style.right = '16px'
+    link.style.top = '18px'
     link.style.zIndex = '1000'
     link.style.display = 'flex'
-    link.style.gap = '1rem'
+    link.style.gap = '20px'
     const /** @type HTMLElement */ anchor = document.querySelector('#readme') || document.body
     anchor.style.position = 'relative'
     anchor.append(link)
