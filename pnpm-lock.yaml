@@ -33,8 +33,8 @@ devDependencies:
     specifier: '1.35'
     version: 1.35.1
   shuutils:
-    specifier: '7.7'
-    version: 7.7.0
+    specifier: '8.0'
+    version: 8.0.0
   tailwindcss:
     specifier: '3.4'
     version: 3.4.3
@@ -7783,6 +7783,13 @@ packages:
 
   /shuutils@7.7.0:
     resolution: {integrity: sha512-ultnGsBIR9zdHCFDxqWO9YlUBfDa5+oXSi5Gi45o5ne30cNunDzr6sKRntks73VhmgBXQG4IhlbxW3t3cIpfLw==}
+    hasBin: true
+    dependencies:
+      tiny-glob: 0.2.9
+    dev: true
+
+  /shuutils@8.0.0:
+    resolution: {integrity: sha512-dXfLqTOxYh1eugoidZ/5TyuDWqd7pfPaUFV1WzPvDs53UPya9BYifN8lc2YaDRzOXAcGMeMjpivOy4czUNduJw==}
     hasBin: true
     dependencies:
       tiny-glob: 0.2.9
