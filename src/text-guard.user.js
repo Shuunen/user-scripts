@@ -27,8 +27,8 @@
   ])
   const elementExceptions = new Set([
     'circle', 'defs', 'ellipse', 'path', 'polygon', 'rect',
-    'svg', 'symbol', 'br', 'hr', 'iframe', 'g',
-    'link', 'meta', 'script', 'style', 'title',
+    'svg', 'symbol', 'br', 'hr', 'iframe', 'g', 'polyline', 'use',
+    'link', 'meta', 'script', 'style', 'title', 'line', 'text',
   ])
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('txt-grd')
@@ -118,11 +118,11 @@
   }
   function report () {
     if (counts.forbidden > 0) utils.showError(`Found ${counts.forbidden} forbidden words`)
-    else utils.log('Stop, no forbidden words found')
+    else utils.log('no forbidden words found')
   }
   function init () {
     if (hostExceptions.has(window.location.hostname)) return
-    utils.log('Start...')
+    utils.debug('start...')
     counts.forbidden = 0
     const text = document.body.textContent ?? ''
     if (text === '') { utils.showError('No text found in the current page'); return }
