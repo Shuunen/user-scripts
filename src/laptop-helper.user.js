@@ -164,7 +164,7 @@ function base64ToString (str) {
 function cleanCpuName (name) {
   return name.replace(/amd|ryzen \d|core i\d-|gold|intel|pentium|pro|silver/giu, '').trim()
 }
-/* eslint-disable no-tabs */
+/* eslint-disable @stylistic/no-tabs */
 const data = `AMD Ryzen 3 5125C	3 %
 AMD Ryzen 3 5300U	12 %
 AMD Ryzen 3 5400U	11 %
@@ -293,7 +293,7 @@ Intel Core i9-12900HX	21 %
 Intel Core i9-12950HX	21 %
 Intel Pentium Gold 7505	6 %
 Intel Pentium Silver N6000	3 %`
-/* eslint-enable no-tabs */
+/* eslint-enable @stylistic/no-tabs */
 
 data.split('\n').forEach(line => {
   const [cpuRaw, scoreRaw] = line.split('\t')

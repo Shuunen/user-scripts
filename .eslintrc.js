@@ -3,6 +3,52 @@
 
 const rules = {
   '@custom/enforce-download-url': 'error',
+  '@stylistic/array-element-newline': 'off',
+  '@stylistic/arrow-parens': 'off',
+  '@stylistic/brace-style': 'off',
+  '@stylistic/comma-dangle': [
+    'error',
+    'always-multiline',
+  ],
+  '@stylistic/dot-location': 'off',
+  '@stylistic/function-call-argument-newline': 'off',
+  '@stylistic/indent': [
+    'error',
+    2,
+  ],
+  '@stylistic/lines-around-comment': 'off', // not needed
+  '@stylistic/lines-between-class-members': 'off',
+  '@stylistic/max-len': 'off', // not needed
+  '@stylistic/member-delimiter-style': [
+    'error',
+    {
+      multiline: {
+        delimiter: 'none',
+      },
+    },
+  ],
+  '@stylistic/multiline-comment-style': 'off', // not needed
+  '@stylistic/multiline-ternary': 'off',
+  '@stylistic/no-extra-parens': 'off', // not needed
+  '@stylistic/object-curly-spacing': [
+    'error',
+    'always',
+  ],
+  '@stylistic/object-property-newline': 'off', // not needed
+  '@stylistic/padded-blocks': 'off', // not needed
+  '@stylistic/padding-line-between-statements': 'off', // not needed
+  '@stylistic/quote-props': [
+    'error',
+    'consistent-as-needed',
+  ],
+  '@stylistic/quotes': [
+    'error',
+    'single',
+  ],
+  '@stylistic/semi': [
+    'error',
+    'never',
+  ],
   '@typescript-eslint/array-type': 'off',
   '@typescript-eslint/brace-style': [
     'error',
