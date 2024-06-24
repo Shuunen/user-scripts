@@ -11,6 +11,8 @@
 // @grant        none
 // ==/UserScript==
 
+/* eslint-disable jsdoc/require-jsdoc */
+
 // eslint-disable-next-line max-statements
 (function dealabsAio () {
   /* global autosize */
@@ -39,20 +41,17 @@
     descriptions: '.cept-description-container',
   }
   function cleanElements () {
-    Object.keys(uselessElements).forEach(key => {
+    for (const key of Object.keys(uselessElements))
       // @ts-ignore
-      utils.findAll(uselessElements[key], document, true).forEach(node => { node.remove() })
-    })
+      for (const node of utils.findAll(uselessElements[key], document, true)) node.remove()
   }
   function cleanClasses () {
-    Object.keys(uselessClasses).forEach(key => {
+    for (const key of Object.keys(uselessClasses))
       // @ts-ignore
-      utils.findAll(uselessClasses[key], document, true).forEach(node => {
+      for (const node of utils.findAll(uselessClasses[key], document, true))
         // @ts-ignore
-        // eslint-disable-next-line unicorn/no-keyword-prefix, no-param-reassign
+        // eslint-disable-next-line unicorn/no-keyword-prefix
         node.classList = []
-      })
-    })
   }
   function insertStyles () {
     const styleTag = document.createElement('style')
@@ -90,8 +89,8 @@
     document.head.insertAdjacentElement('beforeend', styleTag)
   }
   /**
-   * @param {string} text
-   * @param {HTMLElement} element
+   * @param {string} text the text to check
+   * @param {HTMLElement} element the element to style
    */
   function checkItem (text, element) {
     let isFound = false
@@ -103,19 +102,17 @@
     }
     // eslint-disable-next-line no-magic-numbers
     if (isFound) utils.warn(`"${text.slice(0, 40)}..."`, `is excluded, it contains : "${excluders[remaining] || ''}"`)
-    // eslint-disable-next-line no-param-reassign, sonarjs/elseif-without-else
     else if (utils.willDebug) element.style.backgroundColor = '#f0fbf0'
-    // eslint-disable-next-line no-param-reassign
     element.style.opacity = isFound ? '0.3' : '1'
   }
   function checkItems () {
     utils.log('checking displayed items...')
-    utils.findAll(selectors.deal).forEach(element => {
+    for (const element of utils.findAll(selectors.deal)) {
       const text = utils.readableString(element.textContent ?? '').toLowerCase().trim()
       checkItem(text, element)
-    })
+    }
   }
-  /** @param {boolean} [isFromFilter] */
+  /** @param {boolean} [isFromFilter] Indicate if the update comes from the filter or not */
   function onExcludersUpdate (isFromFilter = false) {
     excluders = excluders
       .map(entry => entry.trim().toLowerCase())

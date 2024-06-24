@@ -11,8 +11,7 @@
 // ==/UserScript==
 
 /* eslint-disable max-statements, no-magic-numbers */
-
-
+/* eslint-disable jsdoc/require-jsdoc */
 
 /**
  * @typedef {import('./lbc.types').LbcCustomInfo} LbcCustomInfo
@@ -65,7 +64,6 @@ const citiesToHide = new Set([
   }
 
   // Remove me one day :)
-  // eslint-disable-next-line @typescript-eslint/unbound-method
   utils.tw ||= (classes) => classes.split(' ')
 
   /**
@@ -124,7 +122,6 @@ const citiesToHide = new Set([
    * @returns {void} nothing
    */
   function removeParagraphViewedStyle (paragraph) {
-    // eslint-disable-next-line no-param-reassign
     paragraph.style.opacity = '1'
     paragraph.classList.add(...utils.tw('max-w-md'))
     paragraph.classList.add(cls.marker)
@@ -282,11 +279,10 @@ const citiesToHide = new Set([
   }
 
   /**
-  * Get custom infos from a car ad
-  * @param {LbcCarAd} ad the car ad to process
-  * @returns {LbcCustomInfo[]} the custom infos
-  */
-  // eslint-disable-next-line complexity
+   * Get custom infos from a car ad
+   * @param {LbcCarAd} ad the car ad to process
+   * @returns {LbcCustomInfo[]} the custom infos
+   */
   function getCustomInfosCar (ad) {
     /** @type {LbcCustomInfo[]} */
     const infos = [getOwnerInfo(ad, false)]
@@ -412,9 +408,9 @@ const citiesToHide = new Set([
     utils.log('process ad :', ad.subject, ad)
     element.classList.add(cls.marker)
     // @ts-ignore
-    const /** @type HTMLElement[] */[, link] = Array.from(element.children)
+    const /** @type {HTMLElement[]} */[, link] = Array.from(element.children)
     if (!link) { utils.warn('no link found in ad', ad); return }
-    ad.element = link // eslint-disable-line no-param-reassign
+    ad.element = link
     addId(ad)
     addInfos(ad)
   }

@@ -13,6 +13,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
+/* eslint-disable jsdoc/require-jsdoc */
 
 (function SpotifyMusicBrainzExport () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
@@ -34,17 +35,14 @@
         id: 'mb-import-from-spotify',
         title: 'Spotify to MB',
       },
-      // eslint-disable-next-line regexp/prefer-regexp-exec
       artist: textFromSelector('.entity-info.media h2 a, .os-content a[href^="/artist/"]') || textFromSelector('.entity-info.media h2').match(/^.+\b\s(?<artist>.+)$/u)?.groups?.artist || '',
       date: { day: 0, month: 0, year: 0 },
-      // eslint-disable-next-line regexp/prefer-regexp-exec
       label: textFromSelector('.copyrights li, .os-content p[as="p"]').match(/[\d\s©℗]+(?<label>.*)/u)?.groups?.label || '',
       title: textFromSelector(selectors.title),
       tracks: getTracks(),
       url: document.location.href,
       urlType: '85',
     }
-    // eslint-disable-next-line regexp/prefer-regexp-exec
     const dateMatches = textFromSelector('script[type="application/ld+json"]').match(/datePublished":"(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u)
     if (dateMatches.groups?.day) {
       data.date.year = dateMatches.groups.year
@@ -59,5 +57,5 @@
     if (title === undefined) { utils.log('no music title found on this page'); return }
     mbImport()
   }
-  void utils.onPageChange(init)
+  utils.onPageChange(init)
 })()

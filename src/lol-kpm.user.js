@@ -11,6 +11,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
+/* eslint-disable jsdoc/require-jsdoc */
 
 (function LolKpmCounter () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
@@ -39,7 +40,8 @@
   }
   window.addEventListener('DOMNodeInserted', event => {
     if (!event.relatedNode.matches('ul[id^=match-history]')) return
-    utils.findAll('div[id^=game-summary]:not(.kpm-handled)', event.relatedNode, true).forEach(row => { showKpmOnRow(row) })
+    const rows = utils.findAll('div[id^=game-summary]:not(.kpm-handled)', event.relatedNode, true)
+    for (const row of rows) showKpmOnRow(row)
   })
 })()
 

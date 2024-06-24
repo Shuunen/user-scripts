@@ -31,7 +31,7 @@
 // @grant        none
 // ==/UserScript==
 
-/* eslint-disable eslint-comments/no-unlimited-disable */
+/* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable unicorn/no-abusive-eslint-disable */
 
@@ -90,16 +90,16 @@ function getScoreForResolution (resolution, score) {
 
 const scoresByKeyword = {
   ' tn ': 50,
-  'backlit': 70,
-  'FHD': 30, // eslint-disable-line @typescript-eslint/naming-convention
-  'fingerprint': 70,
+  'FHD': 30,
   'Full HD': 30,
-  'gtx': 70,
   'Keyboard Light': 70,
+  'NvmE': 80,
+  'Oled': 70,
+  'backlit': 70,
+  'fingerprint': 70,
+  'gtx': 70,
   'led': 70,
   'lock': 70,
-  'NvmE': 80, // eslint-disable-line @typescript-eslint/naming-convention
-  'Oled': 70, // eslint-disable-line @typescript-eslint/naming-convention
   'power delivery': 70,
   'rtx': 70,
   'ssd': 70,
@@ -152,19 +152,34 @@ function a2b (a) {
 }
 /* eslint-enable */
 
-function stringToBase64 (str) {
-  return b2a(str)
+/**
+ * Encode a string to base64
+ * @param {string} string_ the string to encode
+ * @returns {string} the encoded string
+ */
+function stringToBase64 (string_) {
+  return b2a(string_)
 }
 
-function base64ToString (str) {
-  return a2b(str)
+/**
+ * Decode a base64 string
+ * @param {string} string_ the string to decode
+ * @returns {string} the decoded string
+ */
+function base64ToString (string_) {
+  return a2b(string_)
 }
 
 // prepare cpu data
+/**
+ * Clean the CPU name
+ * @param {string} name the CPU name to clean
+ * @returns {string} the cleaned CPU name
+ */
 function cleanCpuName (name) {
   return name.replace(/amd|ryzen \d|core i\d-|gold|intel|pentium|pro|silver/giu, '').trim()
 }
-/* eslint-disable @stylistic/no-tabs */
+
 const data = `AMD Ryzen 3 5125C	3 %
 AMD Ryzen 3 5300U	12 %
 AMD Ryzen 3 5400U	11 %
@@ -293,16 +308,18 @@ Intel Core i9-12900HX	21 %
 Intel Core i9-12950HX	21 %
 Intel Pentium Gold 7505	6 %
 Intel Pentium Silver N6000	3 %`
-/* eslint-enable @stylistic/no-tabs */
 
-data.split('\n').forEach(line => {
+for (const line of data.split('\n')) {
   const [cpuRaw, scoreRaw] = line.split('\t')
   const cpu = cleanCpuName(cpuRaw)
   const score = Number.parseInt(scoreRaw, 10)
   scoresByKeyword[cpu] = score
-})
+}
 
-// eslint-disable-next-line max-statements
+/**
+ * Laptop Helper
+ */
+// eslint-disable-next-line max-lines-per-function, max-statements
 function laptopHelper () {
   /* global RoughNotation */
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
@@ -330,19 +347,21 @@ function laptopHelper () {
   }
   const keywords = Object.keys(scoresByKeyword)
   utils.log(keywords.length, 'keywords with associated scores')
-  // eslint-disable-next-line security/detect-non-literal-regexp
   const keywordRegex = new RegExp(keywords.join('|'), 'giu')
 
+  /**
+   * Annotate an element with a score
+   * @param {HTMLElement} element - The element to annotate
+   * @returns {void}
+   */
   // eslint-disable-next-line max-statements, consistent-return
-  function annotate (/** @type HTMLElement */ element) {
+  function annotate (element) {
     let { keyword } = element.dataset
     keyword = scoresByKeyword[keyword] === undefined ? keyword.toLowerCase() : keyword
     const score = scoresByKeyword[keyword]
     if (score === undefined) return utils.error('no score found for', keyword)
     utils.log('found score', score, 'for', keyword)
-    // eslint-disable-next-line no-param-reassign
     element.dataset.score = score
-    // eslint-disable-next-line no-param-reassign
     element.title = `Score : ${score}%`
     const color = getColorForScore(score)
     let annotation = RoughNotation.annotate(element, { color, type: 'highlight' })
@@ -353,31 +372,32 @@ function laptopHelper () {
       annotation.show()
     }
   }
-
+  /**
+   * Check items on the page
+   */
   function checkItems () {
-    utils.findAll(selectors.desc, document, true).forEach((/** @type HTMLElement */descElement) => {
+    for (const descElement of utils.findAll(selectors.desc, document, true)) {
       descElement.classList.add(cls.mark)
       // first close last opened console group, else closing nothing without throwing error
       console.groupEnd() // eslint-disable-line no-console
-      // eslint-disable-next-line no-param-reassign
       descElement.innerHTML = descElement.innerHTML.replace(/&nbsp;/gu, '')
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // eslint-disable-next-line no-magic-numbers
       console.groupCollapsed(utils.ellipsisWords(text, 15)) // eslint-disable-line no-console
       utils.log('checking :', text)
-      // eslint-disable-next-line no-param-reassign
       descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)
-      utils.findAll(`.${cls.mark}`, descElement, true).forEach(markElement => { annotate(markElement) })
-    })
+      for (const markElement of utils.findAll(`.${cls.mark}`, descElement, true)) annotate(markElement)
+    }
     console.groupEnd() // eslint-disable-line no-console
   }
+  /**
+   * Clear links
+   */
   function clearLinks () {
-    utils.findAll(selectors.clearLinks, document, true).forEach((/** @type HTMLAnchorElement */ link) => {
+    for (const link of utils.findAll(selectors.clearLinks, document, true)) {
       // eslint-disable-next-line no-magic-numbers
-      if (typeof link.href !== 'string' || link.href.length < 2) return
-      // eslint-disable-next-line no-param-reassign
+      if (typeof link.href !== 'string' || link.href.length < 2) continue
       link.dataset.url = stringToBase64(link.href)
-      // eslint-disable-next-line no-param-reassign
       link.href = '#'
       link.parentElement.addEventListener('mouseup', event => {
         if (event.button !== 1) return
@@ -385,8 +405,11 @@ function laptopHelper () {
         window.open(base64ToString(link.dataset.url), '_blank')
       })
       link.removeAttribute('title')
-    })
+    }
   }
+  /**
+   * Process the page
+   */
   function process () {
     utils.log('processing')
     clearLinks()
@@ -395,7 +418,7 @@ function laptopHelper () {
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
   document.addEventListener('scroll', processDebounced)
-  void utils.onPageChange(processDebounced)
+  utils.onPageChange(processDebounced)
   // eslint-disable-next-line no-magic-numbers
   setTimeout(processDebounced, 1000)
 }

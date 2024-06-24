@@ -11,6 +11,9 @@
 // @description  This script let you export data from AliExpress
 // ==/UserScript==
 
+/* eslint-disable jsdoc/require-jsdoc */
+/* eslint-disable no-magic-numbers */
+
 (function AliExpressTakeout () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('alx-tko', true)
@@ -21,7 +24,7 @@
   }
   /**
    * Handles the form submission event.
-   * @param {typeof selectors} values - The form values.
+   * @param {object} values - The form values.
    */
   async function onSubmit (values) {
     utils.log('Form submitted with', { values })
@@ -34,7 +37,6 @@
     return Math.round(Number.parseFloat(price.replace(',', '.'))).toString()
   }
   function getReference () {
-    // eslint-disable-next-line typescript-compat/compat
     const path = document.location.pathname.split('/').toReversed()[0] ?? ''
     if (path === '') { utils.showError('failed to get path from URL'); return '' }
     const reference = path.split('.')[0] ?? ''
@@ -43,26 +45,24 @@
   }
   function startTakeout () {
     const form = createMbForm({ id: utils.id, title: 'AliExpress Takeout' }, onSubmit)
-    Object.entries(selectors).forEach(([key, selector]) => { addMbField(form, key, textFromSelector(selector)) })
+    for (const [key, selector] of Object.entries(selectors)) addMbField(form, key, textFromSelector(selector))
     addMbField(form, 'brand', 'AliExpress')
     addMbField(form, 'reference', getReference())
     addMbField(form, 'price', getPrice())
     addMbSubmit(form, 'Copy to clipboard')
     document.body.append(form)
   }
-  /** @param {MouseEvent} event */
+  /** @param {MouseEvent} event the click event */
   async function init (event) {
     /** @type {HTMLElement | null} */// @ts-ignore
-    const target = event.target
+    const { target } = event
     if (target === null) return
     if ('className' in target && !target.className.includes('sku-item--selected')) { utils.log('waiting for the product image thumbnail click'); return }
     const photo = await utils.waitToDetect(selectors.photo)
     if (photo === undefined) { utils.showError('failed to find product photo on this page'); return }
     startTakeout()
   }
-  const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
-  // void utils.onPageChange(initDebounced)
-  // @ts-ignore
+  const initDebounced = utils.debounce(init, 500) // @ts-ignore
   window.addEventListener('click', initDebounced)
 })()
 

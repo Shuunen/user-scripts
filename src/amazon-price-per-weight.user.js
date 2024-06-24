@@ -10,21 +10,21 @@
 // @grant        none
 // ==/UserScript==
 
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-magic-numbers */
-
 // @ts-nocheck
+/* eslint-disable no-magic-numbers */
+/* eslint-disable jsdoc/require-jsdoc */
+
 // eslint-disable-next-line max-statements
 (function AmazonPricePerWeight () {
   const app = {
-    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
-    hideStuff: false, // eslint-disable-line @typescript-eslint/naming-convention
+    debug: false,
+    hideStuff: false,
     id: 'amz-kg',
-    injectRealPrice: true, // eslint-disable-line @typescript-eslint/naming-convention
-    processOnce: false, // eslint-disable-line @typescript-eslint/naming-convention
-    processOne: false, // eslint-disable-line @typescript-eslint/naming-convention
-    showDebug: false, // eslint-disable-line @typescript-eslint/naming-convention
-    sortProducts: true, // eslint-disable-line @typescript-eslint/naming-convention
+    injectRealPrice: true,
+    processOnce: false,
+    processOne: false,
+    showDebug: false,
+    sortProducts: true,
   }
 
   const cls = {
@@ -47,12 +47,12 @@
   // selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
 
   const regex = {
-    /* eslint-disable regexp/prefer-named-capture-group, prefer-named-capture-group, regexp/no-super-linear-move */
+    /* eslint-disable prefer-named-capture-group */
     bulk: /lot de (\d+)/iu,
     price: /(eur|€)\s?(\d+,\d{2})/iu,
     pricePer: /(\d+,\d{2})\s€\/(\w+)/u,
     weight: /(\d+)\s?(g|kg|-)/iu,
-    /* eslint-enable regexp/prefer-named-capture-group, prefer-named-capture-group, regexp/no-super-linear-move */
+    /* eslint-enable prefer-named-capture-group */
   }
 
   const templates = {
@@ -67,14 +67,15 @@
   const products = []
 
   function shadeBadProducts () {
-    utils.findAll(selectors.pantry, document, true).forEach(element => {
+    const elements = utils.findAll(selectors.pantry, document, true)
+    for (const element of elements) {
       const item = element.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
       item.style.filter = 'grayscale(100%)'
       item.style.opacity = 0.5
       item.style.order = 1000
       item.classList.add(cls.avoided)
       utils.log('shaded item', item)
-    })
+    }
   }
 
   function priceStringToFloat (string) {
@@ -107,7 +108,6 @@
       data.unit = matches[2]
     }
     if (data.unit === '-') data.unit = 'g'
-    // eslint-disable-next-line sonarjs/elseif-without-else
     else if (data.unit === '') utils.warn('failed to find a unit in :', text)
     if (app.processOne) utils.log('found weight & unit :', data)
     return data
@@ -168,14 +168,13 @@
 
   function fill (template, data) {
     let tpl = String(template)
-    Object.keys(data).forEach(key => {
+    for (const key of Object.keys(data)) {
       const string = `{{${key}}}`
       let value = data[key]
       if (key.includes('price') && value > 0) value = priceFloatToString(value)
       // utils.log('looking for', str)
-      // eslint-disable-next-line security/detect-non-literal-regexp
       tpl = tpl.replace(new RegExp(string, 'giu'), value)
-    })
+    }
     return tpl
   }
 
@@ -221,7 +220,6 @@
     utils.log('injecting real price :', data)
     let text = ''
     if (data.pricePerKilo > 0) text = fill(templates.pricePerKilo, data)
-    // eslint-disable-next-line sonarjs/elseif-without-else
     else if (data.price > 0) text = fill(templates.price, data)
     price.innerHTML = text + (app.debug ? ` (${price.innerHTML})` : '')
     if (price.nextElementSibling && !app.debug) price.nextElementSibling.remove()
@@ -245,7 +243,7 @@
   }
 
   function augmentProducts () {
-    utils.findAll(selectors.item).forEach(item => { augmentProduct(item) })
+    for (const item of utils.findAll(selectors.item)) augmentProduct(item)
     // sortProducts()
   }
 

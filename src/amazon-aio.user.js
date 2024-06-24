@@ -10,9 +10,7 @@
 // @grant        none
 // ==/UserScript==
 
-/* eslint-disable func-style */
 /* eslint-disable no-magic-numbers */
-/* eslint-disable no-param-reassign */
 /* eslint-disable max-statements */
 
 /**
@@ -39,7 +37,7 @@ const maxScore = 16
  * @param {boolean} explanation If true, the score explanation string will be returned
  * @returns {number|string} a score between 0 and maxScore
  */
-const calcScore = (rating, reviews, explanation = false) => { // eslint-disable-line @typescript-eslint/naming-convention
+const calcScore = (rating, reviews, explanation = false) => {
   const ratingScore = positionInInterval(rating, [2, 3, 4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5])
   const reviewsScore = ratingScore ? positionInInterval(reviews, [4, 8, 16, 32]) : 0
   let score = ratingScore + reviewsScore
@@ -93,17 +91,21 @@ const score20Styled = (rating, reviews) => {
     sellYours: '[data-cel-widget="moreBuyingChoices_feature_div"]',
     sharing: '#tellAFriendBox_feature_div',
   }
+  /**
+   * Delete useless elements
+   */
   function deleteUseless () {
-    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+    for (const selector of Object.values(deleteUselessSelectors)) for (const node of utils.findAll(selector, document, true))
       // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       node.remove()
-    })
   }
+  /**
+   * Clear classnames of some elements to remove their styles
+   */
   function clearClassnames () {
-    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+    for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true))
       // eslint-disable-next-line unicorn/no-keyword-prefix
       node.className = ''
-    })
   }
   /**
    * Calculate the score by currency, eg: 0.52 pts/€
@@ -128,11 +130,11 @@ const score20Styled = (rating, reviews) => {
   }
   /**
    * Get the product score section
-   * @param {HTMLElement} product
-   * @param {number} score
-   * @param {string} color
-   * @param {number} size
-   * @returns {{ scoreSection:HTMLElement, scoreByCurrency:number }}
+   * @param {HTMLElement} product The product element
+   * @param {number} score The score
+   * @param {string} color The color
+   * @param {number} size The size
+   * @returns {{ scoreSection:HTMLElement, scoreByCurrency:number }} The score section and the score by currency
    */
   // eslint-disable-next-line max-params
   function generateScoreSection (product, score, color, size) {
@@ -146,14 +148,17 @@ const score20Styled = (rating, reviews) => {
     const scoreByCurrency = getScoreByCurrency(product, score, scoreSection)
     return { scoreByCurrency, scoreSection }
   }
+  /**
+   * Inject the score in the page
+   */
   function injectScore () {
     const products = utils.findAll(selectors.product, document, true)
     // set amz-aio-score
-    products.forEach((product) => {
+    for (const product of products) {
       product.classList.add('amz-processed')
       product.dataset.amzAioScore = '0'
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
-      if (!ratingSection) return
+      if (!ratingSection) continue
       // @ts-ignore
       const children = ratingSection.firstChild?.children
       const rating = Number.parseFloat(children[0].getAttribute('aria-label').split(' ')[0].replace(',', '.'))
@@ -162,13 +167,14 @@ const score20Styled = (rating, reviews) => {
       const { scoreByCurrency, scoreSection } = generateScoreSection(product, score, color, size)
       ratingSection.parentNode?.insertBefore(scoreSection, ratingSection.nextSibling)
       product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70).toString()
-    })
+    }
     // sort by score & apply position
-    // eslint-disable-next-line etc/no-assign-mutated-array
-    products.sort((productA, productB) => (Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0'))).forEach((product, index) => {
+    for (const [index, product] of products.sort((productA, productB) => (Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0'))).entries())
       product.style.order = index.toString()
-    })
   }
+  /**
+   * Process the page
+   */
   const process = () => {
     utils.log('process...')
     deleteUseless()
@@ -176,7 +182,7 @@ const score20Styled = (rating, reviews) => {
     injectScore()
   }
   const processDebounced = utils.debounce(process, 500)
-  void utils.onPageChange(processDebounced)
+  utils.onPageChange(processDebounced)
   window.addEventListener('scroll', () => processDebounced())
 })()
 

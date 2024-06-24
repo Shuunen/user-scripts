@@ -11,6 +11,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
+/* eslint-disable jsdoc/require-jsdoc */
 
 (function AmazonMusicBrainzExport () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
@@ -36,14 +37,12 @@
       },
       artist: textFromSelector(selectors.artist),
       date: { day: 0, month: 0, year: 0 },
-      // eslint-disable-next-line regexp/prefer-regexp-exec
       label: (details.match(/Label: (?<name>\S+)/u) || [])[1] || '',
       title: textFromSelector(selectors.title),
       tracks: getTracks(),
       url: document.location.href,
       urlType: '77',
     }
-    // eslint-disable-next-line regexp/prefer-regexp-exec
     const dateMatches = details.match(/origine : (?<day>\d{1,2}) (?<month>\S+) (?<year>\d{4})/u)
     if (dateMatches.groups?.year) {
       const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
@@ -59,5 +58,5 @@
     if (title === undefined) { utils.log('no music title found on this page'); return }
     mbImport()
   }
-  void utils.onPageChange(init)
+  utils.onPageChange(init)
 })()

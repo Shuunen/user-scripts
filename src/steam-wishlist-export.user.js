@@ -50,28 +50,37 @@
     list.push(getGameData(row))
     return await getGames(list)
   }
+  /**
+   * Copies the games to the clipboard.
+   */
   async function copyGames () {
-    if (appGames.length > 0) { void utils.copyToClipboard(appGames); return }
+    if (appGames.length > 0) { utils.copyToClipboard(appGames); return }
     const games = await getGames()
     utils.log('found games :', games)
-    void utils.copyToClipboard(games)
+    utils.copyToClipboard(games)
     appButton.style.backgroundColor = 'lightgreen'
     appButton.textContent = `${games.length} games copied to your clipboard`
     // eslint-disable-next-line require-atomic-updates
     appGames = games
   }
+  /**
+   * Injects the export button into the page.
+   */
   function injectButton () {
     const button = document.createElement('button')
     button.textContent = 'Export list to JSON' // @ts-ignore it works ^^'
     button.style = 'position: fixed; cursor: pointer; top: 70px; right: 20px; padding: 10px 24px; font-size: 20px; z-index: 1000; '
-    button.addEventListener('click', () => { void copyGames() })
+    button.addEventListener('click', () => { copyGames() })
     appButton = button
     document.body.append(button)
   }
+  /**
+   * Initializes the script.
+   */
   async function init () {
     const row = await utils.waitToDetect(selectors.row)
     if (row === undefined) { utils.log('no game found on this page'); return }
     injectButton()
   }
-  void utils.onPageChange(init)
+  utils.onPageChange(init)
 })()

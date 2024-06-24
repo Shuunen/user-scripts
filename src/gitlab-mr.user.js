@@ -11,6 +11,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
+/* eslint-disable jsdoc/require-jsdoc */
 
 (function gitlabMr () {
   const debounceTime = 300
@@ -31,7 +32,6 @@
     link.style.marginRight = '2px'
     link.querySelector('.label').textContent = label
     element.insertAdjacentElement('afterEnd', button)
-    // eslint-disable-next-line promise/prefer-await-to-then
     fetch(href).then(async response => await response.text()).then(html => {
       const matches = html.match(/class="merge-request" data-id/gu)
       const nb = matches ? matches.length : 0
@@ -39,7 +39,6 @@
       badge.textContent = nb
       if (nb < 1) badge.style.backgroundColor = '#1aaa55'
       return nb
-      // eslint-disable-next-line promise/prefer-await-to-then
     }).catch(error => utils.error(error))
     return button
   }
@@ -57,12 +56,12 @@
     await addButton(link.parentElement, 'MR ouverte(s)', `${link.href.replace('assignee_username', 'author_username')}&state=opened`)
   }
   function hideStuff () {
-    utils.findAll('.shortcuts-todos, .nav-item.header-help').forEach(element => { element.remove() })
+    for (const element of utils.findAll('.shortcuts-todos, .nav-item.header-help')) element.remove()
   }
   function process () {
-    void enhanceLinks()
+    enhanceLinks()
     hideStuff()
   }
   const processDebounced = utils.debounce(process, debounceTime)
-  void utils.onPageChange(processDebounced)
+  utils.onPageChange(processDebounced)
 })()

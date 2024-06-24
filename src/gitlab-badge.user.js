@@ -11,6 +11,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
+/* eslint-disable jsdoc/require-jsdoc */
 
 const badges = {
   bronze: 'https://i.imgur.com/APbU15u.png',
@@ -30,7 +31,7 @@ async function getNbContributions () {
   const url = `https://gitlab.com/users/${username}/calendar.json`
   const data = await fetch(url)
   const json = await data.json()
-  const nb = Object.values(json).at(-1) // eslint-disable-line no-magic-numbers
+  const nb = Object.values(json).at(-1)
   if (!nb) throw new Error('No contribution found')
   if (typeof nb !== 'number') throw new Error('Contribution found but not a number')
   return nb
@@ -40,16 +41,13 @@ function injectStyles (string = '') {
   // eslint-disable-next-line no-console
   if (string.length === 0) { console.log('cannot inject empty style stuff'); return }
   if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
-    // eslint-disable-next-line no-unsanitized/method
     document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
     return
   }
-  // eslint-disable-next-line no-unsanitized/method
   document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
 }
 
 async function animateCss (element, animation, canRemoveAfter = true) {
-  // eslint-disable-next-line promise/avoid-new
   return await new Promise((resolve) => {
     const animationName = `animate__${animation}`
     element.classList.add('animate__animated', animationName)
@@ -60,7 +58,7 @@ async function animateCss (element, animation, canRemoveAfter = true) {
       element.classList.remove('animate__animated', animationName)
       resolve('Animation ended')
     }
-    element.addEventListener('animationend', handleAnimationEnd, { once: true }) // eslint-disable-line @typescript-eslint/naming-convention
+    element.addEventListener('animationend', handleAnimationEnd, { once: true })
   })
 }
 
@@ -78,12 +76,12 @@ async function animateCss (element, animation, canRemoveAfter = true) {
   }
   const badge = getBadge()
   let isHidden = false
-  badge.addEventListener('click', () => { isHidden = true; void animateCss(badge, 'bounceOutUp', false) })
+  badge.addEventListener('click', () => { isHidden = true; animateCss(badge, 'bounceOutUp', false) })
   document.body.append(badge)
   let animationCount = 0
   function animateBadge (hasContributionsChanged = false) {
-    if (animationCount === 0) void animateCss(badge, 'backInRight')
-    else void animateCss(badge, hasContributionsChanged ? 'tada' : 'pulse')
+    if (animationCount === 0) animateCss(badge, 'backInRight')
+    else animateCss(badge, hasContributionsChanged ? 'tada' : 'pulse')
     animationCount += 1
   }
   async function process (reason = 'unknown') {
@@ -98,9 +96,9 @@ async function animateCss (element, animation, canRemoveAfter = true) {
     animateBadge(todayContributions !== previousContributions)
   }
   const processDebounced = utils.debounce(process, 1000) // eslint-disable-line no-magic-numbers
-  window.addEventListener('focus', () => { void process('focus') })
+  window.addEventListener('focus', () => { process('focus') })
   window.addEventListener('click', () => processDebounced('click'))
-  void utils.onPageChange(async () => await process('page-change'))
+  utils.onPageChange(async () => await process('page-change'))
 })()
 
 injectStyles(`

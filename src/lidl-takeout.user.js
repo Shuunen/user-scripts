@@ -22,39 +22,56 @@
   }
   /**
    * Handles the form submission event.
-   * @param {typeof selectors} values - The form values.
+   * @param {object} values - The form values.
    */
   async function onSubmit (values) {
     utils.log('Form submitted with', { values })
     await utils.copyToClipboard(values)
     utils.showSuccess('Data copied to clipboard')
   }
+  /**
+   * Get the brand from the page
+   * @returns {string} the product brand
+   */
   function getBrand () {
     /** @type {HTMLImageElement | undefined} */// @ts-ignore
     const image = utils.findOne('.features__link > img')
     if (image === undefined) { utils.showError('failed to get brand image from page'); return '' }
     return utils.capitalize(utils.readableString(image.alt ?? '').toLowerCase())
   }
+  /**
+   * Get the product reference from the URL
+   * @returns {string} the product reference
+   */
   function getReference () {
-    // eslint-disable-next-line typescript-compat/compat
     const reference = document.location.pathname.split('/').toReversed()[0] ?? ''
     if (reference === '') { utils.showError('failed to get reference from URL'); return '' }
     return reference
   }
+  /**
+   * Get the price from the page
+   * @returns {string} the product price
+   */
   function getPrice () {
     const price = textFromSelector('.m-price__price')
     if (price === '') { utils.showError('failed to get price from page'); return '' }
     return Math.round(Number.parseFloat(price.replace(',', '.'))).toString()
   }
+  /**
+   * Start the takeout process
+   */
   function startTakeout () {
     const form = createMbForm({ id: utils.id, title: 'Lidl Takeout' }, onSubmit)
-    Object.entries(selectors).forEach(([key, selector]) => { addMbField(form, key, textFromSelector(selector)) })
+    for (const [key, selector] of Object.entries(selectors)) addMbField(form, key, textFromSelector(selector))
     addMbField(form, 'reference', getReference())
     addMbField(form, 'brand', getBrand())
     addMbField(form, 'price', getPrice())
     addMbSubmit(form, 'Copy to clipboard')
     document.body.append(form)
   }
+  /**
+   * Initialize the script
+   */
   async function init () {
     const name = await utils.waitToDetect(selectors.name)
     if (name === undefined) { utils.log('no product name found on this page'); return }
@@ -62,6 +79,6 @@
   }
   const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
   initDebounced()
-  void utils.onPageChange(initDebounced)
+  utils.onPageChange(initDebounced)
 })()
 

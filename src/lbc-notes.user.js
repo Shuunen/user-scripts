@@ -13,6 +13,8 @@
 // @version      0.0.4
 // ==/UserScript==
 
+/* eslint-disable jsdoc/require-jsdoc */
+
 const config = {
   averageNote: {
     class: 'bg-yellow-200',
@@ -35,7 +37,7 @@ const config = {
 
 /**
   @typedef LbcNote
-  @type {Object}
+  @type {object}
   @property {string} noteId the note id in AppWrite
   @property {number} listingId the listing id in LeBonCoin
   @property {string} noteContent the note content
@@ -86,25 +88,23 @@ function getNoteIdFromNote (noteElement) {
 (function LeBonCoinNotes () {
   if (typeof window === 'undefined') return
   /* global tailwind, Appwrite, idbKeyval, GM_addStyle */
-  /** @type {{get: IdbKeyvalNoteGetter, set: function, clear: function}} */ // @ts-ignore
+  /** @type {{get: IdbKeyvalNoteGetter, set: Function, clear: Function}} */ // @ts-ignore
   const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval
   // @ts-ignore
   tailwind.config = {
     corePlugins: {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       preflight: false,
     },
   }
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('lbc-nts')
   // Remove me one day :)
-  // eslint-disable-next-line @typescript-eslint/unbound-method
   utils.tw ||= (classes) => classes.split(' ')
   const cls = {
     marker: `${utils.id}-processed`,
   }
   /* Init DB */// @ts-ignore
-  const { Client, Databases, ID, Query } = Appwrite // eslint-disable-line @typescript-eslint/naming-convention
+  const { Client, Databases, ID, Query } = Appwrite
   const db = { // eslint-disable-line unicorn/prevent-abbreviations
     databaseId: localStorage.getItem('lbcNotes_databaseId'),
     endpoint: 'https://cloud.appwrite.io/v1',
@@ -118,7 +118,7 @@ function getNoteIdFromNote (noteElement) {
 
   /**
    * Clear all notes from local store
-   * @param {function} clearStoreCallback the clear store function
+   * @param {Function} clearStoreCallback the clear store function
    * @returns {HTMLButtonElement} the clear store button
    */
   function getClearStoreButton (clearStoreCallback) {
@@ -126,7 +126,7 @@ function getNoteIdFromNote (noteElement) {
     button.textContent = 'Clear notes store'
     button.classList.add(...utils.tw('fixed bottom-5 right-5 z-10 rounded-md border border-gray-600 bg-gray-100 px-2 py-1 opacity-30 transition-all duration-500 ease-in-out hover:opacity-100'))
     button.addEventListener('click', () => {
-      if (!confirm('Are you sure you want to clear all notes ?')) return // eslint-disable-line no-alert, no-restricted-globals
+      if (!confirm('Are you sure you want to clear all notes ?')) return // eslint-disable-line no-alert
       clearStoreCallback()
       window.location.reload()
     })
@@ -185,7 +185,7 @@ function getNoteIdFromNote (noteElement) {
    */
   function saveNoteSuccess (note, noteElement) {
     saveNoteToStore(note)
-    noteElement.dataset.noteId = note.noteId // eslint-disable-line no-param-reassign
+    noteElement.dataset.noteId = note.noteId
     noteElement.classList.remove(config.loading.class)
     noteElement.classList.add(...utils.tw('bg-green-200'))
     setTimeout(() => { noteElement.classList.remove(...utils.tw('bg-green-200')); updateNoteStyle(noteElement) }, 1000) // eslint-disable-line no-magic-numbers
@@ -217,7 +217,7 @@ function getNoteIdFromNote (noteElement) {
       const response = await (noteId ? databases.updateDocument(db.databaseId, db.notesCollectionId, noteId, { note: noteContent }) : databases.createDocument(db.databaseId, db.notesCollectionId, ID.unique(), { listingId, note: noteContent }))
       saveNoteSuccess({ listingId, noteContent, noteId: response.$id }, noteElement)
       updateNoteStyle(noteElement) /* @ts-ignore */
-    } catch (/** @type Error */ error) { saveNoteFailure({ listingId, noteContent, noteId: '' }, noteElement, error) }
+    } catch (/** @type {Error} */ error) { saveNoteFailure({ listingId, noteContent, noteId: '' }, noteElement, error) }
   }
   const saveNoteDebounced = utils.debounce(saveNote, 2000) // eslint-disable-line no-magic-numbers
 
@@ -228,7 +228,7 @@ function getNoteIdFromNote (noteElement) {
    */
   async function loadNoteFromAppWrite (listingId) {
     const notesByListingId = await databases.listDocuments(db.databaseId, db.notesCollectionId, [Query.equal('listingId', listingId)])
-    /** @type [{ note: string; $id: string } | undefined] */
+    /** @type {[{ note: string; $id: string } | undefined]} */
     const [first] = notesByListingId.documents
     const note = { listingId, noteContent: first?.note || '', noteId: first?.$id || '' }
     if (note) utils.debug(`loaded note for listing ${listingId} from AppWrite`, note)
@@ -257,11 +257,13 @@ function getNoteIdFromNote (noteElement) {
     const listingId = getListingIdFromNote(noteElement)
     utils.debug(`loading note for listing ${listingId}...`)
     const { noteContent, noteId } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
-    noteElement.dataset.noteId = noteId // eslint-disable-line no-param-reassign
-    noteElement.textContent = noteContent // eslint-disable-line no-param-reassign
+    // eslint-disable-next-line require-atomic-updates
+    noteElement.dataset.noteId = noteId
+    // eslint-disable-next-line require-atomic-updates
+    noteElement.textContent = noteContent
     noteElement.classList.add(...utils.tw('h-56 w-96'))
     noteElement.classList.remove(config.loading.class)
-    noteElement.disabled = false // eslint-disable-line no-param-reassign
+    noteElement.disabled = false
     updateNoteStyle(noteElement)
   }
   /**
@@ -276,7 +278,7 @@ function getNoteIdFromNote (noteElement) {
     note.classList.add(`${utils.id}--note`, config.loading.class, ...utils.tw('z-10 h-8 w-16 rounded-md border border-gray-400 bg-gray-100 p-2 transition-all duration-500 ease-in-out hover:z-20'))
     note.addEventListener('keyup', () => saveNoteDebounced(note)) // keypress will not detect backspace
     note.disabled = true
-    void loadNote(note)
+    loadNote(note)
     return note
   }
   /**
@@ -294,7 +296,7 @@ function getNoteIdFromNote (noteElement) {
   }
   function addNotesToListings () {
     utils.log('add note to each listing')
-    /** @type HTMLAnchorElement[] */// @ts-ignore
+    /** @type {HTMLAnchorElement[]} */// @ts-ignore
     const listings = utils.findAll(`a[data-test-id="ad"]:not(.${cls.marker})`)
     for (const listing of listings) {
       listing.classList.add(cls.marker)
@@ -330,7 +332,7 @@ function getNoteIdFromNote (noteElement) {
     document.body.append(getClearStoreButton(clearStore))
   }
   // @ts-ignore
-  // eslint-disable-next-line new-cap, sonar/new-cap
+  // eslint-disable-next-line new-cap
   GM_addStyle(`
     .${utils.id}--note.loading {
       background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -360,7 +362,7 @@ function getNoteIdFromNote (noteElement) {
   const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
   window.addEventListener('scroll', () => processDebounced('scroll-event'))
   window.addEventListener('load', () => processDebounced('load-event'))
-  void utils.onPageChange(() => processDebounced('page-change-event'))
+  utils.onPageChange(() => processDebounced('page-change-event'))
 })()
 
 

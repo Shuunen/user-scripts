@@ -16,13 +16,16 @@
   const utils = new Shuutils('ldl-tko', true)
   /**
    * Handles the form submission event.
-   * @param {Object} values - The form values.
+   * @param {object} values - The form values.
    */
   async function onSubmit (values) {
     utils.log('Form submitted with', { values })
     await utils.copyToClipboard(values)
     utils.showSuccess('Data copied to clipboard')
   }
+  /**
+   * Start the takeout process.
+   */
   function startTakeout () {
     /* global rawData */// @ts-expect-error rawData is not defined but exists in the page
     const data = JSON.parse(rawData.store.googleShoppingJson)
@@ -36,11 +39,14 @@
     addMbSubmit(form, 'Copy to clipboard')
     document.body.append(form)
   }
+  /**
+   * Initialize the script.
+   */
   function init () {
     startTakeout()
   }
   const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
   initDebounced()
-  void utils.onPageChange(initDebounced)
+  utils.onPageChange(initDebounced)
 })()
 
