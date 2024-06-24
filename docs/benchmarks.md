@@ -13,3 +13,9 @@ Targets :
 - tsc : `hyperfine --runs 5 --warmup 3 'node node_modules/typescript/bin/tsc --noEmit'`
 - eslint : `hyperfine --runs 5 --warmup 3 'node node_modules/eslint/bin/eslint'`
 - vitest : `hyperfine --runs 10 --warmup 3 'npx vitest --run'`
+
+Note 1 : to show time taken by rules : `TIMING=1 npx eslint`
+
+Note 2 : to view final config : `npx eslint --print-config tailwind.config.js > eslint-js.config.json`
+
+Note 3 : to list eslint scanned files : `npx eslint --debug 2>&1 | grep eslint:eslint | awk '{print $NF}'`
