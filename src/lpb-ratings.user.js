@@ -11,9 +11,10 @@
 // @grant        none
 // ==/UserScript==
 
-/* eslint-disable no-magic-numbers */
-
 // @ts-nocheck
+/* eslint-disable no-magic-numbers */
+/* eslint-disable jsdoc/require-jsdoc */
+
 /* globals Fuse */
 
 const ratingsCsv = `domaine des bergeonnieres saint nicolas de bourgueil vielles vignes,3.6
@@ -439,11 +440,11 @@ function createReview (name, rating) {
   return review
 }
 
-// eslint-disable-next-line max-statements
+// eslint-disable-next-line max-statements, max-lines-per-function
 function lePetitBallonRatings () {
   if (typeof window === 'undefined') return
   const fuseSettings = {
-    includeScore: true, // eslint-disable-line @typescript-eslint/naming-convention
+    includeScore: true,
     keys: ['title'],
     minMatchCharLength: 4,
     threshold: 0.4,
@@ -457,12 +458,9 @@ function lePetitBallonRatings () {
     wineTitle: '.product-catalog__title',
   }
   function hideUseless () {
-    utils.findAll(selectors.useless, document, true).forEach(node => {
-      // eslint-disable-next-line no-param-reassign
+    for (const node of utils.findAll(selectors.useless, document, true))
       if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-      // eslint-disable-next-line no-param-reassign
       else node.style.display = 'none'
-    })
   }
 
   function searchRating (wine = '') {
@@ -483,7 +481,6 @@ function lePetitBallonRatings () {
     const title = utils.findOne(selectors.wineTitle, item, true)
     if (!title) { utils.error('no title found on item', item); return }
     const domain = title.nextElementSibling
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     const wine = cleanTitle(`${domain.textContent} ${title.textContent}`)
     const result = searchRating(wine)
     if (!result.isMatching) return
@@ -492,18 +489,19 @@ function lePetitBallonRatings () {
   }
 
   function injectRatings () {
-    utils.findAll(selectors.items).forEach((item) => {
+    for (const item of utils.findAll(selectors.items))
       injectRating(item)
-    })
   }
+
   async function init () {
     const items = await utils.waitToDetect(selectors.items)
     if (items === undefined) { utils.log('no item found on this page'); return }
     hideUseless()
     injectRatings()
   }
+
   const injectRatingsDebounced = utils.debounce(injectRatings, 500)
-  void utils.onPageChange(init)
+  utils.onPageChange(init)
   window.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
 }
 

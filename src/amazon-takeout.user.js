@@ -11,6 +11,8 @@
 // @description  This script let you export data from Amazon
 // ==/UserScript==
 
+/* eslint-disable jsdoc/require-jsdoc */
+
 (function AmazonTakeout () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('amz-tko', true)
@@ -24,7 +26,7 @@
   }
   /**
    * Handles the form submission event.
-   * @param {typeof selectors} values - The form values.
+   * @param {object} values - The form values.
    */
   async function onSubmit (values) {
     utils.log('Form submitted with', { values })
@@ -33,7 +35,7 @@
   }
   function startTakeout () {
     const form = createMbForm({ id: utils.id, title: 'Amazon Takeout' }, onSubmit)
-    Object.entries(selectors).forEach(([key, selector]) => { addMbField(form, key, textFromSelector(selector)) })
+    for (const [key, selector] of Object.entries(selectors)) addMbField(form, key, textFromSelector(selector))
     addMbSubmit(form, 'Copy to clipboard')
     document.body.append(form)
   }
@@ -44,6 +46,6 @@
   }
   const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
   initDebounced()
-  void utils.onPageChange(initDebounced)
+  utils.onPageChange(initDebounced)
 })()
 

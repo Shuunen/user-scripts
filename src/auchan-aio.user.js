@@ -10,6 +10,8 @@
 // @grant        none
 // ==/UserScript==
 
+/* eslint-disable jsdoc/require-jsdoc */
+
 // eslint-disable-next-line max-statements
 (function auchanAio () {
 
@@ -29,7 +31,6 @@
    * @returns {void}
    */
   function hideElement (element, reason) {
-    /* eslint-disable no-param-reassign */
     if (utils.willDebug) {
       element.style.backgroundColor = 'red !important'
       element.style.color = 'white !important'
@@ -40,16 +41,14 @@
       element.style.opacity = '0'
     }
     element.dataset.hiddenCause = reason
-    /* eslint-enable no-param-reassign */
   }
 
   function hideUseless () {
     let nb = 0
-    // eslint-disable-next-line no-loop-func
-    for (const selector of Object.values(uselessSelectors)) utils.findAll(`${selector}:not([data-hidden-cause])`, document, true).forEach((node) => {
+    for (const selector of Object.values(uselessSelectors)) for (const node of utils.findAll(`${selector}:not([data-hidden-cause])`, document, true)) {
       hideElement(node, 'useless')
       nb += 1
-    })
+    }
     if (nb > 0) utils.debug(`hideUseless has hidden ${nb} elements`)
   }
 
@@ -86,7 +85,7 @@
   window.addEventListener('focus', () => processDebounced('focus'))
   window.addEventListener('click', () => processDebounced('click'))
   window.addEventListener('scroll', () => processDebounced('scroll'))
-  void utils.onPageChange(() => processDebounced('page-change'))
+  utils.onPageChange(() => processDebounced('page-change'))
 
   utils.injectStyles(`
   .product-thumbnail__attributes {

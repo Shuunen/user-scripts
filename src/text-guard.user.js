@@ -41,7 +41,6 @@
    */
   function onForbidden (word, element) {
     if (element.dataset.txtGrd === 'forbidden') return
-    // eslint-disable-next-line no-param-reassign
     element.dataset.txtGrd = 'forbidden'
     counts.forbidden += 1 // @ts-ignore
     const annotation1 = RoughNotation.annotate(element, { color: 'red', strokeWidth: 4, type: 'box' })// @ts-ignore
@@ -66,14 +65,13 @@
   // eslint-disable-next-line max-statements
   function findElementsByXpath (word) {
     const needle = sanitize(word)
-    // eslint-disable-next-line sonar/xpath
     const results = document.evaluate(`//*[contains(translate(text(),"ABCDEFGHIJKLMNOPQRSTUVWXYZ ,","abcdefghijklmnopqrstuvwxyz "),"${needle}")]`, document, undefined, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE)
     const elements = []
     for (let index = 0; index < results.snapshotLength; index += 1) {
       const node = results.snapshotItem(index)
-      if (node === null) continue // eslint-disable-line no-continue
-      if (!(node instanceof HTMLElement)) { utils.error(node); utils.showError('Node is not an HTMLElement'); continue } // eslint-disable-line no-continue
-      if (node.dataset.txtGrd !== undefined) continue // eslint-disable-line no-continue
+      if (node === null) continue
+      if (!(node instanceof HTMLElement)) { utils.error(node); utils.showError('Node is not an HTMLElement'); continue }
+      if (node.dataset.txtGrd !== undefined) continue
       node.dataset.txtGrd = 'found'
       elements.push(node)
     }
@@ -84,25 +82,26 @@
    * @param {string} word - The word to search for.
    * @returns {Array<HTMLElement>} - An array of elements that contain the specified word.
    */
+  // eslint-disable-next-line max-statements
   function findElementsByQueryAll (word) {
     const needle = sanitize(word)
-    const elements = document.querySelectorAll('*')
+    const elements = Array.from(document.querySelectorAll('*'))
     /**
      * @type {HTMLElement[]}
      */
     const results = []
-    // eslint-disable-next-line max-statements
-    elements.forEach((element) => {
-      if (elementExceptions.has(element.tagName.toLowerCase())) return
-      if (!(element instanceof HTMLElement)) { utils.error('Element is not an HTMLElement, tag is : ', element.tagName); return }
-      if (element.dataset.txtGrd !== undefined) return
+
+    for (const element of elements) {
+      if (elementExceptions.has(element.tagName.toLowerCase())) continue
+      if (!(element instanceof HTMLElement)) { utils.error('Element is not an HTMLElement, tag is : ', element.tagName); continue }
+      if (element.dataset.txtGrd !== undefined) continue
       const children = Array.from(element.children).filter(child => !['b', 'br'].includes(child.tagName.toLowerCase()))
-      if (children.length > 0) return
+      if (children.length > 0) continue
       const text = sanitize(element.textContent ?? '')
-      if (!text.includes(needle)) return
-      element.dataset.txtGrd = 'found' // eslint-disable-line no-param-reassign
+      if (!text.includes(needle)) continue
+      element.dataset.txtGrd = 'found'
       results.push(element)
-    })
+    }
     return results
   }
   /**
@@ -117,10 +116,16 @@
       if (isForbidden) onForbidden(word, element)
       else utils.showLog(`Found warn word: ${word}`)
   }
+  /**
+   * Reports the number of forbidden words found.
+   */
   function report () {
     if (counts.forbidden > 0) utils.showError(`Found ${counts.forbidden} forbidden words`)
     else utils.log('no forbidden words found')
   }
+  /**
+   * Initializes the script.
+   */
   function init () {
     if (hostExceptions.has(window.location.hostname)) return
     utils.debug('start...')

@@ -1,8 +1,4 @@
-/* eslint-disable userscripts/filename-user */
-/* eslint-disable no-shadow */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable userscripts/no-invalid-metadata */
-/* eslint-disable unused-imports/no-unused-vars */
+/* eslint-disable no-unused-vars */
 
 /**
  * Get the text content from the node behind a css selector
@@ -14,15 +10,14 @@ function textFromSelector (selector, context) {
   const element = (context ?? document).querySelector(selector)
   if (!element) return '' // @ts-ignore
   const text = element.textContent || element.value || element.src || ''
-  // eslint-disable-next-line regexp/no-super-linear-move
   return text.trim().replace(/^\W+/gu, '').replace(/\W+$/gu, '')
 }
 
 /**
  * Generate a form to import a release to MusicBrainz
- * @param {{ id:string, title: string }} app
+ * @param {{ id:string, title: string }} app the app id and title
  * @param {Function} [callback] a function to call with the data, prevent form submission is used
- * @returns
+ * @returns {HTMLFormElement} the form
  */
 // eslint-disable-next-line max-statements
 function createMbForm (app, callback = () => ({})) {
@@ -74,10 +69,10 @@ function createMbForm (app, callback = () => ({})) {
 
 /**
  * Add a field to the form
- * @param {HTMLFormElement} form
- * @param {string} name
- * @param {string} value
- * @param {boolean} isHidden
+ * @param {HTMLFormElement} form the form
+ * @param {string} name the field name
+ * @param {string} value the field value
+ * @param {boolean} isHidden if the field should be hidden
  */
 // eslint-disable-next-line max-params, max-statements
 function addMbField (form, name, value, isHidden = false) {
@@ -118,7 +113,9 @@ function addMbField (form, name, value, isHidden = false) {
 
 /**
  * Add a submit button to the form
- * @param {HTMLFormElement} form
+ * @param {HTMLFormElement} form the form
+ * @param {string} [label] the button label
+ * @returns {void} nothing
  */
 // eslint-disable-next-line max-statements
 function addMbSubmit (form, label = 'Export to MusicBrainz') {
@@ -139,8 +136,8 @@ function addMbSubmit (form, label = 'Export to MusicBrainz') {
 
 /**
  * Insert the form into the page
- * @param {{ app: { id:string, title: string }, title: string, artist: string, date: {day:string, month:string, year: string}, tracks: {number: string, name: string, artist: string, duration: string}[], label: string, url: string, urlType: string }} data
- * @returns
+ * @param {{ app: { id:string, title: string }, title: string, artist: string, date: {day:string, month:string, year: string}, tracks: {number: string, name: string, artist: string, duration: string}[], label: string, url: string, urlType: string }} data the data to insert
+ * @returns {void} nothing
  */
 // eslint-disable-next-line max-statements
 function insertMbForm ({ app, artist, date, label, title, tracks, url, urlType }) {
@@ -157,12 +154,12 @@ function insertMbForm ({ app, artist, date, label, title, tracks, url, urlType }
   if (date.year) addMbField(form, 'date.year', date.year)
   if (date.month) addMbField(form, 'date.month', date.month)
   if (date.day) addMbField(form, 'date.day', date.day)
-  tracks.forEach((track, index) => {
+  for (const [index, track] of tracks.entries()) {
     addMbField(form, `mediums.0.track.${index}.number`, track.number, true)
     addMbField(form, `mediums.0.track.${index}.name`, track.name, true)
     addMbField(form, `mediums.0.track.${index}.artist_credit.names.0.name`, track.artist || artist, true)
     addMbField(form, `mediums.0.track.${index}.length`, track.duration, true)
-  })
+  }
   addMbField(form, 'mediums.0.format', 'Digital Media', true)
   addMbField(form, 'labels.0.name', label)
   addMbField(form, 'urls.0.url', url, true)

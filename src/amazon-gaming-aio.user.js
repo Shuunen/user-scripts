@@ -10,8 +10,6 @@
 // @grant        none
 // ==/UserScript==
 
-/* eslint-disable no-param-reassign */
-
 // eslint-disable-next-line max-statements
 (function amazonGamingAio () {
   if (typeof window === 'undefined') return
@@ -114,8 +112,11 @@
     badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
     sections: '[data-a-target="hero-banner"],[data-a-target="offer-section-FGWP"],[data-a-target="offer-section-RECOMMENDED"],[data-a-target="offer-section-WEB_GAMES"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-EXPIRING"]',
   }
+  /**
+   * Delete useless elements
+   */
   function deleteUseless () {
-    for (const selector of Object.values(deleteUselessSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+    for (const selector of Object.values(deleteUselessSelectors)) for (const node of utils.findAll(selector, document, true)) {
       if (utils.willDebug) {
         node.style.backgroundColor = 'red !important'
         node.style.color = 'white !important'
@@ -126,25 +127,30 @@
         node.style.opacity = '0'
       }
       node.dataset.hiddenCause = 'useless'
-    })
+    }
   }
+  /**
+   * Clear classnames
+   */
   function clearClassnames () {
-    for (const selector of Object.values(clearClassSelectors)) utils.findAll(selector, document, true).forEach((node) => {
+    for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true))
       // eslint-disable-next-line unicorn/no-keyword-prefix
       node.className = ''
-    })
+
   }
+  /**
+   * Check if a grid is empty and hide it
+   */
   function checkEmptyGrids () {
-    utils.findAll(selectors.grid, document, true).forEach((node) => {
+    for (const node of utils.findAll(selectors.grid, document, true)) {
       // @ts-expect-error
-      // eslint-disable-next-line array-func/prefer-array-from
       const visibleChildren = [...node.children].filter(child => !child.hasAttribute('data-hidden-cause')).length // eslint-disable-line unicorn/prefer-dom-node-dataset
       node.style.backgroundImage = visibleChildren === 0 ? 'url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHZpZXdCb3g9IjAgMCAyMzIgMjMyIj48cGF0aCBkPSJNMTA3IDE0NmE4IDggMCAwIDAgMTUtMmwtMy0zM2E4IDggMCAwIDAtMTUgMWwzIDM0em00NyA2IDEgMWM0IDAgNy0zIDgtN2wzLTM0YTcgNyAwIDEgMC0xNS0xbC0zIDMzYy0xIDQgMiA4IDYgOHptLTU4IDMzYTIzIDIzIDAgMSAwIDAgNDcgMjMgMjMgMCAwIDAgMC00N3ptMCAzMmE4IDggMCAxIDEgMC0xNyA4IDggMCAwIDEgMCAxN3ptNzgtMzJhMjMgMjMgMCAxIDAgMCA0NyAyMyAyMyAwIDAgMCAwLTQ3em0wIDMyYTggOCAwIDEgMSAwLTE3IDggOCAwIDAgMSAwIDE3eiIvPjxwYXRoIGQ9Im0yMTkgNzktNi0zSDYzbC02LTI0Yy0xLTMtNC02LTctNkgxOWE4IDggMCAwIDAgMCAxNWgyNWw2IDI0djFsMjMgODljMSAzIDQgNSA4IDVoMTA4YzQgMCA3LTIgOC01bDIzLTg5LTEtN3ptLTM1IDg2SDg2TDY3IDkxaDEzNmwtMTkgNzR6TTEwNiA1M2E3IDcgMCAwIDAgMTAgMGMzLTMgMy04IDAtMTFMOTMgMTlhOCA4IDAgMCAwLTExIDEwbDI0IDI0em01MyAyIDUtMiAyNC0yNGE3IDcgMCAxIDAtMTEtMTBsLTIzIDIzYTggOCAwIDAgMCA1IDEzem0tMjQtN2M0IDAgOC0zIDgtN1Y4YzAtNS00LTgtOC04cy03IDMtNyA3djM0YzAgNCAzIDcgNyA3eiIvPjwvc3ZnPg==")' : ''
       node.style.height = visibleChildren === 0 ? '160px' : ''
       node.style.backgroundRepeat = visibleChildren === 0 ? 'no-repeat' : ''
       node.style.backgroundPositionY = visibleChildren === 0 ? '50%' : ''
       node.style.filter = visibleChildren === 0 ? 'invert(0.4)' : ''
-    })
+    }
   }
   /**
    * Double check if an element should be hidden
@@ -153,7 +159,7 @@
    * @returns {boolean} true if the element should not be hidden
    */
   function preventElementHide (element, cause) {
-    const length = element.innerHTML.length
+    const { length } = element.innerHTML
     utils.debug('checkElementToHide', cause, 'with length', length)
     if (['claimed', 'unwanted-dlc'].includes(cause)) {
       if (length > 8500) { utils.error(`element is too big (${length} > 8500) to be hidden`, element); return true } // eslint-disable-line no-magic-numbers
@@ -179,16 +185,24 @@
     element.style.visibility = 'hidden'
     element.style.opacity = '0'
   }
+  /**
+   * Hide claimed products
+   */
   function hideClaimed () {
-    utils.findAll(selectors.claimedTag, document, true).forEach((node) => {
+    for (const node of utils.findAll(selectors.claimedTag, document, true)) {
       node.classList.add(`${utils.id}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.productAlt)
-      if (!product) return
+      if (!product) continue
       hideElement(product, 'claimed')
-    })
+    }
     checkEmptyGrids()
   }
+  /**
+   * Clean a dlc name
+   * @param {string} name the name to clean
+   * @returns {string} the cleaned name
+   */
   function cleanDlcName (name = '') {
     return name
       .normalize('NFD').replace(/[\u0300-\u036F]/gu, '') // remove accents
@@ -196,28 +210,36 @@
       .replace(/\s+/gu, ' ').trim() // remove multiple spaces
       .toLowerCase() || '' // lowercase
   }
+  /**
+   * Hide unwanted dlc
+   */
+  // eslint-disable-next-line max-statements
   function hideUnwantedDlc () {
     const list = utils.findAll(selectors.productDlcName, document, true)
     utils.log(list.length, 'dlc found')
-    // eslint-disable-next-line max-statements
-    list.forEach((node) => {
+
+    for (const node of list) {
       node.classList.add(`${utils.id}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.product)
-      if (!product) { utils.error('no product found in product :', node); return }
+      if (!product) { utils.error('no product found in product :', node); continue }
       const title = product.querySelector(selectors.productName)
-      if (!title) { utils.error('no title found in product :', node); return }
+      if (!title) { utils.error('no title found in product :', node); continue }
       /** @type {string} */
       const gameName = cleanDlcName(title.textContent ?? '')
-      if (gameName.length === 0) { utils.error('no game name found', node); return }
+      if (gameName.length === 0) { utils.error('no game name found', node); continue }
       node.title = gameName
       const shouldHide = dlcToHide.some((dlc) => gameName.includes(cleanDlcName(dlc)))
-      if (!shouldHide) { utils.log('game dlc is ok :', gameName); return }
+      if (!shouldHide) { utils.log('game dlc is ok :', gameName); continue }
       product.title = gameName
       hideElement(product, 'unwanted-dlc')
-    })
+    }
     checkEmptyGrids()
   }
+  /**
+   * Process the page
+   * @param {string} cause the cause of the process
+   */
   function process (cause = '') {
     if (cause === 'dom-node-inserted:featured-content-thumbnail__overlay') return
     utils.log('process, cause :', cause)
@@ -229,7 +251,7 @@
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
 
-  void utils.onPageChange(() => processDebounced('page-change'))
+  utils.onPageChange(() => processDebounced('page-change'))
 
   window.addEventListener('scroll', () => processDebounced('scroll'))
 

@@ -11,6 +11,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
+/* eslint-disable jsdoc/require-jsdoc */
 
 (function LyBoxEnhanced () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
@@ -19,6 +20,7 @@
     constructor (provider) {
       this.provider = provider
     }
+    // eslint-disable-next-line class-methods-use-this
     fullKey (key) {
       return `${utils.app.id}_${key}`
     }
@@ -32,13 +34,12 @@
       if (defaultValue && (typeof result !== typeof defaultValue)) throw new Error(`storage : type mismatch, got ${typeof result} instead of ${typeof defaultValue}`)
       return result
     }
+    has (key) {
+      return this.get(key).then(Boolean).catch(() => false)
+    }
     set (key, data) {
       this.provider[this.fullKey(key)] = typeof data === 'object' ? JSON.stringify(data) : data
       return data
-    }
-    has (key) {
-      // eslint-disable-next-line promise/prefer-await-to-then
-      return this.get(key).then(Boolean).catch(() => false)
     }
   }
   const store = new Store(localStorage)
@@ -52,17 +53,15 @@
     // mark row id as... id
     const id = row.querySelector('.card-body').className.split(' ')[0].split('-')[1]
     if (id.length === 0) { utils.error('no id found on row', row); return }
-    // eslint-disable-next-line no-param-reassign
     row.id = id
     if (hiddenRows.includes(id)) {
-      // eslint-disable-next-line no-param-reassign
       row.hidden = true
       return // no need to process further
     }
     // text content -> css classes to let user hide/show rows via Amino
-    // eslint-disable-next-line prefer-named-capture-group, regexp/prefer-named-capture-group
+    // eslint-disable-next-line prefer-named-capture-group
     const cls = utils.readableString(row.textContent.replace(/([a-z])(\d)/gu, '$1 $2').split(':')[0]).toLowerCase()
-    // eslint-disable-next-line unicorn/no-keyword-prefix, no-param-reassign
+    // eslint-disable-next-line unicorn/no-keyword-prefix
     row.className += ` ${cls}`
     // add a button to hide row
     const button = document.createElement('i')
@@ -71,7 +70,6 @@
     button.className = 'fa fa-ban'
     button.title = 'Hide this row'
     button.addEventListener('click', () => {
-      // eslint-disable-next-line no-param-reassign
       row.hidden = true
       hiddenRows.push(id)
       store.set('hiddenRows', hiddenRows)
@@ -83,7 +81,7 @@
     if (row === undefined) { utils.log('nothing to process'); return }
     const rows = utils.findAll(selectors.row)
     utils.log(`processing ${rows.length} rows...`)
-    rows.forEach(rowElement => { processRow(rowElement) })
+    for (const rowElement of rows) processRow(rowElement)
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 1000)

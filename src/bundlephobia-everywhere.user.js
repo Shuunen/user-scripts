@@ -17,7 +17,7 @@
   const utils = new Shuutils('bdl-evr')
   /**
    * Inject bundlephobia badges into the page
-   * @param {string} name
+   * @param {string} name the package name
    */
   // eslint-disable-next-line max-statements
   function injectBadge (name) {
@@ -33,23 +33,24 @@
     link.style.zIndex = '1000'
     link.style.display = 'flex'
     link.style.gap = '20px'
-    const /** @type HTMLElement */ anchor = document.querySelector('#readme') || document.body
+    const /** @type {HTMLElement} */ anchor = document.querySelector('#readme') || document.body
     anchor.style.position = 'relative'
     anchor.append(link)
   }
+  /**
+   * Detect the package name in the page and inject the badge
+   */
   // eslint-disable-next-line max-statements
   function detectName () {
     let text = document.body.textContent
     if (!text) { utils.error('cannot find body text content'); return }
     if (!text.includes('npm')) { utils.log('does not seems like the good place to add a badge'); return }
     const copyBlock = utils.findOne('.lh-copy span')
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     if (copyBlock) text = `${copyBlock.textContent}\n${text}`
-    // eslint-disable-next-line regexp/prefer-regexp-exec
     const name = (text.match(/\b(?<provider>npm i|npm install|npx|yarn add).* (?<name>[^-][\w./@-]+)/iu) || text.match(/(?<provider>unpkg\.com)\/(?<name>@?[\w./-]+)/iu))?.groups?.name
     if (name === undefined) { utils.warn('failed to find a npm package name in this page'); return }
     utils.log('found package name :', name)
     injectBadge(name)
   }
-  void utils.onPageChange(detectName)
+  utils.onPageChange(detectName)
 })()

@@ -17,7 +17,7 @@
   /* global autosize */
   const app = {
     debounceTime: 500,
-    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
+    debug: false,
     excluders: [],
     filter: '',
     id: 'amz-xd',
@@ -47,19 +47,21 @@
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils(app)
 
+  /**
+   * Clear the suggestions list
+   */
   function clearSuggestions () {
     utils.log('cleared suggestions !')
     app.suggestions = {}
     utils.findOne(`.${cls.suggestions}`).innerHTML = ''
   }
 
+  /**
+   * Show the suggestions list
+   */
   function showSuggestions () {
-    Object.keys(app.suggestions).forEach(word => {
-      if (app.excluders.includes(word))
-        // if already excluded, no need to suggest it again
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete app.suggestions[word]
-    })
+    for (const word of Object.keys(app.suggestions)) if (app.excluders.includes(word)) // if already excluded, no need to suggest it again
+      delete app.suggestions[word]
     // add .map(key => `${key} (${app.suggestions[key]})`)
     // to see ["silicone (5)", "decoration (4)", "support (4)", "cheveux (3)",
     // instead of ["silicone", "decoration", "support", "cheveux",
@@ -73,16 +75,24 @@
   }
 
   const showSuggestionsDebounced = utils.debounce(showSuggestions, app.debounceTime)
-
+  /**
+   * Add a title to the suggestions list
+   * @param {string} title - The title to add
+   */
   function addTitleToSuggestions (title) {
-    title.split(' ').filter(word => word.length > app.minLengthSuggestion).forEach(word => {
+    const suggestions = title.split(' ').filter(word => word.length > app.minLengthSuggestion)
+    for (const word of suggestions) {
       // add the word if needed & count the occurrence
       if (!app.suggestions[word]) app.suggestions[word] = 0
       app.suggestions[word] += 1
-    })
+    }
     showSuggestionsDebounced()
   }
-
+  /**
+   * Check if a product should be displayed or not
+   * @param {string} titleString - The title of the product
+   * @param {HTMLElement} titleElement - The element containing the title
+   */
   function checkProduct (titleString, titleElement) {
     let isFound = false
     let remaining = app.excluders.length
@@ -96,19 +106,23 @@
     const product = titleElement.closest(selectors.product)
     product.style.display = isFound ? 'none' : 'inline-block'
   }
-
+  /**
+   * Check the displayed products
+   */
   function checkProducts () {
     utils.log('checking displayed products...')
     clearSuggestions()
     const products = utils.findAll(selectors.productTitle)
-    products.forEach(titleElement => {
-      // eslint-disable-next-line no-param-reassign
+    for (const titleElement of products) {
       titleElement.textContent = utils.readableString(titleElement.textContent)
       const titleString = titleElement.textContent.toLowerCase()
       checkProduct(titleString, titleElement)
-    })
+    }
   }
-
+  /**
+   * Update the excluders list
+   * @param {boolean} fromFilter - Whether the update comes from the filter or not
+   */
   function onExcludersUpdate (fromFilter) {
     app.excluders = app.excluders
       .map(entry => entry.trim().toLowerCase())
@@ -124,14 +138,20 @@
     }
     checkProducts()
   }
-
+  /**
+   * Handle a suggestion click
+   * @param {MouseEvent} event - The click event
+   */
   function onSuggestionClick (event) {
     const suggestion = event.target.textContent.replace(/\W/gu, '') // regex avoid caching the plus sign
     utils.log('user wants to add suggestion', suggestion)
     app.excluders.push(suggestion)
     onExcludersUpdate()
   }
-
+  /**
+   * Handle a filter change
+   * @param {Event} event - The change event
+   */
   function onFilterChange (event) {
     utils.log('filter changed')
     app.excluders = event.target.value.split(',')
@@ -173,6 +193,9 @@
   }
   </style>`
 
+  /**
+   * Insert the filter in the page
+   */
   // eslint-disable-next-line max-statements
   function insertFilter () {
     const container = utils.findFirst(selectors.container)
@@ -192,16 +215,22 @@
     const suggestions = utils.findOne(`.${cls.suggestions}`)
     suggestions.addEventListener('click', onSuggestionClick)
   }
-
+  /**
+   * Remove previous elements
+   */
   function cleanPrevious () {
-    utils.findAll(`[class^="${cls.base}"]`, document, true).forEach(node => { node.remove() })
+    for (const node of utils.findAll(`[class^="${cls.base}"]`, document, true)) node.remove()
   }
-
+  /**
+   * Detect a new page
+   */
   function onNewPage () {
     utils.log('new page detected')
     onExcludersUpdate()
   }
-
+  /**
+   * Detect a new page
+   */
   function detectNewPage () {
     const firstProduct = utils.findFirst(selectors.productTitle)
     if (firstProduct.classList.contains(cls.first))
@@ -211,20 +240,22 @@
       onNewPage()
     }
   }
-
+  /**
+   * Process the page
+   */
   function process () {
     detectNewPage()
   }
-
+  /**
+   * Initialize the script
+   */
   function init () {
     utils.log('init !')
     cleanPrevious()
     insertFilter()
     onExcludersUpdate()
   }
-
   init()
-
   const processDebounced = utils.debounce(process, app.debounceTime)
   document.addEventListener('scroll', processDebounced)
 })()

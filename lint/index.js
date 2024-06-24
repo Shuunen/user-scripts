@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-// eslint-disable-next-line no-undef
+/* eslint-disable jsdoc/require-jsdoc */
+
 const { createValidator } = require('eslint-plugin-userscripts/dist/utils/createValidator')
 
 const enforceDownloadUrl = createValidator({
@@ -12,7 +12,6 @@ const enforceDownloadUrl = createValidator({
         const filename = context.filename ?? context.getFilename()
         const line = context.sourceCode.lines[attrVal.comment.loc.start.line - 1] ?? ''
         const from = attrVal.val
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, etc/no-assign-mutated-array
         const to = `https://github.com/Shuunen/user-scripts/raw/master/src/${filename.split('\\').reverse()[0]}`
         const value = `\n${line.replace(/@\S+/u, '@downloadURL').replace(from, to)}`
         return fixer.insertTextAfterRange(attrVal.comment.range, value)

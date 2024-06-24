@@ -21,23 +21,32 @@
    */
   function triggerChange (element) {
     element.dispatchEvent(new KeyboardEvent('change'))
-    element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true })) // eslint-disable-line @typescript-eslint/naming-convention
+    element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
   }
+  /**
+   * Fill the login input with the email
+   * @param {string} email the email to fill
+   */
   function fill (email = 'romain.racamier@gmail.com') {
     utils.log('autofill start')
     // @ts-ignore
-    utils.findAll(selectors.input).forEach((/** @type HTMLInputElement */ input) => {
-      if (input.type === 'password' || input.value.length > 0) return
-      // eslint-disable-next-line no-param-reassign
+    for (const input of utils.findAll(selectors.input)) {
+      // @ts-ignore
+      if (input.type === 'password' || input.value.length > 0) continue
+      // @ts-ignore
       input.value = email
+      // @ts-ignore
       triggerChange(input)
       utils.log('filled', input)
-    })
+    }
   }
+  /**
+   * Init the autofill
+   */
   function init () {
     setTimeout(fill, 1000) // eslint-disable-line no-magic-numbers
     setTimeout(fill, 3000) // eslint-disable-line no-magic-numbers
   }
   if (document.location.hostname === 'localhost') return
-  void utils.onPageChange(init)
+  utils.onPageChange(init)
 })()

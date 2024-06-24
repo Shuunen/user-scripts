@@ -11,6 +11,7 @@
 // ==/UserScript==
 
 // @ts-nocheck
+/* eslint-disable jsdoc/require-jsdoc */
 
 /**
  * Clean a title string
@@ -22,7 +23,6 @@ function cleanTitle (title) {
     .replace(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
     .replace(' Can', ' ').replace('Fût ', ' ')
     .replace(/['’-]/gu, ' ').normalize('NFD').replace(/[^\d\sa-z]/giu, '').toLowerCase() // from shuutils sanitize
-    // eslint-disable-next-line regexp/no-super-linear-move
     .replace(/\d+cl|\d+l|\d+L|pack \d+|pack de|\d+ bieres|pack|et \d+ verres/gu, ' ') // remove contenance or pack size
     .replace(/\s+/gu, ' ')
     .trim()
@@ -56,10 +56,9 @@ function cleanTitle (title) {
     else rating.style.backgroundColor = 'lightpink'
     element.append(rating)
     element.classList.add(utils.id)
-    // eslint-disable-next-line no-param-reassign
     element.parentElement.style.height = 'auto'
   }
-  // eslint-disable-next-line max-statements, consistent-return, sonarjs/cognitive-complexity
+  // eslint-disable-next-line max-statements, consistent-return
   async function fetchRating (item) {
     const titleElement = utils.findOne(selectors.title, item)
     if (titleElement === null) return utils.error('cant find item title')
@@ -68,6 +67,7 @@ function cleanTitle (title) {
     titleElement.title = `Cleaned title : ${name}`
     const storageKey = `${utils.id}-${cached}-${name}` // '2021-11-svb-rat-Gouden Carolus Tripel'
     utils.log(`looking for "${storageKey}" in localStorage`)
+    // eslint-disable-next-line no-useless-assignment
     let data = {}
     if (localStorage.getItem(storageKey) === null) {
       utils.log('fetching rating for :', name)
@@ -85,27 +85,26 @@ function cleanTitle (title) {
     if (titleElement.tagName !== 'A')
       titleElement.outerHTML = `<a href="https://www.saveur-biere.com/fr/search-result/${name}" target="_blank">${name}</a>`
   }
+  // eslint-disable-next-line max-statements
   function injectRatings () {
     const items = utils.findAll(selectors.items)
     utils.log('found items', items)
-    items.forEach(item => {
-      if (item.classList.contains(utils.id)) { utils.log('item already processed'); return }
+    for (const item of items) {
+      if (item.classList.contains(utils.id)) { utils.log('item already processed'); continue }
       // skip if product not available
       if (utils.findOne(selectors.banner, item)) {
-        // eslint-disable-next-line no-param-reassign
+
         item.style.opacity = '0.3'
         utils.log('product not available', item)
-        return
+        continue
       }
-      void fetchRating(item)
-    })
+      fetchRating(item)
+    }
   }
   function deleteUseless () {
-    utils.findAll(selectors.useless, document, true).forEach(node => {
-      // eslint-disable-next-line no-param-reassign
+    for (const node of utils.findAll(selectors.useless, document, true))
       if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       else node.remove()
-    })
   }
   async function init () {
     const items = await utils.waitToDetect(selectors.items)
@@ -113,7 +112,7 @@ function cleanTitle (title) {
     deleteUseless()
     injectRatings()
   }
-  void utils.onPageChange(init)
+  utils.onPageChange(init)
 })()
 
 if (module) module.exports = {

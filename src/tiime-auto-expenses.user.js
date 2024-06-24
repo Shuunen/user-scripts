@@ -12,6 +12,11 @@
 
 /* eslint-disable max-statements */
 
+/**
+ * Create a button element
+ * @param {string} label the button label
+ * @returns {HTMLButtonElement} the button element
+ */
 function createButton (label = '') {
   const button = document.createElement('button')
   button.textContent = label
@@ -44,7 +49,7 @@ function createButton (label = '') {
   const classes = {
     tableRowActive: 'row-active',
   }
-  /** @param {HTMLElement} row */
+  /** @param {HTMLElement} row the row to set the date for */
   async function setDate (row) {
     utils.log('setting date to last day of previous month')
     const input = utils.findOne(selectors.tableRowDate, row)
@@ -58,7 +63,6 @@ function createButton (label = '') {
     lastDay.click()
     utils.log('date set to the', lastDay.textContent, 'of previous month')
   }
-
   /**
    * @param {HTMLElement} row the row to set the label for
    * @param {string} label the label to set, like "Abonnement Internet"
@@ -81,7 +85,6 @@ function createButton (label = '') {
     firstChip.click()
     utils.log('label set to', firstChip.textContent)
   }
-
   /**
    * @param {HTMLElement} row the row to set the amount for
    * @param {number} amount the amount to set, like 22.47
@@ -96,12 +99,11 @@ function createButton (label = '') {
     input.focus()
     input.value = amount.toString()
     await utils.sleep(100) // eslint-disable-line no-magic-numbers
-    input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true })) // eslint-disable-line @typescript-eslint/naming-convention
+    input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
     await utils.sleep(100) // eslint-disable-line no-magic-numbers
     input.blur()
     utils.log('amount set to', input.value)
   }
-
   /**
    * Set the comment for an expense
    * @param {string} comment the comment to set
@@ -123,14 +125,13 @@ function createButton (label = '') {
     if (textarea === undefined) { utils.showError('textareaComment not found'); return }
     textarea.value = comment
     await utils.sleep(100) // eslint-disable-line no-magic-numbers
-    textarea.dispatchEvent(new Event('input', { bubbles: true, cancelable: true })) // eslint-disable-line @typescript-eslint/naming-convention
+    textarea.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
     await utils.sleep(100) // eslint-disable-line no-magic-numbers
     textarea.blur()
     const validate = await utils.waitToDetect(selectors.textareaCommentValidate)
     if (validate === undefined) { utils.showError('textareaCommentValidate not found'); return }
     validate.click()
   }
-
   /**
    * Check if an expense is already filled
    * @param {string} label the label to check
@@ -153,12 +154,11 @@ function createButton (label = '') {
       // so we consider it as already filled
     })
   }
-
   /**
    * Add an expense to the page
-   * @param {string} label
-   * @param {string} comment
-   * @param {number} amount
+   * @param {string} label the label
+   * @param {string} comment the comment
+   * @param {number} amount the amount
    */
   async function addExpense (label, comment, amount) {
     // console.groupEnd() // eslint-disable-line no-console
@@ -176,7 +176,9 @@ function createButton (label = '') {
     row.classList.remove(classes.tableRowActive)
     console.groupEnd() // eslint-disable-line no-console
   }
-
+  /**
+   * Add multiple expenses from the clipboard
+   */
   async function addExpenses () {
     const lines = await utils.readClipboard()
     if (lines.trim() === '') { utils.showError('no data found in clipboard'); return }
@@ -194,19 +196,20 @@ function createButton (label = '') {
       await addExpense(label, comment, amountNumber)
     }
   }
-
+  /**
+   * Initialize the script
+   */
   async function init () {
     /** @type {HTMLButtonElement | undefined} */// @ts-ignore
     const addOne = await utils.waitToDetect(selectors.addExpenseBtn)
     if (addOne === undefined) { utils.log('no add expense button found on this page'); return }
     addOneButton = addOne
     const addAll = createButton('Add common expenses')
-    addAll.addEventListener('click', () => { void addExpenses() })
+    addAll.addEventListener('click', () => { addExpenses() })
     if (addOne.parentElement === null) { utils.showError('button parent element not found'); return }
     addOne.parentElement.append(addAll)
     utils.showLog('button injected, tiime-auto-expenses is ready')
   }
-
   const initDebounced = utils.debounce(init, 300) // eslint-disable-line no-magic-numbers
   initDebounced()
 })()

@@ -17,13 +17,13 @@
 // ==/UserScript==
 
 /* eslint-disable no-magic-numbers */
-/* eslint-disable regexp/no-super-linear-move */
+/* eslint-disable jsdoc/require-jsdoc */
 
 // @ts-nocheck
 // eslint-disable-next-line max-statements
 (function hddCleaner () {
   const app = {
-    debug: false, // eslint-disable-line @typescript-eslint/naming-convention
+    debug: false,
     id: 'hdd-clr',
     maxSize: 12_000,
     minSize: 4000, // in Gb or Go
@@ -38,7 +38,6 @@
   }
   const regex = {
     price: /(?<price>\d+[,.\\€]\d+)/u,
-    // eslint-disable-next-line regexp/no-misleading-capturing-group
     size: /(?<size>\d+)\s?(?<unit>\w+)/u,
     sizes: /(?<size>\d+)\s?(?<unit>gb|go|tb|to)\b/giu,
   }
@@ -53,12 +52,12 @@
     const matches = text.match(regex.sizes)
     if (!matches) return false
     let size = 0
-    matches.forEach(match => {
-      // eslint-disable-next-line prefer-const, regexp/prefer-regexp-exec
+    for (const match of matches) {
+      // eslint-disable-next-line prefer-const
       let [, mSize, mUnit] = match.match(regex.size) ?? []
       if (mUnit === 'to' || mUnit === 'tb') mSize *= 1000 // align sizes to Go, may be slightly different according to TO vs TB
       if (mSize > size) size = Number.parseInt(mSize, 10)
-    })
+    }
     return size
   }
   // eslint-disable-next-line max-statements
@@ -69,7 +68,6 @@
       return false
     }
     utils.log('found price element :', priceElement.textContent)
-    // eslint-disable-next-line regexp/prefer-regexp-exec
     const matches = priceElement.textContent.match(regex.price)
     if (matches.length !== 2) {
       utils.error('failed at finding price')
@@ -82,14 +80,13 @@
       if (pricePerTo < index) rating += '👍'
     rating += (rating.length > 0 ? ' ' : '')
     utils.log('price found :', pricePerTo, '€ per To')
-    // eslint-disable-next-line no-param-reassign
     descElement.textContent = `( ${rating}${pricePerTo}€ / to ) - ${descElement.textContent}`
     return true
   }
 
+  // eslint-disable-next-line max-statements
   function checkItems () {
-    // eslint-disable-next-line max-statements
-    utils.findAll(selectors.desc, document, true).forEach(descElement => {
+    for (const descElement of utils.findAll(selectors.desc, document, true)) {
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       // first close last opened console group, else closing nothing without throwing error
       // eslint-disable-next-line no-console
@@ -99,7 +96,7 @@
       const size = getSize(text)
       if (!size) {
         utils.error('fail at finding size')
-        return
+        continue
       }
       utils.log('size found :', size, 'Go')
       const isSizeOk = (app.minSize <= size) && (size <= app.maxSize)
@@ -107,7 +104,7 @@
       const productElement = descElement.closest(selectors.product)
       if (!productElement) {
         utils.error('fail at finding closest product')
-        return
+        continue
       }
       let willMarkItem = true
       if (isSizeOk) willMarkItem = insertPricePerSize(productElement, descElement, size)
@@ -117,7 +114,7 @@
         descElement.classList.add(cls.mark)
         utils.log('check complete, element marked')
       }
-    })
+    }
     // if at least one iteration above, there's an open console group, else closing nothing without throwing error
     // eslint-disable-next-line no-console
     console.groupEnd()

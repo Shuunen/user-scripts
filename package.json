@@ -6,11 +6,8 @@
   "devDependencies": {
     "@custom/eslint-plugin": "link:lint",
     "@types/node": "20",
-    "eslint": "8.57",
-    "eslint-config-hardcore": "46.0",
-    "eslint-plugin-filenames": "1.3",
-    "eslint-plugin-tailwindcss": "3.17",
-    "eslint-plugin-unicorn": "54.0",
+    "eslint": "*",
+    "eslint-plugin-shuunen": "0.0.5",
     "eslint-plugin-userscripts": "0.5",
     "repo-check": "1.36",
     "shuutils": "8.0",
@@ -36,7 +33,7 @@
   "scripts": {
     "check": "pnpm install && echo install success && pnpm lint && repo-check && echo repo-check success && pnpm test && echo check success",
     "lint": "pnpm lint:sh && pnpm lint:tsc && pnpm lint:eslint && echo lint success",
-    "lint:eslint": "eslint --cache --ext .js,.ts . && echo lint:eslint success",
+    "lint:eslint": "eslint --cache && echo lint:eslint success",
     "lint:sh": "sh ./bin/lint.sh && echo lint:sh success",
     "lint:tsc": "tsc --noEmit && echo lint:tsc success",
     "postversion": "git push && git push --tags",

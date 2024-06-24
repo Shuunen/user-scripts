@@ -27,7 +27,9 @@
     "tada",
     "tiime",
     "Tiime",
-    "tracklist"
+    "tracklist",
+    "userscript",
+    "violentmonkey"
   ],
   "workbench.colorCustomizations": {
     "activityBar.background": "#0C323D",

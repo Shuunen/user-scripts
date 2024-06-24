@@ -10,11 +10,12 @@
 // @grant        none
 // ==/UserScript==
 
-/* eslint-disable func-style */
 /* eslint-disable no-magic-numbers */
-/* eslint-disable no-param-reassign */
 /* eslint-disable max-statements */
 /* eslint-disable consistent-return */
+/* eslint-disable jsdoc/require-param */
+/* eslint-disable jsdoc/require-param-description */
+/* eslint-disable jsdoc/require-returns */
 
 (function aliExpressAio () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
@@ -29,40 +30,40 @@
   }
   /** @param {HTMLElement} element */
   function processProductCard (element) {
-    /** @type HTMLImageElement | null */
+    /** @type {HTMLImageElement | null} */
     const img = element.querySelector('.item-img, img')
     if (!img?.src)
       return utils.error('cannot find image on card el', element)
     extendsImage(img)
-    /** @type HTMLElement | null */
+    /** @type {HTMLImageElement | null} */
     const wrapper = img.closest('.product-img, a')
     if (!wrapper) return utils.error('failed to find wrapper of', img)
     wrapper.style.height = 'inherit'
     wrapper.style.width = 'inherit'
     element.style.display = 'flex'
-    /** @type HTMLElement | null */
+    /** @type {HTMLImageElement | null} */
     const zone = element.querySelector('.right-zone')
     if (!zone) return utils.error('cannot find zone on card el', element)
     zone.style.paddingLeft = '16px'
     zone.style.marginTop = '16px'
-    /** @type HTMLElement | null */// @ts-ignore
+    /** @type {HTMLImageElement | null} */// @ts-ignore
     const sibling = zone.previousElementSibling
     if (sibling) sibling.style.width = '80%'
     element.classList.add('ali-aio-handled')
   }
   /** @param {HTMLElement} element */
   function processItemRow (element) {
-    /** @type HTMLImageElement | null */
+    /** @type {HTMLImageElement | null} */
     const img = element.querySelector('.pic-core')
     if (!img?.src) return utils.error('cannot find image on row el', element)
     utils.log('image src was', img.src)
     extendsImage(img, 500)
     utils.log('now image src is', img.src)
-    /** @type HTMLElement | null */
+    /** @type {HTMLImageElement | null} */
     let wrapper = img.closest('.pic')
     if (!wrapper) return utils.error('failed to find wrapper of', img)
     wrapper.style.height = 'inherit'
-    wrapper.style.width = 'inherit'
+    wrapper.style.width = 'inherit' // @ts-ignore
     wrapper = wrapper.parentElement // @ts-ignore
     wrapper.style.height = 'inherit' // @ts-ignore
     wrapper.style.width = 'inherit'
@@ -78,14 +79,23 @@
   function all (selector) {
     return Array.from(document.querySelectorAll(selector))
   }
+  /**
+   * Process the product cards
+   */
   const processProductCards = () =>
     all('.list.product-card:not(.ali-aio-handled)').map((element) =>
       processProductCard(element),
     )
+  /**
+   * Process the item rows
+   */
   const processItemRows = () =>
     all('.items-list > .item:not(.ali-aio-handled)').map((element) =>
       processItemRow(element),
     )
+  /**
+   * Process the page
+   */
   const process = () => {
     utils.log('process...')
     processProductCards()

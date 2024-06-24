@@ -12,9 +12,8 @@
 // @grant        none
 // ==/UserScript==
 
-/* eslint-disable no-param-reassign */
-
 // @ts-nocheck
+/* eslint-disable jsdoc/require-jsdoc */
 
 // eslint-disable-next-line max-statements
 (function g2aBatchCompare () {
@@ -58,11 +57,9 @@
   function injectStyles (string = '') {
     if (string.length === 0) { utils.log('cannot inject empty style stuff'); return }
     if (string.includes('://') && string.includes('.css')) {
-      // eslint-disable-next-line no-unsanitized/method
       document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
       return
     }
-    // eslint-disable-next-line no-unsanitized/method
     document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
   }
   function generateTable () {
@@ -97,7 +94,7 @@
     injectStyles('https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css')
     const dataTable = new window.simpleDatatables.DataTable(`#${table.id}`, {
       columns: [
-        // eslint-disable-next-line no-magic-numbers, @typescript-eslint/naming-convention
+        // eslint-disable-next-line no-magic-numbers
         { select: [1, 2, 4], sortable: false },
         { hidden: true, render: value => (value === '0' ? '?' : value), select: 3, sort: 'asc' }, // raw price
       ],
@@ -116,15 +113,17 @@
     if (data === undefined || data.items === undefined || data.items.length === 0) return
     let lowestPrice = 0
     let lowestUrl = ''
-    data.items.forEach(result => {
-      if (!/\b(?:europe|euw|global)\b/iu.test(result.name)) { utils.log('incorrect right ?', result.name); return }
-      if (!same(game.title, result.name)) return
+    for (const result of data.items) {
+      if (!/\b(?:europe|euw|global)\b/iu.test(result.name)) { utils.log('incorrect right ?', result.name); continue }
+      if (!same(game.title, result.name)) continue
       if (lowestPrice === undefined || result.price < lowestPrice) {
         lowestPrice = result.price
         lowestUrl = result.href
       }
-    })
+    }
+    // eslint-disable-next-line require-atomic-updates
     game.priceLocal = lowestPrice
+    // eslint-disable-next-line require-atomic-updates
     game.priceLocalUrl = lowestUrl
   }
   async function getLocalPrices (progress) {
@@ -155,7 +154,7 @@
     const button = document.createElement('button')
     button.textContent = `Compare ${list.length} prices`
     button.style = 'position: fixed; cursor: pointer; top: 70px; right: 20px; padding: 10px 24px; font-size: 20px; z-index: 50; '
-    button.addEventListener('click', () => { void showModal() })
+    button.addEventListener('click', () => { showModal() })
     document.body.append(button)
   }
   async function init () {
@@ -165,5 +164,5 @@
     utils.log('got list from clipboard', list)
     injectButton()
   }
-  void utils.onPageChange(init)
+  utils.onPageChange(init)
 })()
