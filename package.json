@@ -7,7 +7,7 @@
     "@custom/eslint-plugin": "link:lint",
     "@types/node": "20",
     "eslint": "*",
-    "eslint-plugin-shuunen": "0.0.5",
+    "eslint-plugin-shuunen": "0.1.1",
     "eslint-plugin-userscripts": "0.5",
     "repo-check": "1.36",
     "shuutils": "8.0",
