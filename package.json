@@ -10,7 +10,7 @@
     "eslint-plugin-shuunen": "0.0.5",
     "eslint-plugin-userscripts": "0.5",
     "repo-check": "1.36",
-    "shuutils": "8.0",
+    "shuutils": "8.1",
     "tailwindcss": "3.4",
     "typescript": "5.5",
     "vitest": "1.6"
