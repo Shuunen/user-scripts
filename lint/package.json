@@ -2,7 +2,7 @@
   "main": "index.js",
   "name": "@custom/eslint-plugin",
   "peerDependencies": {
-    "eslint": "^8"
+    "eslint": "^9.0.0"
   },
   "scripts": {
     "test": "node test && echo test success"
