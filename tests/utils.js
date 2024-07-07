@@ -1,14 +1,14 @@
- 
+
 import { expect, it } from 'vitest'
 
 /**
  * Check if the actual value is equal to the expected value
- * @param title the title of the test
- * @param actual the actual value
- * @param expected the expected value
- * @returns nothing
+ * @param {string} title the title of the test
+ * @param {Promise<Function> | string | number} actual the actual value
+ * @param {Promise<Function> | string | number} expected the expected value
+ * @returns {void}
  */
-export function check<Type> (title: string, actual: Promise<Type> | Type, expected?: Promise<Type> | Type) {
+export function check (title, actual, expected) {
   if (actual instanceof Promise) return it(title, async () => {
     if (expected instanceof Promise) return expect(await actual).toBe(await expected)
     return expect(await actual).toBe(expected)

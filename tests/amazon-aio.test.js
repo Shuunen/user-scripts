@@ -1,13 +1,21 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable camelcase */
 import { expect, it } from 'vitest'
 import { maxScore, score, score20Styled } from '../src/amazon-aio.user.js'
-import { check } from './utils'
+import { check } from './utils.js'
 
-// eslint-disable-next-line @typescript-eslint/max-params
-function checkGreaterThan (title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number) {
-  const scoreA = score(ratingA, reviewsA) as number // eslint-disable-line @typescript-eslint/consistent-type-assertions
-  const scoreB = score(ratingB, reviewsB) as number // eslint-disable-line @typescript-eslint/consistent-type-assertions
+/**
+ * Checks if the score calculated from rating and reviews for two items is greater for the first item.
+ * @param {string} title - The title of the test case.
+ * @param {number} ratingA - The rating of the first item.
+ * @param {number} reviewsA - The number of reviews for the first item.
+ * @param {number} ratingB - The rating of the second item.
+ * @param {number} reviewsB - The number of reviews for the second item.
+ * @returns {void}
+ */
+// eslint-disable-next-line max-params
+function checkGreaterThan (title, ratingA, reviewsA, ratingB, reviewsB) {
+  const scoreA = score(ratingA, reviewsA)
+  const scoreB = Number.parseFloat(score(ratingB, reviewsB).toString())
   it(`${title}, expect ${score(ratingA, reviewsA, true)} to be greater than ${score(ratingB, reviewsB, true)}`, () => {
     expect(scoreA).toBeGreaterThan(scoreB)
   })

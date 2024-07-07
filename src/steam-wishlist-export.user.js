@@ -27,6 +27,7 @@
    * @param {HTMLElement} row - The row element containing the game data.
    * @returns {{ id: string, img: string, price: number, title: string }} - The game data.
    */
+  // eslint-disable-next-line complexity
   function getGameData (row) {
     row.classList.add(utils.id)
     row.scrollIntoView()

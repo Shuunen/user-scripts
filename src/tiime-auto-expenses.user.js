@@ -179,6 +179,7 @@ function createButton (label = '') {
   /**
    * Add multiple expenses from the clipboard
    */
+  // eslint-disable-next-line complexity
   async function addExpenses () {
     const lines = await utils.readClipboard()
     if (lines.trim() === '') { utils.showError('no data found in clipboard'); return }

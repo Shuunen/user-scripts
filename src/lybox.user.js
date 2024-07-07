@@ -16,6 +16,7 @@
 (function LyBoxEnhanced () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('lyb-enhanced')
+  // eslint-disable-next-line no-restricted-syntax
   class Store {
     constructor (provider) {
       this.provider = provider

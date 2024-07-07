@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { Shuutils } from '../src/utils' // eslint-disable-line @typescript-eslint/no-shadow
+import { Shuutils } from '../src/utils'
 import { check } from './utils'
 
 const utils = new Shuutils('tst')

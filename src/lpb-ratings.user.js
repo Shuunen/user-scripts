@@ -463,6 +463,7 @@ function lePetitBallonRatings () {
       else node.style.display = 'none'
   }
 
+  // eslint-disable-next-line complexity
   function searchRating (wine = '') {
     const results = fuse.search(wine)
     if (results.length === 0) return { isMatching: false }

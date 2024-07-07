@@ -5,6 +5,7 @@
 /**
  * Collection of utility functions to help with common tasks in my user scripts.
  */
+// eslint-disable-next-line no-restricted-syntax
 class Shuutils {
   id = ''
   version = '2.4.0'
@@ -196,6 +197,7 @@ class Shuutils {
    * @example utils.findAll('div') // returns all div found
    * @example utils.findAll('.not-exits') // returns an empty array
    */
+  // eslint-disable-next-line complexity
   findAll (selector, scope = document, canFail = false) {
     if (!selector || selector.length === 0 || selector.length === 1) this.error('incorrect selector : ', selector)
     const items = Array.prototype.slice.call(scope.querySelectorAll(selector))

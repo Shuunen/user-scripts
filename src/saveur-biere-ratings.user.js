@@ -58,7 +58,7 @@ function cleanTitle (title) {
     element.classList.add(utils.id)
     element.parentElement.style.height = 'auto'
   }
-  // eslint-disable-next-line max-statements, consistent-return
+  // eslint-disable-next-line max-statements, consistent-return, complexity
   async function fetchRating (item) {
     const titleElement = utils.findOne(selectors.title, item)
     if (titleElement === null) return utils.error('cant find item title')

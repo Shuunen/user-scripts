@@ -9,6 +9,7 @@ module.exports = [
   ...shuunen.configs.base,
   ...shuunen.configs.browser,
   ...shuunen.configs.node,
+  // ...shuunen.configs.typescript, // add me when you have a big hour to fix the 1300+ errors ^^''
   {
     languageOptions: {
       globals: {

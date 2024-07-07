@@ -29,6 +29,7 @@
       number: String(index + 1),
     }))
   }
+  // eslint-disable-next-line complexity
   function mbImport () {
     const data = {
       app: {

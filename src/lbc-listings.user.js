@@ -283,6 +283,7 @@ const citiesToHide = new Set([
    * @param {LbcCarAd} ad the car ad to process
    * @returns {LbcCustomInfo[]} the custom infos
    */
+  // eslint-disable-next-line complexity
   function getCustomInfosCar (ad) {
     /** @type {LbcCustomInfo[]} */
     const infos = [getOwnerInfo(ad, false)]
