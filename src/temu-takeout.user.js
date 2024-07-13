@@ -4,7 +4,7 @@
 // @namespace    https://github.com/Shuunen
 // @match        https://www.temu.*/*
 // @grant        none
-// @version      1.0.0
+// @version      1.1.0
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/mb-import-utils.js
 // @author       Shuunen
@@ -24,18 +24,47 @@
     utils.showSuccess('Data copied to clipboard')
   }
   /**
+   * Get the data from the page.
+   * @returns {Record<'brand' | 'details' | 'name' | 'photo' | 'price' | 'reference', string>} The data.
+   */
+  function getData () {
+    /* global rawData */// @ts-expect-error rawData is not defined but exists in the page
+    const { store } = rawData
+    if (store === undefined) throw new Error('No rawData.store in window')
+    if (store.googleShoppingJson !== undefined) {
+      const data = JSON.parse(store.googleShoppingJson)
+      return {
+        brand: data.brand.name,
+        details: data.description,
+        name: data.name,
+        photo: data.image,
+        price: data.offers.price,
+        reference: data.sku,
+      }
+    }
+    return {
+      brand: 'Temu',
+      details: store.seoPageAltInfo.pageAlt,
+      name: store.seoPageAltInfo.pageAlt,
+      photo: store.goods.hdThumbUrl,
+      price: String(store.goods.minOnSalePrice / 100), // eslint-disable-line no-magic-numbers
+      reference: store.goods.itemId,
+    }
+  }
+  /**
    * Start the takeout process.
    */
+  // eslint-disable-next-line max-statements
   function startTakeout () {
-    /* global rawData */// @ts-expect-error rawData is not defined but exists in the page
-    const data = JSON.parse(rawData.store.googleShoppingJson)
+    const data = getData()
+    utils.log('found data', data)
     const form = createMbForm({ id: utils.id, title: 'Temu Takeout' }, onSubmit)
     addMbField(form, 'name', data.name)
-    addMbField(form, 'details', data.description)
-    addMbField(form, 'reference', data.sku)
-    addMbField(form, 'photo', data.image)
-    addMbField(form, 'brand', data.brand.name)
-    addMbField(form, 'price', Math.round(Number.parseFloat(data.offers.price.replace(',', '.'))).toString())
+    addMbField(form, 'details', data.details)
+    addMbField(form, 'reference', data.reference)
+    addMbField(form, 'photo', data.photo)
+    addMbField(form, 'brand', data.brand)
+    addMbField(form, 'price', Math.round(Number.parseFloat(data.price.replace(',', '.'))).toString())
     addMbSubmit(form, 'Copy to clipboard')
     document.body.append(form)
   }
