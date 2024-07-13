@@ -1,0 +1,13 @@
+{
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "foo": "readonly"
+  },
+  "rules": {
+    "unicorn/prefer-string-replace-all": "off",
+    "tree_shaking/no-side-effects-in-initialization": "off"
+  },
+  "settings": {}
+}
