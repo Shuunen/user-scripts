@@ -1,3 +1,4 @@
+// biome-ignore lint/suspicious/noRedundantUseStrict: <explanation>
 'use strict'
 
 // @ts-expect-error missing types
