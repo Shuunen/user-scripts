@@ -2,7 +2,7 @@
 // @name         Text Guard
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/text-guard.user.js
 // @namespace    https://github.com/Shuunen
-// @version      1.0.1
+// @version      1.0.2
 // @description  Check the text of the current page, show alerts if it contains weird/forbidden words
 // @author       Romain Racamier-Lafon
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
@@ -138,17 +138,19 @@
   const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
   initDebounced()
   /**
-   * Handles the DOM insert event.
-   * @param {Event} event - The DOM insert event.
+   * Handles page mutations
+   * @param {MutationRecord[]} mutations the mutations that occurred
    */
-  function onDomInsert (event) {
-    const { target } = event
-    if (target === null) return
+  function onMutation (mutations) {
+    // const { target } = event
+    const target = mutations[0]?.target
+    if (target === null || target === undefined) return
     if (!(target instanceof HTMLElement)) return
     if (elementExceptions.has(target.tagName.toLowerCase())) return
     if (target.className.includes('notyf') || target.className.includes('shu-toast')) return
-    // utils.debug(target)
+    // utils.debug('mutation detected', mutations[0])
     initDebounced()
   }
-  window.addEventListener('DOMNodeInserted', onDomInsert)
+  const observer = new MutationObserver(onMutation)
+  observer.observe(document.body, { childList: true, subtree: true })
 })()
