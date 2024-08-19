@@ -42,6 +42,8 @@
         reference: data.sku,
       }
     }
+    if (store.seoPageAltInfo === undefined) throw new Error('No rawData.store.seoPageAltInfo in window')
+    if (store.goods === undefined) throw new Error('No rawData.store.goods in window')
     return {
       brand: 'Temu',
       details: store.seoPageAltInfo.pageAlt,
