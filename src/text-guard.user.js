@@ -143,12 +143,12 @@
    */
   function onMutation (mutations) {
     // const { target } = event
-    const target = mutations[0]?.target
-    if (target === null || target === undefined) return
-    if (!(target instanceof HTMLElement)) return
-    if (elementExceptions.has(target.tagName.toLowerCase())) return
-    if (target.className.includes('notyf') || target.className.includes('shu-toast')) return
-    // utils.debug('mutation detected', mutations[0])
+    const element = mutations[0]?.addedNodes[0]
+    if (element === null || element === undefined) return
+    if (!(element instanceof HTMLElement)) return
+    if (elementExceptions.has(element.tagName.toLowerCase())) return
+    if (element.className.includes('notyf') || element.className.includes('shu-toast')) return
+    utils.debug('mutation detected', mutations[0])
     initDebounced()
   }
   const observer = new MutationObserver(onMutation)
