@@ -11,6 +11,8 @@
 
 /* eslint-disable max-statements */
 
+const id = 'tim-aex'
+
 /**
  * Create a button element
  * @param {string} label the button label
@@ -18,6 +20,7 @@
  */
 function createButton (label = '') {
   const button = document.createElement('button')
+  button.id = id
   button.textContent = label
   button.type = 'button'
   button.setAttribute('tiime-button', '')
@@ -25,10 +28,11 @@ function createButton (label = '') {
 }
 
 (function TiimeAutoExpenses () {
-  let addOneButton = document.createElement('button')
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils('tim-aex')
-  utils.injectStyles('https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css')
+  const utils = new Shuutils(id)
+  const elements = {
+    addOneButton: createButton(''),
+  }
   const selectors = {
     addExpenseBtn: '.right [tiime-button]',
     tableRow: 'tbody > tr',
@@ -164,7 +168,7 @@ function createButton (label = '') {
     await utils.sleep(300) // eslint-disable-line no-magic-numbers
     if (isExpenseFilled(label, amount)) { utils.log(`expense already filled : ${label}`); return }
     console.groupCollapsed(`addExpense "${label}" with ${amount}€ (${comment})`) // eslint-disable-line no-console
-    addOneButton.click()
+    elements.addOneButton.click()
     const row = await utils.waitToDetect(selectors.tableRow)
     if (row === undefined) { utils.showError('row not found'); return }
     row.classList.add(classes.tableRowActive)
@@ -195,6 +199,7 @@ function createButton (label = '') {
       // eslint-disable-next-line no-await-in-loop
       await addExpense(label, comment, amountNumber)
     }
+    utils.showSuccess('expenses added 😎')
   }
   /**
    * Initialize the script
@@ -203,13 +208,16 @@ function createButton (label = '') {
     /** @type {HTMLButtonElement | undefined} */// @ts-ignore
     const addOne = await utils.waitToDetect(selectors.addExpenseBtn)
     if (addOne === undefined) { utils.log('no add expense button found on this page'); return }
-    addOneButton = addOne
-    const addAll = createButton('Add common expenses')
+    elements.addOneButton = addOne
+    const hasAddAll = utils.findOne(`#${id}`, document.body, true)
+    if (hasAddAll !== undefined) { utils.log('button already injected'); return }
+    const addAll = createButton('Ajouter les dépenses courantes 😎')
     addAll.addEventListener('click', () => { addExpenses() })
     if (addOne.parentElement === null) { utils.showError('button parent element not found'); return }
     addOne.parentElement.append(addAll)
-    utils.showLog('button injected, tiime-auto-expenses is ready')
+    utils.showLog('button injected')
   }
-  const initDebounced = utils.debounce(init, 300) // eslint-disable-line no-magic-numbers
+  const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
   initDebounced()
+  utils.onPageChange(initDebounced)
 })()
