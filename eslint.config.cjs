@@ -55,7 +55,7 @@ module.exports = [
     files: ['*.user.js'],
     name: 'user-scripts-userscripts-plugin',
     plugins: {
-      'userscripts': {
+      userscripts: {
         rules: userscripts.rules,
       },
     },
