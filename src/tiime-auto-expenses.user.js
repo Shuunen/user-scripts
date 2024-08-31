@@ -6,12 +6,18 @@
 // @description  Generate expenses automatically
 // @author       Romain Racamier-Lafon
 // @match        https://apps.tiime.fr/companies/*/expense/advanced-expenses
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.2/src/utils.min.js
 // ==/UserScript==
 
 /* eslint-disable max-statements */
 
 const id = 'tim-aex'
+
+const delays = {
+  large: 500,
+  medium: 300,
+  small: 100,
+}
 
 /**
  * Create a button element
@@ -101,9 +107,9 @@ function createButton (label = '') {
     input.parentElement?.click()
     input.focus()
     input.value = amount.toString()
-    await utils.sleep(100) // eslint-disable-line no-magic-numbers
+    await utils.sleep(delays.small)
     input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
-    await utils.sleep(100) // eslint-disable-line no-magic-numbers
+    await utils.sleep(delays.small)
     input.blur()
     utils.log('amount set to', input.value)
   }
@@ -127,9 +133,9 @@ function createButton (label = '') {
     const textarea = await utils.waitToDetect(selectors.textareaComment)
     if (textarea === undefined) { utils.showError('textareaComment not found'); return }
     textarea.value = comment
-    await utils.sleep(100) // eslint-disable-line no-magic-numbers
+    await utils.sleep(delays.small)
     textarea.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
-    await utils.sleep(100) // eslint-disable-line no-magic-numbers
+    await utils.sleep(delays.small)
     textarea.blur()
     const validate = await utils.waitToDetect(selectors.textareaCommentValidate)
     if (validate === undefined) { utils.showError('textareaCommentValidate not found'); return }
@@ -165,7 +171,7 @@ function createButton (label = '') {
    */
   async function addExpense (label, comment, amount) {
     // console.groupEnd() // eslint-disable-line no-console
-    await utils.sleep(300) // eslint-disable-line no-magic-numbers
+    await utils.sleep(delays.medium)
     if (isExpenseFilled(label, amount)) { utils.log(`expense already filled : ${label}`); return }
     console.groupCollapsed(`addExpense "${label}" with ${amount}€ (${comment})`) // eslint-disable-line no-console
     elements.addOneButton.click()
@@ -217,7 +223,7 @@ function createButton (label = '') {
     addOne.parentElement.append(addAll)
     utils.showLog('button injected')
   }
-  const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
+  const initDebounced = utils.debounce(init, delays.large)
   initDebounced()
   utils.onPageChange(initDebounced)
 })()
