@@ -147,7 +147,7 @@
     if (element === null || element === undefined) return
     if (!(element instanceof HTMLElement)) return
     if (elementExceptions.has(element.tagName.toLowerCase())) return
-    if (element.className.includes('notyf') || element.className.includes('shu-toast')) return
+    if (element.className.includes('shu-toast')) return
     utils.debug('mutation detected', mutations[0])
     initDebounced()
   }

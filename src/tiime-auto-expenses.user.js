@@ -7,7 +7,6 @@
 // @author       Romain Racamier-Lafon
 // @match        https://apps.tiime.fr/companies/*/expense/advanced-expenses
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
-// @require      https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js
 // ==/UserScript==
 
 /* eslint-disable max-statements */
