@@ -8,7 +8,7 @@
 // eslint-disable-next-line no-restricted-syntax
 class Shuutils {
   id = ''
-  version = '2.4.0'
+  version = '2.4.1'
   willDebug = false
   /**
    * The ShuUserScriptUtils constructor
@@ -29,16 +29,17 @@ class Shuutils {
    * @param {number} padding - The padding in pixels between the toast and the bottom of the window.
    * @example utils.#toastAdd('error', 'hello world', 4000, 20)
    */
-  // eslint-disable-next-line max-params
-  #toastAdd (type, message, delay = 0, padding = 20) {
+  // eslint-disable-next-line max-params, max-statements
+  #toastAdd (type, message, delay = 0, padding = 14) {
     const element = document.createElement('div')
     element.setAttribute('class', 'shu-toast')
     const last = document.querySelector('.shu-toast:nth-last-child(1 of .shu-toast)')?.getBoundingClientRect().top
     const bottom = last ? window.innerHeight - last : 0
-    const background = type === 'success' ? 'forestgreen' : 'firebrick'
+    const backgrounds = type === 'success' ? ['MediumSeaGreen', 'SeaGreen'] : ['FireBrick', 'Brown']
     const icon = type === 'success' ? '✔' : '✖' // @ts-ignore it works (๑◕ܫ◕๑)
-    element.style = `position: fixed; display: flex; align-items: center; gap: 8px; bottom: ${bottom + padding}px; right: 20px; z-index: 99999; padding: 5px 14px 6px 10px; background-color: ${background}; color: white; border-radius: 7px; box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5); font-size: 18px; transition: transform 0.2s ease-in-out; transform: translateX(300px);`
-    element.innerHTML = `<span style="border-radius: 50%; border: 1px solid #ffffff90; width: 20px; height: 20px; text-align: center; font-size: 12px;">${icon}</span><span style="margin-top: -1px;">${message}</span>`
+    const iconStyle = type === 'success' ? 'line-height: 21px; text-indent: 1px;' : 'line-height: 21.5px;' // @ts-ignore it works (๑◕ܫ◕๑)
+    element.style = `position: fixed; display: flex; align-items: center; gap: 9px; bottom: ${bottom + padding}px; right: ${padding}px; z-index: 99999; padding: 12px 20px 11px 14px; background: linear-gradient(45deg, ${backgrounds[0]}, 20%, ${backgrounds[1]}); color: white; border-radius: 5px; box-shadow: 0 3px 7px 0 rgba(0,0,0,.5); font-size: 18px; opacity: 0; transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; transform: translateX(300px);`
+    element.innerHTML = `<span style="${iconStyle}border-radius: 50%; color: ${backgrounds[1]}; background-color: #ffffff90; width: 20px; height: 20px; text-align: center; font-weight: bolder; font-size: 12px;">${icon}</span><span style="margin-top: -1px;">${message}</span>`
     this.#toastShow(element)
     if (delay > 0) setTimeout(() => this.#toastHide(element), delay)
   }
@@ -48,6 +49,7 @@ class Shuutils {
    * @param {number} [delay] - The delay in milliseconds before removing the element.
    */
   #toastHide (element, delay = 200) {
+    element.style.opacity = '0'
     element.style.transform = 'translateX(300px)'
     setTimeout(() => { element.remove() }, delay)
   }
@@ -58,7 +60,10 @@ class Shuutils {
    */
   #toastShow (element, delay = 100) {
     document.body.append(element)
-    setTimeout(() => { element.style.transform = 'translateX(0)' }, delay)
+    setTimeout(() => {
+      element.style.opacity = '1'
+      element.style.transform = 'translateX(0)'
+    }, delay)
   }
   /**
    * Animate an element with animate.css
@@ -259,12 +264,6 @@ class Shuutils {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
     console.log(...stuff) // eslint-disable-line no-console
   }
-  /**
-   * Adds a toast notification to the document body.
-   * @param {string} type - The type of the toast notification.
-   * @param {string} message - The message to be displayed in the toast notification.
-   * @param {number} delay - The delay in milliseconds before the toast notification is removed.
-   */
   /**
    * Wait for location.href to change and call a callback
    * @param {Function} callback the callback to call when location.href changes
