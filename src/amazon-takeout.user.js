@@ -15,7 +15,7 @@
 
 (function AmazonTakeout () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils('amz-tko', true)
+  const utils = new Shuutils('amz-tko')
   const selectors = {
     brand: '.po-brand .po-break-word',
     details: '#productTitle',

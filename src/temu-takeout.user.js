@@ -13,7 +13,7 @@
 
 (function TemuTakeout () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils('ldl-tko', true)
+  const utils = new Shuutils('ldl-tko')
   /**
    * Handles the form submission event.
    * @param {object} values - The form values.

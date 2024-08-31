@@ -16,7 +16,7 @@
 
 (function AliExpressTakeout () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils('alx-tko', true)
+  const utils = new Shuutils('alx-tko')
   const selectors = {
     details: '[data-pl="product-title"]',
     name: '[data-pl="product-title"]',

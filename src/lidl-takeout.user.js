@@ -14,7 +14,7 @@
 // eslint-disable-next-line max-statements
 (function LidlTakeout () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils('ldl-tko', true)
+  const utils = new Shuutils('ldl-tko')
   const selectors = {
     details: '.keyfacts__title',
     name: '.keyfacts__title',
