@@ -205,6 +205,7 @@
    */
   function cleanDlcName (name = '') {
     return name
+      // biome-ignore lint/suspicious/noMisleadingCharacterClass: <explanation>
       .normalize('NFD').replace(/[\u0300-\u036F]/gu, '') // remove accents
       .replace(/\W/gu, ' ') // remove non word characters
       .replace(/\s+/gu, ' ').trim() // remove multiple spaces

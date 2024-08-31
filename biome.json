@@ -8,6 +8,12 @@
   "linter": {
     "enabled": true,
     "rules": {
+      "suspicious": {
+        "noRedundantUseStrict": "off"
+      },
+      "complexity": {
+        "useSimpleNumberKeys": "off"
+      },
       "recommended": true
     }
   },
