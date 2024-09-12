@@ -4,7 +4,7 @@
   "bugs": "https://github.com/Shuunen/user-scripts/issues",
   "description": "personal heavily opinionated script I make to enhance my daily web experience",
   "devDependencies": {
-    "@biomejs/biome": "1.8",
+    "@biomejs/biome": "1.9",
     "@custom/eslint-plugin": "link:lint",
     "@types/node": "20",
     "eslint": "*",
