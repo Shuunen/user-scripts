@@ -4,7 +4,7 @@
 // @namespace    https://github.com/Shuunen
 // @match        https://www.aliexpress.*/*
 // @grant        none
-// @version      1.0.0
+// @version      1.0.1
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/mb-import-utils.js
 // @author       Shuunen
@@ -57,7 +57,6 @@
     /** @type {HTMLElement | null} */// @ts-ignore
     const { target } = event
     if (target === null) return
-    if ('className' in target && !target.className.includes('sku-item--selected')) { utils.log('waiting for the product image thumbnail click'); return }
     const photo = await utils.waitToDetect(selectors.photo)
     if (photo === undefined) { utils.showError('failed to find product photo on this page'); return }
     startTakeout()
