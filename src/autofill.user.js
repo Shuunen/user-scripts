@@ -4,15 +4,22 @@
 // @namespace    https://github.com/Shuunen
 // @version      1.0.3
 // @description  Simply fill your login everywhere
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
 // @author       Romain Racamier-Lafon
 // ==/UserScript==
 
+// eslint-disable-next-line max-statements
 (function AutofillLogin () {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('auto-fill')
+  const data = {
+    email: atob('cm9tYWluLnJhY2FtaWVyQGdtYWlsLmNvbQ=='),
+    phone: atob('NjU4NDc2Nzg4'),
+  }
   const selectors = {
-    input: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
+    login: 'input[id*="mail"], input[name*="mail"], input[name*="ogin"], input[type*="mail"], input[name*="user"], input[name*="ident"]',
+    phone: 'input[type*="phone"], input[name*="phone"], input[name*="mobile"], input[name*="tel"], input[inputmode="tel"]',
+    phoneCountry: '[id="areaCode-+33"]',
   }
   /**
    * Trigger a change event on an input element
@@ -24,21 +31,47 @@
     element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
   }
   /**
-   * Fill the login input with the email
-   * @param {string} email the email to fill
+   * Get the inputs matching the selector
+   * @param {string} selector the selector to match
+   * @returns {HTMLInputElement[]} the inputs if any
    */
-  function fill (email = 'romain.racamier@gmail.com') {
-    utils.log('autofill start')
+  function getInputs (selector) {
     // @ts-ignore
-    for (const input of utils.findAll(selectors.input)) {
-      // @ts-ignore
+    return utils.findAll(selector)
+  }
+  /**
+   * Fill the login input with the email
+   */
+  function fillLogin () {
+    for (const input of getInputs(selectors.login)) {
       if (input.type === 'password' || input.value.length > 0) continue
-      // @ts-ignore
-      input.value = email
-      // @ts-ignore
+      input.value = data.email
       triggerChange(input)
-      utils.log('filled', input)
+      utils.log('filled login', input)
     }
+  }
+  /**
+   * Fill the phone input with the phone number
+   */
+  function fillPhone () {
+    // select the right country before filling the phone
+    const country = utils.findOne(selectors.phoneCountry)
+    if (country === undefined) { utils.log('no country selector found'); return }
+    country.click()
+    for (const input of getInputs(selectors.phone)) {
+      if (input.value.length > 0) continue
+      input.value = data.phone
+      triggerChange(input)
+      utils.log('filled phone', input)
+    }
+  }
+  /**
+   * Fill the various handled inputs
+   */
+  function fill () {
+    utils.log('autofill start...')
+    fillLogin()
+    fillPhone()
   }
   /**
    * Init the autofill
