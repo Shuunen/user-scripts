@@ -2,7 +2,7 @@
 // @name         Autofill
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/autofill.user.js
 // @namespace    https://github.com/Shuunen
-// @version      1.0.3
+// @version      1.0.4
 // @description  Simply fill your login everywhere
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
 // @author       Romain Racamier-Lafon
@@ -35,9 +35,8 @@
    * @param {string} selector the selector to match
    * @returns {HTMLInputElement[]} the inputs if any
    */
-  function getInputs (selector) {
-    // @ts-ignore
-    return utils.findAll(selector)
+  function getInputs (selector) { // @ts-ignore
+    return utils.findAll(selector, document, true)
   }
   /**
    * Fill the login input with the email
@@ -55,8 +54,8 @@
    */
   function fillPhone () {
     // select the right country before filling the phone
-    const country = utils.findOne(selectors.phoneCountry)
-    if (country === undefined) { utils.log('no country selector found'); return }
+    const country = utils.findOne(selectors.phoneCountry, document, true)
+    if (country === undefined) { utils.debug('no country selector found'); return }
     country.click()
     for (const input of getInputs(selectors.phone)) {
       if (input.value.length > 0) continue
@@ -66,20 +65,14 @@
     }
   }
   /**
-   * Fill the various handled inputs
+   * Init the autofill
    */
-  function fill () {
+  function init () {
     utils.log('autofill start...')
     fillLogin()
     fillPhone()
   }
-  /**
-   * Init the autofill
-   */
-  function init () {
-    setTimeout(fill, 1000) // eslint-disable-line no-magic-numbers
-    setTimeout(fill, 3000) // eslint-disable-line no-magic-numbers
-  }
+  const initDebounced = utils.debounce(init, 1000) // eslint-disable-line no-magic-numbers
   if (document.location.hostname === 'localhost') return
-  utils.onPageChange(init)
+  utils.onPageChange(() => initDebounced())
 })()
