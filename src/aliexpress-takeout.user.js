@@ -2,7 +2,7 @@
 // @name         AliExpress Takeout - Get data with you
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-takeout.user.js
 // @namespace    https://github.com/Shuunen
-// @match        https://www.aliexpress.*/*
+// @match        https://*.aliexpress.*/*
 // @grant        none
 // @version      1.0.1
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
@@ -54,9 +54,11 @@
   }
   /** @param {MouseEvent} event the click event */
   async function init (event) {
+    utils.debug('init')
     /** @type {HTMLElement | null} */// @ts-ignore
     const { target } = event
     if (target === null) return
+    if (!target.className.includes('image')) return
     const photo = await utils.waitToDetect(selectors.photo)
     if (photo === undefined) { utils.showError('failed to find product photo on this page'); return }
     startTakeout()
