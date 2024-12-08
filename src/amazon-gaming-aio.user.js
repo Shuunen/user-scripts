@@ -12,7 +12,7 @@
 
 // eslint-disable-next-line max-statements
 (function amazonGamingAio () {
-  if (typeof window === 'undefined') return
+  if (globalThis.matchMedia === undefined) return
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('amz-gm-aio')
   // non word characters will be removed
@@ -254,7 +254,7 @@
 
   utils.onPageChange(() => processDebounced('page-change'))
 
-  window.addEventListener('scroll', () => processDebounced('scroll'))
+  globalThis.addEventListener('scroll', () => processDebounced('scroll'))
 
-  window.addEventListener('DOMNodeInserted', (event) => processDebounced(`dom-node-inserted:${ /** @type {HTMLElement} */ (event.target)?.className || 'unknown'}`))
+  globalThis.addEventListener('DOMNodeInserted', (event) => processDebounced(`dom-node-inserted:${ /** @type {HTMLElement} */ (event.target)?.className || 'unknown'}`))
 })()

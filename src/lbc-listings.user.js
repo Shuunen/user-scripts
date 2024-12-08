@@ -434,8 +434,8 @@ const citiesToHide = new Set([
 
 
   const processDebounced = utils.debounce(process, 1000)
-  window.addEventListener('scroll', () => processDebounced())
-  window.addEventListener('load', () => processDebounced())
+  globalThis.addEventListener('scroll', () => processDebounced())
+  globalThis.addEventListener('load', () => processDebounced())
 })()
 
 

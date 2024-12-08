@@ -89,20 +89,20 @@ function getScoreForResolution (resolution, score) {
 }
 
 const scoresByKeyword = {
-  ' tn ': 50,
-  'FHD': 30,
-  'Full HD': 30,
-  'Keyboard Light': 70,
-  'NvmE': 80,
-  'Oled': 70,
   'backlit': 70,
+  'FHD': 30,
   'fingerprint': 70,
+  'Full HD': 30,
   'gtx': 70,
+  'Keyboard Light': 70,
   'led': 70,
   'lock': 70,
+  'NvmE': 80,
+  'Oled': 70,
   'power delivery': 70,
   'rtx': 70,
   'ssd': 70,
+  ' tn ': 50,
   ...getScoreForResolution('1080', 30),
   ...getScoreForResolution('1200', 60),
   ...getScoreForResolution('1440', 70),
@@ -408,7 +408,7 @@ function laptopHelper () {
       link.parentElement.addEventListener('mouseup', event => {
         if (event.button !== 1) return
         event.preventDefault()
-        window.open(base64ToString(link.dataset.url), '_blank')
+        globalThis.open(base64ToString(link.dataset.url), '_blank')
       })
       link.removeAttribute('title')
     }

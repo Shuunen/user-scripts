@@ -64,7 +64,7 @@ const score20Styled = (rating, reviews) => {
 }
 
 (function amazonAio () {
-  if (typeof window === 'undefined') return
+  if (globalThis.matchMedia === undefined) return
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('amz-aio')
   const selectors = {
@@ -183,7 +183,7 @@ const score20Styled = (rating, reviews) => {
   }
   const processDebounced = utils.debounce(process, 500)
   utils.onPageChange(processDebounced)
-  window.addEventListener('scroll', () => processDebounced())
+  globalThis.addEventListener('scroll', () => processDebounced())
 })()
 
 if (module) module.exports = {

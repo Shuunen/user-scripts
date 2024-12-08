@@ -38,7 +38,7 @@
     row.append(element)
     row.classList.add('kpm-handled')
   }
-  window.addEventListener('DOMNodeInserted', event => {
+  globalThis.addEventListener('DOMNodeInserted', event => {
     if (!event.relatedNode.matches('ul[id^=match-history]')) return
     const rows = utils.findAll('div[id^=game-summary]:not(.kpm-handled)', event.relatedNode, true)
     for (const row of rows) showKpmOnRow(row)

@@ -92,7 +92,7 @@
   }
   function enhanceTable (table) {
     injectStyles('https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css')
-    const dataTable = new window.simpleDatatables.DataTable(`#${table.id}`, {
+    const dataTable = new globalThis.simpleDatatables.DataTable(`#${table.id}`, {
       columns: [
         // eslint-disable-next-line no-magic-numbers
         { select: [1, 2, 4], sortable: false },
@@ -109,7 +109,7 @@
     const search = `${utils.readableString(game.title).toLowerCase()} steam`
     game.priceLocalSearchUrl = `https://www.g2a.com/search?query=${search}`
     const url = `https://www.g2a.com/search/api/v3/suggestions?itemsPerPage=5&phrase=${search}&currency=EUR&variantCategory=189`
-    const { data } = await window.fetch(url).then(async response => await response.json())
+    const { data } = await globalThis.fetch(url).then(async response => await response.json())
     if (data === undefined || data.items === undefined || data.items.length === 0) return
     let lowestPrice = 0
     let lowestUrl = ''

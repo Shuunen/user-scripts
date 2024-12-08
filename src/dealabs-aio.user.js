@@ -19,7 +19,7 @@
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('dlb-clr')
   /** @type {string[]} */
-  let excluders = (window.localStorage[`${utils.id}.filter`] || 'my-keyword, other-keyword').split(',')
+  let excluders = (globalThis.localStorage[`${utils.id}.filter`] || 'my-keyword, other-keyword').split(',')
   let filter = ''
   const selectors = {
     deal: '.thread--type-list',
@@ -120,7 +120,7 @@
     if (excluders.length <= 0) return
     utils.log('new excluders :', excluders)
     filter = excluders.join(', ')
-    window.localStorage[`${utils.id}.filter`] = filter
+    globalThis.localStorage[`${utils.id}.filter`] = filter
     if (!isFromFilter) {
       const filterElement = utils.findOne(`.${cls.filter}`)
       // @ts-ignore

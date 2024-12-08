@@ -86,7 +86,7 @@ function getNoteIdFromNote (noteElement) {
 // @ts-nocheck
 // eslint-disable-next-line max-statements
 (function LeBonCoinNotes () {
-  if (typeof window === 'undefined') return
+  if (globalThis.matchMedia === undefined) return
   /* global tailwind, Appwrite, idbKeyval, GM_addStyle */
   /** @type {{get: IdbKeyvalNoteGetter, set: Function, clear: Function}} */ // @ts-ignore
   const { clear: clearStore, get: getNoteFromStore, set: setInStore } = idbKeyval
@@ -128,7 +128,7 @@ function getNoteIdFromNote (noteElement) {
     button.addEventListener('click', () => {
       if (!confirm('Are you sure you want to clear all notes ?')) return // eslint-disable-line no-alert
       clearStoreCallback()
-      window.location.reload()
+      globalThis.location.reload()
     })
     return button
   }
@@ -360,8 +360,8 @@ function getNoteIdFromNote (noteElement) {
     }
   `)
   const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
-  window.addEventListener('scroll', () => processDebounced('scroll-event'))
-  window.addEventListener('load', () => processDebounced('load-event'))
+  globalThis.addEventListener('scroll', () => processDebounced('scroll-event'))
+  globalThis.addEventListener('load', () => processDebounced('load-event'))
   utils.onPageChange(() => processDebounced('page-change-event'))
 })()
 

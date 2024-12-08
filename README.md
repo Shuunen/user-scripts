@@ -51,3 +51,11 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 - [Shuutils](https://github.com/Shuunen/shuutils) : collection of pure JS utils
 - [TailwindCss](https://tailwindcss.com) : awesome lib to produce maintainable style
 - [Vitest](https://github.com/vitest-dev/vitest) : super fast vite-native testing framework
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/Shuunen/user-scripts.svg?variant=adaptive)](https://starchart.cc/Shuunen/user-scripts)
+
+## Page views
+
+[![Free Website Counter](https://www.websitecounterfree.com/c.php?d=9&id=63985&s=12)](https://www.websitecounterfree.com)

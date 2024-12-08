@@ -84,7 +84,7 @@
 
       const isPositive = amountText.includes('+')
       const { bottom, right, top } = amountElement.getBoundingClientRect()
-      if (window.innerHeight < bottom) continue // avoid putting the meter outside the screen ^^
+      if (globalThis.innerHeight < bottom) continue // avoid putting the meter outside the screen ^^
       elements.meter.style.left = `${right + 20}px`
       elements.meter.style.top = `${top - 7}px`
       const amount = Number.parseFloat(amountText.replace(/[+€\s]/gu, '').replace(',', '.').trim()) * (isPositive ? 1 : -1)

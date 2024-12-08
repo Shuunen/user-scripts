@@ -102,5 +102,5 @@
     processItemRows()
   }
   const processDebounced = utils.debounce(process, 1000) // @ts-ignore
-  window.addEventListener('scroll', processDebounced)
+  globalThis.addEventListener('scroll', processDebounced)
 })()

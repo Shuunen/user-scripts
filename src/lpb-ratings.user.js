@@ -442,7 +442,7 @@ function createReview (name, rating) {
 
 // eslint-disable-next-line max-statements, max-lines-per-function
 function lePetitBallonRatings () {
-  if (typeof window === 'undefined') return
+  if (globalThis.matchMedia === undefined) return
   const fuseSettings = {
     includeScore: true,
     keys: ['title'],
@@ -503,7 +503,7 @@ function lePetitBallonRatings () {
 
   const injectRatingsDebounced = utils.debounce(injectRatings, 500)
   utils.onPageChange(init)
-  window.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
+  globalThis.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
 }
 
 lePetitBallonRatings()

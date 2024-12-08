@@ -27,9 +27,9 @@
     'localhost',
   ])
   const elementExceptions = new Set([
-    'circle', 'defs', 'ellipse', 'path', 'polygon', 'rect',
-    'svg', 'symbol', 'br', 'hr', 'iframe', 'g', 'polyline', 'use',
-    'link', 'meta', 'script', 'style', 'title', 'line', 'text',
+    'br', 'circle', 'defs', 'ellipse', 'g', 'hr',
+    'iframe', 'line', 'link', 'meta', 'path', 'polygon', 'polyline', 'rect',
+    'script', 'style', 'svg', 'symbol', 'text', 'title', 'use',
   ])
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('txt-grd')
@@ -127,7 +127,7 @@
    * Initializes the script.
    */
   function init () {
-    if (hostExceptions.has(window.location.hostname)) return
+    if (hostExceptions.has(globalThis.location.hostname)) return
     utils.debug('start...')
     counts.forbidden = 0
     const text = document.body.textContent ?? ''

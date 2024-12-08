@@ -96,8 +96,8 @@ async function animateCss (element, animation, canRemoveAfter = true) {
     animateBadge(todayContributions !== previousContributions)
   }
   const processDebounced = utils.debounce(process, 1000) // eslint-disable-line no-magic-numbers
-  window.addEventListener('focus', () => { process('focus') })
-  window.addEventListener('click', () => processDebounced('click'))
+  globalThis.addEventListener('focus', () => { process('focus') })
+  globalThis.addEventListener('click', () => processDebounced('click'))
   utils.onPageChange(async () => await process('page-change'))
 })()
 

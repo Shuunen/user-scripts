@@ -16,7 +16,7 @@ class Shuutils {
    * @param {boolean} willDebug if true, will log more stuff
    * @example const utils = new Shuutils('lbc-dpe', true)
    */
-  constructor (id = 'shu-app', willDebug = false) {
+  constructor(id = 'shu-app', willDebug = false) {
     this.id = id
     this.willDebug = willDebug
     this.debug('using Shuutils', this.version)
@@ -34,7 +34,7 @@ class Shuutils {
     const element = document.createElement('div')
     element.setAttribute('class', 'shu-toast')
     const last = document.querySelector('.shu-toast:nth-last-child(1 of .shu-toast)')?.getBoundingClientRect().top
-    const bottom = last ? window.innerHeight - last : 0
+    const bottom = last ? globalThis.innerHeight - last : 0
     const backgrounds = type === 'success' ? ['MediumSeaGreen', 'SeaGreen'] : ['FireBrick', 'Brown']
     const icon = type === 'success' ? '✔' : '✖' // @ts-ignore it works (๑◕ܫ◕๑)
     const iconStyle = type === 'success' ? 'line-height: 21px; text-indent: 1px;' : 'line-height: 21.5px;' // @ts-ignore it works (๑◕ܫ◕๑)
@@ -305,17 +305,6 @@ class Shuutils {
     return this.round(finalScore, nbDecimals)
   }
   /**
-   * Read clipboard content
-   * @returns {Promise<string>} the clipboard content
-   * @example const text = await utils.readClipboard()
-   */
-  async readClipboard () {
-    this.log('reading clipboard...')
-    const text = await navigator.clipboard.readText()
-    this.log(`got this text from clipboard : ${this.ellipsis(text)}`)
-    return text
-  }
-  /**
    * Make a string more readable for humans
    * @param {string} string the string to sanitize
    * @returns {string} the sanitized string
@@ -328,6 +317,17 @@ class Shuutils {
       .replace(/\W/gu, ' ') // remove non words
       .replace(/\s+/gu, ' ') // replace spaces with single space
       .trim() // final trim
+  }
+  /**
+   * Read clipboard content
+   * @returns {Promise<string>} the clipboard content
+   * @example const text = await utils.readClipboard()
+   */
+  async readClipboard () {
+    this.log('reading clipboard...')
+    const text = await navigator.clipboard.readText()
+    this.log(`got this text from clipboard : ${this.ellipsis(text)}`)
+    return text
   }
   /**
    * Remove accents from a string

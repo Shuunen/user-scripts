@@ -18,7 +18,7 @@
   const utils = new Shuutils('lyb-enhanced')
   // eslint-disable-next-line no-restricted-syntax
   class Store {
-    constructor (provider) {
+    constructor(provider) {
       this.provider = provider
     }
     // eslint-disable-next-line class-methods-use-this
@@ -86,6 +86,6 @@
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 1000)
-  window.addEventListener('scroll', processDebounced)
-  window.addEventListener('load', processDebounced)
+  globalThis.addEventListener('scroll', processDebounced)
+  globalThis.addEventListener('load', processDebounced)
 })()

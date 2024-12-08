@@ -26,7 +26,7 @@
     suggestions: {},
   }
 
-  app.excluders = (window.localStorage[`${app.id}.filter`] || 'my-keyword, other-keyword').split(',')
+  app.excluders = (globalThis.localStorage[`${app.id}.filter`] || 'my-keyword, other-keyword').split(',')
 
   const cls = {
     base: app.id,
@@ -130,7 +130,7 @@
     if (app.excluders.length <= 0) return
     utils.log('new excluders :', app.excluders)
     app.filter = app.excluders.join(', ')
-    window.localStorage[`${app.id}.filter`] = app.filter
+    globalThis.localStorage[`${app.id}.filter`] = app.filter
     if (!fromFilter) {
       const filter = utils.findOne(`.${cls.filter}`)
       filter.value = app.filter

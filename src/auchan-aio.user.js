@@ -82,9 +82,9 @@
   }
 
   const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
-  window.addEventListener('focus', () => processDebounced('focus'))
-  window.addEventListener('click', () => processDebounced('click'))
-  window.addEventListener('scroll', () => processDebounced('scroll'))
+  globalThis.addEventListener('focus', () => processDebounced('focus'))
+  globalThis.addEventListener('click', () => processDebounced('click'))
+  globalThis.addEventListener('scroll', () => processDebounced('scroll'))
   utils.onPageChange(() => processDebounced('page-change'))
 
   utils.injectStyles(`

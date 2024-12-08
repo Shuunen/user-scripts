@@ -8,7 +8,7 @@
     "@custom/eslint-plugin": "link:lint",
     "@types/node": "22",
     "eslint": "*",
-    "eslint-plugin-shuunen": "0.3",
+    "eslint-plugin-shuunen": "0.4",
     "eslint-plugin-userscripts": "0.5",
     "oxlint": "0.14",
     "repo-check": "1.40",
@@ -35,7 +35,7 @@
   "scripts": {
     "check": "pnpm install && echo install success && pnpm lint && repo-check && echo repo-check success && pnpm test && echo check success",
     "lint": "pnpm lint:sh && pnpm lint:tsc && pnpm lint:biome && pnpm lint:eslint && echo lint success",
-    "lint:biome": "biome lint --write && echo lint:biome success",
+    "lint:biome": "biome check --write && echo lint:biome success",
     "lint:eslint": "eslint --cache && echo lint:eslint success",
     "lint:oxlint": "oxlint -D all -D nursery -c oxlintrc.json",
     "lint:sh": "sh ./bin/lint.sh && echo lint:sh success",

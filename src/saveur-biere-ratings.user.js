@@ -30,7 +30,7 @@ function cleanTitle (title) {
 
 // eslint-disable-next-line max-statements
 (function SaveurBiereUntappd () {
-  if (typeof window === 'undefined') return
+  if (globalThis.matchMedia === undefined) return
   // eslint-disable-next-line no-magic-numbers
   const cached = new Date().toISOString().slice(0, 7) // like 2021-11
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore

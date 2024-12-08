@@ -30,7 +30,7 @@
   function getData () {
     /* global rawData */// @ts-expect-error rawData is not defined but exists in the page
     const { store } = rawData
-    if (store === undefined) throw new Error('No rawData.store in window')
+    if (store === undefined) throw new Error('No rawData.store in page')
     if (store.googleShoppingJson !== undefined) {
       const data = JSON.parse(store.googleShoppingJson)
       return {
@@ -42,8 +42,8 @@
         reference: data.sku,
       }
     }
-    if (store.seoPageAltInfo === undefined) throw new Error('No rawData.store.seoPageAltInfo in window')
-    if (store.goods === undefined) throw new Error('No rawData.store.goods in window')
+    if (store.seoPageAltInfo === undefined) throw new Error('No rawData.store.seoPageAltInfo in page')
+    if (store.goods === undefined) throw new Error('No rawData.store.goods in page')
     return {
       brand: 'Temu',
       details: store.seoPageAltInfo.pageAlt,

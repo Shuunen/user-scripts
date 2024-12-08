@@ -25,10 +25,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2020",
-    "types": [
-      "node/fs/promises"
-    ],
+    "target": "ESNext",
     "verbatimModuleSyntax": true
   },
   "include": [

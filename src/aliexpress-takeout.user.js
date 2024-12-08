@@ -64,6 +64,6 @@
     startTakeout()
   }
   const initDebounced = utils.debounce(init, 500) // @ts-ignore
-  window.addEventListener('click', initDebounced)
+  globalThis.addEventListener('click', initDebounced)
 })()
 

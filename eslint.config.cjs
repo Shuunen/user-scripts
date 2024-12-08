@@ -15,12 +15,12 @@ module.exports = [
   {
     languageOptions: {
       globals: {
-        Shuutils: false,
         addMbField: false,
         addMbSubmit: false,
         createMbForm: false,
         insertMbForm: false,
         module: false,
+        Shuutils: false,
         textFromSelector: false,
       },
     },
