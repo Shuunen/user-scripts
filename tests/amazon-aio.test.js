@@ -104,3 +104,13 @@ const score0_20 = score20Styled(0, 0)
 check('amazon-aio 0/20 score', score0_20.score, 0)
 check('amazon-aio 0/20 score is red', score0_20.color, 'red')
 check('amazon-aio 0/20 score is small', score0_20.size, 1)
+
+it('amazon-aio from 4.4 to 5 spectrum', () => {
+  expect(score20Styled(4.4, 315).score).toBe(13)
+  expect(score20Styled(4.5, 315).score).toBe(14)
+  expect(score20Styled(4.6, 315).score).toBe(15)
+  expect(score20Styled(4.7, 315).score).toBe(16)
+  expect(score20Styled(4.8, 315).score).toBe(18)
+  expect(score20Styled(4.9, 315).score).toBe(19)
+  expect(score20Styled(5, 315).score).toBe(20)
+})
