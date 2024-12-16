@@ -8,7 +8,7 @@
 // eslint-disable-next-line no-restricted-syntax
 class Shuutils {
   id = ''
-  version = '2.4.1'
+  version = '2.5.0'
   willDebug = false
   /**
    * The ShuUserScriptUtils constructor
@@ -241,6 +241,38 @@ class Shuutils {
    */
   getRandomNumber (min = 0, max = 100) {
     return Math.floor(Math.random() * (max - min + 1) + min)
+  }
+  /**
+   * Hide an element for a reason
+   * @param {HTMLElement} element the element to hide
+   * @param {string} reason the reason why the element is hidden
+   * @returns {void}
+   */
+  hideElement (element, reason) {
+    if (this.willDebug) {
+      element.style.backgroundColor = 'red !important'
+      element.style.color = 'white !important'
+      element.style.boxShadow = '0 0 10px red'
+      element.style.opacity = '70'
+    } else {
+      element.style.display = 'none'
+      element.style.opacity = '0'
+    }
+    element.dataset.hiddenCause = reason
+  }
+  /**
+   * Hide elements for a reason
+   * @param {object} selectors the selectors to hide, like { sidebar: 'main > div > div + div', ads: '.ad, .ads' }
+   * @param {string} reason the reason why the elements are hidden
+   * @returns {void}
+   */
+  hideElements (selectors, reason) {
+    let nb = 0
+    for (const selector of Object.values(selectors)) for (const node of this.findAll(`${selector}:not([data-hidden-cause])`, document, true)) {
+      this.hideElement(node, reason)
+      nb += 1
+    }
+    if (nb > 0) this.debug(`hideUseless has hidden ${nb} elements`)
   }
   /**
    * Inject styles in the DOM
