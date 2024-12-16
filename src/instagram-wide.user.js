@@ -2,7 +2,7 @@
 // @name         Instagram Wide
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/instagram-wide.user.js
 // @namespace    https://github.com/Shuunen
-// @version      1.0.0
+// @version      1.0.1
 // @description  Improve Instagram UX
 // @author       Romain Racamier-Lafon
 // @match        https://*.instagram.com/*
@@ -59,7 +59,7 @@
   function enlargeMain () {
     const main = utils.findOne(selectors.main)
     if (main === undefined) {
-      utils.showError('Could not find main element')
+      utils.warn('Could not find main element')
       return
     }
     main.style.padding = '60px'
@@ -70,7 +70,7 @@
   function enlargeFeed () {
     const feed = utils.findOne(selectors.feed)
     if (feed === undefined) {
-      utils.showError('Could not find feed element')
+      utils.warn('Could not find feed element')
       return
     }
     feed.style.width = '100%'
@@ -80,7 +80,7 @@
   function enlargeWrappers () {
     const wrappers = utils.findAll(selectors.wrapper)
     if (wrappers.length === 0) {
-      utils.showError('Could not find wrapper elements')
+      utils.warn('Could not find wrapper elements')
       return
     }
     for (const wrapper of wrappers) {
