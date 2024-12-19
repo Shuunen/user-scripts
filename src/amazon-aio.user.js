@@ -227,7 +227,7 @@ const score20Styled = (rating, reviews) => {
    */
   function getRating (element) {
     const html = element.outerHTML
-    const value = /\d[,.]\d /u.exec(html)?.[0] ?? '0'
+    const value = /\d[,.]\d ?/u.exec(html)?.[0] ?? '0'
     const count = Number.parseFloat(value.replace(',', '.'))
     if (count === 0) utils.warn('failed to find rating in', element)
     return count
@@ -258,9 +258,9 @@ const score20Styled = (rating, reviews) => {
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
       if (!ratingSection) continue
       // @ts-ignore
-      const children = ratingSection.firstChild?.children
-      const rating = getRating(children[0])
-      const reviews = getReviews(children[1])
+      const children = Array.from(ratingSection.firstChild?.children)
+      const rating = getRating(children.at(0))
+      const reviews = getReviews(children.at(-1))
       const { color, score, size } = score20Styled(rating, reviews)
       const { scoreByCurrency, scoreSection } = generateScoreSection({ color, product, rating, reviews, score, size })
       utils.log({ rating, reviews, score, scoreByCurrency, title })
