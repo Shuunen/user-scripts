@@ -6,8 +6,8 @@
 // @match        https://www.leboncoin.fr/*
 // @name         LeBonCoin Listing Plus Plus
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.0.6
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.7
 // ==/UserScript==
 
 /* eslint-disable max-statements, no-magic-numbers */

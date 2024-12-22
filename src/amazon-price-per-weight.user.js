@@ -6,8 +6,8 @@
 // @match        https://*.amazon.fr/*
 // @name         Amazon - Price per weight
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
-// @version      1.0.7
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.8
 // ==/UserScript==
 
 // @ts-nocheck

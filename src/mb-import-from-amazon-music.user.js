@@ -6,8 +6,8 @@
 // @match        https://www.amazon.fr/*
 // @name         Amazon Music - Export to MusicBrainz
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/mb-import-utils.js
-// @version      1.0.4
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
+// @version      1.0.5
 // ==/UserScript==
 
 // @ts-nocheck

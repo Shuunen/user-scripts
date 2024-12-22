@@ -6,8 +6,8 @@
 // @match        https://*.auchan.fr/*
 // @name         Auchan - All in one
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.0.1
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.2
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

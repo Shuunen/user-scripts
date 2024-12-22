@@ -6,10 +6,10 @@
 // @match        https://www.g2a.com/*
 // @name         G2A Batch Compare
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/didyoumean/didYouMean-1.2.1.min.js
 // @require      https://cdn.jsdelivr.net/npm/simple-datatables
-// @version      1.1.1
+// @version      1.1.2
 // ==/UserScript==
 
 // @ts-nocheck
@@ -91,7 +91,7 @@
     return table
   }
   function enhanceTable (table) {
-    injectStyles('https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css')
+    injectStyles('https://cdn.jsdelivr.net/npm/simple-datatables/dist/style.css')
     const dataTable = new globalThis.simpleDatatables.DataTable(`#${table.id}`, {
       columns: [
         // eslint-disable-next-line no-magic-numbers

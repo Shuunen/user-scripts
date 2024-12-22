@@ -7,9 +7,9 @@
 // @match        https://open.spotify.com/playlist/*
 // @name         Spotify - Export to MusicBrainz
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/mb-import-utils.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.0.5
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.6
 // ==/UserScript==
 
 // @ts-nocheck

@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Autofill
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/autofill.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.4
-// @description  Simply fill your login everywhere
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
 // @author       Romain Racamier-Lafon
+// @description  Simply fill your login everywhere
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/autofill.user.js
+// @name         Autofill
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.5
 // ==/UserScript==
 
 // eslint-disable-next-line max-statements

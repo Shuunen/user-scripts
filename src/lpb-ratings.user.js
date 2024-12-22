@@ -6,9 +6,9 @@
 // @match        https://www.lepetitballon.com/*
 // @name         Le Petit Ballon - Ratings
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/fuse.js@6.6.2
-// @version      1.0.1
+// @version      1.0.2
 // ==/UserScript==
 
 // @ts-nocheck

@@ -6,8 +6,8 @@
 // @match        https://photos.google.com/*
 // @name         Google Photos - Easy Delete
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
-// @version      1.0.5
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.6
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

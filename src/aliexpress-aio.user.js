@@ -6,8 +6,8 @@
 // @match        https://*.aliexpress.com/*
 // @name         AliExpress - All in one
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.0.3
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.4
 // ==/UserScript==
 
 /* eslint-disable no-magic-numbers */

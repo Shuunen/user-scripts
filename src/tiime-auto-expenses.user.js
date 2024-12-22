@@ -5,8 +5,8 @@
 // @match        https://apps.tiime.fr/companies/*/expense/advanced-expenses
 // @name         Tiime Auto Expenses Filler
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.1.1
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.1.2
 // ==/UserScript==
 
 /* eslint-disable max-statements */

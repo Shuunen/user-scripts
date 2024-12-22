@@ -6,9 +6,9 @@
 // @match        https://www.dealabs.com/*
 // @name         Dealabs - All in one
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js
-// @version      1.1.4
+// @version      1.1.5
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

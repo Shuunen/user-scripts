@@ -12,8 +12,8 @@
 // @match        https://www.topachat.com/*
 // @name         HDD Cleaner
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
-// @version      1.2.5
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.2.6
 // ==/UserScript==
 
 /* eslint-disable no-magic-numbers */

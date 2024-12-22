@@ -6,8 +6,8 @@
 // @match        https://store.steampowered.com/wishlist/profiles/*
 // @name         Steam Wishlist Export
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.1.2
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.1.3
 // ==/UserScript==
 
 (function SteamWishlistExport () {

@@ -4,9 +4,9 @@
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/text-guard.user.js
 // @name         Text Guard
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
-// @version      1.0.3
+// @version      1.0.4
 // ==/UserScript==
 
 // This script use two ways to find elements in the document:

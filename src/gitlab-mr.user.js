@@ -6,8 +6,8 @@
 // @match        https://some-gitlab.fr/*
 // @name         Gitlab - MR Shortcuts
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.1.5
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.1.6
 // ==/UserScript==
 
 // @ts-nocheck

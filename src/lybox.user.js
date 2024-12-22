@@ -6,8 +6,8 @@
 // @match        https://www.lybox.fr/app/search/*
 // @name         LyBox Enhanced
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.0.1
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.2
 // ==/UserScript==
 
 // @ts-nocheck

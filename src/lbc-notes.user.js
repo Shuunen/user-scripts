@@ -6,11 +6,11 @@
 // @match        https://www.leboncoin.fr/*
 // @name         LeBonCoin Notes
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require      https://cdn.tailwindcss.com
-// @version      0.0.5
+// @version      0.0.6
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

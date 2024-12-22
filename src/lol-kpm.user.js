@@ -6,8 +6,8 @@
 // @match        https://matchhistory.euw.leagueoflegends.com/*
 // @name         LoL - KPM Counter - Kills per minutes
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.1.4
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.1.5
 // ==/UserScript==
 
 // @ts-nocheck

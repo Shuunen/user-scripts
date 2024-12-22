@@ -6,8 +6,8 @@
 // @match        https://www.saveur-biere.com/*
 // @name         Saveur Bière - Untappd Ratings
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.2.1
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.2.2
 // ==/UserScript==
 
 // @ts-nocheck

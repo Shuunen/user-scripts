@@ -6,8 +6,8 @@
 // @match        https://gitlab.com/*
 // @name         Gitlab - Contribution badge
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      0.0.4
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      0.0.5
 // ==/UserScript==
 
 // @ts-nocheck

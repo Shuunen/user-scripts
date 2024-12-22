@@ -8,8 +8,8 @@
 // @match        https://www.npmjs.com/package/*
 // @name         BundlePhobia <3 Everywhere
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
-// @version      1.1.2
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.1.3
 // ==/UserScript==
 
 (function BundlePhobiaEverywhere () {

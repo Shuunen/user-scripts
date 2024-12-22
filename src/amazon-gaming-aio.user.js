@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Amazon Gaming - All in one
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-gaming-aio.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.1.0
-// @description  Hide games
 // @author       Romain Racamier-Lafon
-// @match        https://gaming.amazon.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @description  Hide games
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-gaming-aio.user.js
 // @grant        none
+// @match        https://gaming.amazon.com/*
+// @name         Amazon Gaming - All in one
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.1.1
 // ==/UserScript==
 
 // eslint-disable-next-line max-statements

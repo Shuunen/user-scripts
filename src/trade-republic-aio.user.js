@@ -1,13 +1,13 @@
 /* eslint-disable no-magic-numbers */
 // ==UserScript==
-// @name         Trade Republic AIO
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/trade-republic-aio.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.0
-// @description  Add some features to Trade Republic like investment report
-// @match        https://app.traderepublic.com/profile/transactions
 // @author       Romain Racamier-Lafon
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @description  Add some features to Trade Republic like investment report
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/trade-republic-aio.user.js
+// @match        https://app.traderepublic.com/profile/transactions
+// @name         Trade Republic AIO
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.1
 // ==/UserScript==
 
 // eslint-disable-next-line max-statements

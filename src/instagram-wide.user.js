@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Instagram Wide
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/instagram-wide.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.1
-// @description  Improve Instagram UX
 // @author       Romain Racamier-Lafon
-// @match        https://*.instagram.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @description  Improve Instagram UX
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/instagram-wide.user.js
 // @grant        none
+// @match        https://*.instagram.com/*
+// @name         Instagram Wide
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @version      1.0.2
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

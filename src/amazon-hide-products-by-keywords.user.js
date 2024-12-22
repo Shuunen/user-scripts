@@ -6,9 +6,9 @@
 // @match        https://www.amazon.fr/s*
 // @name         Amazon - Hide products by keyword
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js
-// @version      1.1.8
+// @version      1.1.9
 // ==/UserScript==
 
 // @ts-nocheck
