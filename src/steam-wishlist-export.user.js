@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Steam Wishlist Export
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/steam-wishlist-export.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.1.1
-// @description  Export games from a wishlist page
 // @author       Romain Racamier-Lafon
-// @match        https://store.steampowered.com/wishlist/profiles/*
+// @description  Export games from a wishlist page
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/steam-wishlist-export.user.js
 // @match        https://store.steampowered.com/wishlist/id/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @match        https://store.steampowered.com/wishlist/profiles/*
+// @name         Steam Wishlist Export
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      1.1.2
 // ==/UserScript==
 
 (function SteamWishlistExport () {

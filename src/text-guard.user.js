@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Text Guard
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/text-guard.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.2
-// @description  Check the text of the current page, show alerts if it contains weird/forbidden words
 // @author       Romain Racamier-Lafon
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @description  Check the text of the current page, show alerts if it contains weird/forbidden words
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/text-guard.user.js
+// @name         Text Guard
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
+// @version      1.0.3
 // ==/UserScript==
 
 // This script use two ways to find elements in the document:

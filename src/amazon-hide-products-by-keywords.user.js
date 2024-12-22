@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Amazon - Hide products by keyword
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-hide-products-by-keywords.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.1.7
-// @description  Easily hide products from your searches by specifying a block list
 // @author       Romain Racamier-Lafon
-// @match        https://www.amazon.fr/s*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.1.0/src/utils.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js
+// @description  Easily hide products from your searches by specifying a block list
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-hide-products-by-keywords.user.js
 // @grant        none
+// @match        https://www.amazon.fr/s*
+// @name         Amazon - Hide products by keyword
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js
+// @version      1.1.8
 // ==/UserScript==
 
 // @ts-nocheck
@@ -45,7 +45,7 @@
   }
 
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils(app)
+  const utils = new Shuutils(app.id)
 
   /**
    * Clear the suggestions list

@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Le Petit Ballon - Ratings
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lpb-ratings.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.0
-// @description  See your ratings when buying
 // @author       Romain Racamier-Lafon
-// @match        https://www.lepetitballon.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
-// @require      https://cdn.jsdelivr.net/npm/fuse.js@6.6.2
+// @description  See your ratings when buying
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lpb-ratings.user.js
 // @grant        none
+// @match        https://www.lepetitballon.com/*
+// @name         Le Petit Ballon - Ratings
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/npm/fuse.js@6.6.2
+// @version      1.0.1
 // ==/UserScript==
 
 // @ts-nocheck

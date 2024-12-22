@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Amazon - Price per weight
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-price-per-weight.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.6
-// @description  Display price per weight & sort ascending
 // @author       Romain Racamier-Lafon
-// @match        https://*.amazon.fr/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.1.0/src/utils.js
+// @description  Display price per weight & sort ascending
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-price-per-weight.user.js
 // @grant        none
+// @match        https://*.amazon.fr/*
+// @name         Amazon - Price per weight
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
+// @version      1.0.7
 // ==/UserScript==
 
 // @ts-nocheck
@@ -17,14 +17,11 @@
 // eslint-disable-next-line max-statements
 (function AmazonPricePerWeight () {
   const app = {
-    debug: false,
-    hideStuff: false,
     id: 'amz-kg',
     injectRealPrice: true,
     processOnce: false,
     processOne: false,
     showDebug: false,
-    sortProducts: true,
   }
 
   const cls = {
@@ -62,7 +59,7 @@
   }
 
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils(app)
+  const utils = new Shuutils(app.id)
 
   const products = []
 

@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Auchan - All in one
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/auchan-aio.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.0
-// @description  Improve Auchan UX
 // @author       Romain Racamier-Lafon
-// @match        https://*.auchan.fr/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @description  Improve Auchan UX
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/auchan-aio.user.js
 // @grant        none
+// @match        https://*.auchan.fr/*
+// @name         Auchan - All in one
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      1.0.1
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

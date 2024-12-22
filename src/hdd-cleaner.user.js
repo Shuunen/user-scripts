@@ -1,19 +1,19 @@
 // ==UserScript==
-// @name         HDD Cleaner
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/hdd-cleaner.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.2.4
-// @description  Remove unwanted hard drives disks
 // @author       Romain Racamier-Lafon
-// @match        https://keepa.com/*
-// @match        https://www.amazon.fr/*
-// @match        https://www.amazon.co.uk/*
-// @match        https://www.dealabs.com/*
-// @match        https://www.topachat.com/*
-// @match        https://www.materiel.net/*
-// @match        https://www.ldlc.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.1.0/src/utils.js
+// @description  Remove unwanted hard drives disks
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/hdd-cleaner.user.js
 // @grant        none
+// @match        https://keepa.com/*
+// @match        https://www.amazon.co.uk/*
+// @match        https://www.amazon.fr/*
+// @match        https://www.dealabs.com/*
+// @match        https://www.ldlc.com/*
+// @match        https://www.materiel.net/*
+// @match        https://www.topachat.com/*
+// @name         HDD Cleaner
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
+// @version      1.2.5
 // ==/UserScript==
 
 /* eslint-disable no-magic-numbers */
@@ -22,14 +22,13 @@
 // @ts-nocheck
 // eslint-disable-next-line max-statements
 (function hddCleaner () {
+  const id = 'hdd-clr'
   const app = {
-    debug: false,
-    id: 'hdd-clr',
     maxSize: 12_000,
     minSize: 4000, // in Gb or Go
   }
   const cls = {
-    mark: `${app.id}-mark`,
+    mark: `${id}-mark`,
   }
   const selectors = {
     desc: ['.colorTipContent', 'div[data-asin] span.a-text-normal', '.c-product__title', '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3'].map(sel => `${sel}:not(.${cls.mark})`).join(','),
@@ -42,7 +41,7 @@
     sizes: /(?<size>\d+)\s?(?<unit>gb|go|tb|to)\b/giu,
   }
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils(app)
+  const utils = new Shuutils(id)
   /**
    * Get the size from a text
    * @param {string} text the text to search in

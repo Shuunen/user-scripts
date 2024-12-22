@@ -1,21 +1,21 @@
 // ==UserScript==
-// @name         Google Photos - Easy Delete
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/google-photos-easy-delete.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.4
-// @description  Delete a photo by pressing ! (bang)
 // @author       Romain Racamier-Lafon
-// @match        https://photos.google.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.1.0/src/utils.js
+// @description  Delete a photo by pressing ! (bang)
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/google-photos-easy-delete.user.js
 // @grant        none
+// @match        https://photos.google.com/*
+// @name         Google Photos - Easy Delete
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
+// @version      1.0.5
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
 
 (function GooglePhotosEasyDelete () {
-  const app = { debug: false, id: 'gp-ed', init: false, timeToWait: 200 }
+  const app = { init: false, timeToWait: 200 }
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
-  const utils = new Shuutils(app)
+  const utils = new Shuutils('gp-ed')
   const selectors = {
     confirmBtn: 'button[autofocus]',
     trash: '[data-delete-origin] button',

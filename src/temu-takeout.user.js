@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Temu Takeout - Get data with you
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/temu-takeout.user.js
-// @namespace    https://github.com/Shuunen
-// @match        https://www.temu.*/*
-// @grant        none
-// @version      1.1.0
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/mb-import-utils.js
 // @author       Shuunen
 // @description  This script let you export data from Temu
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/temu-takeout.user.js
+// @grant        none
+// @match        https://www.temu.*/*
+// @name         Temu Takeout - Get data with you
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/mb-import-utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      1.1.1
 // ==/UserScript==
 
 (function TemuTakeout () {

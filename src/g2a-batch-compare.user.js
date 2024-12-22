@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         G2A Batch Compare
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/g2a-batch-compare.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.1.0
-// @description  Compare prices with game list in the clipboard
 // @author       Romain Racamier-Lafon
-// @match        https://www.g2a.com/*
-// @require      https://cdn.jsdelivr.net/npm/didyoumean/didYouMean-1.2.1.min.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
-// @require      https://cdn.jsdelivr.net/npm/simple-datatables
+// @description  Compare prices with game list in the clipboard
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/g2a-batch-compare.user.js
 // @grant        none
+// @match        https://www.g2a.com/*
+// @name         G2A Batch Compare
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/npm/didyoumean/didYouMean-1.2.1.min.js
+// @require      https://cdn.jsdelivr.net/npm/simple-datatables
+// @version      1.1.1
 // ==/UserScript==
 
 // @ts-nocheck

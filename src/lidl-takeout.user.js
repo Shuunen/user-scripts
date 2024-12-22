@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Lidl Takeout - Get data with you
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lidl-takeout.user.js
-// @namespace    https://github.com/Shuunen
-// @match        https://www.lidl.*/*
-// @grant        none
-// @version      1.0.0
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/mb-import-utils.js
 // @author       Shuunen
 // @description  This script let you export data from Lidl
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lidl-takeout.user.js
+// @grant        none
+// @match        https://www.lidl.*/*
+// @name         Lidl Takeout - Get data with you
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/mb-import-utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      1.0.1
 // ==/UserScript==
 
 // eslint-disable-next-line max-statements

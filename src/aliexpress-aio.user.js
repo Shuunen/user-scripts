@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         AliExpress - All in one
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-aio.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.2
-// @description  Bigger listing
 // @author       Romain Racamier-Lafon
-// @match        https://*.aliexpress.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @description  Bigger listing
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-aio.user.js
 // @grant        none
+// @match        https://*.aliexpress.com/*
+// @name         AliExpress - All in one
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      1.0.3
 // ==/UserScript==
 
 /* eslint-disable no-magic-numbers */

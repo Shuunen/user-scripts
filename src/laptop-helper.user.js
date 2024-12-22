@@ -1,16 +1,14 @@
 // ==UserScript==
-// @name         Laptop Helper
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/laptop-helper.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.0.1
-// @description  Add annotations on displayed informations
 // @author       Romain Racamier-Lafon
+// @description  Add annotations on displayed informations
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/laptop-helper.user.js
+// @grant        none
 // @match        https://bestware.com/*
-// @match        https://noteb.com/*
-// @match        https://www.amazon.fr/*
 // @match        https://deals.dell.com/*
 // @match        https://laptopmedia.com/*
+// @match        https://noteb.com/*
 // @match        https://www.amazon.com/*
+// @match        https://www.amazon.fr/*
 // @match        https://www.boulanger.com/*
 // @match        https://www.comparez-malin.fr/*
 // @match        https://www.darty.com/*
@@ -26,9 +24,11 @@
 // @match        https://www.notebookcheck.net/*
 // @match        https://www.topachat.com/*
 // @match        https://www.tuxedocomputers.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @name         Laptop Helper
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
-// @grant        none
+// @version      1.0.2
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

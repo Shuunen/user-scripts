@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         AliExpress Takeout - Get data with you
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-takeout.user.js
-// @namespace    https://github.com/Shuunen
-// @match        https://*.aliexpress.*/*
-// @grant        none
-// @version      1.0.1
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/mb-import-utils.js
 // @author       Shuunen
 // @description  This script let you export data from AliExpress
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/aliexpress-takeout.user.js
+// @grant        none
+// @match        https://*.aliexpress.*/*
+// @name         AliExpress Takeout - Get data with you
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/mb-import-utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      1.0.2
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

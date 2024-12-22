@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Amazon Music - Export to MusicBrainz
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/mb-import-from-amazon-music.user.js
-// @namespace    https://github.com/Shuunen
-// @match        https://www.amazon.fr/*
-// @grant        none
-// @version      1.0.3
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/mb-import-utils.js
 // @author       Shuunen
 // @description  This script let you import releases on Amazon Music to the great MusicBrainz db <3
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/mb-import-from-amazon-music.user.js
+// @grant        none
+// @match        https://www.amazon.fr/*
+// @name         Amazon Music - Export to MusicBrainz
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/mb-import-utils.js
+// @version      1.0.4
 // ==/UserScript==
 
 // @ts-nocheck

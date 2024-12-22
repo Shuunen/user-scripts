@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Image Unblock
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/img-unblock.user.js
-// @namespace    https://github.com/Shuunen
-// @description  Use DuckDuckGo image proxy
 // @author       Romain Racamier-Lafon
-// @match        https://www.reddit.com/*
+// @description  Use DuckDuckGo image proxy
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/img-unblock.user.js
 // @grant        none
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
-// @version      1.1.3
+// @match        https://www.reddit.com/*
+// @name         Image Unblock
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      1.1.4
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

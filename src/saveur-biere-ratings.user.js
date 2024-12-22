@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Saveur Bière - Untappd Ratings
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/saveur-biere-ratings.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.2.0
-// @description  See your ratings when buying
 // @author       Romain Racamier-Lafon
-// @match        https://www.saveur-biere.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @description  See your ratings when buying
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/saveur-biere-ratings.user.js
 // @grant        none
+// @match        https://www.saveur-biere.com/*
+// @name         Saveur Bière - Untappd Ratings
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      1.2.1
 // ==/UserScript==
 
 // @ts-nocheck

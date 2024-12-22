@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Dealabs - All in one
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/dealabs-aio.user.js
-// @namespace    https://github.com/Shuunen
-// @version      1.1.3
-// @description  Un-clutter & add filters to Dealabs
 // @author       Romain Racamier-Lafon
-// @match        https://www.dealabs.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
-// @require      https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js
+// @description  Un-clutter & add filters to Dealabs
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/dealabs-aio.user.js
 // @grant        none
+// @match        https://www.dealabs.com/*
+// @name         Dealabs - All in one
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js
+// @version      1.1.4
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

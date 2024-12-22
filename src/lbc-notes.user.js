@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         LeBonCoin Notes
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lbc-notes.user.js
-// @namespace    https://github.com/Shuunen
-// @description  Add notes to LeBonCoin listings
 // @author       Romain Racamier-Lafon
-// @match        https://www.leboncoin.fr/*
+// @description  Add notes to LeBonCoin listings
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lbc-notes.user.js
 // @grant        GM_addStyle
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @match        https://www.leboncoin.fr/*
+// @name         LeBonCoin Notes
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require      https://cdn.tailwindcss.com
-// @version      0.0.4
+// @version      0.0.5
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */

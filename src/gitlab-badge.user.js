@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Gitlab - Contribution badge
-// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/gitlab-badge.user.js
-// @namespace    https://github.com/Shuunen
-// @version      0.0.3
-// @description  Display a badge on the top right corner of the page with the number of contributions you made today on Gitlab
 // @author       Romain Racamier-Lafon
-// @match        https://gitlab.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @description  Display a badge on the top right corner of the page with the number of contributions you made today on Gitlab
+// @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/gitlab-badge.user.js
 // @grant        none
+// @match        https://gitlab.com/*
+// @name         Gitlab - Contribution badge
+// @namespace    https://github.com/Shuunen
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
+// @version      0.0.4
 // ==/UserScript==
 
 // @ts-nocheck
