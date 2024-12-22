@@ -2,11 +2,11 @@
 // @name         Amazon Gaming - All in one
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-gaming-aio.user.js
 // @namespace    https://github.com/Shuunen
-// @version      1.0.3
+// @version      1.1.0
 // @description  Hide games
 // @author       Romain Racamier-Lafon
 // @match        https://gaming.amazon.com/*
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.1/src/utils.min.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.min.js
 // @grant        none
 // ==/UserScript==
 
@@ -98,8 +98,9 @@
     'World of Warships',
   ]
   const selectors = {
-    claimedTag: '[title="Récupéré"]:not(.amz-gm-aio-processed)',
+    claimedTag: '[title="Récupéré"]:not(.amz-gm-aio-processed),[title="Collected"]:not(.amz-gm-aio-processed)',
     grid: '.offer-list__content__grid',
+    playGameButton: '[title="Play game"]:not(.amz-gm-aio-processed)',
     product: 'div.tw-block.tw-relative:not(.amz-gm-aio-processed)',
     productAlt: '[data-a-target="learn-more-card"]:not(.amz-gm-aio-processed)',
     productDlcName: '[data-a-target="ItemCardDetailPrimaryText"]:not(.amz-gm-aio-processed)',
@@ -110,7 +111,8 @@
   }
   const deleteUselessSelectors = {
     badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
-    sections: '[data-a-target="hero-banner"],[data-a-target="offer-section-FGWP"],[data-a-target="offer-section-RECOMMENDED"],[data-a-target="offer-section-WEB_GAMES"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-EXPIRING"]',
+    lunaGaming: '#offer-section-LUNA',
+    sections: '[data-a-target="hero-banner"],.event-container,.sub-credit-promotion-banner,[data-a-target="offer-section-FGWP"],.marketing-promotion-banner,[data-a-target="offer-section-RECOMMENDED"],[data-a-target="offer-section-WEB_GAMES"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-EXPIRING"]',
   }
   /**
    * Delete useless elements
@@ -136,20 +138,18 @@
     for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true))
       // eslint-disable-next-line unicorn/no-keyword-prefix
       node.className = ''
-
   }
   /**
    * Check if a grid is empty and hide it
    */
-  function checkEmptyGrids () {
-    for (const node of utils.findAll(selectors.grid, document, true)) {
-      // @ts-expect-error
-      const visibleChildren = [...node.children].filter(child => !child.hasAttribute('data-hidden-cause')).length // eslint-disable-line unicorn/prefer-dom-node-dataset
-      node.style.backgroundImage = visibleChildren === 0 ? 'url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbDpzcGFjZT0icHJlc2VydmUiIHZpZXdCb3g9IjAgMCAyMzIgMjMyIj48cGF0aCBkPSJNMTA3IDE0NmE4IDggMCAwIDAgMTUtMmwtMy0zM2E4IDggMCAwIDAtMTUgMWwzIDM0em00NyA2IDEgMWM0IDAgNy0zIDgtN2wzLTM0YTcgNyAwIDEgMC0xNS0xbC0zIDMzYy0xIDQgMiA4IDYgOHptLTU4IDMzYTIzIDIzIDAgMSAwIDAgNDcgMjMgMjMgMCAwIDAgMC00N3ptMCAzMmE4IDggMCAxIDEgMC0xNyA4IDggMCAwIDEgMCAxN3ptNzgtMzJhMjMgMjMgMCAxIDAgMCA0NyAyMyAyMyAwIDAgMCAwLTQ3em0wIDMyYTggOCAwIDEgMSAwLTE3IDggOCAwIDAgMSAwIDE3eiIvPjxwYXRoIGQ9Im0yMTkgNzktNi0zSDYzbC02LTI0Yy0xLTMtNC02LTctNkgxOWE4IDggMCAwIDAgMCAxNWgyNWw2IDI0djFsMjMgODljMSAzIDQgNSA4IDVoMTA4YzQgMCA3LTIgOC01bDIzLTg5LTEtN3ptLTM1IDg2SDg2TDY3IDkxaDEzNmwtMTkgNzR6TTEwNiA1M2E3IDcgMCAwIDAgMTAgMGMzLTMgMy04IDAtMTFMOTMgMTlhOCA4IDAgMCAwLTExIDEwbDI0IDI0em01MyAyIDUtMiAyNC0yNGE3IDcgMCAxIDAtMTEtMTBsLTIzIDIzYTggOCAwIDAgMCA1IDEzem0tMjQtN2M0IDAgOC0zIDgtN1Y4YzAtNS00LTgtOC04cy03IDMtNyA3djM0YzAgNCAzIDcgNyA3eiIvPjwvc3ZnPg==")' : ''
-      node.style.height = visibleChildren === 0 ? '160px' : ''
-      node.style.backgroundRepeat = visibleChildren === 0 ? 'no-repeat' : ''
-      node.style.backgroundPositionY = visibleChildren === 0 ? '50%' : ''
-      node.style.filter = visibleChildren === 0 ? 'invert(0.4)' : ''
+  function showGridFlex () {
+    const grids = utils.findAll(selectors.grid, document, true)
+    utils.log(grids.length, 'grids found', grids)
+    for (const grid of grids) {
+      grid.style.display = 'flex'
+      /** @type {HTMLElement[]} */ // @ts-expect-error type issue
+      const children = Array.from(grid.children)
+      for (const node of children)  node.style.minWidth = '380px'
     }
   }
   /**
@@ -189,14 +189,15 @@
    * Hide claimed products
    */
   function hideClaimed () {
-    for (const node of utils.findAll(selectors.claimedTag, document, true)) {
+    const claimed = utils.findAll(selectors.claimedTag, document, true)
+    utils.log(claimed.length, 'claimed found')
+    for (const node of claimed) {
       node.classList.add(`${utils.id}-processed`)
       /** @type {HTMLElement | null} */
       const product = node.closest(selectors.productAlt)
       if (!product) continue
       hideElement(product, 'claimed')
     }
-    checkEmptyGrids()
   }
   /**
    * Clean a dlc name
@@ -235,7 +236,21 @@
       product.title = gameName
       hideElement(product, 'unwanted-dlc')
     }
-    checkEmptyGrids()
+  }
+  /**
+   * Hide Luna games
+   * @returns {void}
+   */
+  function hideLuna () {
+    const buttons = utils.findAll(selectors.playGameButton, document, true)
+    utils.log(buttons.length, 'luna games found')
+    for (const button of buttons) {
+      button.classList.add(`${utils.id}-processed`)
+      /** @type {HTMLElement | null} */
+      const product = button.closest(selectors.productAlt) // the link to the game
+      if (!product) { utils.error('no product found for button :', button); continue }
+      hideElement(product, 'luna')
+    }
   }
   /**
    * Process the page
@@ -248,13 +263,27 @@
     clearClassnames()
     hideClaimed()
     hideUnwantedDlc()
+    hideLuna()
+    showGridFlex()
   }
   // eslint-disable-next-line no-magic-numbers
   const processDebounced = utils.debounce(process, 500)
 
   utils.onPageChange(() => processDebounced('page-change'))
 
-  globalThis.addEventListener('scroll', () => processDebounced('scroll'))
-
-  globalThis.addEventListener('DOMNodeInserted', (event) => processDebounced(`dom-node-inserted:${ /** @type {HTMLElement} */ (event.target)?.className || 'unknown'}`))
+  /**
+   * Handles page mutations
+   * @param {MutationRecord[]} mutations the mutations that occurred
+   */
+  function onMutation (mutations) {
+    // const { target } = event
+    const element = mutations[0]?.addedNodes[0]
+    if (element === null || element === undefined) return
+    if (!(element instanceof HTMLElement)) return
+    if (element.className.includes('shu-toast')) return
+    utils.debug('mutation detected', mutations[0])
+    processDebounced('mutation')
+  }
+  const observer = new MutationObserver(onMutation)
+  observer.observe(document.body, { childList: true, subtree: true })
 })()
