@@ -8,7 +8,7 @@
 // eslint-disable-next-line no-restricted-syntax
 class Shuutils {
   id = ''
-  version = '2.5.0'
+  version = '2.6.3'
   willDebug = false
   /**
    * The ShuUserScriptUtils constructor
@@ -253,9 +253,11 @@ class Shuutils {
       element.style.backgroundColor = 'red !important'
       element.style.color = 'white !important'
       element.style.boxShadow = '0 0 10px red'
+      element.style.visibility = 'visible'
       element.style.opacity = '70'
     } else {
       element.style.display = 'none'
+      element.style.visibility = 'hidden'
       element.style.opacity = '0'
     }
     element.dataset.hiddenCause = reason
