@@ -8,7 +8,7 @@
 // eslint-disable-next-line no-restricted-syntax
 class Shuutils {
   id = ''
-  version = '2.6.3'
+  version = '2.6.4'
   willDebug = false
   /**
    * The ShuUserScriptUtils constructor
@@ -311,6 +311,19 @@ class Shuutils {
     const current = document.location.href
     if (current !== last) callback(current)
     this.onPageChange(callback, current, wait)
+  }
+  /**
+   * Parse a price from a string
+   * @param {string} input the string to parse, like "12,34 €" or "$12.34"
+   * @returns {{amount: number, currency: string}} the parsed price, like { amount: 12.34, currency: '€' } or { amount: -12.34, currency: '$' }
+   */
+  parsePrice (input) {
+    const { currencyEnd, currencyStart, decimals, integers, integersOnly, sign = '' } = /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u.exec(input.trim())?.groups ?? {}
+    const integer = (integers ?? integersOnly ?? '').replace(/\D/gu, '')
+    const fraction = decimals ? decimals.slice(1) : '00'
+    const currency = currencyStart ?? currencyEnd ?? ''
+    const amount = Number.parseFloat(`${sign + integer}.${fraction}`)
+    return { amount, currency };
   }
   /**
    * Pick a random element from an array

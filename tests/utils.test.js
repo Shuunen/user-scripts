@@ -40,3 +40,34 @@ it('rangedScore weight B', () => { expect(utils.rangedScore(weightRules, -4)).to
 it('rangedScore weight C', () => { expect(utils.rangedScore(weightRules, 0)).toBe(50) })
 it('rangedScore weight D', () => { expect(utils.rangedScore(weightRules, 4)).toBe(10) })
 
+const prices = {
+  '': { amount: 0, currency: '' },
+  ' - 145 678.90  ': { amount: -145_678.9, currency: '' },
+  '-14 899 $': { amount: -14_899, currency: '$' },
+  '-148.99 $': { amount: -148.99, currency: '$' },
+  '-1': { amount: -1, currency: '' },
+  '-1 $': { amount: -1, currency: '$' },
+  '0': { amount: 0, currency: '' },
+  '0.00': { amount: 0, currency: '' },
+  '0.01': { amount: 0.01, currency: '' },
+  '1.234,56€': { amount: 1234.56, currency: '€' },
+  '2,000': { amount: 2000, currency: '' },
+  '2,000 €': { amount: 2000, currency: '€' },
+  '+32,815.77 $': { amount: 32_815.77, currency: '$' },
+  '31 415,92 €': { amount: 31_415.92, currency: '€' },
+  '$2,000.00': { amount: 2000, currency: '$' },
+  '$5 678.90': { amount: 5678.9, currency: '$' },
+  ',': { amount: 0, currency: '' },
+  ' ,  ': { amount: 0, currency: '' },
+  '-$2,000.00': { amount: -2000, currency: '$' },
+  '.': { amount: 0, currency: '' },
+  '€ 2,000': { amount: 2000, currency: '€' },
+  '€ 2,000.00': { amount: 2000, currency: '€' },
+}
+
+for (const [price, { amount, currency }] of Object.entries(prices))
+  it(`parsePrice ${price}`, () => {
+    const data = utils.parsePrice(price)
+    expect(data.amount, `amount incorrect for price "${price}"`).toBe(amount)
+    expect(data.currency, `currency incorrect for price "${price}"`).toBe(currency)
+  })
