@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 // ==UserScript==
 // @author       Romain Racamier-Lafon
 // @description  Add some features to Trade Republic like investment report
@@ -7,8 +6,11 @@
 // @name         Trade Republic AIO
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
-// @version      1.0.1
+// @version      1.1.0
 // ==/UserScript==
+
+/* eslint-disable no-console */
+/* eslint-disable no-magic-numbers */
 
 // eslint-disable-next-line max-statements
 (function TradeRepublicAio () {
@@ -18,6 +20,7 @@
   const elements = {
     meter: document.createElement('div'),
   }
+  elements.meter.id = 'shu-meter'
   const selectors = {
     entries: '.timeline__entry',
     entryInjectedIcon: 'img[data-testid="logos/timeline_plus_circle/v2"]',
@@ -43,7 +46,9 @@
   /**
    * Inject the elements needed for the script
    */
+  // eslint-disable-next-line max-statements
   function injectElements () {
+    if (document.querySelector(`#${elements.meter.id}`) !== null) return
     elements.meter.style.position = 'fixed'
     elements.meter.style.top = '0'
     elements.meter.style.left = '0'
@@ -59,39 +64,86 @@
   /**
    * Show the invested amount and times
    */
-  // eslint-disable-next-line max-statements, complexity
+  // eslint-disable-next-line max-statements, complexity, max-lines-per-function
   function showInvested () {
     let injected = 0
     let spent = 0
     const entries = utils.findAll(selectors.entries)
     for (const entry of entries) {
-      if (entry.getAttribute('aria-hidden') === 'true') continue // skip month section titles
+      console.groupCollapsed(`entry ${entry.textContent}`)
+      utils.log('entry element', entry)
+
+      entry.style.borderLeftWidth = '4px'
+      entry.style.borderLeftStyle = 'solid'
+      entry.style.borderLeftColor = 'transparent'
+      entry.style.paddingLeft = '10px'
+
+      if (entry.getAttribute('aria-hidden') === 'true') {
+        utils.log('skip, entry hidden, month section title for example')
+        entry.style.borderLeftColor = 'gray'
+        console.groupEnd()
+        continue
+      }
+
       const amountElement = utils.findOne(selectors.entryPrice, entry)
-      if (amountElement === undefined) continue // skip entries without amount, happens for card verification for example
+      if (amountElement === undefined) {
+        utils.log('skip, entry without amount, happens for card verification for example')
+        entry.style.borderLeftColor = 'gray'
+        console.groupEnd()
+        continue
+      }
+
       const amountText = amountElement.textContent ?? ''
-      if (amountText === '') continue // skip empty amounts
+      if (amountText === '') {
+        utils.showError('skip, empty amount detected')
+        entry.style.borderLeftColor = 'red'
+        console.groupEnd()
+        continue
+      }
 
       const subtitleElement = utils.findOne(selectors.entrySubtitle, entry)
-      if (subtitleElement === undefined) { utils.showError('check logs'); utils.error('subtitle element not found for entry', entry); return }
+      if (subtitleElement === undefined) {
+        utils.showError('skip, subtitle element not found');
+        entry.style.borderLeftColor = 'red'
+        console.groupEnd()
+        continue
+      }
+
       const subtitleText = subtitleElement.textContent ?? ''
-      if (subtitleText === '') { utils.showError('check logs'); utils.error('subtitle text empty for entry', entry); return }
-      const date = subtitleText.trim()
+      if (subtitleText === '') {
+        utils.showError('skip, subtitle text empty for entry')
+        entry.style.borderLeftColor = 'red'
+        console.groupEnd()
+        continue
+      }
 
       const isInternal = subtitleText.includes(' - ')
-      if (isInternal) continue // skip internal transactions
+      if (isInternal) {
+        utils.log('skip, is an internal transaction')
+        entry.style.borderLeftColor = 'grey'
+        console.groupEnd()
+        continue
+      }
 
-      const isInjected = utils.findOne(selectors.entryInjectedIcon, entry) !== undefined // money I transferred to my Trade Republic account
-
-      const isPositive = amountText.includes('+')
       const { bottom, right, top } = amountElement.getBoundingClientRect()
-      if (globalThis.innerHeight < bottom) continue // avoid putting the meter outside the screen ^^
+      if (globalThis.innerHeight < bottom) {
+        utils.log('skip, avoid entries outside viewport ^^')
+        console.groupEnd()
+        continue
+      }
+
       elements.meter.style.left = `${right + 20}px`
       elements.meter.style.top = `${top - 7}px`
-      const amount = Number.parseFloat(amountText.replace(/[+€\s]/gu, '').replace(',', '.').trim()) * (isPositive ? 1 : -1)
+
+      const { amount } = utils.parsePrice(amountText)
+      const date = subtitleText.trim()
+      const isInjected = utils.findOne(selectors.entryInjectedIcon, entry) !== undefined // money I transferred to my Trade Republic account
       utils.log('adding', amount, '€ to', isInjected ? 'injected' : 'spent', 'on', date)
       if (isInjected) injected += amount
       else spent += amount
       elements.meter.textContent = meterText(injected, spent, date)
+      entry.style.borderLeftColor = isInjected ? 'green' : 'orange'
+      console.groupEnd()
     }
   }
   /**
@@ -99,6 +151,7 @@
    */
   function init () {
     utils.log('Trade Republic AIO start...')
+    injectElements()
     showInvested()
   }
   const initDebounced = utils.debounce(init, 500)
@@ -119,5 +172,5 @@
   const observer = new MutationObserver(onMutation)
   observer.observe(document.body, { childList: true, subtree: true })
   document.addEventListener('scroll', () => initDebounced())
-  utils.onPageChange(injectElements)
+  utils.onPageChange(initDebounced)
 })()
