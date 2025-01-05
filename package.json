@@ -12,7 +12,7 @@
     "eslint-plugin-userscripts": "0.5",
     "oxlint": "0.15",
     "repo-check": "1.40",
-    "shuutils": "10.1",
+    "shuutils": "10.2",
     "tailwindcss": "3.4",
     "typescript": "5.7",
     "vitest": "2.1"
