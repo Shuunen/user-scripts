@@ -26,35 +26,17 @@
     wrapper: '[aria-hidden="true"][tabindex="0"][role="button"] > div[style]',
   }
 
-  /**
-   * Hide an element for a reason
-   * @param {HTMLElement} element the element to hide
-   * @param {string} reason the reason why the element is hidden
-   * @returns {void}
-   */
-  function hideElement (element, reason) {
-    if (utils.willDebug) {
-      element.style.backgroundColor = 'red !important'
-      element.style.color = 'white !important'
-      element.style.boxShadow = '0 0 10px red'
-      element.style.opacity = '70'
-      element.style.filter = 'blur(1px)'
-    } else {
-      element.style.display = 'none'
-      element.style.opacity = '0'
+  function showVideoControls () {
+    /** @type {HTMLVideoElement[]} */
+    const videos = Array.from(document.querySelectorAll('video:not([controls])'))
+    if (videos.length === 0) return
+    for (const video of videos) {
+      video.controls = true
+      // @ts-ignore
+      if (video.nextElementSibling) video.nextElementSibling.style.pointerEvents = 'none'
     }
-    element.dataset.hiddenCause = reason
+    utils.log(`video controls added to ${videos.length} video${videos.length > 1 ? 's' : ''}`)
   }
-
-  function hideUseless () {
-    let nb = 0
-    for (const selector of Object.values(uselessSelectors)) for (const node of utils.findAll(`${selector}:not([data-hidden-cause])`, document, true)) {
-      hideElement(node, 'useless')
-      nb += 1
-    }
-    if (nb > 0) utils.debug(`hideUseless has hidden ${nb} elements`)
-  }
-
 
   function enlargeMain () {
     const main = utils.findOne(selectors.main)
@@ -84,19 +66,19 @@
       return
     }
     for (const wrapper of wrappers) {
-       wrapper.style.width = '100%'
-       if(wrapper.parentElement) wrapper.parentElement.style.width = '100%'
-       if(wrapper.parentElement?.parentElement) wrapper.parentElement.parentElement.style.width = '100%'
+      wrapper.style.width = '100%'
+      if (wrapper.parentElement) wrapper.parentElement.style.width = '100%'
+      if (wrapper.parentElement?.parentElement) wrapper.parentElement.parentElement.style.width = '100%'
     }
-
   }
 
   function process (reason = 'unknown') {
     utils.debug(`process called because "${reason}"`)
-    hideUseless()
+    utils.hideElements(uselessSelectors, 'useless')
     enlargeMain()
     enlargeFeed()
     enlargeWrappers()
+    showVideoControls()
   }
 
   const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers

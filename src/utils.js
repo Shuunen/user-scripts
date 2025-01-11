@@ -261,13 +261,11 @@ class Shuutils {
       element.style.backgroundColor = 'red !important'
       element.style.color = 'white !important'
       element.style.boxShadow = '0 0 10px red'
-      element.style.visibility = 'visible'
-      element.style.opacity = '70'
-    } else {
-      element.style.display = 'none'
-      element.style.visibility = 'hidden'
-      element.style.opacity = '0'
+      element.style.filter = 'blur(1px)'
     }
+    element.style.display = this.willDebug ? element.style.display : 'none'
+    element.style.visibility = this.willDebug ? 'visible' : 'hidden'
+    element.style.opacity = this.willDebug ? '1' : '0'
     element.dataset.hiddenCause = reason
   }
   /**
@@ -282,7 +280,7 @@ class Shuutils {
       this.hideElement(node, reason)
       nb += 1
     }
-    if (nb > 0) this.debug(`hideUseless has hidden ${nb} elements`)
+    if (nb > 0) this.debug(`hideElements has hidden ${nb} elements`)
   }
   /**
    * Inject styles in the DOM
