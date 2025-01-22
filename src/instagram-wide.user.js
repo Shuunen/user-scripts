@@ -6,8 +6,8 @@
 // @match        https://*.instagram.com/*
 // @name         Instagram Wide
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
-// @version      1.0.2
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
+// @version      1.0.3
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
@@ -81,7 +81,7 @@
     showVideoControls()
   }
 
-  const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
+  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), 300) // eslint-disable-line no-magic-numbers
   globalThis.addEventListener('scroll', () => processDebounced('scroll'))
   utils.onPageChange(() => processDebounced('page-change'))
 })()
