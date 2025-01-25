@@ -5,8 +5,8 @@
 // @match        https://app.traderepublic.com/profile/transactions
 // @name         Trade Republic AIO
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
-// @version      1.1.0
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
+// @version      1.1.1
 // ==/UserScript==
 
 /* eslint-disable no-console */
