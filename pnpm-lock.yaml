@@ -33,8 +33,8 @@ importers:
         specifier: '1.40'
         version: 1.40.0
       shuutils:
-        specifier: '10.3'
-        version: 10.3.0
+        specifier: '10.4'
+        version: 10.4.0
       tailwindcss:
         specifier: '3.4'
         version: 3.4.17
@@ -1436,8 +1436,8 @@ packages:
     resolution: {integrity: sha512-Q+8PaUIik4W3bEE2xtDMZvYC7y4B8mnh3x7cneXPJmry0esVRir+hSZHh5Kjh6rtV0pYj+eKtAXBxJ8LDqPZhA==}
     hasBin: true
 
-  shuutils@10.3.0:
-    resolution: {integrity: sha512-Vo4USo3D0W59T2qAojxWx9BDnIZQrzhVh+8rnSXN757MpQ9gPr396HAYsO1jP+lkqjlxKOqbnk7IiFtfJOpyKQ==}
+  shuutils@10.4.0:
+    resolution: {integrity: sha512-PMeon5coA7kQEjB0HQUalqqWBd9RLbeopVW3CwGd1sE9wFsgwNm1aBTKi+QMhym+toHLHoSr9ai5kFMe/VUa7g==}
     hasBin: true
 
   siginfo@2.0.0:
@@ -3044,7 +3044,7 @@ snapshots:
     dependencies:
       tiny-glob: 0.2.9
 
-  shuutils@10.3.0:
+  shuutils@10.4.0:
     dependencies:
       resultx: 2.0.2
       tiny-glob: 0.2.9
