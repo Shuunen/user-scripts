@@ -30,8 +30,8 @@ importers:
         specifier: '0.15'
         version: 0.15.5
       repo-check:
-        specifier: '1.40'
-        version: 1.40.0
+        specifier: '1.42'
+        version: 1.42.0
       shuutils:
         specifier: '10.4'
         version: 10.4.0
@@ -1387,8 +1387,8 @@ packages:
     resolution: {integrity: sha512-qx+xQGZVsy55CH0a1hiVwHmqjLryfh7wQyF5HO07XJ9f7dQMY/gPQHhlyDkIzJKC+x2fUCpCcUODUUUFrm7SHA==}
     hasBin: true
 
-  repo-check@1.40.0:
-    resolution: {integrity: sha512-EO5AKEYlUU8cRDq/9PVEkTsQ19371lCdw38KTHVWH48Nxq7kS6uJXYEHBii/AQ0kXRVxJP57uMi84lGH5zNRZQ==}
+  repo-check@1.42.0:
+    resolution: {integrity: sha512-AsmKM/MNM26fjJPqob8oMw+7m28/pLUMpH8u05AF1yHLOeW2S1+Hhx6iPSN1T3XBOsO0d7ol1WgCcVF75ZjTYA==}
     hasBin: true
 
   resolve-from@4.0.0:
@@ -1432,12 +1432,12 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  shuutils@10.1.0:
-    resolution: {integrity: sha512-Q+8PaUIik4W3bEE2xtDMZvYC7y4B8mnh3x7cneXPJmry0esVRir+hSZHh5Kjh6rtV0pYj+eKtAXBxJ8LDqPZhA==}
-    hasBin: true
-
   shuutils@10.4.0:
     resolution: {integrity: sha512-PMeon5coA7kQEjB0HQUalqqWBd9RLbeopVW3CwGd1sE9wFsgwNm1aBTKi+QMhym+toHLHoSr9ai5kFMe/VUa7g==}
+    hasBin: true
+
+  shuutils@10.5.0:
+    resolution: {integrity: sha512-XIBlpWI8zIRYV1f1hdIApAPtsThzqBkIoLfBpmbQY+RVTwDn3mtfJ/ir3ifhdsnoQjcDKkcdiJGdnoLje/KU3w==}
     hasBin: true
 
   siginfo@2.0.0:
@@ -2983,10 +2983,10 @@ snapshots:
     dependencies:
       jsesc: 0.5.0
 
-  repo-check@1.40.0:
+  repo-check@1.42.0:
     dependencies:
       arg: 5.0.2
-      shuutils: 10.1.0
+      shuutils: 10.5.0
       sort-json: 2.0.1
 
   resolve-from@4.0.0: {}
@@ -3040,13 +3040,13 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  shuutils@10.1.0:
-    dependencies:
-      tiny-glob: 0.2.9
-
   shuutils@10.4.0:
     dependencies:
       resultx: 2.0.2
+      tiny-glob: 0.2.9
+
+  shuutils@10.5.0:
+    dependencies:
       tiny-glob: 0.2.9
 
   siginfo@2.0.0: {}
