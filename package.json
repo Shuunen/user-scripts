@@ -30,7 +30,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/Shuunen/user-scripts.git"
+    "url": "git+https://github.com/Shuunen/user-scripts.git"
   },
   "scripts": {
     "check": "pnpm install && echo install success && pnpm lint && repo-check && echo repo-check success && pnpm test && echo check success",
