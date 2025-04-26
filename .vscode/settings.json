@@ -10,6 +10,7 @@
     "dealabs",
     "Electricité",
     "floralwhite",
+    "greyscale",
     "Hautepierre",
     "Illkirch",
     "Immo",
@@ -25,10 +26,13 @@
     "Shuutils",
     "Stockfeld",
     "tada",
+    "testid",
     "tiime",
     "Tiime",
     "tracklist",
     "userscript",
+    "vinted",
+    "Vinted",
     "violentmonkey"
   ],
   "workbench.colorCustomizations": {
