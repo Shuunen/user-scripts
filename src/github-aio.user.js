@@ -38,32 +38,51 @@ const bugIcon = `<svg class="octicon octicon-repo-issues" xmlns="http://www.w3.o
       .catch(error => { utils.error(`GitHub Issue Counter: Error for ${repoFullName}`, error); });
   }
   /**
-   * Augment a repo with issue count
+   * Get repository full name from repo element
    * @param {HTMLElement} repo - The repo element
+   * @returns {string} The repo full name or "" an empty string if not found
    */
-  // eslint-disable-next-line max-statements
-  async function augmentRepo(repo) {
-    repo.classList.add(utils.id)
+  function getRepoFullName(repo) {
     const repoLinkElement = repo.querySelector('a[itemprop="name codeRepository"]')
     const repoLink = repoLinkElement?.getAttribute('href') ?? ''
     if (repoLink === '') {
       utils.error('no repo link found in', repo)
-      return
+      return ""
     }
     const repoFullName = repoLink.slice(1) // remove the leading /
-    if(!repoFullName) {
+    if (!repoFullName) {
       utils.error('failed to extract repo full name from link :', repoLink)
-      return
+      return ""
     }
-    const lastLink = repo.querySelector('.mr-3.Link--muted:last-of-type')
-    utils.debug({ lastLink, repo })
-    const count = await fetchIssueCountViaAPI(repoFullName)
+    return repoFullName
+  }
+  /**
+   * Create issue count link element
+   * @param {string} repoFullName - The full name of the repo
+   * @param {number} count - The issue count
+   * @returns {HTMLAnchorElement} The created link element
+   */
+  function createIssueCountLink(repoFullName, count) {
     const link = document.createElement('a')
     // eslint-disable-next-line unicorn/no-keyword-prefix
     link.className = 'muted-link tooltipped tooltipped-s mr-3'
     link.innerHTML = `${bugIcon} ${count}`
     link.href = `/${repoFullName}/issues`
     link.setAttribute('aria-label', `${count} issues`)
+    return link
+  }
+  /**
+   * Augment a repo with issue count
+   * @param {HTMLElement} repo - The repo element
+   */
+  async function augmentRepo(repo) {
+    repo.classList.add(utils.id)
+    const repoFullName = getRepoFullName(repo)
+    if (repoFullName === '') return
+    const lastLink = repo.querySelector('.mr-3.Link--muted:last-of-type')
+    utils.debug({ lastLink, repo })
+    const count = await fetchIssueCountViaAPI(repoFullName)
+    const link = createIssueCountLink(repoFullName, count)
     lastLink?.insertAdjacentHTML('afterend', link.outerHTML)
   }
   /**
