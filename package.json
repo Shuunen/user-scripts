@@ -14,7 +14,7 @@
     "repo-check": "1.42",
     "shuutils": "10.6",
     "tailwindcss": "3.4",
-    "typescript": "5.7",
+    "typescript": "5.8",
     "vitest": "3.0"
   },
   "files": [
