@@ -7,7 +7,7 @@
 // @name         Github AIO
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
-// @version      0.0.1
+// @version      1.0.0
 // ==/UserScript==
 
 const bugIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" class="octicon octicon-repo-issues" viewBox="0 0 53 53">
