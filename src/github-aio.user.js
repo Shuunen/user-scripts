@@ -29,21 +29,27 @@ const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
     userRepos: '#user-repositories-list > ul > li:not(.github-aio)',
   }
   /**
-   * Fetch issue count via API with caching
+   * Get issue count from cache
    * @param {string} repoFullName The full name of the repo like "owner/repo"
-   * @returns {Promise<number>} The issue count
+   * @param {string} cacheKey The cache key to use
+   * @returns {number} The issue count or -1 if not found
    */
-  // eslint-disable-next-line max-statements
-  function fetchIssueCount(repoFullName) {
-    const cacheKey = `github-aio-issues-${repoFullName}`
+  function getIssueCountCached(repoFullName, cacheKey) {
     const cachedData = localStorage.getItem(cacheKey)
-    if (cachedData) {
-      const { count, timestamp } = JSON.parse(cachedData)
-      if (Date.now() - timestamp < cacheDurationMs) {
-        utils.debug('Using cached issue count for', repoFullName)
-        return Promise.resolve(count)
-      }
-    }
+    if (!cachedData) return -1
+    const { count, timestamp } = JSON.parse(cachedData)
+    const isFresh = Date.now() - timestamp < cacheDurationMs
+    if (!isFresh) return -1
+    utils.debug('using cached issue count for', repoFullName)
+    return count
+  }
+  /**
+   * Fetch issue count via API
+   * @param {string} repoFullName The full name of the repo like "owner/repo"
+   * @param {string} cacheKey The cache key to use
+   * @returns {Promise<number>} The issue count or -1 on error
+   */
+  function getIssueCountApi(repoFullName, cacheKey) {
     utils.log('fetching issue count for', repoFullName)
     const apiUrl = `https://api.github.com/repos/${repoFullName}/issues?state=open`;
     const headers = { 'Accept': 'application/vnd.github.v3+json' };
@@ -59,6 +65,17 @@ const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
         utils.error(`GitHub Issue Counter: Error for ${repoFullName}`, error);
         return -1; // Return -1 on error to prevent breaking the UI
       });
+  }
+  /**
+   * Fetch issue count via API with caching
+   * @param {string} repoFullName The full name of the repo like "owner/repo"
+   * @returns {Promise<number>} The issue count
+   */
+  function getIssueCount(repoFullName) {
+    const cacheKey = `github-aio-issues-${repoFullName}`
+    const cachedCount = getIssueCountCached(repoFullName, cacheKey)
+    if (cachedCount !== -1) return Promise.resolve(cachedCount)
+    return getIssueCountApi(repoFullName, cacheKey)
   }
   /**
    * Get repository full name from repo element
@@ -104,7 +121,7 @@ const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
     if (repoFullName === '') return
     const lastLink = repo.querySelector(selectors.lastLink)
     utils.debug({ lastLink, repo })
-    const count = await fetchIssueCount(repoFullName)
+    const count = await getIssueCount(repoFullName)
     const link = createIssueCountLink(repoFullName, count)
     lastLink?.insertAdjacentHTML('afterend', link.outerHTML)
   }
