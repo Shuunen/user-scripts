@@ -14,28 +14,47 @@ const bugIcon = `<svg class="octicon octicon-repo-issues" xmlns="http://www.w3.o
 				<path d="m39.2 0c2 0 3.7 1.5 3.7 3.4 0 1.9-1.7 3.4-3.7 3.4l-0.9-0.1-3.4 4c2.3 1.6 4.4 3.8 6 6.4-4 1.2-8.9 1.9-14.2 1.9-5.3 0-10.1-0.7-14.2-1.9 1.5-2.6 3.5-4.7 5.7-6.3l-3.5-4.1c-0.2 0-0.4 0.1-0.6 0.1-2 0-3.7-1.5-3.7-3.4 0-1.9 1.7-3.4 3.7-3.4 2 0 3.7 1.5 3.7 3.4 0 0.7-0.2 1.3-0.6 1.8l3.5 4.2c1.8-0.8 3.8-1.3 5.9-1.3 2 0 3.9 0.4 5.6 1.2l3.7-4.3c-0.3-0.5-0.4-1-0.4-1.6 0-1.9 1.6-3.4 3.7-3.4zm11.8 28.5c1.2 0 2.2 0.9 2.2 2 0 1.1-1 2-2.2 2l-6.7 0c-0.1 1.5-0.3 2.9-0.6 4.3l7.8 3.4c1.1 0.5 1.6 1.7 1.1 2.7-0.5 1-1.8 1.5-2.9 1l-7.2-3.1c-2.7 6.7-8 11.4-14.3 12.1l0-31.2c5.2-0.1 10-1 13.9-2.3l0.3 0.7 7.5-2.7c1.1-0.4 2.4 0.1 2.9 1.2 0.4 1.1-0.1 2.2-1.3 2.6l-7.9 2.8c0.3 1.4 0.6 2.9 0.7 4.5l6.7 0 0 0zm-48.7 0 6.7 0c0.1-1.5 0.3-3.1 0.7-4.5l-7.9-2.8c-1.1-0.4-1.7-1.6-1.3-2.6 0.4-1 1.7-1.6 2.9-1.2l7.5 2.7 0.3-0.7c3.9 1.3 8.7 2.1 13.9 2.3l0 31.2c-6.2-0.7-11.5-5.4-14.3-12.1l-7.2 3.1c-1.1 0.5-2.4 0-2.9-1-0.5-1 0-2.2 1.1-2.7l7.8-3.4c-0.3-1.4-0.5-2.8-0.6-4.3l-6.7 0c-1.2 0-2.2-0.9-2.2-2 0-1.1 1-2 2.2-2z" />
 			</svg>`;
 
+const minutesInHour = 60
+const msInSecond = 1000
+const cacheDurationMinutes = 30
+const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
+
 // eslint-disable-next-line max-statements
-(function githubAio() {
+(() => {
   /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('github-aio')
   const selectors = {
     userRepos: '#user-repositories-list > ul > li:not(.github-aio)',
   }
   /**
-   * Fetch issue count via API
+   * Fetch issue count via API with caching
    * @param {string} repoFullName The full name of the repo like "owner/repo"
    * @returns {Promise<number>} The issue count
    */
   function fetchIssueCountViaAPI(repoFullName) {
+    const cacheKey = `github-aio-issues-${repoFullName}`
+    const cachedData = localStorage.getItem(cacheKey)
+    if (cachedData) {
+      const { count, timestamp } = JSON.parse(cachedData)
+      if (Date.now() - timestamp < cacheDurationMs) {
+        utils.debug('Using cached issue count for', repoFullName)
+        return Promise.resolve(count)
+      }
+    }
     const apiUrl = `https://api.github.com/repos/${repoFullName}/issues?state=open`;
     const headers = { 'Accept': 'application/vnd.github.v3+json' };
     return fetch(apiUrl, { headers })
       .then(response => response.json())
       .then(issues => {
-        utils.debug('issues', issues)
-        return issues.length
+        const count = issues.length
+        localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: Date.now() }))
+        utils.debug('Cached issue count for', repoFullName)
+        return count
       })
-      .catch(error => { utils.error(`GitHub Issue Counter: Error for ${repoFullName}`, error); });
+      .catch(error => {
+        utils.error(`GitHub Issue Counter: Error for ${repoFullName}`, error);
+        return -1; // Return -1 on error to prevent breaking the UI
+      });
   }
   /**
    * Get repository full name from repo element
