@@ -10,14 +10,16 @@
 // @version      0.0.1
 // ==/UserScript==
 
-const bugIcon = `<svg class="octicon octicon-repo-issues" xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 53 53">
-				<path d="m39.2 0c2 0 3.7 1.5 3.7 3.4 0 1.9-1.7 3.4-3.7 3.4l-0.9-0.1-3.4 4c2.3 1.6 4.4 3.8 6 6.4-4 1.2-8.9 1.9-14.2 1.9-5.3 0-10.1-0.7-14.2-1.9 1.5-2.6 3.5-4.7 5.7-6.3l-3.5-4.1c-0.2 0-0.4 0.1-0.6 0.1-2 0-3.7-1.5-3.7-3.4 0-1.9 1.7-3.4 3.7-3.4 2 0 3.7 1.5 3.7 3.4 0 0.7-0.2 1.3-0.6 1.8l3.5 4.2c1.8-0.8 3.8-1.3 5.9-1.3 2 0 3.9 0.4 5.6 1.2l3.7-4.3c-0.3-0.5-0.4-1-0.4-1.6 0-1.9 1.6-3.4 3.7-3.4zm11.8 28.5c1.2 0 2.2 0.9 2.2 2 0 1.1-1 2-2.2 2l-6.7 0c-0.1 1.5-0.3 2.9-0.6 4.3l7.8 3.4c1.1 0.5 1.6 1.7 1.1 2.7-0.5 1-1.8 1.5-2.9 1l-7.2-3.1c-2.7 6.7-8 11.4-14.3 12.1l0-31.2c5.2-0.1 10-1 13.9-2.3l0.3 0.7 7.5-2.7c1.1-0.4 2.4 0.1 2.9 1.2 0.4 1.1-0.1 2.2-1.3 2.6l-7.9 2.8c0.3 1.4 0.6 2.9 0.7 4.5l6.7 0 0 0zm-48.7 0 6.7 0c0.1-1.5 0.3-3.1 0.7-4.5l-7.9-2.8c-1.1-0.4-1.7-1.6-1.3-2.6 0.4-1 1.7-1.6 2.9-1.2l7.5 2.7 0.3-0.7c3.9 1.3 8.7 2.1 13.9 2.3l0 31.2c-6.2-0.7-11.5-5.4-14.3-12.1l-7.2 3.1c-1.1 0.5-2.4 0-2.9-1-0.5-1 0-2.2 1.1-2.7l7.8-3.4c-0.3-1.4-0.5-2.8-0.6-4.3l-6.7 0c-1.2 0-2.2-0.9-2.2-2 0-1.1 1-2 2.2-2z" />
-			</svg>`;
+const bugIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" class="octicon octicon-repo-issues" viewBox="0 0 53 53">
+  <path d="M39 0c2 0 4 2 4 3 0 2-2 4-4 4h-1l-3 4 6 6-14 2-14-2 5-6-3-4h-1c-2 0-4-2-4-4 0-1 2-3 4-3s4 2 4 3l-1 2 4 4 6-1 5 1 4-4V3c0-1 1-3 3-3zm12 29c1 0 2 0 2 2l-2 2h-7v4l7 3c2 1 2 2 2 3l-3 1-8-3c-2 6-8 11-14 12V22c5 0 10-1 14-3v1l8-3c1 0 2 0 3 2 0 1 0 2-2 2l-7 3v5h7zM2 29h7l1-5-8-3-2-2 3-2 8 3v-1c4 2 9 2 14 3v31c-6-1-11-6-14-12l-7 3-3-1c-1-1 0-2 1-3l8-3-1-5-7 1-2-2c0-2 1-2 2-2z"/>
+</svg>`;
 let firstRun = true;
 const minutesInHour = 60
 const msInSecond = 1000
 const cacheDurationMinutes = 30
 const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
+const countError = -1;
+let stopQuerying = false;
 
 // eslint-disable-next-line max-statements
 (() => {
@@ -36,10 +38,10 @@ const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
    */
   function getIssueCountCached(repoFullName, cacheKey) {
     const cachedData = localStorage.getItem(cacheKey)
-    if (!cachedData) return -1
-    const { count, timestamp } = JSON.parse(cachedData)
+    if (!cachedData) return countError
+    const { count = countError, timestamp } = JSON.parse(cachedData)
     const isFresh = Date.now() - timestamp < cacheDurationMs
-    if (!isFresh) return -1
+    if (!isFresh) return countError
     utils.debug('using cached issue count for', repoFullName)
     return count
   }
@@ -47,23 +49,33 @@ const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
    * Fetch issue count via API
    * @param {string} repoFullName The full name of the repo like "owner/repo"
    * @param {string} cacheKey The cache key to use
+   * @param {number} cachedCount The cached count to use if available
    * @returns {Promise<number>} The issue count or -1 on error
    */
-  function getIssueCountApi(repoFullName, cacheKey) {
+  function getIssueCountApi(repoFullName, cacheKey, cachedCount) {
+    if (stopQuerying) {
+      utils.warn('stopping querying for issue count')
+      return Promise.resolve(cachedCount)
+    }
     utils.log('fetching issue count for', repoFullName)
     const apiUrl = `https://api.github.com/repos/${repoFullName}/issues?state=open`;
     const headers = { 'Accept': 'application/vnd.github.v3+json' };
     return fetch(apiUrl, { headers })
       .then(response => response.json())
-      .then(issues => {
-        const count = issues.length
+      .then(response => {
+        if (response.message.includes('rate limit exceeded')) {
+          utils.warn('github api rate limit exceeded, using cached count')
+          stopQuerying = true
+          return cachedCount
+        }
+        const count = response.length
         localStorage.setItem(cacheKey, JSON.stringify({ count, timestamp: Date.now() }))
-        utils.debug('Cached issue count for', repoFullName)
+        utils.debug('cached issue count for', repoFullName)
         return count
       })
       .catch(error => {
-        utils.error(`GitHub Issue Counter: Error for ${repoFullName}`, error);
-        return -1; // Return -1 on error to prevent breaking the UI
+        utils.error(`error on fetching repo issues for "${repoFullName}"`, error);
+        return countError;
       });
   }
   /**
@@ -74,8 +86,8 @@ const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
   function getIssueCount(repoFullName) {
     const cacheKey = `github-aio-issues-${repoFullName}`
     const cachedCount = getIssueCountCached(repoFullName, cacheKey)
-    if (cachedCount !== -1) return Promise.resolve(cachedCount)
-    return getIssueCountApi(repoFullName, cacheKey)
+    if (cachedCount !== countError) return Promise.resolve(cachedCount)
+    return getIssueCountApi(repoFullName, cacheKey, cachedCount)
   }
   /**
    * Get repository full name from repo element
@@ -105,10 +117,12 @@ const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
   function createIssueCountLink(repoFullName, count) {
     const link = document.createElement('a')
     // eslint-disable-next-line unicorn/no-keyword-prefix
-    link.className = 'muted-link tooltipped tooltipped-s mr-3'
-    link.innerHTML = `${bugIcon} ${count}`
+    link.className = `${count > 0 ? '' : 'Link--muted'} tooltipped tooltipped-s mr-3`
+    if (count > 0) link.style.color = 'var(--color-ansi-red) !important'
+    else if (count === 0) link.style.color = 'var(--color-ansi-green) !important'
+    link.innerHTML = `${bugIcon} ${count === countError ? '&nbsp;?' : count}`
     link.href = `/${repoFullName}/issues`
-    link.setAttribute('aria-label', `${count} issues`)
+    link.setAttribute('aria-label', 'see issues')
     return link
   }
   /**
@@ -128,26 +142,27 @@ const cacheDurationMs = cacheDurationMinutes * minutesInHour * msInSecond;
   /**
    * Augment user repos : add issue count
    */
-  function augmentUserRepos() {
+  async function augmentUserRepos() {
     const repos = utils.findAll(selectors.userRepos, document, true)
     if (repos.length === 0) {
-      if (firstRun) utils.showError('found no user repos to augment')
+      if (firstRun) utils.warn('found no user repos to augment')
       else utils.log('no more user repos to augment')
       firstRun = false
       return
     }
     firstRun = false
     utils.log(`found ${repos.length} user repos to augment`)
-    for (const repo of repos) augmentRepo(repo)
-    utils.showSuccess('augmented user repos')
+    // eslint-disable-next-line no-await-in-loop
+    for (const repo of repos) await augmentRepo(repo)
+    if (!stopQuerying) utils.showSuccess('augmented user repos')
   }
   /**
    * Process the page and hide elements
    * @param {string} reason - The reason for processing
    */
-  function process(reason = 'unknown') {
+  async function process(reason = 'unknown') {
     utils.debug(`process called because "${reason}"`)
-    augmentUserRepos()
+    await augmentUserRepos()
   }
   const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), 300) // eslint-disable-line no-magic-numbers
   globalThis.addEventListener('scroll', () => processDebounced('scroll'))
