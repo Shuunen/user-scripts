@@ -15,7 +15,7 @@ importers:
         specifier: link:lint
         version: link:lint
       '@types/node':
-        specifier: '22.15'
+        specifier: '22'
         version: 22.15.3
       eslint:
         specifier: '*'
