@@ -63,7 +63,7 @@ let stopQuerying = false;
     return fetch(apiUrl, { headers })
       .then(response => response.json())
       .then(response => {
-        if (response.message.includes('rate limit exceeded')) {
+        if (typeof response.message === 'string' && response.message.includes('rate limit exceeded')) {
           utils.warn('github api rate limit exceeded, using cached count')
           stopQuerying = true
           return cachedCount
