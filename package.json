@@ -11,11 +11,11 @@
     "eslint-plugin-shuunen": "0.4",
     "eslint-plugin-userscripts": "0.5",
     "oxlint": "0.16",
-    "repo-check": "1.42",
+    "repo-check": "1.43",
     "shuutils": "10.6",
     "tailwindcss": "3.4",
-    "typescript": "5.7",
-    "vitest": "3.0"
+    "typescript": "5.8",
+    "vitest": "3.1"
   },
   "files": [
     "src",
