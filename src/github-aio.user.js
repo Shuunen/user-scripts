@@ -130,7 +130,6 @@ let stopQuerying = false;
    * @param {HTMLElement} repo - The repo element
    */
   async function augmentRepo(repo) {
-    repo.classList.add(utils.id)
     const repoFullName = getRepoFullName(repo)
     if (repoFullName === '') return
     const lastLink = repo.querySelector(selectors.lastLink)
@@ -152,6 +151,8 @@ let stopQuerying = false;
     }
     firstRun = false
     utils.log(`found ${repos.length} user repos to augment`)
+    // important : mark all repos as processed before waiting for the async processes
+    for (const repo of repos) repo.classList.add(utils.id)
     // eslint-disable-next-line no-await-in-loop
     for (const repo of repos) await augmentRepo(repo)
     if (!stopQuerying) utils.showSuccess('augmented user repos')
