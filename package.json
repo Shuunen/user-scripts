@@ -43,6 +43,7 @@
     "postversion": "git push && git push --tags",
     "preversion": "pnpm check",
     "test": "vitest --run && echo test success",
+    "test:coverage": "fake bun test --coverage && echo test coverage success",
     "test:update": "vitest --run --update && echo test update success",
     "test:watch": "vitest"
   },
