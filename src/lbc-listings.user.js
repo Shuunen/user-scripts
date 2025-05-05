@@ -123,8 +123,7 @@ const citiesToHide = new Set([
    */
   function removeParagraphViewedStyle (paragraph) {
     paragraph.style.opacity = '1'
-    paragraph.classList.add(...utils.tw('max-w-md'))
-    paragraph.classList.add(cls.marker)
+    paragraph.classList.add(...utils.tw('max-w-md'), cls.marker)
   }
 
   function removeViewedStyles () {

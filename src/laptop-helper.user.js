@@ -33,7 +33,6 @@
 
 /* eslint-disable jsdoc/require-jsdoc */
 /* eslint-disable no-magic-numbers */
-/* eslint-disable unicorn/no-abusive-eslint-disable */
 
 // @ts-nocheck
 

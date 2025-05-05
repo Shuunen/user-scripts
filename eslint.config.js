@@ -1,17 +1,17 @@
-'use strict'
+import { base } from 'eslint-plugin-shuunen/configs/base'
+import { browser } from 'eslint-plugin-shuunen/configs/browser'
+import { node } from 'eslint-plugin-shuunen/configs/node'
+import userscripts from 'eslint-plugin-userscripts'
+import custom from './lint/index.js'
 
-// @ts-expect-error missing types
-const shuunen = require('eslint-plugin-shuunen')
-const userscripts = require('eslint-plugin-userscripts') // @ts-ignore
-const custom = require('./lint/index')
+// @ts-expect-error type mismatch
+const noRestrictedSyntaxRules = (base[1]?.rules?.['no-restricted-syntax'] ?? []).slice(1).filter((rule) => rule.selector !== 'ThrowStatement')
 
-const noRestrictedSyntaxRules = shuunen.configs.base[1].rules['no-restricted-syntax'].slice(1)
-
-module.exports = [
-  ...shuunen.configs.base,
-  ...shuunen.configs.browser,
-  ...shuunen.configs.node,
-  // ...shuunen.configs.typescript, // add me when you have a big hour to fix the 1300+ errors ^^''
+export default [
+  ...base,
+  ...browser,
+  ...node,
+  // ...typescript, // add me when you have a big hour to fix the 1300+ errors ^^''
   {
     languageOptions: {
       globals: {

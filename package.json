@@ -8,7 +8,7 @@
     "@custom/eslint-plugin": "link:lint",
     "@types/node": "22",
     "eslint": "*",
-    "eslint-plugin-shuunen": "0.4",
+    "eslint-plugin-shuunen": "1.3",
     "eslint-plugin-userscripts": "0.5",
     "oxlint": "0.16",
     "repo-check": "1.43",
@@ -46,5 +46,6 @@
     "test:update": "vitest --run --update && echo test update success",
     "test:watch": "vitest"
   },
+  "type": "module",
   "version": "2.6.4"
 }
