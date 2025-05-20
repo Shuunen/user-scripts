@@ -8,7 +8,7 @@
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
-// @version      1.0.3
+// @version      1.0.4
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
@@ -20,7 +20,7 @@
   const selectors = {
     details: '[data-pl="product-title"]',
     name: '[data-pl="product-title"]',
-    photo: '[class^="image-view--previewBox"] img',
+    photo: '[class^="image-view"] > div > img',
   }
   /**
    * Handles the form submission event.
