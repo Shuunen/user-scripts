@@ -12,7 +12,7 @@
     "eslint-plugin-userscripts": "0.5",
     "knip": "latest",
     "oxlint": "0.16",
-    "repo-check": "1.43",
+    "repo-check": "1.44",
     "shuutils": "10.6",
     "tailwindcss": "4.1",
     "typescript": "5.8",
