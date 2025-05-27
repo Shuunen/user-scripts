@@ -10,7 +10,7 @@
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require      https://cdn.tailwindcss.com
-// @version      0.0.6
+// @version      1.0.0
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
@@ -19,12 +19,12 @@ const config = {
   averageNote: {
     class: 'bg-yellow-200',
     isDisplayed: false,
-    keyword: 'Bof',
+    keyword: 'bof',
   },
   badNote: {
     class: 'bg-red-200',
     isDisplayed: false,
-    keyword: 'Nope',
+    keyword: 'nope',
   },
   loading: {
     class: 'loading',
@@ -103,6 +103,9 @@ function getNoteIdFromNote (noteElement) {
   const cls = {
     marker: `${utils.id}-processed`,
   }
+  const uselessSelectors = {
+    floatingSidebar: '[class^="styles_sideColumn__"]',
+  }
   /* Init DB */// @ts-ignore
   const { Client, Databases, ID, Query } = Appwrite
   const db = { // eslint-disable-line unicorn/prevent-abbreviations
@@ -144,9 +147,9 @@ function getNoteIdFromNote (noteElement) {
     const id = 'lbc-nts'
     if (!element) throw new Error(`no element to hide for cause "${cause}"`)
     element.classList.add(...utils.tw('overflow-hidden transition-all duration-500 ease-in-out hover:h-[215px] hover:opacity-100 hover:filter-none'))
-    element.classList.toggle('h-24', willHide)
+    element.classList.toggle('h-40', willHide)
     element.classList.toggle('grayscale', willHide)
-    element.classList.toggle('opacity-50', willHide)
+    element.classList.toggle('opacity-40', willHide)
     element.parentElement?.classList.toggle(`${id}-hidden`, willHide)
     element.parentElement?.classList.toggle(`${id}-hidden-cause-${cause}`, willHide)
   }
@@ -292,12 +295,12 @@ function getNoteIdFromNote (noteElement) {
     const note = createNoteElement(listingId)
     listingElement.parentElement?.classList.add(...utils.tw('relative'))
     listingElement.parentElement?.append(note)
-    note.classList.add(...utils.tw('absolute top-0 translate-x-[350%]'))
+    note.classList.add(...utils.tw('absolute top-10 translate-x-[330%]'))
   }
   function addNotesToListings () {
     utils.log('add note to each listing')
     /** @type {HTMLAnchorElement[]} */// @ts-ignore
-    const listings = utils.findAll(`a[data-test-id="ad"]:not(.${cls.marker})`)
+    const listings = utils.findAll(`article[data-test-id="ad"] > a:not(.${cls.marker})`)
     for (const listing of listings) {
       listing.classList.add(cls.marker)
       const listingId = getListingId(listing.href)
@@ -313,7 +316,7 @@ function getNoteIdFromNote (noteElement) {
   function addNoteToPage (listingId) {
     utils.log('addNoteToPage', listingId)
     const note = createNoteElement(listingId)
-    note.classList.add(...utils.tw('fixed right-5 top-56'))
+    note.classList.add(...utils.tw('fixed right-[37rem] bottom-40'))
     document.body.append(note)
   }
   let isProcessing = false
@@ -326,6 +329,7 @@ function getNoteIdFromNote (noteElement) {
     if (isProcessing) return
     isProcessing = true
     utils.log('process cause :', reason)
+    utils.hideElements(uselessSelectors, 'useless')
     const id = getListingId()
     if (id) addNoteToPage(id)
     else addNotesToListings()
@@ -353,10 +357,12 @@ function getNoteIdFromNote (noteElement) {
     .${utils.id}-hidden .${utils.id}--note,
     .lbc-lpp-hidden .${utils.id}--note {
       max-height: 60px;
+      opacity: 0.4;
     }
     .${utils.id}-hidden .${utils.id}--note:hover,
     .lbc-lpp-hidden .${utils.id}--note:hover {
       max-height: 140px;
+      opacity: 1;
     }
   `)
   const processDebounced = utils.debounce(process, 300) // eslint-disable-line no-magic-numbers
