@@ -62,4 +62,4 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 
 ## Page views
 
-[![Free Website Counter](https://www.websitecounterfree.com/c.php?d=9&id=63985&s=12)](https://www.websitecounterfree.com)
+[![Views Counter](https://views-counter.vercel.app/badge?pageId=Shuunen%2Fuser-scripts&leftColor=5c5c5c&rightColor=07a62f&type=total&label=Visitors&style=none)](https://github.com/Kumara2mahe/Views-Counter)
