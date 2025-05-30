@@ -11,7 +11,7 @@
     "eslint-plugin-shuunen": "1.3",
     "eslint-plugin-userscripts": "0.5",
     "knip": "latest",
-    "oxlint": "0.16",
+    "oxlint": "0.17",
     "repo-check": "1.44",
     "shuutils": "10.6",
     "tailwindcss": "4.1",
