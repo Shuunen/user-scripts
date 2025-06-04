@@ -114,7 +114,7 @@ function getNoteIdFromNote (noteElement) {
     notesCollectionId: localStorage.getItem('lbcNotes_notesCollectionId'),
     project: localStorage.getItem('lbcNotes_project'),
   }
-  if (!db.databaseId || !db.notesCollectionId) { utils.error('missing lbcNotes_databaseId or lbcNotes_notesCollectionId in localStorage'); return }
+  if (!db.databaseId || !db.notesCollectionId) { utils.showError('missing lbcNotes_databaseId or lbcNotes_notesCollectionId in localStorage'); return }
   const client = new Client()
   const databases = new Databases(client)
   client.setEndpoint(db.endpoint).setProject(db.project)
@@ -201,7 +201,8 @@ function getNoteIdFromNote (noteElement) {
    * @returns {void}
    */
   function saveNoteFailure (note, noteElement, error) {
-    utils.error(`failed to ${note.noteId ? 'update' : 'create'} note for listing ${note.listingId}`, error)
+    utils.showError(`failed to ${note.noteId ? 'update' : 'create'} note for listing ${note.listingId}`)
+    utils.error(error)
     noteElement.classList.remove(config.loading.class)
     noteElement.classList.add(...utils.tw('border-4 border-red-500'))
   }
