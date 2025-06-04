@@ -54,6 +54,8 @@ const prices = {
   '2,000': { amount: 2000, currency: '' },
   '2,000 €': { amount: 2000, currency: '€' },
   '+32,815.77 $': { amount: 32_815.77, currency: '$' },
+  '190 €': { amount: 190, currency: '€' },
+  '190 €': { amount: 190, currency: '€' },
   '31 415,92 €': { amount: 31_415.92, currency: '€' },
   '$2,000.00': { amount: 2000, currency: '$' },
   '$5 678.90': { amount: 5678.9, currency: '$' },

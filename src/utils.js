@@ -1,4 +1,3 @@
-
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-magic-numbers */
 
@@ -8,7 +7,7 @@
 // eslint-disable-next-line no-restricted-syntax
 class Shuutils {
   id = ''
-  version = '2.6.4'
+  version = '2.6.5'
   willDebug = false
   /**
    * The ShuUserScriptUtils constructor
@@ -324,12 +323,14 @@ class Shuutils {
    * @returns {{amount: number, currency: string}} the parsed price, like { amount: 12.34, currency: '€' } or { amount: -12.34, currency: '$' }
    */
   parsePrice (input) {
-    const { currencyEnd, currencyStart, decimals, integers, integersOnly, sign = '' } = /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u.exec(input.trim())?.groups ?? {}
+    // Normalize all space-like characters to regular space
+    const normalizedInput = input.replace(/[\s\u00A0\u2000-\u200B\u202F\u205F\u3000]+/gu, ' ').trim()
+    const { currencyEnd, currencyStart, decimals, integers, integersOnly, sign = '' } = /^(?<sign>-)?\+?(?<currencyStart>[$€])? ?(?:(?<integers>[\d .,]+)(?<decimals>[.,]\d{2})|(?<integersOnly>[\d .,]+)) ?(?<currencyEnd>[$€])?$/u.exec(normalizedInput)?.groups ?? {}
     const integer = (integers ?? integersOnly ?? '').replace(/\D/gu, '')
     const fraction = decimals ? decimals.slice(1) : '00'
     const currency = currencyStart ?? currencyEnd ?? ''
     const amount = Number.parseFloat(`${sign + integer}.${fraction}`)
-    return { amount, currency };
+    return { amount, currency }
   }
   /**
    * Pick a random element from an array
