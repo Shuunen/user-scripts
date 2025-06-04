@@ -16,7 +16,7 @@
     "shuutils": "10.6",
     "tailwindcss": "4.1",
     "typescript": "5.8",
-    "vitest": "3.1"
+    "vitest": "3.2"
   },
   "files": [
     "src",
