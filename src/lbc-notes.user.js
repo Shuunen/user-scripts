@@ -6,11 +6,11 @@
 // @match        https://www.leboncoin.fr/*
 // @name         LeBonCoin Notes
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.5/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require      https://cdn.tailwindcss.com
-// @version      1.0.0
+// @version      1.1.0
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
@@ -253,6 +253,61 @@ function getNoteIdFromNote (noteElement) {
   }
 
   /**
+   * Extract the price for a given listingId from the DOM
+   * @param {number} listingId - The listing id to search for in the DOM
+   * @returns {string} The price as a string, or empty string if not found
+   */
+  // eslint-disable-next-line max-statements
+  function getListingPrice (listingId) {
+    utils.log('getListingPrice for listingId', listingId)
+    // eslint-disable-next-line no-useless-assignment
+    let text = ''
+    const listingElement = utils.findOne(`[data-list-id="${listingId}"]`, document, true)
+    if (listingElement) {
+      text = listingElement.dataset.price || ''
+      utils.log('getListingPrice, listingElement found:', listingElement, 'price:', text)
+    } else {
+      const priceElement = utils.findOne('[data-qa-id="adview_price"]', document, true)
+      utils.log('getListingPrice, priceElement found:', priceElement)
+      text = priceElement?.textContent?.trim() || ''
+    }
+    if (text === '') {
+      utils.error(`getListingPrice, no price found for listing ${listingId}`)
+      return ''
+    }
+    const { amount, currency } = utils.parsePrice(text)
+    utils.log(`found price for listing ${listingId} :`, { amount, currency, text })
+    return `${amount} ${currency}`
+  }
+
+  /**
+   * Get the prefilled note value (date + price if available)
+   * @param {number} listingId - The listing id to get the price for
+   * @param {string} content - The current content of the note
+   * @returns {string} Prefilled note value with date and price if available
+   */
+  function addTodayPrice (listingId, content = '') {
+    const today = new Date().toLocaleDateString('fr-FR')
+    const price = getListingPrice(listingId)
+    if (content === '') return price ? `${today} : ${price}\n` : `${today} \n` // If no content, return just the date and price if available
+    if (content.includes(config.badNote.keyword)) return content // no need to add the price if the note is already marked as bad
+    if (content.includes(price)) return content // If the price is already in the content, return it as is
+    return `${content}\n${today} : ${price}\n`
+  }
+
+  /**
+   * Initialize the note style
+   * @param {HTMLTextAreaElement} noteElement the note element
+   * @returns {void}
+   */
+  function initNoteStyle (noteElement) {
+    noteElement.classList.add(...utils.tw('h-56 w-96'))
+    noteElement.classList.remove(config.loading.class)
+    noteElement.disabled = false
+    updateNoteStyle(noteElement)
+  }
+
+  /**
    * Load a note
    * @param {HTMLTextAreaElement} noteElement the note element
    * @returns {Promise<void>} a promise
@@ -263,13 +318,13 @@ function getNoteIdFromNote (noteElement) {
     const { noteContent, noteId } = await loadNoteFromLocalStore(listingId) ?? await loadNoteFromAppWrite(listingId)
     // eslint-disable-next-line require-atomic-updates
     noteElement.dataset.noteId = noteId
+    const updatedContent = addTodayPrice(listingId, noteContent)
     // eslint-disable-next-line require-atomic-updates
-    noteElement.textContent = noteContent
-    noteElement.classList.add(...utils.tw('h-56 w-96'))
-    noteElement.classList.remove(config.loading.class)
-    noteElement.disabled = false
-    updateNoteStyle(noteElement)
+    noteElement.textContent = updatedContent
+    initNoteStyle(noteElement)
+    if (updatedContent !== noteContent) saveNote(noteElement) // Save the updated content
   }
+
   /**
    * Create a note element
    * @param {number} listingId the listing id
@@ -285,6 +340,33 @@ function getNoteIdFromNote (noteElement) {
     loadNote(note)
     return note
   }
+
+  /**
+   * Add a price to a listing
+   * @param {HTMLAnchorElement} listingElement the listing element
+   * @param {number} listingId the listing id
+   * @returns {void}
+   */
+  // eslint-disable-next-line max-statements
+  function addPriceToListing (listingElement, listingId) {
+    utils.debug('add the price to listing', listingId)
+    if (!listingElement.parentElement) {
+      utils.showError(`addPriceToListing, no parent element found for listing ${listingId}`)
+      return
+    }
+    const priceElement = utils.findOne('[data-test-id="price"]', listingElement.parentElement, true)
+    if (!priceElement) {
+      utils.showError(`addPriceToListing, no price element found for listing ${listingId}`)
+      return
+    }
+    const { amount, currency } = utils.parsePrice(priceElement.textContent ?? '')
+    if (amount === 0) {
+      utils.error(`addPriceToListing, no price found for listing ${listingId}`, listingElement)
+      return
+    }
+    listingElement.dataset.price = `${amount} ${currency}` // Store the price in the listing element for later use
+  }
+
   /**
    * Add a note to a listing
    * @param {HTMLAnchorElement} listingElement the listing element
@@ -293,6 +375,8 @@ function getNoteIdFromNote (noteElement) {
    */
   function addNoteToListing (listingElement, listingId) {
     utils.debug('add the note to listing', listingId)
+    addPriceToListing(listingElement, listingId) // Add the price to the listing
+    listingElement.dataset.listId = listingId.toString() // Store the listing id in the listing element for later use
     const note = createNoteElement(listingId)
     listingElement.parentElement?.classList.add(...utils.tw('relative'))
     listingElement.parentElement?.append(note)
