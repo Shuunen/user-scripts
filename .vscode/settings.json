@@ -1,4 +1,7 @@
 {
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
   "cSpell.words": [
     "Aion",
     "auchan",
@@ -35,10 +38,11 @@
     "Vinted",
     "violentmonkey"
   ],
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "javascript.format.semicolons": "remove",
   "workbench.colorCustomizations": {
     "activityBar.background": "#0C323D",
     "titleBar.activeBackground": "#114655",
     "titleBar.activeForeground": "#F5FBFD"
-  },
-  "javascript.format.insertSpaceBeforeFunctionParenthesis": true
+  }
 }
