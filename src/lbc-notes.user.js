@@ -10,7 +10,7 @@
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require      https://cdn.tailwindcss.com
-// @version      1.1.0
+// @version      1.2.0
 // ==/UserScript==
 
 /* eslint-disable jsdoc/require-jsdoc */
@@ -104,6 +104,7 @@ function getNoteIdFromNote (noteElement) {
     marker: `${utils.id}-processed`,
   }
   const uselessSelectors = {
+    adWithDelivery: '[data-test-id="delivery-widget"]',
     floatingSidebar: '[class^="styles_sideColumn__"]',
   }
   /* Init DB */// @ts-ignore
@@ -138,7 +139,7 @@ function getNoteIdFromNote (noteElement) {
 
   /**
    * Hide the ad element
-   * @param {Element?} element the element to hide
+   * @param {HTMLElement?} element the element to hide
    * @param {string} cause the cause of the hide
    * @param {boolean} willHide true if the hide is active
    * @returns {void}
@@ -146,10 +147,12 @@ function getNoteIdFromNote (noteElement) {
   function hideAdElement (element, cause = 'unknown', willHide = true) {
     const id = 'lbc-nts'
     if (!element) throw new Error(`no element to hide for cause "${cause}"`)
-    element.classList.add(...utils.tw('overflow-hidden transition-all duration-500 ease-in-out hover:h-[215px] hover:opacity-100 hover:filter-none'))
+    element.dataset.lbcAdHiddenCause = cause
+    element.classList.add(...utils.tw('overflow-hidden transition-all duration-500 ease-in-out hover:h-auto hover:opacity-100 hover:filter-none'))
     element.classList.toggle('h-40', willHide)
     element.classList.toggle('grayscale', willHide)
     element.classList.toggle('opacity-40', willHide)
+    element.style.pointerEvents = 'auto'
     element.parentElement?.classList.toggle(`${id}-hidden`, willHide)
     element.parentElement?.classList.toggle(`${id}-hidden-cause-${cause}`, willHide)
   }
@@ -166,7 +169,10 @@ function getNoteIdFromNote (noteElement) {
     noteElement.classList.toggle(config.averageNote.class, isAverage)
     noteElement.classList.toggle(config.badNote.class, isBad)
     if (!multipleAdDisplayed()) return
+    utils.log('multiple ad displayed')
+    // @ts-expect-error type mismatch
     if (!config.averageNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'average-keyword', isAverage)
+    // @ts-expect-error type mismatch
     if (isBad && !config.badNote.isDisplayed) hideAdElement(noteElement.previousElementSibling, 'bad-keyword')
   }
 
@@ -367,6 +373,29 @@ function getNoteIdFromNote (noteElement) {
     listingElement.dataset.price = `${amount} ${currency}` // Store the price in the listing element for later use
   }
 
+  // eslint-disable-next-line max-statements
+  function mosaicToList () {
+    const mosaic = utils.findOne('[data-test-id="listing-mosaic"]', document, true)
+    if (!mosaic) return
+    utils.showLog('mosaicToList, converting mosaic to list')
+    mosaic.style.display = 'flex'
+    mosaic.style.flexDirection = 'column'
+    mosaic.style.gap = '5rem'
+    const ads = utils.findAll('[data-test-id="ad"]', mosaic)
+    for (const ad of ads) ad.style.maxWidth = '72%'
+    const cards = utils.findAll('[data-test-id="adcard-consumer-goods-list"]', mosaic)
+    for (const card of cards) {
+      card.style.display = 'flex'
+      card.style.flexDirection = 'row'
+      card.style.gap = '3rem'
+    }
+    const images = utils.findAll('[data-test-id="image"]', mosaic)
+    for (const image of images) {
+      image.style.height = '300px'
+      image.style.width = '400px'
+    }
+  }
+
   /**
    * Add a note to a listing
    * @param {HTMLAnchorElement} listingElement the listing element
@@ -384,6 +413,7 @@ function getNoteIdFromNote (noteElement) {
   }
   function addNotesToListings () {
     utils.log('add note to each listing')
+    mosaicToList()
     /** @type {HTMLAnchorElement[]} */// @ts-ignore
     const listings = utils.findAll(`article[data-test-id="ad"] > a:not(.${cls.marker})`)
     for (const listing of listings) {
