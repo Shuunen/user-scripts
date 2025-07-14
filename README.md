@@ -6,6 +6,12 @@
 
 > Personal heavily opinionated script I make to enhance my daily web experience.
 
+## Archived
+
+This current repo is archived since it migrated to [Shuunen/monorepo](https://github.com/Shuunen/monorepo/tree/master/apps/user-scripts).
+
+Further development will be done there 🚀
+
 ## Usage
 
 ![demo](docs/demo.gif)
