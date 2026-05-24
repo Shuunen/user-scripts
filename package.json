@@ -48,5 +48,5 @@
     "up:deps": "pnpm update --latest && echo Dependencies updated successfully"
   },
   "type": "module",
-  "version": "2.6.5"
+  "version": "2.6.6"
 }
