@@ -33,9 +33,11 @@
       return result
     }
     has(key) {
-      return this.get(key)
-        .then(Boolean)
-        .catch(() => false)
+      try {
+        return Boolean(this.get(key))
+      } catch {
+        return false
+      }
     }
     set(key, data) {
       this.provider[this.fullKey(key)] = typeof data === 'object' ? JSON.stringify(data) : data

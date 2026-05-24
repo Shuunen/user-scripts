@@ -33,7 +33,7 @@ function GitlabMr() {
       utils.showError('button is not an HTMLElement')
       return element
     }
-    const link = button.firstChild
+    const link = button.querySelector('a')
     if (!link) {
       utils.error('no link found in element', element)
       return button

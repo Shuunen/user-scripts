@@ -45,7 +45,7 @@ function DealabsAio() {
   function cleanClasses() {
     for (const key of Object.keys(uselessClasses))
       // @ts-expect-error it's ok
-      for (const node of utils.findAll(uselessClasses[key], document, true)) node.classList = []
+      for (const node of utils.findAll(uselessClasses[key], document, true)) node.className = ''
   }
   function insertStyles() {
     const styleTag = document.createElement('style')

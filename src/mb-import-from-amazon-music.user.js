@@ -15,7 +15,7 @@
 function MbImportFromAmazonMusic() {
   const utils = new Shuutils('amazon-mb-export')
   const selectors = {
-    artist: '[data-feature-name="artistLink"',
+    artist: '[data-feature-name="artistLink"]',
     title: '[data-feature-name="dmusicProductTitle"]',
   }
   function getTracks() {
