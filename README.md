@@ -55,7 +55,6 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 - [Knip](https://github.com/webpro/knip) : super tool to find & fix problems
 - [Oxc](https://oxc.rs) : a lovely super-fast collection of JavaScript tools written in Rust
 - [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) : blazing-fast linter from the Oxc project
-- [Repo-checker](https://github.com/Shuunen/repo-checker) : keeps repo structure & conventions in check
 - [Shields.io](https://shields.io) : for the nice badges on top of this readme
 - [Shuutils](https://github.com/Shuunen/shuutils) : collection of pure JS utils
 - [Svg Omg](https://jakearchibald.github.io/svgomg/) : the great king of svg file size reduction
