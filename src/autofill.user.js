@@ -1,16 +1,27 @@
 // ==UserScript==
+// @name         Autofill
 // @author       Romain Racamier-Lafon
 // @description  Simply fill your login everywhere
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/autofill.user.js
-// @name         Autofill
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/autofill.user.js
+// @grant        none
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=autofill.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.0.5
 // ==/UserScript==
 
-// eslint-disable-next-line max-statements
-(function AutofillLogin () {
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+/**
+ * Trigger a change event on an input element
+ * @param {HTMLInputElement} element the input element
+ * @returns {void}
+ */
+function triggerChange(element) {
+  element.dispatchEvent(new KeyboardEvent('change'))
+  element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
+}
+
+function Autofill() {
   const utils = new Shuutils('auto-fill')
   const data = {
     email: atob('cm9tYWluLnJhY2FtaWVyQGdtYWlsLmNvbQ=='),
@@ -22,26 +33,18 @@
     phoneCountry: '[id="areaCode-+33"]',
   }
   /**
-   * Trigger a change event on an input element
-   * @param {HTMLInputElement} element the input element
-   * @returns {void}
-   */
-  function triggerChange (element) {
-    element.dispatchEvent(new KeyboardEvent('change'))
-    element.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
-  }
-  /**
    * Get the inputs matching the selector
    * @param {string} selector the selector to match
    * @returns {HTMLInputElement[]} the inputs if any
    */
-  function getInputs (selector) { // @ts-ignore
+  function getInputs(selector) {
+    // @ts-expect-error it's ok ^^
     return utils.findAll(selector, document, true)
   }
   /**
    * Fill the login input with the email
    */
-  function fillLogin () {
+  function fillLogin() {
     for (const input of getInputs(selectors.login)) {
       if (input.type === 'password' || input.value.length > 0) continue
       input.value = data.email
@@ -52,10 +55,13 @@
   /**
    * Fill the phone input with the phone number
    */
-  function fillPhone () {
+  function fillPhone() {
     // select the right country before filling the phone
     const country = utils.findOne(selectors.phoneCountry, document, true)
-    if (country === undefined) { utils.debug('no country selector found'); return }
+    if (country === undefined) {
+      utils.debug('no country selector found')
+      return
+    }
     country.click()
     for (const input of getInputs(selectors.phone)) {
       if (input.value.length > 0) continue
@@ -67,12 +73,15 @@
   /**
    * Init the autofill
    */
-  function init () {
+  function init() {
     utils.log('autofill start...')
     fillLogin()
     fillPhone()
   }
-  const initDebounced = utils.debounce(init, 1000) // eslint-disable-line no-magic-numbers
+  const initDebounced = utils.debounce(init, 1000)
   if (document.location.hostname === 'localhost') return
   utils.onPageChange(() => initDebounced())
-})()
+}
+
+if (globalThis.window) Autofill()
+else module.exports = { triggerChange }

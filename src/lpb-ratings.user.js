@@ -1,21 +1,17 @@
 // ==UserScript==
+// @name         Le Petit Ballon - Ratings
 // @author       Romain Racamier-Lafon
 // @description  See your ratings when buying
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lpb-ratings.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/lpb-ratings.user.js
 // @grant        none
 // @match        https://www.lepetitballon.com/*
-// @name         Le Petit Ballon - Ratings
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=lepetitballon.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/fuse.js@6.6.2
 // @version      1.0.2
 // ==/UserScript==
-
-// @ts-nocheck
-/* eslint-disable no-magic-numbers */
-/* eslint-disable jsdoc/require-jsdoc */
-
-/* globals Fuse */
 
 const ratingsCsv = `domaine des bergeonnieres saint nicolas de bourgueil vielles vignes,3.6
 fabrice petit brut recoltant manipulant montier en l isle,4.0
@@ -394,42 +390,47 @@ chateau grand puy lacoste lacoste borie pauillac,5.0
 mouton cadet bordeaux rouge,3.0
 la prade mari gourmandise des bois,2.5
 chateau saint ahon haut medoc,4.0
-gallo family vineyards summer red,1.0
-chateau lynch bages pauillac,4.0
-san pedro gato negro rose,1.0`
-
+gallo family vineyards summer red,1.0`
 
 /**
  * Clean a title string
  * @param {string} title The title to clean
  * @returns {string} The cleaned title
  */
-function cleanTitle (title) {
+function cleanTitle(title) {
   return title
-    .replace(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
-    .replace(/\d{4}/gu, ' ') // remove year
-    .replace(/['’-]/gu, ' ').normalize('NFD').replace(/[^\d\sa-z]/giu, '').toLowerCase() // from shuutils sanitize
-    .replace(/\b(?:chateau|clos|cuvee|de|domaine|du|la|le|maison|vini)s?\b/gu, ' ') // remove common words
-    .replace(/\s+/gu, ' ')
+    .replaceAll(/\([^(]+\)/gu, ' ') // remove parenthesis content(s)
+    .replaceAll(/\d{4}/gu, ' ') // remove year
+    .replaceAll(/['’-]/gu, ' ')
+    .normalize('NFD')
+    .replaceAll(/[^\d\sa-z]/giu, '')
+    .toLowerCase() // from shuutils sanitize
+    .replaceAll(/\b(?:chateau|clos|cuvee|de|domaine|du|la|le|maison|vini)s?\b/gu, ' ') // remove common words
+    .replaceAll(/\s+/gu, ' ')
     .trim()
 }
 
-const ratings = ratingsCsv.split('\n').map((line) => {
-  const [title, rating] = line.split(',')
+const ratings = ratingsCsv.split('\n').map(line => {
+  const [title = '', rating = ''] = line.split(',')
   return {
-    rating: Number.parseFloat(rating, 10),
+    rating: Number.parseFloat(rating),
     title: cleanTitle(title),
   }
 })
 
-// eslint-disable-next-line max-statements
-function createReview (name, rating) {
+/**
+ * Creates a styled review element representing a user rating
+ * @param {string} name - The name of the reviewer.
+ * @param {number} rating - The rating given by the reviewer (typically between 1 and 5).
+ * @returns {HTMLDivElement} The styled review div element.
+ */
+function createReview(name, rating) {
   const review = document.createElement('div')
   review.classList.add('my-review')
-  review.style.width = `${Math.max(rating / 5 * 100, 20)}%` // 5 stars will be 100% width
-  review.style.height = `${12}px`
+  review.style.width = `${Math.max((rating / 5) * 100, 20)}%` // 5 stars will be 100% width
+  review.style.height = `12px`
   review.style.margin = '2px 0'
-  review.style.borderRadius = `${5}px`
+  review.style.borderRadius = `5px`
   review.style.backgroundColor = 'red'
   review.style.backgroundImage = 'url("https://i.pinimg.com/originals/d5/a7/cb/d5a7cb46e2f15a8fed10aaf1dd00965c.gif")'
   review.style.backgroundBlendMode = 'color-dodge'
@@ -440,8 +441,7 @@ function createReview (name, rating) {
   return review
 }
 
-// eslint-disable-next-line max-statements, max-lines-per-function
-function lePetitBallonRatings () {
+function LpbRatings() {
   if (globalThis.matchMedia === undefined) return
   const fuseSettings = {
     includeScore: true,
@@ -449,22 +449,22 @@ function lePetitBallonRatings () {
     minMatchCharLength: 4,
     threshold: 0.4,
   }
-  const fuse = new Fuse(ratings, fuseSettings)
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+  // @ts-expect-error Fuse is globally available
+  const fuse = new Fuse(ratings, fuseSettings) // oxlint-disable-line no-undef
+
   const utils = new Shuutils('lpb-ratings')
   const selectors = {
     items: `.product-item:not(.${utils.id})`,
     useless: '.product-catalog--out-stock, .footer-trustpilot, .footer-legal',
     wineTitle: '.product-catalog__title',
   }
-  function hideUseless () {
+  function hideUseless() {
     for (const node of utils.findAll(selectors.useless, document, true))
-      if (utils.app.debug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
+      if (utils.willDebug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
       else node.style.display = 'none'
   }
 
-  // eslint-disable-next-line complexity
-  function searchRating (wine = '') {
+  function searchRating(wine = '') {
     const results = fuse.search(wine)
     if (results.length === 0) return { isMatching: false }
     const [result] = results
@@ -476,27 +476,34 @@ function lePetitBallonRatings () {
     return { isMatching: true, percent, rating, search: wine, title }
   }
 
-  // eslint-disable-next-line max-statements
-  function injectRating (item) {
+  /**
+   * @param {HTMLElement} item The item to inject the rating into
+   */
+  function injectRating(item) {
     item.classList.add(utils.id)
     const title = utils.findOne(selectors.wineTitle, item, true)
-    if (!title) { utils.error('no title found on item', item); return }
+    if (!title) {
+      utils.error('no title found on item', item)
+      return
+    }
     const domain = title.nextElementSibling
-    const wine = cleanTitle(`${domain.textContent} ${title.textContent}`)
+    const wine = cleanTitle(`${domain?.textContent} ${title.textContent}`)
     const result = searchRating(wine)
     if (!result.isMatching) return
     utils.log('found', result)
     title.prepend(createReview(result.title, result.rating))
   }
 
-  function injectRatings () {
-    for (const item of utils.findAll(selectors.items))
-      injectRating(item)
+  function injectRatings() {
+    for (const item of utils.findAll(selectors.items)) injectRating(item)
   }
 
-  async function init () {
+  async function init() {
     const items = await utils.waitToDetect(selectors.items)
-    if (items === undefined) { utils.log('no item found on this page'); return }
+    if (items === undefined) {
+      utils.log('no item found on this page')
+      return
+    }
     hideUseless()
     injectRatings()
   }
@@ -506,8 +513,5 @@ function lePetitBallonRatings () {
   globalThis.addEventListener('DOMNodeInserted', () => injectRatingsDebounced())
 }
 
-lePetitBallonRatings()
-
-if (module) module.exports = {
-  cleanTitle,
-}
+if (globalThis.window) LpbRatings()
+else module.exports = { cleanTitle, createReview }

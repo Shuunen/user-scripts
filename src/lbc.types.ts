@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
 type LbcAdAttribute = {
   generic: boolean
   key_label?: string
@@ -13,10 +11,28 @@ type LbcHousingAdAttribute = LbcAdAttribute & {
 }
 
 export type LbcCarAdAttribute = LbcAdAttribute & {
-  key: 'ad_warranty_type' | 'brand' | 'doors' | 'fuel' | 'gearbox' | 'horse_power_din' | 'is_import' | 'issuance_date' | 'mileage' | 'model' | 'profile_picture_url' | 'regdate' | 'seats' | 'u_utility_brand' | 'u_utility_model' | 'vehicle_is_eligible_p2p' | 'vehicle_vsp' | 'vehicule_color'
+  key:
+    | 'ad_warranty_type'
+    | 'brand'
+    | 'doors'
+    | 'fuel'
+    | 'gearbox'
+    | 'horse_power_din'
+    | 'is_import'
+    | 'issuance_date'
+    | 'mileage'
+    | 'model'
+    | 'profile_picture_url'
+    | 'regdate'
+    | 'seats'
+    | 'u_utility_brand'
+    | 'u_utility_model'
+    | 'vehicle_is_eligible_p2p'
+    | 'vehicle_vsp'
+    | 'vehicule_color'
 }
 
-export interface LbcAdImages {
+export type LbcAdImages = {
   nb_images: number
   small_url: string
   thumb_url: string
@@ -25,18 +41,18 @@ export interface LbcAdImages {
   urls_thumb: string[]
 }
 
-export interface LbcAdLocationFeatureGeometry {
+export type LbcAdLocationFeatureGeometry = {
   coordinates: number[]
   type: string
 }
 
-export interface LbcAdLocationFeature {
+export type LbcAdLocationFeature = {
   geometry: LbcAdLocationFeatureGeometry
   properties: null
   type: string
 }
 
-export interface LbcAdLocation {
+export type LbcAdLocation = {
   city: string
   city_label: string
   country_id: string
@@ -53,7 +69,7 @@ export interface LbcAdLocation {
   zipcode: string
 }
 
-export interface LbcAdOptions {
+export type LbcAdOptions = {
   booster: boolean
   gallery: boolean
   has_option: boolean
@@ -62,7 +78,7 @@ export interface LbcAdOptions {
   urgent: boolean
 }
 
-export interface LbcAdOwner {
+export type LbcAdOwner = {
   activity_sector: string
   name: string
   no_salesmen: boolean
@@ -111,7 +127,7 @@ export type LbcCustomInfo = {
   /**
    * info tailwind classes to enhance display & UX
    * @example ['bg-red-500', 'text-white']
-  */
+   */
   classes?: string[]
   /**
    * a score between 0 (bad), 1 (normal) and 2 (super)

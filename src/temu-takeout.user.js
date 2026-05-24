@@ -1,63 +1,65 @@
 // ==UserScript==
+// @name         Temu Takeout - Get data with you
 // @author       Shuunen
 // @description  This script let you export data from Temu
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/temu-takeout.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/temu-takeout.user.js
 // @grant        none
-// @match        https://www.temu.*/*
-// @name         Temu Takeout - Get data with you
+// @match        https://www.temu.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=temu.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.2
 // ==/UserScript==
 
-(function TemuTakeout () {
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+/**
+ * Get the data from the page.
+ * @returns {Record<'brand' | 'details' | 'name' | 'photo' | 'price' | 'reference', string>} The data.
+ */
+function getData() {
+  // @ts-expect-error rawData is not defined but exists in the page
+  // oxlint-disable no-undef
+  const { store } = rawData
+  if (store === undefined) throw new Error('No rawData.store in page')
+  if (store.googleShoppingJson !== undefined) {
+    const data = JSON.parse(store.googleShoppingJson)
+    return {
+      brand: data.brand.name,
+      details: data.description,
+      name: data.name,
+      photo: data.image,
+      price: data.offers.price,
+      reference: data.sku,
+    }
+  }
+  if (store.seoPageAltInfo === undefined) throw new Error('No rawData.store.seoPageAltInfo in page')
+  if (store.goods === undefined) throw new Error('No rawData.store.goods in page')
+  return {
+    brand: 'Temu',
+    details: store.seoPageAltInfo.pageAlt,
+    name: store.seoPageAltInfo.pageAlt,
+    photo: store.goods.hdThumbUrl,
+    price: String(store.goods.minOnSalePrice / 100),
+    reference: store.goods.itemId,
+  }
+}
+
+function TemuTakeout() {
   const utils = new Shuutils('ldl-tko')
   /**
    * Handles the form submission event.
    * @param {object} values - The form values.
    */
-  async function onSubmit (values) {
+  async function onSubmit(values) {
     utils.log('Form submitted with', { values })
     await utils.copyToClipboard(values)
     utils.showSuccess('Data copied to clipboard')
   }
   /**
-   * Get the data from the page.
-   * @returns {Record<'brand' | 'details' | 'name' | 'photo' | 'price' | 'reference', string>} The data.
-   */
-  function getData () {
-    /* global rawData */// @ts-expect-error rawData is not defined but exists in the page
-    const { store } = rawData
-    if (store === undefined) throw new Error('No rawData.store in page')
-    if (store.googleShoppingJson !== undefined) {
-      const data = JSON.parse(store.googleShoppingJson)
-      return {
-        brand: data.brand.name,
-        details: data.description,
-        name: data.name,
-        photo: data.image,
-        price: data.offers.price,
-        reference: data.sku,
-      }
-    }
-    if (store.seoPageAltInfo === undefined) throw new Error('No rawData.store.seoPageAltInfo in page')
-    if (store.goods === undefined) throw new Error('No rawData.store.goods in page')
-    return {
-      brand: 'Temu',
-      details: store.seoPageAltInfo.pageAlt,
-      name: store.seoPageAltInfo.pageAlt,
-      photo: store.goods.hdThumbUrl,
-      price: String(store.goods.minOnSalePrice / 100), // eslint-disable-line no-magic-numbers
-      reference: store.goods.itemId,
-    }
-  }
-  /**
    * Start the takeout process.
    */
-  // eslint-disable-next-line max-statements
-  function startTakeout () {
+  function startTakeout() {
     const data = getData()
     utils.log('found data', data)
     const form = createMbForm({ id: utils.id, title: 'Temu Takeout' }, onSubmit)
@@ -73,11 +75,14 @@
   /**
    * Initialize the script.
    */
-  function init () {
+  function init() {
     startTakeout()
   }
-  const initDebounced = utils.debounce(init, 500) // eslint-disable-line no-magic-numbers
-  initDebounced()
-  utils.onPageChange(initDebounced)
-})()
+  const processDebounceTime = 500
+  const processDebounced = utils.debounce(init, processDebounceTime)
+  processDebounced()
+  utils.onPageChange(processDebounced)
+}
 
+if (globalThis.window) TemuTakeout()
+else module.exports = { getData }

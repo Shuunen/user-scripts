@@ -1,21 +1,18 @@
 // ==UserScript==
+// @name         Instagram Wide
 // @author       Romain Racamier-Lafon
 // @description  Improve Instagram UX
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/instagram-wide.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/instagram-wide.user.js
 // @grant        none
-// @match        https://*.instagram.com/*
-// @name         Instagram Wide
+// @match        https://www.instagram.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=instagram.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
 // @version      1.0.3
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
-// eslint-disable-next-line max-statements
-(function instagramWide () {
-
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+function InstagramWide() {
   const utils = new Shuutils('instagram-wide')
   const uselessSelectors = {
     sidebar: 'main > div > div + div', // useless account suggestions
@@ -26,19 +23,19 @@
     wrapper: '[aria-hidden="true"][tabindex="0"][role="button"] > div[style]',
   }
 
-  function showVideoControls () {
-    /** @type {HTMLVideoElement[]} */
+  function showVideoControls() {
     const videos = Array.from(document.querySelectorAll('video:not([controls])'))
     if (videos.length === 0) return
     for (const video of videos) {
+      if (!(video instanceof HTMLVideoElement)) continue
       video.controls = true
-      // @ts-ignore
-      if (video.nextElementSibling) video.nextElementSibling.style.pointerEvents = 'none'
+
+      if (video.nextElementSibling instanceof HTMLElement) video.nextElementSibling.style.pointerEvents = 'none'
     }
     utils.log(`video controls added to ${videos.length} video${videos.length > 1 ? 's' : ''}`)
   }
 
-  function enlargeMain () {
+  function enlargeMain() {
     const main = utils.findOne(selectors.main)
     if (main === undefined) {
       utils.warn('Could not find main element')
@@ -49,7 +46,7 @@
     main.style.maxWidth = '1000px'
   }
 
-  function enlargeFeed () {
+  function enlargeFeed() {
     const feed = utils.findOne(selectors.feed)
     if (feed === undefined) {
       utils.warn('Could not find feed element')
@@ -58,8 +55,7 @@
     feed.style.width = '100%'
   }
 
-
-  function enlargeWrappers () {
+  function enlargeWrappers() {
     const wrappers = utils.findAll(selectors.wrapper)
     if (wrappers.length === 0) {
       utils.warn('Could not find wrapper elements')
@@ -72,16 +68,18 @@
     }
   }
 
-  function process (reason = 'unknown') {
-    utils.debug(`process called because "${reason}"`)
+  function start(reason = 'unknown') {
+    utils.debug(`start called because "${reason}"`)
     utils.hideElements(uselessSelectors, 'useless')
     enlargeMain()
     enlargeFeed()
     enlargeWrappers()
     showVideoControls()
   }
+  const startDebounceTime = 300
+  const startDebounced = utils.debounce((/** @type {string | undefined} */ reason) => start(reason), startDebounceTime)
+  globalThis.addEventListener('scroll', () => startDebounced('scroll'))
+  utils.onPageChange(() => startDebounced('page-change'))
+}
 
-  const processDebounced = utils.debounce((/** @type {string} */ reason) => process(reason), 300) // eslint-disable-line no-magic-numbers
-  globalThis.addEventListener('scroll', () => processDebounced('scroll'))
-  utils.onPageChange(() => processDebounced('page-change'))
-})()
+if (globalThis.window) InstagramWide()

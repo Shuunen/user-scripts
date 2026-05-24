@@ -1,7 +1,9 @@
 // ==UserScript==
+// @name         Laptop Helper
 // @author       Romain Racamier-Lafon
 // @description  Add annotations on displayed informations
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/laptop-helper.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/laptop-helper.user.js
 // @grant        none
 // @match        https://bestware.com/*
 // @match        https://deals.dell.com/*
@@ -18,25 +20,27 @@
 // @match        https://www.laptopspirit.fr/*
 // @match        https://www.ldlc.com/*
 // @match        https://www.lenovo.com/*
-// @match        https://www.lenovo.com/*
 // @match        https://www.materiel.net/*
 // @match        https://www.newegg.com/*
 // @match        https://www.notebookcheck.net/*
 // @match        https://www.topachat.com/*
 // @match        https://www.tuxedocomputers.com/*
-// @name         Laptop Helper
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=bestware.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @version      1.0.3
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-/* eslint-disable no-magic-numbers */
+// @ts-nocheck FIX ME later, I don't use Laptop Helper for now
+// oxlint-disable no-immediate-mutation
 
-// @ts-nocheck
-
-function getColorForScore (percent) {
+/**
+ * Get the color for a given score percentage
+ * @param {number} percent - The score percentage
+ * @returns {string} The HSL color string
+ */
+function getColorForScore(percent) {
   const alpha = 30
   if (percent <= 35) return `hsl(0deg 100% 50% / ${alpha}%)` // red
   if (percent <= 50) return `hsl(35deg 100% 50% / ${alpha}%)` // orange
@@ -44,7 +48,7 @@ function getColorForScore (percent) {
   return `hsl(120deg 100% 50% / ${alpha}%)` // green
 }
 
-function getScoresForRam (ram, score) {
+function getScoresForRam(ram, score) {
   const scores = {}
   scores[`${ram}gb`] = score
   scores[`${ram}go`] = score
@@ -53,7 +57,7 @@ function getScoresForRam (ram, score) {
   return scores
 }
 
-function getScoresForScreen (inches, score) {
+function getScoresForScreen(inches, score) {
   const scores = {}
   scores[`${inches} pouce`] = score
   scores[`${inches}"`] = score
@@ -65,7 +69,7 @@ function getScoresForScreen (inches, score) {
   return scores
 }
 
-function getScoresForWifi (wifi, score) {
+function getScoresForWifi(wifi, score) {
   const scores = {}
   scores[`wifi ${wifi}`] = score
   scores[`wifi${wifi}`] = score
@@ -73,14 +77,14 @@ function getScoresForWifi (wifi, score) {
   return scores
 }
 
-function getScoreForRefresh (refresh, score) {
+function getScoreForRefresh(refresh, score) {
   const scores = {}
   scores[`${refresh}hz`] = score
   scores[`${refresh} hz`] = score
   return scores
 }
 
-function getScoreForResolution (resolution, score) {
+function getScoreForResolution(resolution, score) {
   const scores = {}
   scores[`${resolution}p`] = score
   scores[`${resolution} p`] = score
@@ -88,20 +92,20 @@ function getScoreForResolution (resolution, score) {
 }
 
 const scoresByKeyword = {
-  'backlit': 70,
-  'FHD': 30,
-  'fingerprint': 70,
-  'Full HD': 30,
-  'gtx': 70,
-  'Keyboard Light': 70,
-  'led': 70,
-  'lock': 70,
-  'NvmE': 80,
-  'Oled': 70,
-  'power delivery': 70,
-  'rtx': 70,
-  'ssd': 70,
   ' tn ': 50,
+  backlit: 70,
+  fhd: 30,
+  fingerprint: 70,
+  'full hd': 30,
+  gtx: 70,
+  'keyboard light': 70,
+  led: 70,
+  lock: 70,
+  nvme: 80,
+  oled: 70,
+  'power delivery': 70,
+  rtx: 70,
+  ssd: 70,
   ...getScoreForResolution('1080', 30),
   ...getScoreForResolution('1200', 60),
   ...getScoreForResolution('1440', 70),
@@ -134,35 +138,60 @@ const scoresByKeyword = {
   ...getScoreForRefresh(240, 70),
 }
 
-/* eslint-disable */
-function b2a (a) {
-  // biome-ignore lint/style/useSingleVarDeclarator: <explanation>
-  let c, d, e, f, g, h, i, j, o, b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", k = 0, l = 0, m = "", n = []
+// oxlint-disable-next-line no-abusive-eslint-disable
+/* oxlint-disable */
+function b2a(a) {
+  let c,
+    d,
+    e,
+    f,
+    g,
+    h,
+    i,
+    j,
+    o,
+    b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
+    k = 0,
+    l = 0,
+    m = '',
+    n = []
   if (!a) return a
-  do c = a.charCodeAt(k++), d = a.charCodeAt(k++), e = a.charCodeAt(k++), j = c << 16 | d << 8 | e,
-    // biome-ignore lint/style/noCommaOperator: <explanation>
-    f = 63 & j >> 18, g = 63 & j >> 12, h = 63 & j >> 6, i = 63 & j, n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i); while (k < a.length)
-  // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
-  // biome-ignore lint/style/noCommaOperator: <explanation>
-  return m = n.join(""), o = a.length % 3, (o ? m.slice(0, o - 3) : m) + "===".slice(o || 3)
+  do
+    ((c = a.charCodeAt(k++)),
+      (d = a.charCodeAt(k++)),
+      (e = a.charCodeAt(k++)),
+      (j = (c << 16) | (d << 8) | e),
+      (f = 63 & (j >> 18)),
+      (g = 63 & (j >> 12)),
+      (h = 63 & (j >> 6)),
+      (i = 63 & j),
+      (n[l++] = b.charAt(f) + b.charAt(g) + b.charAt(h) + b.charAt(i)))
+  while (k < a.length)
+  return ((m = n.join('')), (o = a.length % 3), (o ? m.slice(0, o - 3) : m) + '==='.slice(o || 3))
 }
 
-function a2b (a) {
-  // biome-ignore lint/style/useSingleVarDeclarator: <explanation>
-  let b, c, d, e = {}, f = 0, g = 0, h = "", i = String.fromCharCode, j = a.length
-  for (b = 0; 64 > b; b++) e["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".charAt(b)] = b
-  // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
-  for (c = 0; j > c; c++) for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8;) ((d = 255 & f >>> (g -= 8)) || j - 2 > c) && (h += i(d))
+function a2b(a) {
+  let b,
+    c,
+    d,
+    e = {},
+    f = 0,
+    g = 0,
+    h = '',
+    i = String.fromCharCode,
+    j = a.length
+  for (b = 0; 64 > b; b++) e['ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.charAt(b)] = b
+  for (c = 0; j > c; c++) for (b = e[a.charAt(c)], f = (f << 6) + b, g += 6; g >= 8; ) ((d = 255 & (f >>> (g -= 8))) || j - 2 > c) && (h += i(d))
   return h
 }
-/* eslint-enable */
+/* oxlint-enable */
 
 /**
  * Encode a string to base64
  * @param {string} string_ the string to encode
  * @returns {string} the encoded string
  */
-function stringToBase64 (string_) {
+function stringToBase64(string_) {
   return b2a(string_)
 }
 
@@ -171,7 +200,7 @@ function stringToBase64 (string_) {
  * @param {string} string_ the string to decode
  * @returns {string} the decoded string
  */
-function base64ToString (string_) {
+function base64ToString(string_) {
   return a2b(string_)
 }
 
@@ -181,8 +210,8 @@ function base64ToString (string_) {
  * @param {string} name the CPU name to clean
  * @returns {string} the cleaned CPU name
  */
-function cleanCpuName (name) {
-  return name.replace(/amd|ryzen \d|core i\d-|gold|intel|pentium|pro|silver/giu, '').trim()
+function cleanCpuName(name) {
+  return name.replaceAll(/amd|ryzen \d|core i\d-|gold|intel|pentium|pro|silver/giu, '').trim()
 }
 
 const data = `AMD Ryzen 3 5125C	3 %
@@ -324,10 +353,7 @@ for (const line of data.split('\n')) {
 /**
  * Laptop Helper
  */
-// eslint-disable-next-line max-lines-per-function, max-statements
-function laptopHelper () {
-  /* global RoughNotation */
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+function LaptopHelper() {
   const utils = new Shuutils('lpt-hlp')
   const cls = {
     mark: `${utils.id}-mark`,
@@ -335,20 +361,52 @@ function laptopHelper () {
   const selectors = {
     clearLinks: '.comparo_table_description a, .contenttable td a',
     desc: [
-      'h1', '.specs > li', 'dd', '.product_details_item', '.infos_strenghts > li',
-      '.techSpecs-table td', '.cd-features-list > li', '.no-checkbox', '.checkbox > a',
-      '.ProductShowcase__title__SBCBw', 'h1 + .a-unordered-list > li > span.a-list-item',
-      '.configuratorItem-mtmTable-description', '.text-start label',
-      '.see-more > div > span', '.tech-spec-content', '.sd-ps-spec-item > div',
-      '.userHtml', '.ps-iconography-specs-label', '.c-product__description',
-      '.wp-block-table td', '.keypoints__item', '.comparo_table_description',
-      '.search tr > td', '.secondary-title', '.description p', 'p > strong',
-      '.prodDetAttrValue', '.v-list-item[role="listitem"]', '.value > p',
-      '.contenttable td', '.td-spec > span', '.prod_details > li', '.specs_details',
-      '.product-item-short-specs > p', '.resulspace', '.colorTipContent', '.desc',
-      '.short_desc', 'div[data-asin] span.a-text-normal', '.c-product__title',
-      '.pdt-info .title-3 a', '.thread-title--list', 'article .libelle h3',
-    ].map(sel => `${sel}:not(.${cls.mark})`).join(','),
+      'h1',
+      '.specs > li',
+      'dd',
+      '.product_details_item',
+      '.infos_strenghts > li',
+      '.techSpecs-table td',
+      '.cd-features-list > li',
+      '.no-checkbox',
+      '.checkbox > a',
+      '.ProductShowcase__title__SBCBw',
+      'h1 + .a-unordered-list > li > span.a-list-item',
+      '.configuratorItem-mtmTable-description',
+      '.text-start label',
+      '.see-more > div > span',
+      '.tech-spec-content',
+      '.sd-ps-spec-item > div',
+      '.userHtml',
+      '.ps-iconography-specs-label',
+      '.c-product__description',
+      '.wp-block-table td',
+      '.keypoints__item',
+      '.comparo_table_description',
+      '.search tr > td',
+      '.secondary-title',
+      '.description p',
+      'p > strong',
+      '.prodDetAttrValue',
+      '.v-list-item[role="listitem"]',
+      '.value > p',
+      '.contenttable td',
+      '.td-spec > span',
+      '.prod_details > li',
+      '.specs_details',
+      '.product-item-short-specs > p',
+      '.resulspace',
+      '.colorTipContent',
+      '.desc',
+      '.short_desc',
+      'div[data-asin] span.a-text-normal',
+      '.c-product__title',
+      '.pdt-info .title-3 a',
+      '.thread-title--list',
+      'article .libelle h3',
+    ]
+      .map(sel => `${sel}:not(.${cls.mark})`)
+      .join(','),
   }
   const keywords = Object.keys(scoresByKeyword)
   utils.log(keywords.length, 'keywords with associated scores')
@@ -359,8 +417,7 @@ function laptopHelper () {
    * @param {HTMLElement} element - The element to annotate
    * @returns {void}
    */
-  // eslint-disable-next-line max-statements, consistent-return
-  function annotate (element) {
+  function annotate(element) {
     let { keyword } = element.dataset
     keyword = scoresByKeyword[keyword] === undefined ? keyword.toLowerCase() : keyword
     const score = scoresByKeyword[keyword]
@@ -369,10 +426,11 @@ function laptopHelper () {
     element.dataset.score = score
     element.title = `Score : ${score}%`
     const color = getColorForScore(score)
+    // @ts-expect-error RoughNotation is a global variable
     let annotation = RoughNotation.annotate(element, { color, type: 'highlight' })
     annotation.show()
-    // eslint-disable-next-line no-magic-numbers
     if (score >= 80) {
+      // @ts-expect-error RoughNotation is a global variable
       annotation = RoughNotation.annotate(element.parentElement, { color: 'darkgreen', type: 'bracket' })
       annotation.show()
     }
@@ -380,27 +438,21 @@ function laptopHelper () {
   /**
    * Check items on the page
    */
-  function checkItems () {
+  function checkItems() {
     for (const descElement of utils.findAll(selectors.desc, document, true)) {
       descElement.classList.add(cls.mark)
-      // first close last opened console group, else closing nothing without throwing error
-      console.groupEnd() // eslint-disable-line no-console
-      descElement.innerHTML = descElement.innerHTML.replace(/&nbsp;/gu, '')
+      descElement.innerHTML = descElement.innerHTML.replaceAll('&nbsp;', '')
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
-      // eslint-disable-next-line no-magic-numbers
-      console.groupCollapsed(utils.ellipsisWords(text, 15)) // eslint-disable-line no-console
       utils.log('checking :', text)
       descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)
       for (const markElement of utils.findAll(`.${cls.mark}`, descElement, true)) annotate(markElement)
     }
-    console.groupEnd() // eslint-disable-line no-console
   }
   /**
    * Clear links
    */
-  function clearLinks () {
+  function clearLinks() {
     for (const link of utils.findAll(selectors.clearLinks, document, true)) {
-      // eslint-disable-next-line no-magic-numbers
       if (typeof link.href !== 'string' || link.href.length < 2) continue
       link.dataset.url = stringToBase64(link.href)
       link.href = '#'
@@ -415,17 +467,29 @@ function laptopHelper () {
   /**
    * Process the page
    */
-  function process () {
-    utils.log('processing')
+  function start() {
+    utils.log('starting processing')
     clearLinks()
     checkItems()
   }
-  // eslint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 500)
-  document.addEventListener('scroll', processDebounced)
-  utils.onPageChange(processDebounced)
-  // eslint-disable-next-line no-magic-numbers
-  setTimeout(processDebounced, 1000)
+  const startDebounced = utils.debounce(start, 500)
+  document.addEventListener('scroll', startDebounced)
+  utils.onPageChange(startDebounced)
+  setTimeout(startDebounced, 1000)
 }
 
-laptopHelper()
+if (globalThis.window) LaptopHelper()
+else
+  module.exports = {
+    a2b,
+    b2a,
+    base64ToString,
+    cleanCpuName,
+    getColorForScore,
+    getScoreForRefresh,
+    getScoreForResolution,
+    getScoresForRam,
+    getScoresForScreen,
+    getScoresForWifi,
+    stringToBase64,
+  }

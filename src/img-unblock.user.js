@@ -1,29 +1,30 @@
 // ==UserScript==
+// @name         ImgUnblock
 // @author       Romain Racamier-Lafon
 // @description  Use DuckDuckGo image proxy
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/img-unblock.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/img-unblock.user.js
 // @grant        none
 // @match        https://www.reddit.com/*
-// @name         Image Unblock
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.1.5
 // ==/UserScript==
 
-/* eslint-disable jsdoc/require-jsdoc */
-
-(function ImageUnblock () {
+function ImgUnblock() {
   const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('img-unblock')
   const selectors = {
     images: 'a[href^="https://i.imgur.com/"]:not(.img-unblock)',
   }
-  // eslint-disable-next-line max-statements
-  function process () {
-    /** @type {HTMLAnchorElement[]} */ // @ts-ignore
+  function start() {
     const images = utils.findAll(selectors.images)
     for (const element of images) {
+      if (!(element instanceof HTMLAnchorElement)) {
+        utils.error('element is not an anchor', element)
+        continue
+      }
       element.classList.add('img-unblock')
       if (!element.href.includes('.jpg') && !element.href.includes('.png')) continue
       utils.log('processing', element)
@@ -38,9 +39,11 @@
       element.parentElement.style.flexDirection = 'column'
     }
   }
-  // eslint-disable-next-line no-magic-numbers
-  const processDebounced = utils.debounce(process, 500)
+  const startDebounceTime = 500
+  const startDebounced = utils.debounce(start, startDebounceTime)
   utils.log('set scroll listener')
-  document.addEventListener('scroll', () => processDebounced())
-  utils.onPageChange(processDebounced)
-})()
+  document.addEventListener('scroll', () => startDebounced())
+  utils.onPageChange(startDebounced)
+}
+
+if (globalThis.window) ImgUnblock()

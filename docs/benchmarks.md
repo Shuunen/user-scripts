@@ -1,4 +1,3 @@
-
 # Benchmarks
 
 | date          | target | delay  | comment                       | machine            |

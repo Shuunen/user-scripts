@@ -1,19 +1,17 @@
 // ==UserScript==
+// @name         Trade Republic AIO
 // @author       Romain Racamier-Lafon
 // @description  Add some features to Trade Republic like investment report
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/trade-republic-aio.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/trade-republic-aio.user.js
 // @match        https://app.traderepublic.com/profile/transactions
-// @name         Trade Republic AIO
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=traderepublic.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
 // @version      1.1.1
 // ==/UserScript==
 
-/* eslint-disable no-console */
-/* eslint-disable no-magic-numbers */
-
-// eslint-disable-next-line max-statements
-(function TradeRepublicAio () {
+function TradeRepublicAio() {
   const data = {
     currentYear: new Date().getFullYear(),
   }
@@ -27,7 +25,6 @@
     entryPrice: '.timelineV2Event__price p',
     entrySubtitle: '.timelineV2Event__subtitle',
   }
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('trep-aio')
 
   /**
@@ -37,17 +34,20 @@
    * @param {string} date the date of the first investment, like "26/07"
    * @returns {string} the meter text
    */
-  function meterText (injected, spent, date) {
+  function meterText(injected, spent, date) {
     const [day, month] = date.split('/')
-    const readableDate = new Date(data.currentYear, Number(month) - 1, Number(day)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    const readableDate = new Date(data.currentYear, Number(month) - 1, Number(day)).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
     return `since ${readableDate.toLowerCase()} : ${injected.toFixed(2).replace('.', ',')} € injected and ${spent.toFixed(2).replace('.', ',')} € spent`
   }
 
   /**
    * Inject the elements needed for the script
    */
-  // eslint-disable-next-line max-statements
-  function injectElements () {
+  function injectElements() {
     if (document.querySelector(`#${elements.meter.id}`) !== null) return
     elements.meter.style.position = 'fixed'
     elements.meter.style.top = '0'
@@ -64,13 +64,11 @@
   /**
    * Show the invested amount and times
    */
-  // eslint-disable-next-line max-statements, complexity, max-lines-per-function
-  function showInvested () {
+  function showInvested() {
     let injected = 0
     let spent = 0
     const entries = utils.findAll(selectors.entries)
     for (const entry of entries) {
-      console.groupCollapsed(`entry ${entry.textContent}`)
       utils.log('entry element', entry)
 
       entry.style.borderLeftWidth = '4px'
@@ -81,7 +79,6 @@
       if (entry.getAttribute('aria-hidden') === 'true') {
         utils.log('skip, entry hidden, month section title for example')
         entry.style.borderLeftColor = 'gray'
-        console.groupEnd()
         continue
       }
 
@@ -89,7 +86,6 @@
       if (amountElement === undefined) {
         utils.log('skip, entry without amount, happens for card verification for example')
         entry.style.borderLeftColor = 'gray'
-        console.groupEnd()
         continue
       }
 
@@ -97,15 +93,13 @@
       if (amountText === '') {
         utils.showError('skip, empty amount detected')
         entry.style.borderLeftColor = 'red'
-        console.groupEnd()
         continue
       }
 
       const subtitleElement = utils.findOne(selectors.entrySubtitle, entry)
       if (subtitleElement === undefined) {
-        utils.showError('skip, subtitle element not found');
+        utils.showError('skip, subtitle element not found')
         entry.style.borderLeftColor = 'red'
-        console.groupEnd()
         continue
       }
 
@@ -113,7 +107,6 @@
       if (subtitleText === '') {
         utils.showError('skip, subtitle text empty for entry')
         entry.style.borderLeftColor = 'red'
-        console.groupEnd()
         continue
       }
 
@@ -121,14 +114,12 @@
       if (isInternal) {
         utils.log('skip, is an internal transaction')
         entry.style.borderLeftColor = 'grey'
-        console.groupEnd()
         continue
       }
 
       const { bottom, right, top } = amountElement.getBoundingClientRect()
       if (globalThis.innerHeight < bottom) {
         utils.log('skip, avoid entries outside viewport ^^')
-        console.groupEnd()
         continue
       }
 
@@ -143,13 +134,12 @@
       else spent += amount
       elements.meter.textContent = meterText(injected, spent, date)
       entry.style.borderLeftColor = isInjected ? 'green' : 'orange'
-      console.groupEnd()
     }
   }
   /**
    * Initializes the script.
    */
-  function init () {
+  function init() {
     utils.log('Trade Republic AIO start...')
     injectElements()
     showInvested()
@@ -160,7 +150,7 @@
    * Handles page mutations
    * @param {MutationRecord[]} mutations the mutations that occurred
    */
-  function onMutation (mutations) {
+  function onMutation(mutations) {
     // const { target } = event
     const element = mutations[0]?.addedNodes[0]
     if (element === null || element === undefined) return
@@ -173,4 +163,6 @@
   observer.observe(document.body, { childList: true, subtree: true })
   document.addEventListener('scroll', () => initDebounced())
   utils.onPageChange(initDebounced)
-})()
+}
+
+if (globalThis.window) TradeRepublicAio()

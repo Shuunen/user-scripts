@@ -1,21 +1,50 @@
 // ==UserScript==
+// @name         Amazon - Price per weight
 // @author       Romain Racamier-Lafon
 // @description  Display price per weight & sort ascending
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-price-per-weight.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/amazon-price-per-weight.user.js
 // @grant        none
-// @match        https://*.amazon.fr/*
-// @name         Amazon - Price per weight
+// @match        https://www.amazon.fr/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
-// @version      1.0.8
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @version      1.0.9
 // ==/UserScript==
 
 // @ts-nocheck
-/* eslint-disable no-magic-numbers */
-/* eslint-disable jsdoc/require-jsdoc */
 
-// eslint-disable-next-line max-statements
-(function AmazonPricePerWeight () {
+/**
+ * Converts a price string to a floating-point number.
+ * Replaces commas with dots to handle European decimal notation.
+ *
+ * @param {string} string - The price string to convert (e.g., "12,34" or "12.34").
+ * @returns {number} The parsed floating-point price.
+ */
+function priceStringToFloat(string) {
+  let price = string.replace(',', '.')
+  price = Number.parseFloat(price)
+  return price
+}
+
+/**
+ * Converts a floating-point price to a string formatted with one decimal place,
+ * replaces the decimal point with a comma, and appends a trailing zero.
+ *
+ * @param {number} number - The price value to format.
+ * @returns {string} The formatted price string (e.g., "12,30").
+ */
+function priceFloatToString(number) {
+  let price = number.toFixed(1)
+  price = `${price.replace('.', ',')}0`
+  return price
+}
+
+function getTitle(text) {
+  return text.split(' ').slice(0, 5).join(' ')
+}
+
+function AmazonPricePerWeight() {
   const app = {
     id: 'amz-kg',
     injectRealPrice: true,
@@ -44,12 +73,10 @@
   // selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
 
   const regex = {
-    /* eslint-disable prefer-named-capture-group */
     bulk: /lot de (\d+)/iu,
     price: /(eur|€)\s?(\d+,\d{2})/iu,
     pricePer: /(\d+,\d{2})\s€\/(\w+)/u,
     weight: /(\d+)\s?(g|kg|-)/iu,
-    /* eslint-enable prefer-named-capture-group */
   }
 
   const templates = {
@@ -58,12 +85,11 @@
     pricePerKilo: `<span class="a-color-price s-price a-text-bold ${cls.pricePer}">EUR {{pricePerKilo}}/kg</span>`,
   }
 
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils(app.id)
 
   const products = []
 
-  function shadeBadProducts () {
+  function shadeBadProducts() {
     const elements = utils.findAll(selectors.pantry, document, true)
     for (const element of elements) {
       const item = element.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement
@@ -75,19 +101,14 @@
     }
   }
 
-  function priceStringToFloat (string) {
-    let price = string.replace(',', '.')
-    price = Number.parseFloat(price)
-    return price
-  }
-
-  function priceFloatToString (number) {
-    let price = number.toFixed(1)
-    price = `${price.replace('.', ',')}0`
-    return price
-  }
-
-  function getPrice (text) {
+  /**
+   * Extracts the price from a given text using a regular expression.
+   * Logs warnings if the price cannot be found, and logs matches and price if `app.processOne` is enabled.
+   *
+   * @param {string} text - The input text containing the price information.
+   * @returns {number|undefined} The extracted price as a float, or undefined if not found.
+   */
+  function getPrice(text) {
     const matches = text.match(regex.price) || []
     if (matches.length !== 3) return utils.warn(`failed to find price in : "${text}"`, matches)
     if (app.processOne) utils.log('found price matches :', matches)
@@ -96,13 +117,13 @@
     return price
   }
 
-  function getWeightAndUnit (text) {
+  function getWeightAndUnit(text) {
     const matches = text.toLowerCase().match(regex.weight)
     if (app.processOne) utils.log('found weight matches & unit :', matches)
     const data = { unit: '', weight: 0 }
-    if (matches && matches.length === 3) {
-      data.weight = matches[1]
-      data.unit = matches[2]
+    if (matches?.length === 3) {
+      data.weight = matches.at(1) ?? 0
+      data.unit = matches.at(2) ?? ''
     }
     if (data.unit === '-') data.unit = 'g'
     else if (data.unit === '') utils.warn('failed to find a unit in :', text)
@@ -110,17 +131,16 @@
     return data
   }
 
-  function getBulk (text) {
+  function getBulk(text) {
     const matches = text.match(regex.bulk)
     // utils.log('found bulk matches :', matches)
-    let bulk = matches && matches.length === 2 ? matches[1] : '1'
+    let bulk = matches?.length === 2 ? matches[1] : '1'
     bulk = Number.parseInt(bulk, 10)
     // utils.log('found bulk', bulk)
     return bulk
   }
 
-  // eslint-disable-next-line max-statements
-  function getProductDataViaPricePer (text) {
+  function getProductDataViaPricePer(text) {
     const matches = text.replace('&nbsp;', ' ').match(regex.pricePer) || []
     const data = {
       bulk: 1,
@@ -135,21 +155,16 @@
     if (matches.length === 3) {
       data.price = priceStringToFloat(matches[1])
       data.weight = 1
-      data.unit = matches[2]
+      data.unit = matches.at(2) ?? ''
     }
-    if (data.unit === 'unit')
-      data.unit = ''
+    if (data.unit === 'unit') data.unit = ''
 
     if (!['', 'g', 'kg'].includes(data.unit)) utils.error('unit ?', data.unit)
     if (app.processOne) utils.log('found pricePer :', data)
     return data
   }
 
-  function getTitle (text) {
-    return text.split(' ').slice(0, 5).join(' ')
-  }
-
-  function getProductData (item, data = {}) {
+  function getProductData(item, data = {}) {
     const text = item.textContent.trim()
     const textClean = utils.readableString(text)
     if (!data.unit || data.unit === '') {
@@ -163,20 +178,19 @@
     return data
   }
 
-  function fill (template, data) {
+  function fill(template, data) {
     let tpl = String(template)
     for (const key of Object.keys(data)) {
       const string = `{{${key}}}`
       let value = data[key]
       if (key.includes('price') && value > 0) value = priceFloatToString(value)
       // utils.log('looking for', str)
-      tpl = tpl.replace(new RegExp(string, 'giu'), value)
+      tpl = tpl.replaceAll(new RegExp(string, 'giu'), value)
     }
     return tpl
   }
 
-  // eslint-disable-next-line max-statements
-  function showDebugData (item, data) {
+  function showDebugData(item, data) {
     let debug = utils.findOne(selectors.debug, item, true)
     if (!app.showDebug) {
       if (debug) debug.style.display = 'none' // if existing debug zone found
@@ -197,7 +211,7 @@
     else utils.error(data.title, ': failed at finding debug container', item)
   }
 
-  function getPricePerKilo (data) {
+  function getPricePerKilo(data) {
     data.pricePerKilo = 0
     if (data.weight === 0) return data
     const weight = data.weight * data.bulk
@@ -209,11 +223,13 @@
     return data
   }
 
-  // eslint-disable-next-line max-statements
-  function injectRealPrice (item, data) {
+  function injectRealPrice(item, data) {
     if (!app.injectRealPrice) return
     const price = utils.findOne(selectors.price, item)
-    if (!price) { utils.error('failed to find price el'); return }
+    if (!price) {
+      utils.error('failed to find price el')
+      return
+    }
     utils.log('injecting real price :', data)
     let text = ''
     if (data.pricePerKilo > 0) text = fill(templates.pricePerKilo, data)
@@ -224,8 +240,7 @@
     if (otherPrice) otherPrice.classList.remove('a-color-price', 'a-text-bold')
   }
 
-  // eslint-disable-next-line max-statements
-  function augmentProduct (item) {
+  function augmentProduct(item) {
     if (app.processOne) utils.log('augment', item)
     const pricePer = utils.findOne(selectors.pricePer, item, true)
     let data = {}
@@ -239,7 +254,7 @@
     products.push(data)
   }
 
-  function augmentProducts () {
+  function augmentProducts() {
     for (const item of utils.findAll(selectors.item)) augmentProduct(item)
     // sortProducts()
   }
@@ -262,7 +277,7 @@
   // })
   // }
 
-  function init () {
+  function init() {
     utils.log('is starting...')
     shadeBadProducts()
     if (app.processOne) augmentProduct(utils.findFirst(selectors.item))
@@ -271,4 +286,7 @@
   }
 
   init()
-})()
+}
+
+if (globalThis.window) AmazonPricePerWeight()
+else module.exports = { getTitle, priceFloatToString, priceStringToFloat }
