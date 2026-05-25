@@ -9,12 +9,13 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=instagram.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
-// @version      1.0.3
+// @version      1.0.6
 // ==/UserScript==
 
 function InstagramWide() {
   const utils = new Shuutils('instagram-wide')
   const uselessSelectors = {
+    muteButton: '[aria-label="Toggle audio"]', // mute button is useless when we unmute videos by default
     sidebar: 'main > div > div + div', // useless account suggestions
   }
   const selectors = {
@@ -24,15 +25,22 @@ function InstagramWide() {
   }
 
   function showVideoControls() {
-    const videos = Array.from(document.querySelectorAll('video:not([controls])'))
+    const videos = Array.from(document.querySelectorAll('video'))
     if (videos.length === 0) return
+    let newCount = 0
     for (const video of videos) {
       if (!(video instanceof HTMLVideoElement)) continue
+      // oxlint-disable-next-line unicorn/prefer-add-event-listener
+      video.onplay = () => {
+        if (video.muted) video.muted = false
+      }
+      if (video.muted) video.muted = false
+      if (video.controls) continue
       video.controls = true
-
+      newCount += 1
       if (video.nextElementSibling instanceof HTMLElement) video.nextElementSibling.style.pointerEvents = 'none'
     }
-    utils.log(`video controls added to ${videos.length} video${videos.length > 1 ? 's' : ''}`)
+    if (newCount > 0) utils.log(`video controls added to ${newCount} video${newCount > 1 ? 's' : ''}`)
   }
 
   function enlargeMain() {
@@ -55,6 +63,21 @@ function InstagramWide() {
     feed.style.width = '100%'
   }
 
+  function enlargeVideos() {
+    const containers = utils.findAll('div[data-visualcompletion="ignore-late-mutation"] div[style*="padding-bottom"]')
+    if (containers.length === 0) {
+      utils.warn('Could not find video containers')
+      return
+    }
+    for (const container of containers) {
+      if (!(container instanceof HTMLElement)) continue
+      const current = container.style.paddingBottom
+      if (!current.endsWith('%') || current === '200%') continue
+      container.style.paddingBottom = '200%'
+      utils.log(`padding-bottom changed from ${current} to 200%`)
+    }
+  }
+
   function enlargeWrappers() {
     const wrappers = utils.findAll(selectors.wrapper)
     if (wrappers.length === 0) {
@@ -74,6 +97,7 @@ function InstagramWide() {
     enlargeMain()
     enlargeFeed()
     enlargeWrappers()
+    enlargeVideos()
     showVideoControls()
   }
   const startDebounceTime = 300
