@@ -1,17 +1,16 @@
 // ==UserScript==
+// @name         Amazon - All in one
 // @author       Romain Racamier-Lafon
 // @description  Bigger listing
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/amazon-aio.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/amazon-aio.user.js
 // @grant        none
-// @match        https://*.amazon.fr/*
-// @name         Amazon - All in one
+// @match        https://www.amazon.fr/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      1.0.2
 // ==/UserScript==
-
-/* eslint-disable no-magic-numbers */
-/* eslint-disable max-statements */
 
 /**
  * Return the position of a value in an interval
@@ -41,8 +40,8 @@ const calcScore = (rating, reviews, explanation = false) => {
   const ratingScore = positionInInterval(rating, [2, 3, 4, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 5])
   const reviewsScore = ratingScore ? positionInInterval(reviews, [4, 8, 16, 32]) : 0
   let score = ratingScore + reviewsScore
-  if (reviewsScore === 0) score *= .3
-  if (reviewsScore === 1) score *= .5
+  if (reviewsScore === 0) score *= 0.3
+  if (reviewsScore === 1) score *= 0.5
   if (explanation) return `${score}pts (rating: ${rating}, ratingScore: ${ratingScore}, reviews: ${reviews}, reviewsScore: ${reviewsScore})`
   return score
 }
@@ -56,16 +55,15 @@ const calcScore = (rating, reviews, explanation = false) => {
 const score20Styled = (rating, reviews) => {
   const data = { color: 'black', score: 0, size: 1 }
   const value = calcScore(rating, reviews)
-  if (typeof value === 'number') data.score = Math.round(value / maxScore * 20)
+  if (typeof value === 'number') data.score = Math.round((value / maxScore) * 20)
   const index = positionInInterval(data.score, [8, 12, 16])
   data.color = ['red', 'darkorange', 'black', 'darkgreen'][index] ?? 'grey'
   data.size = index + 1
   return data
 }
 
-(function amazonAio () {
+function AmazonAio() {
   if (globalThis.matchMedia === undefined) return
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
   const utils = new Shuutils('amz-aio')
   const selectors = {
     product: '[data-asin][data-component-type="s-search-result"]:not(.AdHolder):not(.amz-processed)',
@@ -95,25 +93,22 @@ const score20Styled = (rating, reviews) => {
   /**
    * Delete useless elements
    */
-  function deleteUseless () {
-    for (const selector of Object.values(deleteUselessSelectors)) for (const node of utils.findAll(selector, document, true))
-      // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-      node.remove()
+  function deleteUseless() {
+    // node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
+    for (const selector of Object.values(deleteUselessSelectors)) for (const node of utils.findAll(selector, document, true)) node.remove()
   }
   /**
    * Clear classnames of some elements to remove their styles
    */
-  function clearClassnames () {
-    for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true))
-      // eslint-disable-next-line unicorn/no-keyword-prefix
-      node.className = ''
+  function clearClassnames() {
+    for (const selector of Object.values(clearClassSelectors)) for (const node of utils.findAll(selector, document, true)) node.className = ''
   }
   /**
    * Get the price in a text
    * @param {string} text The text
    * @returns {number} The price
    */
-  function getPrice (text) {
+  function getPrice(text) {
     const price = Number.parseFloat(text.replace(',', '.').replace(/\s/u, '') ?? '0')
     if (price === 0) utils.warn('failed to calc price from', { text })
     return price
@@ -123,7 +118,7 @@ const score20Styled = (rating, reviews) => {
    * @param {HTMLElement} element The element
    * @returns {number} The price
    */
-  function getPriceInElement (element) {
+  function getPriceInElement(element) {
     const text = element.textContent ?? ''
     if (text === '') {
       utils.warn('failed to find textContent in', element)
@@ -139,10 +134,10 @@ const score20Styled = (rating, reviews) => {
    * @param {HTMLDivElement} scoreSection The score section
    * @returns {number} The score by currency
    */
-  // eslint-disable-next-line max-params
-  function getScoreByCurrency (price, currency, score, scoreSection) {
+  // oxlint-disable-next-line max-params
+  function getScoreByCurrency(price, currency, score, scoreSection) {
     const scoreByCurrencySection = document.createElement('div')
-    const scoreByCurrency = Math.round(score / price * 100) / 100
+    const scoreByCurrency = Math.round((score / price) * 100) / 100
     scoreByCurrencySection.textContent += `💯 ${scoreByCurrency.toFixed(2)} pts/${currency}`
     const index = positionInInterval(scoreByCurrency, [0.2, 0.3, 0.4])
     scoreByCurrencySection.style.color = ['red', 'darkorange', 'black', 'darkgreen'][index] ?? 'grey'
@@ -159,8 +154,8 @@ const score20Styled = (rating, reviews) => {
    * @param {HTMLElement} parameters.scoreSection The score section
    * @returns {void} nothing and alter the score section dom element
    */
-  // eslint-disable-next-line complexity
-  function addPricePerWeight ({ currency, price, product, scoreSection }) {
+  // oxlint-disable complexity
+  function addPricePerWeight({ currency, price, product, scoreSection }) {
     const pricePerWeightElement = product.querySelector(selectors.productPricePerWeight)
     const pricePerWeightSection = document.createElement('div')
     if (pricePerWeightElement) {
@@ -176,13 +171,25 @@ const score20Styled = (rating, reviews) => {
     }
     if (pricePerWeightSection.textContent === '') {
       const title = utils.findOne('h2', product, true)?.textContent ?? ''
-      if (title === '') { utils.warn('failed to find title in', product); return }
+      if (title === '') {
+        utils.warn('failed to find title in', product)
+        return
+      }
       const { unitPer = '', weightPer = '' } = /(?<weightPer>\d+)\s?(?<unitPer>[kKgG]+)/u.exec(title)?.groups ?? {}
-      if (weightPer === '') { utils.log('failed to find weight in :', title); return }
-      if (unitPer === '') { utils.log('failed to find unit in :', title); return }
-      const grams = unitPer.toLowerCase() === 'g' ? Number.parseInt(weightPer, 10) : (unitPer.toLowerCase() === 'kg' ? Number.parseInt(weightPer, 10) * 1000 : 0)
-      if (grams === 0) { utils.warn('failed to find calc grams in', { title, unitPer, weightPer }); return }
-      const pricePerKg = Math.round(price / grams * 1000)
+      if (weightPer === '') {
+        utils.log('failed to find weight in :', title)
+        return
+      }
+      if (unitPer === '') {
+        utils.log('failed to find unit in :', title)
+        return
+      }
+      const grams = unitPer.toLowerCase() === 'g' ? Number.parseInt(weightPer, 10) : unitPer.toLowerCase() === 'kg' ? Number.parseInt(weightPer, 10) * 1000 : 0
+      if (grams === 0) {
+        utils.warn('failed to find calc grams in', { title, unitPer, weightPer })
+        return
+      }
+      const pricePerKg = Math.round((price / grams) * 1000)
       pricePerWeightSection.textContent = `${pricePerKg} ${currency}/kg`
       utils.debug({ grams, innerHtml: pricePerWeightSection.innerHTML, price, pricePerKg, title, unitPer, weightPer })
     }
@@ -190,6 +197,7 @@ const score20Styled = (rating, reviews) => {
     pricePerWeightSection.textContent = `⚖️ ${pricePerWeightSection.textContent}`
     scoreSection.append(pricePerWeightSection)
   }
+  // oxlint-enable complexity
   /**
    * Get the product score section
    * @param {object} parameters The parameters
@@ -201,9 +209,8 @@ const score20Styled = (rating, reviews) => {
    * @param {number} parameters.reviews The number of reviews, like 30
    * @returns {{ scoreSection:HTMLElement, scoreByCurrency:number }} The score section and the score by currency
    */
-  function generateScoreSection ({ color, product, rating, reviews, score, size }) {
+  function generateScoreSection({ color, product, rating, reviews, score, size }) {
     const scoreSection = document.createElement('div')
-    // eslint-disable-next-line unicorn/no-keyword-prefix
     scoreSection.className = 'amz-aio-score a-spacing-top-micro'
     const on20 = document.createElement('span')
     on20.textContent = `💯 ${score}/20`
@@ -225,7 +232,7 @@ const score20Styled = (rating, reviews) => {
    * @param {HTMLElement} element The element
    * @returns {number} The rating or review count
    */
-  function getRating (element) {
+  function getRating(element) {
     const html = element.outerHTML
     const value = /\d[,.]\d ?/u.exec(html)?.[0] ?? '0'
     const count = Number.parseFloat(value.replace(',', '.'))
@@ -237,7 +244,7 @@ const score20Styled = (rating, reviews) => {
    * @param {HTMLElement} element The element
    * @returns {number} The reviews count
    */
-  function getReviews (element) {
+  function getReviews(element) {
     const html = element.outerHTML
     const { p1 = '', p2 = '' } = /"(?<p1>\d+)(?:&nbsp;)?(?<p2>\d+)&nbsp;/u.exec(html)?.groups ?? {}
     const parts = p1 + p2
@@ -248,7 +255,7 @@ const score20Styled = (rating, reviews) => {
   /**
    * Inject the score in the page
    */
-  function injectScore () {
+  function injectScore() {
     const products = utils.findAll(selectors.product, document, true)
     // set amz-aio-score
     for (const product of products) {
@@ -257,9 +264,11 @@ const score20Styled = (rating, reviews) => {
       const title = utils.findOne('h2', product, true)?.textContent ?? ''
       const ratingSection = utils.findOne(selectors.productRatingSection, product, true)
       if (!ratingSection) continue
-      // @ts-ignore
-      const children = Array.from(ratingSection.firstChild?.children)
+      // @ts-expect-error it's ok
+      const /** @type HTMLElement[] */ children = Array.from(ratingSection.firstChild?.children)
+      // @ts-expect-error it's ok
       const rating = getRating(children.at(0))
+      // @ts-expect-error it's ok
       const reviews = getReviews(children.at(-1))
       const { color, score, size } = score20Styled(rating, reviews)
       const { scoreByCurrency, scoreSection } = generateScoreSection({ color, product, rating, reviews, score, size })
@@ -268,23 +277,21 @@ const score20Styled = (rating, reviews) => {
       product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70).toString()
     }
     // sort by score & apply position
-    for (const [index, product] of products.sort((productA, productB) => (Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0'))).entries())
-      product.style.order = index.toString()
+    for (const [index, product] of products.toSorted((productA, productB) => Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0')).entries()) product.style.order = index.toString()
   }
   /**
    * Process the page
    */
-  const process = () => {
-    utils.log('process...')
+  const start = () => {
+    utils.log('starting...')
     deleteUseless()
     clearClassnames()
     injectScore()
   }
-  const processDebounced = utils.debounce(process, 500)
-  utils.onPageChange(processDebounced)
-  globalThis.addEventListener('scroll', () => processDebounced())
-})()
-
-if (module) module.exports = {
-  maxScore, score: calcScore, score20Styled,
+  const startDebounced = utils.debounce(start, 500)
+  utils.onPageChange(startDebounced)
+  globalThis.addEventListener('scroll', () => startDebounced())
 }
+
+if (globalThis.window) AmazonAio()
+else module.exports = { calcScore, maxScore, positionInInterval, score20Styled }

@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+// oxlint-disable promise/prefer-await-to-callbacks, no-unused-vars
 
 /**
  * Get the text content from the node behind a css selector
@@ -6,11 +6,12 @@
  * @param {HTMLElement} [context] the context
  * @returns {string} the text content
  */
-function textFromSelector (selector, context) {
+function textFromSelector(selector, context) {
   const element = (context ?? document).querySelector(selector)
-  if (!element) return '' // @ts-ignore
+  if (!element) return ''
+  // @ts-expect-error it's ok
   const text = element.textContent || element.value || element.src || ''
-  return text.trim().replace(/^\W+/gu, '').replace(/\W+$/gu, '')
+  return text.trim().replaceAll(/^\W+/gu, '').replaceAll(/\W+$/gu, '')
 }
 
 /**
@@ -19,8 +20,7 @@ function textFromSelector (selector, context) {
  * @param {Function} [callback] a function to call with the data, prevent form submission is used
  * @returns {HTMLFormElement} the form
  */
-// eslint-disable-next-line max-statements
-function createMbForm (app, callback = () => ({})) {
+function createMbForm(app, callback = () => ({})) {
   const existing = document.querySelector(`#${app.id}`)
   if (existing) existing.remove()
   const form = document.createElement('form')
@@ -58,12 +58,13 @@ function createMbForm (app, callback = () => ({})) {
   header.style.fontSize = '24px'
   header.style.margin = '0'
   form.append(header)
-  if (callback) form.addEventListener('submit', (event) => {
-    event.preventDefault()
-    const formData = new FormData(form) // @ts-ignore it exists ^^'
-    const values = Object.fromEntries(formData.entries())
-    callback(values)
-  })
+  if (callback)
+    form.addEventListener('submit', event => {
+      event.preventDefault()
+      const formData = new FormData(form)
+      const values = Object.fromEntries(formData.entries())
+      callback(values)
+    })
   return form
 }
 
@@ -74,8 +75,8 @@ function createMbForm (app, callback = () => ({})) {
  * @param {string} value the field value
  * @param {boolean} isHidden if the field should be hidden
  */
-// eslint-disable-next-line max-params, max-statements
-function addMbField (form, name, value, isHidden = false) {
+// oxlint-disable-next-line max-params
+function addMbField(form, name, value, isHidden = false) {
   const colors = ['darkblue', 'green', 'darkred', 'darkorange', 'teal', 'brown', 'indigo']
   const nbExistingFields = form.querySelectorAll('.mb-field').length
   const color = colors[nbExistingFields % colors.length] ?? 'inherit'
@@ -117,8 +118,7 @@ function addMbField (form, name, value, isHidden = false) {
  * @param {string} [label] the button label
  * @returns {void} nothing
  */
-// eslint-disable-next-line max-statements
-function addMbSubmit (form, label = 'Export to MusicBrainz') {
+function addMbSubmit(form, label = 'Export to MusicBrainz') {
   const submit = document.createElement('input')
   submit.type = 'submit'
   submit.value = label
@@ -139,12 +139,8 @@ function addMbSubmit (form, label = 'Export to MusicBrainz') {
  * @param {{ app: { id:string, title: string }, title: string, artist: string, date: {day:string, month:string, year: string}, tracks: {number: string, name: string, artist: string, duration: string}[], label: string, url: string, urlType: string }} data the data to insert
  * @returns {void} nothing
  */
-// eslint-disable-next-line max-statements
-function insertMbForm ({ app, artist, date, label, title, tracks, url, urlType }) {
-  // eslint-disable-next-line no-console
-  if (!title || !artist) { console.info(app.id, 'cannot work without data, exiting...'); return }
-  // eslint-disable-next-line no-console
-  console.log(app.id, 'got data :', { artist, date, label, title, tracks, url, urlType })
+function insertMbForm({ app, artist, date, label, title, tracks, url, urlType }) {
+  if (!title || !artist) return
   const form = createMbForm(app)
   addMbField(form, 'name', title)
   addMbField(form, 'artist_credit.names.0.name', artist)

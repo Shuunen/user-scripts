@@ -1,17 +1,16 @@
 // ==UserScript==
+// @name         Gitlab - Contribution badge
 // @author       Romain Racamier-Lafon
 // @description  Display a badge on the top right corner of the page with the number of contributions you made today on Gitlab
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/gitlab-badge.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/gitlab-badge.user.js
 // @grant        none
 // @match        https://gitlab.com/*
-// @name         Gitlab - Contribution badge
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=gitlab.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
 // @version      0.0.5
 // ==/UserScript==
-
-// @ts-nocheck
-/* eslint-disable jsdoc/require-jsdoc */
 
 const badges = {
   bronze: 'https://i.imgur.com/APbU15u.png',
@@ -24,8 +23,11 @@ const steps = {
   silver: 20,
 }
 
-async function getNbContributions () {
+async function getNbContributions() {
+  // @ts-expect-error gon is a global variable set by Gitlab
+  // oxlint-disable no-undef
   const isOnUserProfile = gon.feature_category === 'user_profile'
+  // @ts-expect-error gon is a global variable set by Gitlab
   const username = isOnUserProfile ? document.location.pathname.slice(1) : gon.current_username
   if (!username) throw new Error('No username found, looked in global gon.current_username')
   const url = `https://gitlab.com/users/${username}/calendar.json`
@@ -37,69 +39,93 @@ async function getNbContributions () {
   return nb
 }
 
-function injectStyles (string = '') {
-  // eslint-disable-next-line no-console
-  if (string.length === 0) { console.log('cannot inject empty style stuff'); return }
+function injectStyles(string = '') {
+  if (string.length === 0) return
   if (string.includes('://') && !string.includes('\n') && string.includes('.css')) {
-    document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
+    document.querySelector('head')?.insertAdjacentHTML('beforeend', `<link rel="stylesheet" href="${string}" />`)
     return
   }
   document.body.insertAdjacentHTML('beforeend', `<style>${string}</style>`)
 }
 
-async function animateCss (element, animation, canRemoveAfter = true) {
-  return await new Promise((resolve) => {
+/**
+ * Adds a CSS animation to an element using Animate.css classes and returns a Promise that resolves when the animation ends.
+ *
+ * @param {HTMLElement} element - The DOM element to animate.
+ * @param {string} animation - The name of the Animate.css animation (e.g., 'fadeIn', 'bounce').
+ * @param {boolean} [canRemoveAfter] - Whether to remove animation classes after the animation ends.
+ * @returns {Promise<string>} A Promise that resolves with a message when the animation ends.
+ */
+function animateCss(element, animation, canRemoveAfter = true) {
+  // oxlint-disable-next-line promise/avoid-new
+  return new Promise(resolve => {
     const animationName = `animate__${animation}`
     element.classList.add('animate__animated', animationName)
-    if (!canRemoveAfter) { resolve('Animation ended, no need to remove'); return }
-    // When the animation ends, we clean the classes and resolve the Promise
-    function handleAnimationEnd (event) {
-      event.stopPropagation()
-      element.classList.remove('animate__animated', animationName)
-      resolve('Animation ended')
+    if (!canRemoveAfter) {
+      resolve('Animation ended, no need to remove')
+      return
     }
-    element.addEventListener('animationend', handleAnimationEnd, { once: true })
+    // When the animation ends, we clean the classes and resolve the Promise
+    element.addEventListener(
+      'animationend',
+      event => {
+        event.stopPropagation()
+        element.classList.remove('animate__animated', animationName)
+        resolve('Animation ended')
+      },
+      { once: true },
+    )
   })
 }
 
-// eslint-disable-next-line max-statements
-(function GitlabBadge () {
-  /* global gon */
-  /** @type {import('./utils.js').Shuutils} */// @ts-ignore
+function GitlabBadge() {
   const utils = new Shuutils('gtb-bdg')
-  function getBadge () {
+  function getBadge() {
     const badge = document.createElement('div')
     badge.id = utils.id
     badge.classList.add('animate__animated')
-    badge.style = 'cursor: grab; background-repeat: no-repeat;filter: drop-shadow(black 2px 4px 6px);position: fixed;top: 60px;right: 0px;z-index: 1000;width: 300px;height: 300px;font-size: 80px;font-weight: 800;text-align: center;line-height: 250px;'
+    badge.style =
+      'cursor: grab; background-repeat: no-repeat;filter: drop-shadow(black 2px 4px 6px);position: fixed;top: 60px;right: 0px;z-index: 1000;width: 300px;height: 300px;font-size: 80px;font-weight: 800;text-align: center;line-height: 250px;'
     return badge
   }
   const badge = getBadge()
   let isHidden = false
-  badge.addEventListener('click', () => { isHidden = true; animateCss(badge, 'bounceOutUp', false) })
+  badge.addEventListener('click', () => {
+    isHidden = true
+    void animateCss(badge, 'bounceOutUp', false)
+  })
   document.body.append(badge)
   let animationCount = 0
-  function animateBadge (hasContributionsChanged = false) {
-    if (animationCount === 0) animateCss(badge, 'backInRight')
-    else animateCss(badge, hasContributionsChanged ? 'tada' : 'pulse')
+  function animateBadge(hasContributionsChanged = false) {
+    if (animationCount === 0) void animateCss(badge, 'backInRight')
+    else void animateCss(badge, hasContributionsChanged ? 'tada' : 'pulse')
     animationCount += 1
   }
-  async function process (reason = 'unknown') {
-    if (isHidden) { utils.debug(`process called because ${reason} but badge has been hidden`); return }
+  async function start(reason = 'unknown') {
+    if (isHidden) {
+      utils.debug(`start called because ${reason} but badge has been hidden`)
+      return
+    }
     const todayContributions = await getNbContributions()
-    utils.log(`process, reason ${reason}, found ${todayContributions} contributions`)
+    utils.log(`start, reason ${reason}, found ${todayContributions} contributions`)
     const previousContributions = Number(badge.textContent)
-    badge.textContent = todayContributions
+    badge.textContent = String(todayContributions)
     if (todayContributions < steps.bronze) badge.style.backgroundImage = `url(${badges.bronze})`
     else if (todayContributions < steps.silver) badge.style.backgroundImage = `url(${badges.silver})`
     else badge.style.backgroundImage = `url(${badges.gold})`
     animateBadge(todayContributions !== previousContributions)
   }
-  const processDebounced = utils.debounce(process, 1000) // eslint-disable-line no-magic-numbers
-  globalThis.addEventListener('focus', () => { process('focus') })
-  globalThis.addEventListener('click', () => processDebounced('click'))
-  utils.onPageChange(async () => await process('page-change'))
-})()
+  const startDebounceTime = 1000
+  const startDebounced = utils.debounce(start, startDebounceTime)
+  globalThis.addEventListener('focus', () => {
+    void start('focus')
+  })
+  globalThis.addEventListener('click', () => startDebounced('click'))
+  utils.onPageChange(() => start('page-change'))
+}
+
+if (globalThis.window) GitlabBadge()
+else module.exports = { animateCss, getNbContributions, injectStyles }
 
 injectStyles(`
 /*!
