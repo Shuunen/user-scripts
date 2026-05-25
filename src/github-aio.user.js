@@ -9,7 +9,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=github.com
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
-// @version      1.0.0
+// @version      1.0.1
 // ==/UserScript==
 
 // oxlint-disable promise/prefer-await-to-callbacks
@@ -50,14 +50,21 @@ function createIssueCountLink(repoFullName, count) {
 /**
  * Get repository full name from repo element
  * @param {HTMLElement} repo - The repo element
+ * @param {InstanceType<typeof Shuutils>} [utils] - The utils instance for logging
  * @returns {string} The repo full name or "" an empty string if not found
  */
-function getRepoFullName(repo) {
+function getRepoFullName(repo, utils) {
   const repoLinkElement = repo.querySelector(selectors.repoLink)
   const repoLink = repoLinkElement?.getAttribute('href') ?? ''
-  if (repoLink === '') return ''
+  if (repoLink === '') {
+    utils?.showError('Repository link not found')
+    return ''
+  }
   const repoFullName = repoLink.slice(1) // remove the leading /
-  if (!repoFullName) return ''
+  if (!repoFullName) {
+    utils?.showError('Repository full name not found')
+    return ''
+  }
   return repoFullName
 }
 
@@ -126,7 +133,7 @@ function GithubAio() {
    * @param {HTMLElement} repo - The repo element
    */
   async function augmentRepo(repo) {
-    const repoFullName = getRepoFullName(repo)
+    const repoFullName = getRepoFullName(repo, utils)
     if (repoFullName === '') return
     const lastLink = repo.querySelector(selectors.lastLink)
     const count = await getIssueCount(repoFullName)
