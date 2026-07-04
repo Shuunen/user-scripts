@@ -11,7 +11,7 @@ import { maxScore, calcScore as score, score20Styled } from './amazon-aio.user.j
  */
 function checkGreaterThan(title: string, ratingA: number, reviewsA: number, ratingB: number, reviewsB: number) {
   const scoreA = score(ratingA, reviewsA)
-  const scoreB = Number.parseFloat(score(ratingB, reviewsB).toString())
+  const scoreB = Number(score(ratingB, reviewsB).toString())
   test(`${title}, expect ${score(ratingA, reviewsA, true)} to be greater than ${score(ratingB, reviewsB, true)}`, () => {
     expect(scoreA).toBeGreaterThan(scoreB)
   })

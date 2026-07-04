@@ -23,7 +23,7 @@
  */
 function priceStringToFloat(string) {
   let price = string.replace(',', '.')
-  price = Number.parseFloat(price)
+  price = Number(price)
   return price
 }
 
@@ -73,10 +73,10 @@ function AmazonPricePerWeight() {
   // selectors.price = selectors.debugContainer + ' div:first-child .a-link-normal'
 
   const regex = {
-    bulk: /lot de (\d+)/iu,
-    price: /(eur|€)\s?(\d+,\d{2})/iu,
-    pricePer: /(\d+,\d{2})\s€\/(\w+)/u,
-    weight: /(\d+)\s?(g|kg|-)/iu,
+    bulk: /lot de (?<count>\d+)/iu,
+    price: /(?<currency>eur|€)\s?(?<amount>\d+,\d{2})/iu,
+    pricePer: /(?<amount>\d+,\d{2})\s€\/(?<unit>\w+)/u,
+    weight: /(?<weight>\d+)\s?(?<unit>g|kg|-)/iu,
   }
 
   const templates = {
@@ -135,7 +135,7 @@ function AmazonPricePerWeight() {
     const matches = text.match(regex.bulk)
     // utils.log('found bulk matches :', matches)
     let bulk = matches?.length === 2 ? matches[1] : '1'
-    bulk = Number.parseInt(bulk, 10)
+    bulk = Math.trunc(Number(bulk))
     // utils.log('found bulk', bulk)
     return bulk
   }

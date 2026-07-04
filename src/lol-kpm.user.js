@@ -20,12 +20,12 @@
     return Math.min(Math.max(Math.round((kpm / maxKpm) * 100), 0), 100)
   }
   function showKpmOnRow(row) {
-    const kills = Number.parseInt(row.querySelector('.kda-plate').textContent.split('/')[0], 10)
+    const kills = Math.trunc(Number(row.querySelector('.kda-plate').textContent.split('/')[0]))
     const time = row
       .querySelector('.date-duration')
       .textContent.split(' ')[0]
       .split(':')
-      .map(string => Number.parseInt(string, 10))
+      .map(string => Math.trunc(Number(string)))
     const minutes = time.length === 3 ? 60 * time[0] + time[1] : time[0]
     const element = document.createElement('div')
     const kpm = Math.round((kills / minutes) * 10) / 10

@@ -405,7 +405,7 @@ class Shuutils {
     const integer = (integers ?? integersOnly ?? '').replaceAll(/\D/gu, '')
     const fraction = decimals ? decimals.slice(1) : '00'
     const currency = currencyStart ?? currencyEnd ?? ''
-    const amount = Number.parseFloat(`${sign + integer}.${fraction}`)
+    const amount = Number(`${sign + integer}.${fraction}`)
     return { amount, currency, normalizedInput }
   }
   /**

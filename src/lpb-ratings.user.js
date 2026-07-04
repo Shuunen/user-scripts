@@ -413,7 +413,7 @@ function cleanTitle(title) {
 const ratings = ratingsCsv.split('\n').map(line => {
   const [title = '', rating = ''] = line.split(',')
   return {
-    rating: Number.parseFloat(rating),
+    rating: Number(rating),
     title: cleanTitle(title),
   }
 })

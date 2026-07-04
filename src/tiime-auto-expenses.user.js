@@ -336,8 +336,8 @@ function TiimeAutoExpenses() {
     if (expensesLines.length === 0) return []
 
     const expenses = expensesLines.map(([label = '', comment = '', amount = '', tva = '']) => {
-      const amountNumber = Number.parseFloat(amount.replace(',', '.'))
-      const tvaNumber = Number.parseFloat(tva.replace(',', '.'))
+      const amountNumber = Number(amount.replace(',', '.'))
+      const tvaNumber = Number(tva.replace(',', '.'))
       return { amount: amountNumber, comment, label, tva: tvaNumber }
     })
     if (doOnlyOneExpense) {

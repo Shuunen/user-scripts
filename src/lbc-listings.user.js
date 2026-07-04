@@ -299,9 +299,9 @@ function LbcListings() {
    */
   function getCustomInfosCar(ad) {
     const infos = [getOwnerInfo(ad, false)]
-    const year = Number.parseInt(ad.attributes.find(attribute => attribute.key === 'regdate')?.value ?? '', 10)
+    const year = Math.trunc(Number(ad.attributes.find(attribute => attribute.key === 'regdate')?.value ?? ''))
     if (year) infos.push({ score: utils.rangedScore(yearRules, year), text: `année : ${year}` })
-    const mileage = Number.parseInt(ad.attributes.find(attribute => attribute.key === 'mileage')?.value ?? '', 10)
+    const mileage = Math.trunc(Number(ad.attributes.find(attribute => attribute.key === 'mileage')?.value ?? ''))
     if (mileage) infos.push({ score: utils.rangedScore(mileageRules, mileage), text: `kilométrage : ${mileage} km` })
     const fuel = ad.attributes.find(attribute => attribute.key === 'fuel')?.value_label.toLowerCase() ?? ''
     if (fuel) infos.push({ text: `carburant : ${fuel}` })

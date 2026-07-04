@@ -50,7 +50,7 @@ const config = {
  */
 function getListingId(url = document.location.href) {
   const id = /\/(?<id>\d{5,15})\b/u.exec(url)?.groups?.id
-  return id ? Number.parseInt(id, 10) : undefined
+  return id ? Math.trunc(Number(id)) : undefined
 }
 
 /**
@@ -69,7 +69,7 @@ function multipleAdDisplayed() {
 function getListingIdFromNote(noteElement) {
   const listingIdString = noteElement.dataset.listingId
   if (listingIdString === undefined) return 0
-  return Number.parseInt(listingIdString, 10)
+  return Math.trunc(Number(listingIdString))
 }
 
 /**

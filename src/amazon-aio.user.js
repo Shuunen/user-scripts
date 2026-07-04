@@ -109,7 +109,7 @@ function AmazonAio() {
    * @returns {number} The price
    */
   function getPrice(text) {
-    const price = Number.parseFloat(text.replace(',', '.').replace(/\s/u, '') ?? '0')
+    const price = Number(text.replace(',', '.').replace(/\s/u, '') ?? '0')
     if (price === 0) utils.warn('failed to calc price from', { text })
     return price
   }
@@ -184,7 +184,7 @@ function AmazonAio() {
         utils.log('failed to find unit in :', title)
         return
       }
-      const grams = unitPer.toLowerCase() === 'g' ? Number.parseInt(weightPer, 10) : unitPer.toLowerCase() === 'kg' ? Number.parseInt(weightPer, 10) * 1000 : 0
+      const grams = unitPer.toLowerCase() === 'g' ? Math.trunc(Number(weightPer)) : unitPer.toLowerCase() === 'kg' ? Math.trunc(Number(weightPer)) * 1000 : 0
       if (grams === 0) {
         utils.warn('failed to find calc grams in', { title, unitPer, weightPer })
         return
@@ -235,7 +235,7 @@ function AmazonAio() {
   function getRating(element) {
     const html = element.outerHTML
     const value = /\d[,.]\d ?/u.exec(html)?.[0] ?? '0'
-    const count = Number.parseFloat(value.replace(',', '.'))
+    const count = Number(value.replace(',', '.'))
     if (count === 0) utils.warn('failed to find rating in', element)
     return count
   }
@@ -248,7 +248,7 @@ function AmazonAio() {
     const html = element.outerHTML
     const { p1 = '', p2 = '' } = /"(?<p1>\d+)(?:&nbsp;)?(?<p2>\d+)&nbsp;/u.exec(html)?.groups ?? {}
     const parts = p1 + p2
-    const count = Number.parseInt(parts || '0', 10)
+    const count = Math.trunc(Number(parts || '0'))
     if (count === 0) utils.warn('failed to find reviews count in', element)
     return count
   }
@@ -277,7 +277,7 @@ function AmazonAio() {
       product.dataset.amzAioScore = Math.round(score * score * scoreByCurrency * 70).toString()
     }
     // sort by score & apply position
-    for (const [index, product] of products.toSorted((productA, productB) => Number.parseFloat(productB.dataset.amzAioScore ?? '0') - Number.parseFloat(productA.dataset.amzAioScore ?? '0')).entries()) product.style.order = index.toString()
+    for (const [index, product] of products.toSorted((productA, productB) => Number(productB.dataset.amzAioScore ?? '0') - Number(productA.dataset.amzAioScore ?? '0')).entries()) product.style.order = index.toString()
   }
   /**
    * Process the page

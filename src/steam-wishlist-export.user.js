@@ -38,7 +38,7 @@ function SteamWishlistExport() {
     const img = image instanceof HTMLImageElement ? image.src : ''
     const id = row.dataset.appId ?? ''
     const priceElement = utils.findOne(selectors.price, row)
-    const price = priceElement ? Math.round(Number.parseFloat(priceElement.textContent?.replace(',', '.') ?? '')) : 0
+    const price = priceElement ? Math.round(Number(priceElement.textContent?.replace(',', '.') ?? '')) : 0
     return { id, img, price, title }
   }
   /**

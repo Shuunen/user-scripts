@@ -12,15 +12,15 @@ const regexDownloadUrl = /@downloadURL\s+https:\/\/github.com\/Shuunen\/user-scr
 const regexUpdateUrl = /@updateURL\s+https:\/\/github.com\/Shuunen\/user-scripts\/raw\/master\/src\/.+\.user\.js/
 const regexMatchDomain = /\*\.[^\s]+\.com/
 const regexIcon = /@icon\s+https:\/\/www\.google\.com\/s2\/favicons\?sz=64&domain=[^\s]+/
-const regexMainFuncKebab = /-([a-z])/g
-const regexMainFuncPascal = /^(..)/
+const regexMainFuncKebab = /-(?<letter>[a-z])/g
+const regexMainFuncPascal = /^(?<firstTwo>..)/
 const regexMainFuncDef = (name: string) => new RegExp(`function ${name}\\(`)
 const regexExportPattern1 = /if \(globalThis\.window\) (?:void )?[A-Z][A-Za-z0-9_]*\(\)/
 const regexExportPattern2 = /if \(globalThis\.window\) (?:void )?[A-Z][A-Za-z0-9_]*\(\)\nelse module\.exports = \{.*\}/s
 const regexIife = /\(function [A-Z][A-Za-z0-9_]*\(\) \{[\s\S]*\}\)\(\);/
-const regexFunctionDef = /function ([a-z][A-Za-z0-9_]*)\(/g
-const regexMainFunctionDef = /function ([A-Z][A-Za-z0-9_]*)\(/
-const regexModuleExports = /module\.exports = \{([^}]*)\}/s
+const regexFunctionDef = /function (?<name>[a-z][A-Za-z0-9_]*)\(/g
+const regexMainFunctionDef = /function (?<name>[A-Z][A-Za-z0-9_]*)\(/
+const regexModuleExports = /module\.exports = \{(?<content>[^}]*)\}/s
 
 function findFunctionStart(content: string, mainName: string): number {
   return content.indexOf(`function ${mainName}(`)

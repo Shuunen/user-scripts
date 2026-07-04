@@ -63,7 +63,7 @@
       return // no need to process further
     }
     // text content -> css classes to let user hide/show rows via Amino
-    const cls = utils.readableString(row.textContent.replaceAll(/([a-z])(\d)/gu, '$1 $2').split(':')[0]).toLowerCase()
+    const cls = utils.readableString(row.textContent.replaceAll(/(?<letter>[a-z])(?<digit>\d)/gu, '$<letter> $<digit>').split(':')[0]).toLowerCase()
     row.className += ` ${cls}`
     // add a button to hide row
     const button = document.createElement('i')

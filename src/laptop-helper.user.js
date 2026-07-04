@@ -346,7 +346,7 @@ Intel Pentium Silver N6000	3 %`
 for (const line of data.split('\n')) {
   const [cpuRaw, scoreRaw] = line.split('\t')
   const cpu = cleanCpuName(cpuRaw)
-  const score = Number.parseInt(scoreRaw, 10)
+  const score = Math.trunc(Number(scoreRaw))
   scoresByKeyword[cpu] = score
 }
 

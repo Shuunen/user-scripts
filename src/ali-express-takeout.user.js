@@ -35,7 +35,7 @@ function AliExpressTakeout() {
       utils.showError('failed to get price from page')
       return ''
     }
-    return Math.round(Number.parseFloat(price.replace(',', '.'))).toString()
+    return Math.round(Number(price.replace(',', '.'))).toString()
   }
   function getReference() {
     const path = document.location.pathname.split('/').toReversed()[0] ?? ''

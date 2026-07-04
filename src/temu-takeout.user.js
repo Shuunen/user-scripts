@@ -68,7 +68,8 @@ function TemuTakeout() {
     addMbField(form, 'reference', data.reference)
     addMbField(form, 'photo', data.photo)
     addMbField(form, 'brand', data.brand)
-    addMbField(form, 'price', Math.round(Number.parseFloat(data.price.replace(',', '.'))).toString())
+    const priceNumber = Number(data.price.replace(',', '.'))
+    addMbField(form, 'price', Math.round(priceNumber).toString())
     addMbSubmit(form, 'Copy to clipboard')
     document.body.append(form)
   }
