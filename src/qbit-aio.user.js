@@ -9,7 +9,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=qbittorrent.org
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @version      1.1.0
+// @version      1.1.1
 // ==/UserScript==
 
 // the script id, used as a log prefix and as a css marker, keep it short
