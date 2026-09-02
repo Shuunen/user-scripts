@@ -8,7 +8,7 @@
 // @match        https://www.vinted.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=vinted.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@latest/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version      1.0.0
 // ==/UserScript==
 

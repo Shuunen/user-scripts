@@ -6,12 +6,6 @@
 
 > Personal heavily opinionated script I make to enhance my daily web experience.
 
-## Archived
-
-This current repo is archived since it migrated to [Shuunen/monorepo](https://github.com/Shuunen/monorepo/tree/master/apps/user-scripts).
-
-Further development will be done there 🚀
-
 ## Usage
 
 ![demo](docs/demo.gif)
@@ -20,6 +14,10 @@ Further development will be done there 🚀
 2. Open the script you want to use (use raw view)
 3. Review the code, no one should trust a random script from the internet
 4. Install the script in your browser
+
+## New script
+
+Copy [`src/template.user.js`](src/template.user.js) to `src/my-script.user.js` and follow the checklist at the top of the file, it already wires the `Shuutils` helpers, the debounced `start` and the export pattern expected by `pnpm run lint:scripts`.
 
 ## Scripts
 

@@ -8,7 +8,7 @@
 // @match        https://luna.amazon.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version      1.1.3
 // ==/UserScript==
 
@@ -126,30 +126,12 @@ function AmazonGamingAio() {
   const clearClassSelectors = {
     productLine: '.s-item-container',
   }
-  const deleteUselessSelectors = {
+  const uselessSelectors = {
     badges: '.featured-content, [data-a-target="badge-new"],.featured-content-shoveler, [data-a-target="badge-ends-soon"]',
     gameNight: '[data-a-target="GameNightBannerSectionRootHome"]',
     lunaGaming: '#offer-section-LUNA',
     sections:
       '[data-a-target="hero-banner"],.event-container,.sub-credit-promotion-banner,[data-a-target="offer-section-FGWP"],.marketing-promotion-banner,[data-a-target="offer-section-RECOMMENDED"],[data-a-target="offer-section-WEB_GAMES"], #SearchBar, [data-a-target="offer-section-TOP_PICKS"], [data-a-target="offer-section-EXPIRING"]',
-  }
-  /**
-   * Delete useless elements
-   */
-  function deleteUseless() {
-    for (const selector of Object.values(deleteUselessSelectors))
-      for (const node of utils.findAll(selector, document, true)) {
-        if (utils.willDebug) {
-          node.style.backgroundColor = 'red !important'
-          node.style.color = 'white !important'
-          node.style.boxShadow = '0 0 10px red'
-          node.style.opacity = '70'
-        } else {
-          node.style.display = 'none'
-          node.style.opacity = '0'
-        }
-        node.dataset.hiddenCause = 'useless'
-      }
   }
   /**
    * Clear classnames
@@ -198,15 +180,8 @@ function AmazonGamingAio() {
    */
   function hideElement(element, cause = 'unknown') {
     if (preventElementHide(element, cause)) return
-    element.dataset.hiddenCause = cause
-    if (utils.willDebug) {
-      element.style.boxShadow = 'inset darkred 0 100vh, red 0 0 10px'
-      return
-    }
-    element.classList.remove('tw-block')
-    element.style.display = 'none'
-    element.style.visibility = 'hidden'
-    element.style.opacity = '0'
+    if (!utils.willDebug) element.classList.remove('tw-block') // this tailwind class would fight the display none
+    utils.hideElement(element, cause)
   }
   /**
    * Hide claimed products
@@ -279,7 +254,7 @@ function AmazonGamingAio() {
   function start(cause = '') {
     if (cause === 'dom-node-inserted:featured-content-thumbnail__overlay') return
     utils.log('start, cause :', cause)
-    deleteUseless()
+    utils.hideElements(uselessSelectors, 'useless')
     clearClassnames()
     hideClaimed()
     hideUnwantedDlc()

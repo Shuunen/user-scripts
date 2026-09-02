@@ -8,7 +8,7 @@
 // @match        https://www.lepetitballon.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=lepetitballon.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/fuse.js@6.6.2
 // @version      1.0.2
 // ==/UserScript==
@@ -455,13 +455,12 @@ function LpbRatings() {
   const utils = new Shuutils('lpb-ratings')
   const selectors = {
     items: `.product-item:not(.${utils.id})`,
-    useless: '.product-catalog--out-stock, .footer-trustpilot, .footer-legal',
     wineTitle: '.product-catalog__title',
   }
-  function hideUseless() {
-    for (const node of utils.findAll(selectors.useless, document, true))
-      if (utils.willDebug) node.style = 'background-color: red !important;color: white !important; box-shadow: 0 0 10px red;'
-      else node.style.display = 'none'
+  const uselessSelectors = {
+    footerLegal: '.footer-legal',
+    footerTrustpilot: '.footer-trustpilot',
+    outOfStock: '.product-catalog--out-stock',
   }
 
   function searchRating(wine = '') {
@@ -504,7 +503,7 @@ function LpbRatings() {
       utils.log('no item found on this page')
       return
     }
-    hideUseless()
+    utils.hideElements(uselessSelectors, 'useless')
     injectRatings()
   }
 

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         AliExpress Takeout - Get data with you
-// @author       Shuunen
+// @author       Romain Racamier-Lafon
 // @description  This script let you export data from AliExpress
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/ali-express-takeout.user.js
 // @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/ali-express-takeout.user.js
@@ -8,8 +8,8 @@
 // @match        https://www.aliexpress.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=aliexpress.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/mb-import-utils.js
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/mb-import-utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version      1.0.4
 // ==/UserScript==
 

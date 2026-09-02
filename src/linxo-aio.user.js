@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Linxo AIO - Get data with you
-// @author       Shuunen
+// @author       Romain Racamier-Lafon
 // @description  This script help me improve my Linxo user experience
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/linxo-aio.user.js
 // @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/linxo-aio.user.js
@@ -8,7 +8,7 @@
 // @match        https://wwws.linxo.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=linxo.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @version      1.1.0
 // ==/UserScript==

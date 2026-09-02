@@ -1,12 +1,14 @@
 // ==UserScript==
+// @name         LoL - KPM Counter - Kills per minutes
 // @author       Romain Racamier-Lafon
 // @description  Show how many kills per minutes you did, isn't the title that obvious ?
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lol-kpm.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/lol-kpm.user.js
 // @grant        none
 // @match        https://matchhistory.euw.leagueoflegends.com/*
-// @name         LoL - KPM Counter - Kills per minutes
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=leagueoflegends.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version      1.1.5
 // ==/UserScript==
 

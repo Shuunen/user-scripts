@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         JustETF Export - Get data with you
-// @author       Shuunen
+// @author       Romain Racamier-Lafon
 // @description  This script help me improve my JustETF user experience
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/just-etf-export.user.js
 // @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/just-etf-export.user.js
@@ -8,7 +8,7 @@
 // @match        https://www.justetf.com/fr/search.html?*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=justetf.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version      1.2.0
 // ==/UserScript==
 

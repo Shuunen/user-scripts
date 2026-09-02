@@ -8,7 +8,7 @@
 // @match        https://www.leboncoin.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=leboncoin.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@2.6.5/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/appwrite@10.1.0
 // @require      https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js
 // @require      https://cdn.tailwindcss.com

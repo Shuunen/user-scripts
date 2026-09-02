@@ -25,3 +25,17 @@ declare const tailwind: {
 }
 
 declare const Appwrite: typeof import('appwrite')
+
+/**
+ * Objects exposed by the qBittorrent web ui on the page, only the bits used by qbit-aio are declared here
+ * @see https://github.com/qbittorrent/qBittorrent/tree/master/src/webui/www/private
+ */
+declare const torrentsTable: {
+  getCurrentTorrentID: () => string | undefined
+}
+
+declare const qBittorrent: {
+  PropTrackers: {
+    updateData: () => void
+  }
+}

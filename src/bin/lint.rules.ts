@@ -3,14 +3,23 @@ import path from 'node:path'
 
 export type Rule = {
   check: (content: string, filePath?: string) => boolean
-  error: string | ((content: string) => string)
+  error: string | ((content: string, filePath?: string) => string)
   name: string
 }
 
 const regexUserScriptName = /^\/\/ ==UserScript==\n\/\/ @name/m
-const regexDownloadUrl = /@downloadURL\s+https:\/\/github.com\/Shuunen\/user-scripts\/raw\/master\/src\/.+\.user\.js/
-const regexUpdateUrl = /@updateURL\s+https:\/\/github.com\/Shuunen\/user-scripts\/raw\/master\/src\/.+\.user\.js/
+const selfRawUrl = 'https://github.com/Shuunen/user-scripts/raw/master/src/'
+const regexDownloadUrl = /^\/\/ @downloadURL\s+(?<url>\S+)/m
+const regexUpdateUrl = /^\/\/ @updateURL\s+(?<url>\S+)/m
+const scriptAuthor = 'Romain Racamier-Lafon'
+const regexAuthor = new RegExp(`^// @author\\s+${scriptAuthor}\\s*$`, 'm')
+const regexNamespace = /^\/\/ @namespace\s+https:\/\/github\.com\/Shuunen\s*$/m
+const regexVersion = /^\/\/ @version\s+\d+\.\d+\.\d+\s*$/m
+const regexMetaBlock = /\/\/ ==UserScript==\n(?<meta>[\s\S]*?)\/\/ ==\/UserScript==/
+const regexMetaKey = /^\/\/ @(?<key>[a-zA-Z-]+)/gm
+const metaKeyOrder = ['name', 'author', 'description', 'downloadURL', 'updateURL', 'grant', 'match', 'icon', 'namespace', 'require', 'version']
 const regexMatchDomain = /\*\.[^\s]+\.com/
+const regexMatchAny = /^\/\/ @(?:match|include)[ \t]+\S+/m
 const regexIcon = /@icon\s+https:\/\/www\.google\.com\/s2\/favicons\?sz=64&domain=[^\s]+/
 const regexMainFuncKebab = /-(?<letter>[a-z])/g
 const regexMainFuncPascal = /^(?<firstTwo>..)/
@@ -21,6 +30,8 @@ const regexIife = /\(function [A-Z][A-Za-z0-9_]*\(\) \{[\s\S]*\}\)\(\);/
 const regexFunctionDef = /function (?<name>[a-z][A-Za-z0-9_]*)\(/g
 const regexMainFunctionDef = /function (?<name>[A-Z][A-Za-z0-9_]*)\(/
 const regexModuleExports = /module\.exports = \{(?<content>[^}]*)\}/s
+const regexSelfRequire = /@require\s+https:\/\/cdn\.jsdelivr\.net\/gh\/Shuunen\/user-scripts(?<ref>@[^/\s]+)?\//g
+const selfRequireRef = '@master'
 
 function findFunctionStart(content: string, mainName: string): number {
   return content.indexOf(`function ${mainName}(`)
@@ -63,6 +74,42 @@ function extractFunctionNames(content: string, mainName: string, boundaries: { e
   return outsideFunctions
 }
 
+function getExpectedSelfUrl(filePath?: string): string {
+  if (filePath === undefined) return ''
+  return `${selfRawUrl}${path.basename(filePath)}`
+}
+
+function getMetaKeys(content: string): string[] {
+  const block = regexMetaBlock.exec(content)?.at(1) ?? ''
+  regexMetaKey.lastIndex = 0
+  const keys: string[] = []
+  let match: RegExpExecArray | null = regexMetaKey.exec(block)
+  while (match) {
+    const key = match.at(1) ?? ''
+    if (metaKeyOrder.includes(key) && !keys.includes(key)) keys.push(key)
+    match = regexMetaKey.exec(block)
+  }
+  return keys
+}
+
+function getMetaKeysOutOfOrder(content: string): string[] {
+  const keys = getMetaKeys(content)
+  const sorted = [...keys].toSorted((keyA, keyB) => metaKeyOrder.indexOf(keyA) - metaKeyOrder.indexOf(keyB))
+  return keys.filter((key, index) => key !== sorted[index])
+}
+
+function getWrongSelfRequires(content: string): string[] {
+  regexSelfRequire.lastIndex = 0
+  const wrongRefs: string[] = []
+  let match: RegExpExecArray | null = regexSelfRequire.exec(content)
+  while (match) {
+    const ref = match.at(1) ?? ''
+    if (ref !== selfRequireRef) wrongRefs.push(ref === '' ? '(no ref)' : ref)
+    match = regexSelfRequire.exec(content)
+  }
+  return wrongRefs
+}
+
 function getOutsideFunctions(content: string): string[] {
   regexFunctionDef.lastIndex = 0
   regexMainFunctionDef.lastIndex = 0
@@ -74,16 +121,45 @@ function getOutsideFunctions(content: string): string[] {
   return extractFunctionNames(content, mainName, boundaries)
 }
 
-export const rules: Rule[] = [
+export const metadataRules: Rule[] = [
   {
     check: (content: string) => regexUserScriptName.test(content),
     error: 'missing or misplaced @name meta (should be second line)',
     name: '@name second line',
   },
   {
-    check: (content: string) => regexDownloadUrl.test(content) && regexUpdateUrl.test(content),
-    error: 'missing or incorrect @downloadURL/@updateURL (expected https://github.com/Shuunen/user-scripts/raw/master/src/)',
+    check: (content: string, filePath?: string) => {
+      const expected = getExpectedSelfUrl(filePath)
+      if (expected === '') return false
+      return regexDownloadUrl.exec(content)?.at(1) === expected && regexUpdateUrl.exec(content)?.at(1) === expected
+    },
+    error: (_content: string, filePath?: string) => `@downloadURL and @updateURL must both be exactly "${getExpectedSelfUrl(filePath)}"`,
     name: '@downloadURL/@updateURL',
+  },
+  {
+    check: (content: string) => regexAuthor.test(content),
+    error: `missing or incorrect @author, expected "${scriptAuthor}"`,
+    name: '@author',
+  },
+  {
+    check: (content: string) => regexNamespace.test(content),
+    error: 'missing or incorrect @namespace, expected "https://github.com/Shuunen"',
+    name: '@namespace',
+  },
+  {
+    check: (content: string) => regexVersion.test(content),
+    error: 'missing or non-semver @version, expected something like "1.0.0"',
+    name: '@version semver',
+  },
+  {
+    check: (content: string) => getMetaKeysOutOfOrder(content).length === 0,
+    error: (content: string) => `metadata keys are out of order (${getMetaKeysOutOfOrder(content).join(', ')}), expected order : ${metaKeyOrder.join(', ')}`,
+    name: 'metadata key order',
+  },
+  {
+    check: (content: string) => regexMatchAny.test(content),
+    error: 'missing @match, without it the script never runs, use "*://*/*" to run everywhere',
+    name: '@match presence',
   },
   {
     check: (content: string) => !regexMatchDomain.test(content),
@@ -95,6 +171,24 @@ export const rules: Rule[] = [
     error: 'missing or incorrect @icon meta',
     name: '@icon domain',
   },
+  {
+    check: (content: string) => !content.includes('githubusercontent'),
+    error: 'githubusercontent URLs are not allowed, migrate to https://www.jsdelivr.com/github',
+    name: 'no githubusercontent',
+  },
+  {
+    check: (content: string) => !content.includes('Shuunen/monorepo'),
+    error: `Shuunen/monorepo does not exist anymore, use https://cdn.jsdelivr.net/gh/Shuunen/user-scripts${selfRequireRef}/src/`,
+    name: 'no monorepo url',
+  },
+  {
+    check: (content: string) => getWrongSelfRequires(content).length === 0,
+    error: (content: string) => `@require to user-scripts must use the "${selfRequireRef}" ref, found : ${getWrongSelfRequires(content).join(', ')} (git tags are not maintained so "@latest" serves a stale utils.js)`,
+    name: '@require self ref',
+  },
+]
+
+export const codeRules: Rule[] = [
   {
     check: (content: string, filePath?: string) => {
       if (filePath === undefined) return false
@@ -114,11 +208,6 @@ export const rules: Rule[] = [
     check: (content: string) => !regexIife.test(content),
     error: 'IIFE pattern is not allowed',
     name: 'no IIFE',
-  },
-  {
-    check: (content: string) => !content.includes('githubusercontent'),
-    error: 'githubusercontent URLs are not allowed, migrate to https://www.jsdelivr.com/github',
-    name: 'no githubusercontent',
   },
   {
     check: (content: string) => {

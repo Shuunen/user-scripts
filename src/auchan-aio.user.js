@@ -8,7 +8,7 @@
 // @match        https://www.auchan.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=auchan.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version      1.0.3
 // ==/UserScript==
 
@@ -21,42 +21,13 @@ function AuchanAio() {
     unitPrice: '.product-price__container', // unit price is not useful
   }
 
-  /**
-   * Hide an element for a reason
-   * @param {HTMLElement} element the element to hide
-   * @param {string} reason the reason why the element is hidden
-   * @returns {void}
-   */
-  function hideElement(element, reason) {
-    if (utils.willDebug) {
-      element.style.backgroundColor = 'red !important'
-      element.style.color = 'white !important'
-      element.style.boxShadow = '0 0 10px red'
-      element.style.opacity = '70'
-    } else {
-      element.style.display = 'none'
-      element.style.opacity = '0'
-    }
-    element.dataset.hiddenCause = reason
-  }
-
-  function hideUseless() {
-    let nb = 0
-    for (const selector of Object.values(uselessSelectors))
-      for (const node of utils.findAll(`${selector}:not([data-hidden-cause])`, document, true)) {
-        hideElement(node, 'useless')
-        nb += 1
-      }
-    if (nb > 0) utils.debug(`hideUseless has hidden ${nb} elements`)
-  }
-
   function hideUnavailableProducts() {
     const messages = utils.findAll('.product-unavailable__message', document, true)
     let nb = 0
     for (const message of messages) {
       const product = message.closest('article')
       if (!product) throw new Error('No product found from unavailable message')
-      hideElement(product, 'unavailable')
+      utils.hideElement(product, 'unavailable')
       nb += 1
     }
     if (nb > 0) utils.debug(`hideUnavailableProducts has hidden ${nb} elements`)
@@ -74,7 +45,7 @@ function AuchanAio() {
 
   function start(reason = 'unknown') {
     utils.debug(`start called because "${reason}"`)
-    hideUseless()
+    utils.hideElements(uselessSelectors, 'useless')
     hideUnavailableProducts()
     enhancePricePerKgReadability()
   }

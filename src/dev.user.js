@@ -8,8 +8,8 @@
 // @match        https://www.__HEY_CHANGE_ME__.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @namespace    https://github.com/Shuunen
-// @require      file://C:\Users\__HEY_CHANGE_ME__\Projects\github\monorepo\apps\user-scripts\src\utils.js
-// @require      file://C:\Users\__HEY_CHANGE_ME__\Projects\github\monorepo\apps\user-scripts\src\hdd-cleaner.user.js
+// @require      file://C:\Users\__HEY_CHANGE_ME__\Projects\github\user-scripts\src\utils.js
+// @require      file://C:\Users\__HEY_CHANGE_ME__\Projects\github\user-scripts\src\hdd-cleaner.user.js
 // @version      2.2.2
 // ==/UserScript==
 

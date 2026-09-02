@@ -1,12 +1,14 @@
 // ==UserScript==
+// @name         LyBox Enhanced
 // @author       Romain Racamier-Lafon
 // @description  Add features to LyBox
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/lybox.user.js
+// @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/lybox.user.js
 // @grant        none
 // @match        https://www.lybox.fr/app/search/*
-// @name         LyBox Enhanced
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=lybox.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version      1.0.2
 // ==/UserScript==
 

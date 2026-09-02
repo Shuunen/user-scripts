@@ -2,7 +2,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { rules } from './lint.rules.ts'
+import { codeRules, metadataRules } from './lint.rules.ts'
 
 const legacyMarker = '// @ts-nocheck'
 const __dirname = import.meta.dirname
@@ -10,11 +10,12 @@ const srcDir = path.resolve(__dirname, '..')
 
 function lintFile(filePath: string): string[] {
   const content = fs.readFileSync(filePath, 'utf8')
-  if (content.includes(legacyMarker)) return []
+  // the legacy marker is a type escape hatch, it should not disable the metadata guidelines
+  const rules = content.includes(legacyMarker) ? metadataRules : [...metadataRules, ...codeRules]
   const issues: string[] = []
   for (const rule of rules)
     if (!rule.check(content, filePath)) {
-      const errorMessage = typeof rule.error === 'function' ? rule.error(content) : rule.error
+      const errorMessage = typeof rule.error === 'function' ? rule.error(content, filePath) : rule.error
       issues.push(errorMessage)
     }
 

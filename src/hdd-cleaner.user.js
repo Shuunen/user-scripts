@@ -15,7 +15,7 @@
 // @match        https://www.topachat.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=amazon.fr
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @version      1.2.6
 // ==/UserScript==
 

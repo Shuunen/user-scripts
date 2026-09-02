@@ -338,7 +338,7 @@ class Shuutils {
       this.error('Babel is not loaded, cannot load utils')
       return this
     }
-    const baseUrl = 'https://raw.githubusercontent.com/Shuunen/monorepo/master/libs/utils/src/lib/'
+    const baseUrl = 'https://cdn.jsdelivr.net/gh/Shuunen/shuutils@master/src/'
     const fileList = Array.isArray(files) ? files : [files]
     for (const file of fileList)
       try {

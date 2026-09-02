@@ -8,7 +8,7 @@
 // @match        https://www.g2a.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=g2a.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/didyoumean/didYouMean-1.2.1.min.js
 // @require      https://cdn.jsdelivr.net/npm/simple-datatables
 // @version      1.1.3

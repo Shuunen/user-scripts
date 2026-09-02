@@ -27,7 +27,7 @@
 // @match        https://www.tuxedocomputers.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=bestware.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://unpkg.com/rough-notation/lib/rough-notation.iife.js
 // @version      1.0.3
 // ==/UserScript==

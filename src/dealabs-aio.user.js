@@ -8,7 +8,7 @@
 // @match        https://www.dealabs.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=dealabs.com
 // @namespace    https://github.com/Shuunen
-// @require      https://cdn.jsdelivr.net/gh/Shuunen/monorepo@latest/apps/user-scripts/src/utils.js
+// @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
 // @require      https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js
 // @version      1.1.6
 // ==/UserScript==
