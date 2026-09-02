@@ -137,7 +137,6 @@ class Shuutils {
       // oxlint-disable-next-line promise/avoid-new
       await new Promise(resolve => {
         clearTimeout(timeout)
-        // oxlint-disable-next-line promise/no-multiple-resolved
         timeout = setTimeout(() => {
           // oxlint-disable-next-line promise/prefer-await-to-callbacks
           resolve(callback(...parameters))

@@ -10,6 +10,7 @@ describe('hdd-cleaner', () => {
       }
     `)
   })
+
   it('getSize B', () => {
     expect(getSize('2 to')).toMatchInlineSnapshot(`
       {
@@ -19,6 +20,7 @@ describe('hdd-cleaner', () => {
       }
     `)
   })
+
   it('getSize C', () => {
     expect(getSize('1tb')).toMatchInlineSnapshot(`
       {
@@ -28,6 +30,7 @@ describe('hdd-cleaner', () => {
       }
     `)
   })
+
   it('getSize D', () => {
     expect(getSize('500 gb')).toMatchInlineSnapshot(`
       {
@@ -37,6 +40,7 @@ describe('hdd-cleaner', () => {
       }
     `)
   })
+
   it('getSize E', () => {
     expect(getSize('12500GB')).toMatchInlineSnapshot(`
       {

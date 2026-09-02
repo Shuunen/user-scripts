@@ -12,6 +12,7 @@ describe('utils', () => {
       }
     `)
   })
+
   it('parsePrice B', () => {
     expect(utils.parsePrice('56.78 €')).toMatchInlineSnapshot(`
       {
@@ -21,6 +22,7 @@ describe('utils', () => {
       }
     `)
   })
+
   it('parsePrice C', () => {
     expect(utils.parsePrice('9,87 $')).toMatchInlineSnapshot(`
       {
@@ -30,6 +32,7 @@ describe('utils', () => {
       }
     `)
   })
+
   it('parsePrice D', () => {
     expect(utils.parsePrice('65.43 $')).toMatchInlineSnapshot(`
       {
@@ -39,6 +42,7 @@ describe('utils', () => {
       }
     `)
   })
+
   it('parsePrice E', () => {
     expect(utils.parsePrice('1000 €')).toMatchInlineSnapshot(`
       {
@@ -48,6 +52,7 @@ describe('utils', () => {
       }
     `)
   })
+
   it('parsePrice F', () => {
     expect(utils.parsePrice('1,000.99 $')).toMatchInlineSnapshot(`
       {
@@ -57,6 +62,7 @@ describe('utils', () => {
       }
     `)
   })
+
   it('parsePrice G', () => {
     expect(utils.parsePrice('433€29')).toMatchInlineSnapshot(`
       {
