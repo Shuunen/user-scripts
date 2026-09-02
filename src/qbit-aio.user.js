@@ -348,7 +348,7 @@ function QbitAio() {
    * @param {string} reason the reason why the process has been triggered
    */
   function start(reason = 'unknown') {
-    utils.debug(`start called because "${reason}"`)
+    utils.log(`start because "${reason}"`)
     utils.hideElements(uselessSelectors, 'useless')
     addMenuItems()
   }
