@@ -8,7 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tiime.fr
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @version      1.2.0
+// @version      1.3.0
 // ==/UserScript==
 
 // cSpell:disable
@@ -52,7 +52,7 @@ function TiimeAutoExpenses() {
     /** "Ajouter une dépense" dans la popup après avoir cliqué sur "Creer une note de frais" */
     chooseExpenseBtn: 'span + .tiime-background-secondary-surface',
     /** "Creer une note de frais" le bouton sur la page de demarrage */
-    createNdfBtn: '.action-bar-actions > [tiime-button][accent]',
+    createNdfBtn: 'app-boxed-action-bar button[tds-button].tds-button-color-primary',
     /** Ajouter un label */
     formAddLabelBtn: 'app-advanced-expense-side-panel button[data-cy="label__btn-add"]',
     /** Montant TTC */
@@ -336,8 +336,8 @@ function TiimeAutoExpenses() {
     if (expensesLines.length === 0) return []
 
     const expenses = expensesLines.map(([label = '', comment = '', amount = '', tva = '']) => {
-      const amountNumber = Number(amount.replace(',', '.'))
-      const tvaNumber = Number(tva.replace(',', '.'))
+      const amountNumber = utils.parsePrice(amount).amount
+      const tvaNumber = utils.parsePrice(tva).amount
       return { amount: amountNumber, comment, label, tva: tvaNumber }
     })
     if (doOnlyOneExpense) {
@@ -370,6 +370,42 @@ function TiimeAutoExpenses() {
   }
 
   /**
+   * Validate the expenses array
+   * @param {Expense[]} expenses the expenses to validate
+   * @returns {boolean} true if the expenses are valid, false otherwise
+   */
+  function validateExpenses(expenses) {
+    if (!Array.isArray(expenses)) {
+      utils.showError('expenses is not an array')
+      return false
+    }
+    for (const expense of expenses) {
+      if (typeof expense !== 'object' || expense === null) {
+        utils.showError('invalid expense format')
+        return false
+      }
+      const { label, comment, amount, tva } = expense
+      if (typeof label !== 'string' || label.trim() === '') {
+        utils.showError('invalid expense label')
+        return false
+      }
+      if (typeof comment !== 'string') {
+        utils.showError('invalid expense comment')
+        return false
+      }
+      if (typeof amount !== 'number' || Number.isNaN(amount)) {
+        utils.showError('invalid expense amount')
+        return false
+      }
+      if (typeof tva !== 'number' || Number.isNaN(tva)) {
+        utils.showError('invalid expense tva')
+        return false
+      }
+    }
+    return true
+  }
+
+  /**
    * Add multiple expenses from the clipboard
    */
   async function addExpenses() {
@@ -378,6 +414,7 @@ function TiimeAutoExpenses() {
       utils.showError('no expenses found to add')
       return
     }
+    if (!validateExpenses(expenses)) return
     utils.log('adding expenses...', expenses)
     // oxlint-disable-next-line no-await-in-loop
     for (const expense of expenses) await addExpense(expense)
