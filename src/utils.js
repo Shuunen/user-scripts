@@ -1,9 +1,37 @@
 /**
+ * Result helpers, a tiny port of resultx to get errors as values instead of throws
+ * @see https://github.com/johannschopplich/resultx (MIT License Copyright (c) 2023-PRESENT Johann Schopplich)
+ */
+const Result = {
+  /** @type {<E>(error: E) => { ok: false, error: E }} create a failed result, ex : utils.Result.error('oh no') */
+  error: error => ({ error, ok: false }),
+  /** @type {<T>(value: T) => { ok: true, value: T }} create a successful result, ex : utils.Result.ok(42) */
+  ok: value => ({ ok: true, value }),
+  /** @type {<T>(fnOrPromise: (() => T) | Promise<T>) => any} run a fn or await a promise, ex : utils.Result.trySafe(() => JSON.parse(input)) */
+  trySafe(fnOrPromise) {
+    if (fnOrPromise instanceof Promise) return fnOrPromise.then(this.ok).catch(this.error)
+    try {
+      return this.ok(fnOrPromise())
+    } catch (error) {
+      return this.error(error)
+    }
+  },
+  /** @type {<T, E>(result: { ok: true, value: T } | { ok: false, error: E }) => { value: T, error: undefined } | { value: undefined, error: E }} unwrap a result, ex : const { error, value } = utils.Result.unwrap(result) */
+  unwrap: result => (result.ok ? { error: undefined, value: result.value } : { error: result.error, value: undefined }),
+}
+
+/**
+ * A result carrying a message, an empty value means "nothing worth telling the user"
+ * @typedef {{ ok: true, value: string } | { ok: false, error: string }} MessageResult
+ */
+
+/**
  * Collection of utility functions to help with common tasks in my user scripts.
  */
 class Shuutils {
   id = ''
-  version = '2.6.6'
+  Result = Result
+  version = '2.7.0'
   willDebug = false
   /**
    * The ShuUserScriptUtils constructor
@@ -192,6 +220,22 @@ class Shuutils {
     console.error(...stuff)
   }
   /**
+   * Fill an input at once, useful where fillLikeHuman fails, like number inputs : The specified value "25," cannot be parsed
+   * @param {HTMLInputElement|HTMLTextAreaElement} input the input to fill
+   * @param {string|number} value the value to fill
+   * @param {number} delay the time to wait in ms between each step
+   * @returns {Promise<void>} nothing
+   * @example await utils.fillInput(input, 22.47)
+   */
+  async fillInput(input, value, delay = 100) {
+    input.focus()
+    input.value = value.toString()
+    await this.sleep(delay)
+    input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }))
+    await this.sleep(delay)
+    input.blur()
+  }
+  /**
    * Fill an input like a human would do
    * @param {HTMLInputElement | HTMLTextAreaElement} input the input to fill
    * @param {string} value the value to fill
@@ -248,6 +292,21 @@ class Shuutils {
    */
   findOne(selector, scope = document, canFail = false) {
     return this.findAll(selector, scope, canFail)[0]
+  }
+  /**
+   * Get an element of the expected type, as a result
+   * @template {typeof HTMLElement} T
+   * @param {string} selector the css selector to find
+   * @param {T} type the expected element type, like HTMLInputElement
+   * @param {boolean} willWait if true, will wait for the element to appear
+   * @returns {Promise<{ ok: true, value: InstanceType<T> } | { ok: false, error: string }>} the element found or an error
+   * @example const { error, value: input } = utils.Result.unwrap(await utils.getElement('#name', HTMLInputElement))
+   */
+  async getElement(selector, type, willWait = true) {
+    const element = willWait ? await this.waitToDetect(selector) : this.findOne(selector, document, true)
+    if (element === undefined) return Result.error(`no element found for selector "${selector}"`)
+    if (!(element instanceof type)) return Result.error(`element found for selector "${selector}" is not a ${type.name}`)
+    return Result.ok(/** @type {InstanceType<T>} */ (element))
   }
   /**
    * Get a random number between min and max
@@ -392,6 +451,23 @@ class Shuutils {
     void this.onPageChange(callback, current, wait)
   }
   /**
+   * Watch the page for added elements, ignoring the toasts added by this lib
+   * @param {(element: HTMLElement) => void} callback the callback to call with the first element added
+   * @returns {MutationObserver} the observer, call disconnect() on it to stop watching
+   * @example utils.onPageMutation(element => { utils.log('element added', element) })
+   */
+  // oxlint-disable-next-line promise/prefer-await-to-callbacks
+  onPageMutation(callback) {
+    const observer = new MutationObserver(mutations => {
+      const element = mutations[0]?.addedNodes[0]
+      if (!(element instanceof HTMLElement) || element.className.includes('shu-toast')) return
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
+      callback(element)
+    })
+    observer.observe(document.body, { childList: true, subtree: true })
+    return observer
+  }
+  /**
    * Parse a price from a string
    * @param {string} input the string to parse, like "12,34 €" or "$12.34"
    * @returns {{amount: number, currency: string, normalizedInput: string}} the parsed price, like { amount: 12.34, currency: '€' } or { amount: -12.34, currency: '$' }
@@ -482,6 +558,20 @@ class Shuutils {
     return Math.round(number * 10 ** nbDecimals) / 10 ** nbDecimals
   }
   /**
+   * Run steps one after the other and stop at the first error
+   * @param {(() => MessageResult|Promise<MessageResult>)[]} steps the steps to run
+   * @returns {Promise<MessageResult>} the first error encountered or an empty success
+   * @example const result = await utils.runSteps([() => setName('bob'), () => setAge(42)])
+   */
+  async runSteps(steps) {
+    for (const step of steps) {
+      // oxlint-disable-next-line no-await-in-loop
+      const { error } = Result.unwrap(await step())
+      if (error !== undefined) return Result.error(error)
+    }
+    return Result.ok('')
+  }
+  /**
    * Display an error both in the console and as a toast
    * @param {string} message the message to display
    * @returns {void}
@@ -498,6 +588,17 @@ class Shuutils {
   showLog(message) {
     this.toastSuccess(message)
     this.log(message)
+  }
+  /**
+   * Display a result : errors are shown, successes are shown only if they carry a message
+   * @param {MessageResult} result the result to display
+   * @returns {void}
+   * @example utils.showResult(await addExpenses())
+   */
+  showResult(result) {
+    const { error, value } = Result.unwrap(result)
+    if (error !== undefined) this.showError(error)
+    else if (value !== '') this.showLog(value)
   }
   /**
    * Display a success both in the console and as a toast
@@ -604,5 +705,6 @@ class Shuutils {
 
 if (globalThis.window === undefined)
   module.exports = {
+    Result,
     Shuutils,
   }
