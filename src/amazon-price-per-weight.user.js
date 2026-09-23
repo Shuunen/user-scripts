@@ -44,6 +44,18 @@ function getTitle(text) {
   return text.split(' ').slice(0, 5).join(' ')
 }
 
+function fill(template, data) {
+  let tpl = String(template)
+  for (const key of Object.keys(data)) {
+    const string = `{{${key}}}`
+    let value = data[key]
+    if (key.includes('price') && value > 0) value = priceFloatToString(value)
+    // utils.log('looking for', str)
+    tpl = tpl.replaceAll(new RegExp(string, 'giu'), value)
+  }
+  return tpl
+}
+
 function AmazonPricePerWeight() {
   const app = {
     id: 'amz-kg',
@@ -176,18 +188,6 @@ function AmazonPricePerWeight() {
     if (!data.bulk) data.bulk = getBulk(textClean)
     if (!data.title) data.title = getTitle(textClean)
     return data
-  }
-
-  function fill(template, data) {
-    let tpl = String(template)
-    for (const key of Object.keys(data)) {
-      const string = `{{${key}}}`
-      let value = data[key]
-      if (key.includes('price') && value > 0) value = priceFloatToString(value)
-      // utils.log('looking for', str)
-      tpl = tpl.replaceAll(new RegExp(string, 'giu'), value)
-    }
-    return tpl
   }
 
   function showDebugData(item, data) {

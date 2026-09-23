@@ -119,6 +119,31 @@ function getAdType(ad) {
   return 'unknown'
 }
 
+/**
+ * Get the ad location district
+ * @param {LbcHousingAd} ad the ad to process
+ * @returns {string} the district
+ */
+function getDistrict(ad) {
+  const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
+  if (districtId === undefined) return ''
+  // @ts-expect-error type conversion from string to number
+  return districts[districtId] ?? districtId
+}
+
+/**
+ * Get floor info from the ad
+ * @param {LbcHousingAd} ad the ad to process
+ * @returns {LbcCustomInfo} the custom info
+ */
+function getFloorNumberInfo(ad) {
+  const floorNumber = ad.attributes.find(attribute => attribute.key === 'floor_number')
+  if (floorNumber === undefined) return {}
+  const text = humanReadableFloor(floorNumber.value)
+  const score = floorNumber.value === '0' ? 0.5 : 1
+  return { score, text }
+}
+
 function LbcListings() {
   const utils = new Shuutils('lbc-lpp')
   const cls = {
@@ -218,18 +243,6 @@ function LbcListings() {
   }
 
   /**
-   * Get the ad location district
-   * @param {LbcHousingAd} ad the ad to process
-   * @returns {string} the district
-   */
-  function getDistrict(ad) {
-    const districtId = ad.attributes.find(attribute => attribute.key === 'district_id')?.value
-    if (districtId === undefined) return ''
-    // @ts-expect-error type conversion from string to number
-    return districts[districtId] ?? districtId
-  }
-
-  /**
    * Hide the ad element
    * @param {HTMLElement} element the element to hide
    * @param {string} cause the cause of the hide
@@ -270,18 +283,6 @@ function LbcListings() {
     }
     const text = [owner.type, ':', owner.name.toLocaleLowerCase()].join(' ')
     const score = isPrivateBetter ? (owner.type === 'pro' ? 0.5 : 1.2) : 1
-    return { score, text }
-  }
-  /**
-   * Get floor info from the ad
-   * @param {LbcHousingAd} ad the ad to process
-   * @returns {LbcCustomInfo} the custom info
-   */
-  function getFloorNumberInfo(ad) {
-    const floorNumber = ad.attributes.find(attribute => attribute.key === 'floor_number')
-    if (floorNumber === undefined) return {}
-    const text = humanReadableFloor(floorNumber.value)
-    const score = floorNumber.value === '0' ? 0.5 : 1
     return { score, text }
   }
   /**
@@ -449,4 +450,4 @@ function LbcListings() {
 }
 
 if (globalThis.window) LbcListings()
-else module.exports = { getAdType, getElevatorInfo, getRoomsInfo, getSquareInfo, humanReadableFloor }
+else module.exports = { getAdType, getDistrict, getElevatorInfo, getFloorNumberInfo, getRoomsInfo, getSquareInfo, humanReadableFloor }

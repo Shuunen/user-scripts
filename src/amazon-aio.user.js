@@ -62,6 +62,26 @@ const score20Styled = (rating, reviews) => {
   return data
 }
 
+/**
+ * Calculate the score by currency, eg: 0.52 pts/€
+ * @param {number} price The price, like 12.99
+ * @param {string} currency The currency, like "€"
+ * @param {number} score The score, like 16
+ * @param {HTMLDivElement} scoreSection The score section
+ * @returns {number} The score by currency
+ */
+// oxlint-disable-next-line max-params
+function getScoreByCurrency(price, currency, score, scoreSection) {
+  const scoreByCurrencySection = document.createElement('div')
+  const scoreByCurrency = Math.round((score / price) * 100) / 100
+  scoreByCurrencySection.textContent += `💯 ${scoreByCurrency.toFixed(2)} pts/${currency}`
+  const index = positionInInterval(scoreByCurrency, [0.2, 0.3, 0.4])
+  scoreByCurrencySection.style.color = ['red', 'darkorange', 'black', 'darkgreen'][index] ?? 'grey'
+  scoreByCurrencySection.title = `Score: ${score} / 20, price: ${price} ${currency}`
+  scoreSection.append(document.createElement('br'), scoreByCurrencySection)
+  return scoreByCurrency
+}
+
 function AmazonAio() {
   if (globalThis.matchMedia === undefined) return
   const utils = new Shuutils('amz-aio')
@@ -125,25 +145,6 @@ function AmazonAio() {
       return 0
     }
     return getPrice(text)
-  }
-  /**
-   * Calculate the score by currency, eg: 0.52 pts/€
-   * @param {number} price The price, like 12.99
-   * @param {string} currency The currency, like "€"
-   * @param {number} score The score, like 16
-   * @param {HTMLDivElement} scoreSection The score section
-   * @returns {number} The score by currency
-   */
-  // oxlint-disable-next-line max-params
-  function getScoreByCurrency(price, currency, score, scoreSection) {
-    const scoreByCurrencySection = document.createElement('div')
-    const scoreByCurrency = Math.round((score / price) * 100) / 100
-    scoreByCurrencySection.textContent += `💯 ${scoreByCurrency.toFixed(2)} pts/${currency}`
-    const index = positionInInterval(scoreByCurrency, [0.2, 0.3, 0.4])
-    scoreByCurrencySection.style.color = ['red', 'darkorange', 'black', 'darkgreen'][index] ?? 'grey'
-    scoreByCurrencySection.title = `Score: ${score} / 20, price: ${price} ${currency}`
-    scoreSection.append(document.createElement('br'), scoreByCurrencySection)
-    return scoreByCurrency
   }
   /**
    * Add the price per weight to the score section
@@ -294,4 +295,4 @@ function AmazonAio() {
 }
 
 if (globalThis.window) AmazonAio()
-else module.exports = { calcScore, maxScore, positionInInterval, score20Styled }
+else module.exports = { calcScore, getScoreByCurrency, maxScore, positionInInterval, score20Styled }

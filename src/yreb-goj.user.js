@@ -204,17 +204,18 @@ function highlightTopRows(rows) {
   for (const row of rows) row.querySelector(`.${cls.value}`)?.classList.toggle(cls.top, readGbPerDay(row) >= threshold)
 }
 
+/**
+ * Augment the listing header with the title of our column
+ * @param {HTMLElement} header the header to augment
+ * @param {boolean} willSort true if the rows will be sorted by this column
+ */
+function augmentHeader(header, willSort) {
+  header.classList.add(cls.done, cls.grid) // mark it first, so a concurrent run will skip it
+  header.append(createCell(willSort ? 'Go/j ▼' : 'Go/j', 'text-center whitespace-nowrap'))
+}
+
 function YrebGoj() {
   const utils = new Shuutils(id)
-  /**
-   * Augment the listing header with the title of our column
-   * @param {HTMLElement} header the header to augment
-   * @param {boolean} willSort true if the rows will be sorted by this column
-   */
-  function augmentHeader(header, willSort) {
-    header.classList.add(cls.done, cls.grid) // mark it first, so a concurrent run will skip it
-    header.append(createCell(willSort ? 'Go/j ▼' : 'Go/j', 'text-center whitespace-nowrap'))
-  }
   /**
    * Augment one row : compute its gigabytes per day and display it in a new cell
    * @param {HTMLElement} row the row to augment
@@ -284,4 +285,4 @@ function YrebGoj() {
 }
 
 if (globalThis.window) YrebGoj()
-else module.exports = { computeGbPerDay, computeTopThreshold, createBadge, createCell, formatGbPerDay, highlightTopRows, isFreeleech, parseAgeToDays, parseSizeToGb, readGbPerDay }
+else module.exports = { augmentHeader, computeGbPerDay, computeTopThreshold, createBadge, createCell, formatGbPerDay, highlightTopRows, isFreeleech, parseAgeToDays, parseSizeToGb, readGbPerDay }
