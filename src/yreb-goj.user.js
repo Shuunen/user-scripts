@@ -315,4 +315,4 @@ function YrebGoj() {
 }
 
 if (globalThis.window) YrebGoj()
-else module.exports = { augmentHeader, computeGbPerDay, computeTopThreshold, createBadge, createCell, formatGbPerDay, highlightTopRows, isFreeleech, parseAgeToDays, parseSizeToGb, readGbPerDay }
+else module.exports = { augmentHeader, computeGbPerDay, computeTopThreshold, createBadge, createCell, findHeader, formatGbPerDay, highlightTopRows, isFreeleech, parseAgeToDays, parseSizeToGb, readGbPerDay }
