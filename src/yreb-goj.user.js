@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YggReborn - Go per day
 // @author       Romain Racamier-Lafon
-// @description  Add a "Go/j" column (size x completions / age) on torrent listings and sort by it on the freeleech one, from the most to the least interesting
+// @description  Add a "Go/j" column (size x leechers / age) on torrent listings and sort by it on the freeleech one, from the most to the least interesting
 // @downloadURL  https://github.com/Shuunen/user-scripts/raw/master/src/yreb-goj.user.js
 // @updateURL    https://github.com/Shuunen/user-scripts/raw/master/src/yreb-goj.user.js
 // @grant        none
@@ -9,7 +9,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=yggreborn.org
 // @namespace    https://github.com/Shuunen
 // @require      https://cdn.jsdelivr.net/gh/Shuunen/user-scripts@master/src/utils.js
-// @version      1.1.0
+// @version      1.2.0
 // ==/UserScript==
 
 // the script id, used as a log prefix and as a css marker, keep it short
@@ -19,19 +19,22 @@ const id = 'yreb-goj'
 const cls = {
   done: `${id}-done`,
   grid: `${id}-grid`,
+  headerGrid: `${id}-header-grid`,
   top: `${id}-top`,
   value: `${id}-value`,
 }
 
-// the tailwind class fragment identifying the listing grid : type, name, size, date, completions, seed, leech
-const gridMarker = 'grid-cols-[82px_minmax(322px,1fr)_64px_52px_50px_52px_52px]'
+// the tailwind class fragment identifying the listing rows : type, name, size, date, seed, leech, download
+const gridMarker = 'grid-cols-[82px_minmax(322px,1fr)_64px_'
 
 // all css selectors in one place, `:not(.done)` avoids processing the same element twice
 const selectors = {
-  header: `main div[class*="${gridMarker}"]:not(.${cls.done})`,
   row: `main a[class*="${gridMarker}"]:not(.${cls.done})`,
   rows: `main a[class*="${gridMarker}"]`,
 }
+
+// the labels of the size column in the header, used to identify the header among the page elements
+const headerMarker = /taille|size/iu
 
 // all regexes in one place, they are hoisted here to avoid re-creating them on each call
 const regex = {
@@ -74,7 +77,10 @@ const badgeClasses = 'inline-flex min-w-[3rem] items-center justify-center round
 // styles injected in the page, the `!important` is needed to override the tailwind grid class
 const styles = `
   .${cls.grid} {
-    grid-template-columns: 82px minmax(322px, 1fr) 64px 52px 50px 52px 52px ${columnWidth} !important;
+    grid-template-columns: 82px minmax(322px, 1fr) 64px 52px 52px 52px 52px ${columnWidth} !important;
+  }
+  .${cls.headerGrid} {
+    grid-template-columns: minmax(0, 1fr) 52px ${columnWidth} !important;
   }
   .${cls.top} {
     background: rgba(96, 165, 250, 0.12);
@@ -124,17 +130,17 @@ function parseAgeToDays(text) {
 }
 
 /**
- * Compute how many gigabytes a torrent gives per day of existence
+ * Compute how many gigabytes a torrent could give per day of existence, based on its leechers
  * @param {string} sizeText the size cell content, like "1.5 Go"
  * @param {string} ageText the age cell content, like "3d"
- * @param {string} completionsText the completions cell content, like "1 234"
+ * @param {string} leechText the leech cell content, like "1 234"
  * @returns {number|undefined} the gigabytes per day, or undefined if one of the inputs is unusable
  */
-function computeGbPerDay(sizeText, ageText, completionsText) {
+function computeGbPerDay(sizeText, ageText, leechText) {
   const sizeGb = parseSizeToGb(sizeText)
   const days = parseAgeToDays(ageText)
-  const completions = completionsText.replace(regex.nonNumeric, '').replace(',', '.')
-  const count = completions === '' ? Number.NaN : Number(completions)
+  const leechers = leechText.replace(regex.nonNumeric, '').replace(',', '.')
+  const count = leechers === '' ? Number.NaN : Number(leechers)
   if (sizeGb === undefined || days === undefined || days <= 0 || Number.isNaN(count)) return undefined
   return (sizeGb * count) / Math.max(days, minAgeDays)
 }
@@ -210,12 +216,24 @@ function highlightTopRows(rows) {
  * @param {boolean} willSort true if the rows will be sorted by this column
  */
 function augmentHeader(header, willSort) {
-  header.classList.add(cls.done, cls.grid) // mark it first, so a concurrent run will skip it
+  header.classList.add(cls.done, cls.headerGrid) // mark it first, so a concurrent run will skip it
   header.append(createCell(willSort ? 'Go/j ▼' : 'Go/j', 'text-center whitespace-nowrap'))
+}
+
+/**
+ * Find the listing header, the element just before the rows container
+ * @param {HTMLElement} row a row of the listing
+ * @returns {HTMLElement|undefined} the header if it exists and is not already augmented
+ */
+function findHeader(row) {
+  const header = row.parentElement?.previousElementSibling
+  if (!(header instanceof HTMLElement) || header.classList.contains(cls.done)) return undefined
+  return headerMarker.test(header.textContent ?? '') ? header : undefined
 }
 
 function YrebGoj() {
   const utils = new Shuutils(id)
+  let hasWarnedNoRows = false // avoid a toast on each page mutation
   /**
    * Augment one row : compute its gigabytes per day and display it in a new cell
    * @param {HTMLElement} row the row to augment
@@ -223,11 +241,11 @@ function YrebGoj() {
   function augmentRow(row) {
     row.classList.add(cls.done, cls.grid) // mark it first, so a concurrent run will skip it
     const cells = row.children
-    if (cells.length < 5) {
+    if (cells.length < 6) {
       utils.debug('skip, row without enough cells', row)
       return
     }
-    const value = computeGbPerDay(cells[2]?.textContent ?? '', cells[3]?.textContent ?? '', cells[4]?.textContent ?? '')
+    const value = computeGbPerDay(cells[2]?.textContent ?? '', cells[3]?.textContent ?? '', cells[5]?.textContent ?? '')
     row.dataset.gbPerDay = value === undefined ? '' : String(value)
     const cell = createCell('', 'text-center')
     cell.append(createBadge(formatGbPerDay(value)))
@@ -250,11 +268,19 @@ function YrebGoj() {
    * @param {boolean} willSort true to sort the rows by gigabytes per day
    */
   function augmentListing(willSort) {
-    for (const header of utils.findAll(selectors.header, document, true)) augmentHeader(header, willSort)
     const rows = utils.findAll(selectors.row, document, true)
+    const firstRow = utils.findFirst(selectors.rows, document, true)
+    const header = firstRow ? findHeader(firstRow) : undefined
+    if (header) augmentHeader(header, willSort)
     if (rows.length > 0) utils.log(`found ${rows.length} rows to augment`)
     for (const row of rows) augmentRow(row)
     const allRows = utils.findAll(selectors.rows, document, true)
+    if (allRows.length === 0) {
+      if (!hasWarnedNoRows) utils.showError(`${id} : no listing rows found, the page DOM probably changed`)
+      hasWarnedNoRows = true
+      return
+    }
+    hasWarnedNoRows = false
     highlightTopRows(allRows)
     if (!willSort) return
     /** @type {Map<HTMLElement, HTMLElement[]>} */
@@ -273,7 +299,11 @@ function YrebGoj() {
   function start(reason = 'unknown') {
     const willSort = isFreeleech(globalThis.location.search)
     utils.log(`start because "${reason}"${willSort ? '' : ', without sorting'}`)
-    augmentListing(willSort)
+    try {
+      augmentListing(willSort)
+    } catch (error) {
+      utils.showError(`${id} failed : ${error instanceof Error ? error.message : String(error)}`)
+    }
   }
   utils.injectStyles(styles)
   const startDebounced = utils.debounce((/** @type {string} */ reason) => start(reason), startDebounceTime)
