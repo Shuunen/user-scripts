@@ -1,0 +1,7 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["src/*.user.js", "src/bin/*.cli.ts", "src/mb-import-utils.js"],
+  "project": ["src/**/*.{js,ts}"],
+  "ignoreExportsUsedInFile": true,
+  "ignoreDependencies": ["rough-notation"]
+}
