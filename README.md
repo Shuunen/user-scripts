@@ -1,9 +1,10 @@
 # User Scripts
 
 [![GitHub license](https://img.shields.io/github/license/shuunen/user-scripts.svg?color=informational)](https://github.com/Shuunen/user-scripts/blob/master/LICENSE)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Shuunen/user-scripts?style=flat)](https://codeclimate.com/github/Shuunen/user-scripts)
 [![Visitors](https://hits.sh/github.com/Shuunen/user-scripts.svg?label=visitors&color=informational)](https://hits.sh/github.com/Shuunen/user-scripts/)
 
-[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/Shuunen/user-scripts?style=flat)](https://codeclimate.com/github/Shuunen/user-scripts)
+![logo](docs/banner.svg)
 
 > Personal heavily opinionated script I make to enhance my daily web experience.
 
