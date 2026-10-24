@@ -193,7 +193,7 @@ export const codeRules: Rule[] = [
     check: (content: string, filePath?: string) => {
       if (filePath === undefined) return false
       const baseName = path.basename(filePath, '.user.js')
-      const expectedName = baseName.replace(regexMainFuncKebab, (_substr, character: string) => character.toUpperCase()).replace(regexMainFuncPascal, matchGroup => matchGroup[0].toUpperCase() + matchGroup[1])
+      const expectedName = baseName.replaceAll(regexMainFuncKebab, (_substr, character: string) => character.toUpperCase()).replace(regexMainFuncPascal, matchGroup => matchGroup[0].toUpperCase() + matchGroup[1])
       return regexMainFuncDef(expectedName).test(content)
     },
     error: 'main function name does not match filename (PascalCase)',

@@ -444,7 +444,7 @@ function LaptopHelper() {
       descElement.innerHTML = descElement.innerHTML.replaceAll('&nbsp;', '')
       const text = utils.readableString(descElement.textContent).toLowerCase().trim()
       utils.log('checking :', text)
-      descElement.innerHTML = descElement.innerHTML.replace(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)
+      descElement.innerHTML = descElement.innerHTML.replaceAll(keywordRegex, match => `<span class="${cls.mark}" style="display: inline-block" data-keyword="${match.replace('"', '”')}">${match}</span>`)
       for (const markElement of utils.findAll(`.${cls.mark}`, descElement, true)) annotate(markElement)
     }
   }
