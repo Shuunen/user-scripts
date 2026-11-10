@@ -9,10 +9,11 @@
     "@vitest/ui": "^5.0.5",
     "bun": "^1.4.4",
     "happy-dom": "^21.0.4",
-    "knip": "~6.44.0",
-    "oxfmt": "^0.75.0",
+    "knip": "~6.45.0",
+    "oxfmt": "^0.78.0",
     "oxlint": "^1.90.0",
     "oxlint-tsgolint": "^7.0.2005",
+    "repo-check": "^2.0.0-rc.1",
     "rough-notation": "latest",
     "turbo": "^2.11.10",
     "typescript": "~7.0.2",
@@ -32,7 +33,7 @@
     "url": "git+https://github.com/Shuunen/user-scripts.git"
   },
   "scripts": {
-    "check": "turbo run lint:types lint:format lint:knip lint:issues lint:scripts test:unit --output-logs=errors-only && echo check completed successfully",
+    "check": "repo-check && turbo run lint:types lint:format lint:knip lint:issues lint:scripts test:unit --output-logs=errors-only && echo check completed successfully",
     "lint": "turbo run lint:types lint:format lint:knip lint:issues lint:scripts --output-logs=errors-only && echo lint completed successfully",
     "lint:format": "oxfmt --check && echo lint:format completed successfully || (echo Please run pnpm run lint:format:fix to automatically fix formatting issues && exit 1)",
     "lint:format:fix": "oxfmt --write && echo lint:format:fix completed successfully || (echo Please run pnpm run lint:format to check for remaining formatting issues && exit 1)",

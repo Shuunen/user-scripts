@@ -56,6 +56,7 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 - [Knip](https://github.com/webpro/knip) : super tool to find & fix problems
 - [Oxc](https://oxc.rs) : a lovely super-fast collection of JavaScript tools written in Rust
 - [Oxlint](https://oxc.rs/docs/guide/usage/linter.html) : blazing-fast linter from the Oxc project
+- [Repo-checker](https://github.com/Shuunen/repo-checker) : eslint cover /src code and this tool the rest ^^
 - [Shields.io](https://shields.io) : for the nice badges on top of this readme
 - [Svg Omg](https://jakearchibald.github.io/svgomg/) : the great king of svg file size reduction
 - [V8](https://github.com/demurgos/v8-coverage) : simple & effective cli for code coverage
