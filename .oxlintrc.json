@@ -61,8 +61,18 @@
     "URLSearchParams": "readonly",
     "window": "readonly"
   },
-  "ignorePatterns": [".git", "*.d.ts", "coverage", "dist", "node_modules", "out-tsc", "test-output"],
+  "options": {
+    "typeAware": true,
+    "typeCheck": true
+  },
   "overrides": [
+    {
+      "files": ["src/globals.d.ts"],
+      "rules": {
+        "eslint/no-redeclare": "off",
+        "typescript/consistent-type-imports": "off"
+      }
+    },
     {
       "files": ["src/bin/**/*.ts"],
       "rules": {
@@ -227,6 +237,12 @@
     "strict-void-return": "off",
     "switch-exhaustiveness-check": "off",
     "unambiguous": "off",
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase"
+      }
+    ],
     "unicorn/prefer-spread": "off",
     "vitest/prefer-called-times": "off",
     "vitest/prefer-to-be-falsy": "off",
