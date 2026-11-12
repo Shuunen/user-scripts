@@ -5,6 +5,7 @@
 ### Changed
 
 - Ignore the `*.tsbuildinfo` files in git
+- Move the todo list from the README to a `TODOS.md` file
 
 ## [2.6.6] - 2026-05-24
 

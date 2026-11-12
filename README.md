@@ -43,11 +43,6 @@ Fetch your own beer ratings from Untappd and inject them in the search results t
 
 ![demo](docs/demo-saveur-biere-untappd-rating.jpg)
 
-## Todo
-
-- [ ] check/comment the disabled rules in `.oxlintrc.json`
-- [ ] remove all `// @ts-nocheck`
-
 ## Thanks
 
 - [Boxy Svg](https://boxy-svg.com) : simple & effective svg editor
