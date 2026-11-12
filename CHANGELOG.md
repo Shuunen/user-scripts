@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Changed
+
+- Ignore the `*.tsbuildinfo` files in git
+
 ## [2.6.6] - 2026-05-24
 
 ### Changed
