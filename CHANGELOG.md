@@ -10,6 +10,7 @@
 - Drop the redundant `run_install` option from the CI
 - Test the shared `utils.js` helpers and drop an unreachable length check in `findAll`
 - Exclude the userscripts from the coverage report
+- Require 100% test coverage
 
 ## [2.6.6] - 2026-05-24
 

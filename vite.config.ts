@@ -4,9 +4,12 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     coverage: {
-      exclude: ['src/*.types.ts', 'src/bin/**', '*.config.ts'],
+      exclude: ['src/*.types.ts', 'src/*.d.ts', 'src/*.jpg', 'src/*.css', 'src/bin/**', '*.config.ts'],
       include: ['src'],
       provider: 'v8' as const,
+      thresholds: {
+        100: true,
+      },
     },
     environment: 'node',
     globals: true,
