@@ -8,6 +8,7 @@
 - Move the todo list from the README to a `TODOS.md` file
 - Add a `VERSION` file
 - Drop the redundant `run_install` option from the CI
+- Test the shared `utils.js` helpers and drop an unreachable length check in `findAll`
 
 ## [2.6.6] - 2026-05-24
 

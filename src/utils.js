@@ -265,7 +265,7 @@ class Shuutils {
    * @example utils.findAll('.not-exits') // returns an empty array
    */
   findAll(selector, scope = document, canFail = false) {
-    if (!selector || selector.length === 0 || selector.length === 1) this.error('incorrect selector : ', selector)
+    if (!selector || selector.length === 1) this.error('incorrect selector : ', selector)
     const items = Array.prototype.slice.call(scope.querySelectorAll(selector))
     if (items.length > 0 && this.willDebug) this.log('found', items.length, `elements matching "${selector}"`)
     else if (items.length <= 0 && !canFail) this.warn(`found no elements for selector "${selector}"`)
