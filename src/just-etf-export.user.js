@@ -12,6 +12,8 @@
 // @version      1.2.0
 // ==/UserScript==
 
+/* v8 ignore file */
+
 /* TODO :
 - Add export button to export data as CSV to clipboard
 - Check column headers to be sure we are on the right page with the right table structure

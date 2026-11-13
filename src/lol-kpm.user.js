@@ -12,6 +12,8 @@
 // @version      1.1.5
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // @ts-nocheck
 
 ;(function LolKpmCounter() {

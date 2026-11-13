@@ -12,6 +12,8 @@
 // @version      1.0.2
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // @ts-nocheck
 
 ;(function LyBoxEnhanced() {

@@ -1,3 +1,4 @@
+/* v8 ignore file */
 // oxlint-disable promise/prefer-await-to-callbacks, no-unused-vars
 
 /**

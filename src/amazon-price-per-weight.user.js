@@ -12,6 +12,8 @@
 // @version      1.0.9
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // @ts-nocheck
 
 /**

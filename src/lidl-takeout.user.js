@@ -13,6 +13,8 @@
 // @version      1.0.2
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function LidlTakeout() {
   const utils = new Shuutils('ldl-tko')
   const selectors = {

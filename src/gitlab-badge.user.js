@@ -12,6 +12,8 @@
 // @version      0.0.5
 // ==/UserScript==
 
+/* v8 ignore file */
+
 const badges = {
   bronze: 'https://i.imgur.com/APbU15u.png',
   gold: 'https://i.imgur.com/hoWbQ3w.png',

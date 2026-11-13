@@ -12,6 +12,8 @@
 // @version      1.1.6
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // oxlint-disable promise/prefer-await-to-callbacks
 
 function GitlabMr() {

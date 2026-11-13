@@ -13,6 +13,8 @@
 // @version      1.1.6
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function DealabsAio() {
   const utils = new Shuutils('dlb-clr')
   /** @type {string[]} */

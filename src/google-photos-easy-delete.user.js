@@ -12,6 +12,8 @@
 // @version      1.0.6
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function GooglePhotosEasyDelete() {
   const app = { init: false, timeToWait: 200 }
   const utils = new Shuutils('gp-ed')

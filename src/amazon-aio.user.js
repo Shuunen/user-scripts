@@ -12,6 +12,8 @@
 // @version      1.0.2
 // ==/UserScript==
 
+/* v8 ignore file */
+
 /**
  * Return the position of a value in an interval
  * @param {number} value The value

@@ -11,6 +11,8 @@
 // @version      1.1.1
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function TradeRepublicAio() {
   const data = {
     currentYear: new Date().getFullYear(),

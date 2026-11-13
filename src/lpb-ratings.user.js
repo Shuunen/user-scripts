@@ -13,6 +13,8 @@
 // @version      1.0.2
 // ==/UserScript==
 
+/* v8 ignore file */
+
 const ratingsCsv = `domaine des bergeonnieres saint nicolas de bourgueil vielles vignes,3.6
 fabrice petit brut recoltant manipulant montier en l isle,4.0
 domaine jean marc bouley vieilles vignes volnay,3.5

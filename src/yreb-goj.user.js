@@ -12,6 +12,8 @@
 // @version      1.2.0
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // the script id, used as a log prefix and as a css marker, keep it short
 const id = 'yreb-goj'
 

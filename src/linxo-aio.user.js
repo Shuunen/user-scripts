@@ -13,6 +13,8 @@
 // @version      1.1.0
 // ==/UserScript==
 
+/* v8 ignore file */
+
 const authorizedCategories = new Set([
   // Vie courante
   'Alimentation, supermarché',

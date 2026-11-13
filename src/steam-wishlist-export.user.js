@@ -13,6 +13,8 @@
 // @version      1.1.3
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function SteamWishlistExport() {
   let appButton = document.createElement('button')
   /** @type {{ id: string, img: string, price: number, title: string }[]} */

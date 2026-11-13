@@ -12,6 +12,8 @@
 // @version      1.0.7
 // ==/UserScript==
 
+/* v8 ignore file */
+
 /**
  * @typedef {import('./lbc.types').LbcCustomInfo} LbcCustomInfo
  * @typedef {import('./lbc.types').LbcAdType} LbcAdType

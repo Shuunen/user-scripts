@@ -13,6 +13,8 @@
 // @version      1.0.3
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function AmazonTakeout() {
   const utils = new Shuutils('amz-tko')
   const selectors = {

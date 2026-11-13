@@ -12,6 +12,8 @@
 // @version      1.0.3
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function AuchanAio() {
   const utils = new Shuutils('auchan-aio')
   const uselessSelectors = {

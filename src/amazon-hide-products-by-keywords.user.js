@@ -13,6 +13,8 @@
 // @version      1.1.9
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // @ts-nocheck
 function AmazonHideProductsByKeywords() {
   const app = {

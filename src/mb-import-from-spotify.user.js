@@ -14,6 +14,8 @@
 // @version      1.0.6
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function MbImportFromSpotify() {
   const utils = new Shuutils('spotify-mb-export')
   const selectors = {

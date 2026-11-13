@@ -12,6 +12,8 @@
 // @version      1.2.2
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // @ts-nocheck FIX ME later, I dont use Saveur Bière for now
 
 /**

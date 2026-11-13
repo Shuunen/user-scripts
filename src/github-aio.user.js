@@ -12,6 +12,8 @@
 // @version      1.1.2
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // oxlint-disable promise/prefer-await-to-callbacks
 
 const bugIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" class="octicon octicon-repo-issues" viewBox="0 0 53 53">

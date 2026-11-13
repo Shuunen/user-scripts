@@ -13,6 +13,8 @@
 // @version      1.0.5
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // This script use two ways to find elements in the document:
 // 1. Using XPath expressions with document.evaluate
 // 2. Using querySelectorAll

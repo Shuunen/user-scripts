@@ -13,6 +13,8 @@
 // @version      1.0.4
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function AliExpressTakeout() {
   const utils = new Shuutils('alx-tko')
   const selectors = {

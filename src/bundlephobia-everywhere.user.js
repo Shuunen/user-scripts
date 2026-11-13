@@ -14,6 +14,8 @@
 // @version      1.1.3
 // ==/UserScript==
 
+/* v8 ignore file */
+
 const pkgManagerRegex = /\b(?<provider>npm i|npm install|npx|yarn add).* (?<name>[^-][\w./@-]+)/iu
 const onlineLibRegex = /(?<provider>unpkg\.com)\/(?<name>@?[\w./-]+)/iu
 

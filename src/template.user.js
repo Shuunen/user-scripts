@@ -12,6 +12,8 @@
 // @version      1.0.0
 // ==/UserScript==
 
+/* v8 ignore file */
+
 /*
  * How to use this template :
  *

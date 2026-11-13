@@ -13,6 +13,8 @@
 // @version      2.2.2
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function Dev() {
   console.log('hello from dev script, loading __HEY_CHANGE_ME__')
 }

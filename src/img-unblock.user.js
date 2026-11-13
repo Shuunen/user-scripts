@@ -12,6 +12,8 @@
 // @version      1.1.5
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function ImgUnblock() {
   const proxyUrl = 'https://proxy.duckduckgo.com/iu/?u='
   const utils = new Shuutils('img-unblock')

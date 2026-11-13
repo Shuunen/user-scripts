@@ -12,6 +12,8 @@
 // @version      1.0.6
 // ==/UserScript==
 
+/* v8 ignore file */
+
 function InstagramWide() {
   const utils = new Shuutils('instagram-wide')
   const uselessSelectors = {

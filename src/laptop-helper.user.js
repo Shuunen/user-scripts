@@ -32,6 +32,8 @@
 // @version      1.0.3
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // @ts-nocheck FIX ME later, I don't use Laptop Helper for now
 // oxlint-disable no-immediate-mutation
 

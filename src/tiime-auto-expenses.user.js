@@ -11,6 +11,8 @@
 // @version      1.4.0
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // cSpell:disable
 
 /**

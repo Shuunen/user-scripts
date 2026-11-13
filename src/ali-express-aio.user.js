@@ -12,6 +12,8 @@
 // @version      1.0.4
 // ==/UserScript==
 
+/* v8 ignore file */
+
 /**
  * @param {HTMLImageElement} img the image to extend
  * @param {number} [size] the size to extend the image to, default is 600px

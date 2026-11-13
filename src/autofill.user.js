@@ -12,6 +12,8 @@
 // @version      1.0.5
 // ==/UserScript==
 
+/* v8 ignore file */
+
 /**
  * Trigger a change event on an input element
  * @param {HTMLInputElement} element the input element

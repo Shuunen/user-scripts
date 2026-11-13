@@ -13,6 +13,8 @@
 // @version      1.1.2
 // ==/UserScript==
 
+/* v8 ignore file */
+
 /**
  * Get the data from the page.
  * @returns {Record<'brand' | 'details' | 'name' | 'photo' | 'price' | 'reference', string>} The data.

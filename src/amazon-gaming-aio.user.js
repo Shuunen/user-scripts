@@ -12,6 +12,8 @@
 // @version      1.1.3
 // ==/UserScript==
 
+/* v8 ignore file */
+
 /**
  * Clean a dlc name
  * @param {string} name the name to clean

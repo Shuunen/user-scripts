@@ -14,6 +14,8 @@
 // @version      1.1.3
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // @ts-nocheck FIXME later, too much issues
 
 function injectModal() {

@@ -19,6 +19,8 @@
 // @version      1.2.6
 // ==/UserScript==
 
+/* v8 ignore file */
+
 const id = 'hdd-clr'
 
 const app = {

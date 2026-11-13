@@ -12,6 +12,8 @@
 // @version      1.1.1
 // ==/UserScript==
 
+/* v8 ignore file */
+
 // the script id, used as a log prefix and as a css marker, keep it short
 const id = 'qbit-aio'
 
