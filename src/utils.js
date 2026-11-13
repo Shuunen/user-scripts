@@ -700,6 +700,7 @@ class Shuutils {
    */
   warn(...stuff) {
     if (this.id.length > 0) stuff.unshift(`${this.id} :`)
+    console.warn(...stuff)
   }
 }
 

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- The userscripts helper `warn` now logs to the console, it used to log nothing
+
 ## [2.6.7] - 2026-11-13
 
 ### Changed
