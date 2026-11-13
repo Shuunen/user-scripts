@@ -6,6 +6,10 @@
 
 - The userscripts helper `warn` now logs to the console, it used to log nothing
 
+### Changed
+
+- Add the repo-check schema to its config
+
 ## [2.6.7] - 2026-11-13
 
 ### Changed
