@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [2.6.7] - 2026-11-13
+
 ### Changed
 
 - Ignore the `*.tsbuildinfo` files in git
