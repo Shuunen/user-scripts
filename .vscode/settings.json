@@ -36,8 +36,17 @@
     "violentmonkey"
   ],
   "workbench.colorCustomizations": {
-    "activityBar.background": "#0C323D",
+    "activityBar.background": "#030e11",
+    "activityBar.foreground": "#f9fafb",
+    "activityBarBadge.background": "#114655",
+    "activityBarBadge.foreground": "#f9fafb",
+    "statusBar.background": "#030e11",
+    "statusBar.foreground": "#f9fafbcc",
+    "statusBar.inactiveBackground": "#02090b",
+    "tab.activeBorderTop": "#114655",
     "titleBar.activeBackground": "#114655",
-    "titleBar.activeForeground": "#F5FBFD"
+    "titleBar.activeForeground": "#f9fafb",
+    "titleBar.inactiveBackground": "#030e11",
+    "titleBar.inactiveForeground": "#f9fafbaa"
   }
 }
