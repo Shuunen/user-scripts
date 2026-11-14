@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config'
 
 // oxlint-disable-next-line import/no-default-export
 export default defineConfig({
+  build: { reportCompressedSize: false },
   test: {
     coverage: {
       exclude: ['src/*.types.ts', 'src/*.d.ts', 'src/*.jpg', 'src/*.css', 'src/bin/**', '*.config.ts'],

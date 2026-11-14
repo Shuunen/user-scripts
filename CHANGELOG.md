@@ -9,6 +9,7 @@
 ### Changed
 
 - Add the repo-check schema to its config
+- Stop reporting the compressed size of the files at build time
 
 ## [2.6.7] - 2026-11-13
 
