@@ -31,7 +31,22 @@ declare const Appwrite: typeof import('appwrite')
  * @see https://github.com/qbittorrent/qBittorrent/tree/master/src/webui/www/private
  */
 declare const torrentsTable: {
+  columns: TorrentsTableColumn[] & Record<string, TorrentsTableColumn | undefined>
   getCurrentTorrentID: () => string | undefined
+  newColumn: (...args: [name: string, style: string, caption: string, defaultWidth: number, defaultVisible: boolean]) => void
+  fixedTableHeader: HTMLElement
+  rerender: () => void
+  rows: Map<string, { full_data: { added_on: number; last_activity?: number; ratio: number } }>
+  setSortedColumn: (name: string) => void
+  setupHeaderMenu: () => void
+  updateTableHeaders: () => void
+}
+
+/** A column of the qBittorrent torrents table, `getRowValue` & `updateTd` are meant to be overridden */
+declare type TorrentsTableColumn = {
+  dataProperties: string[]
+  getRowValue: (row: { full_data: { added_on: number; last_activity?: number; ratio: number } }) => number
+  updateTd: (td: HTMLElement, row: { full_data: { added_on: number; last_activity?: number; ratio: number } }) => void
 }
 
 declare const qBittorrent: {
