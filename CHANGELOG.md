@@ -8,6 +8,7 @@
 
 ### Changed
 
+- Turn off the turbo update notifier
 - Add the repo-check schema to its config
 - Stop reporting the compressed size of the files at build time
 - Color the VS Code window from the theme color: title bar, activity bar, status bar, badges and active tab

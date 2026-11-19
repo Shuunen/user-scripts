@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
+  "noUpdateNotifier": true,
   "tasks": {
     "lint:format": {
       "dependsOn": ["lint:install"]
